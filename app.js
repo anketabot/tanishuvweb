@@ -255,9 +255,75 @@ function doSearch() {
   const resultsEl = document.getElementById('search-results');
   resultsEl.innerHTML = '<div class="loading"><div class="spinner"></div> Qidirilmoqda...</div>';
 
-  setTimeout(() => {
-    resultsEl.innerHTML = renderSearchResults(filters);
-  }, 500);
+  // Try to fetch from backend API
+  if (userId) {
+    fetchSearchResults(userId, filters);
+  } else {
+    // Fallback to demo data if no userId
+    setTimeout(() => {
+      resultsEl.innerHTML = renderSearchResults(filters);
+    }, 500);
+  }
+}
+
+async function fetchSearchResults(telegramId, filters) {
+  const resultsEl = document.getElementById('search-results');
+  
+  try {
+    // Try different API endpoints
+    const currentHost = window.location.hostname;
+    const endpoints = [
+      `http://${currentHost}:8080/api/search`,
+      'http://localhost:8080/api/search',
+      'http://127.0.0.1:8080/api/search',
+      '/api/search'
+    ];
+    
+    let response = null;
+    let lastError = null;
+    
+    for (const endpoint of endpoints) {
+      try {
+        response = await fetch(endpoint, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ telegram_id: telegramId, filters }),
+          mode: 'cors'
+        });
+        if (response.ok) break;
+      } catch (e) {
+        lastError = e;
+      }
+    }
+    
+    if (!response || !response.ok) {
+      throw lastError || new Error('API not available');
+    }
+    
+    const data = await response.json();
+    if (data.success && data.users) {
+      resultsEl.innerHTML = renderRealSearchResults(data.users, filters);
+    } else {
+      resultsEl.innerHTML = `<div class="empty-state"><div class="empty-icon">${ICONS.info}</div><h3>Hech kim topilmadi</h3><p>Iltimos, filtrlarni o'zgartiring va qayta urinib ko'ring.</p></div>`;
+    }
+  } catch (error) {
+    console.warn('API search failed, using demo data', error);
+    // Fallback to demo data
+    setTimeout(() => {
+      resultsEl.innerHTML = renderSearchResults(filters);
+    }, 500);
+  }
+}
+
+function renderRealSearchResults(users, filters) {
+  if (!users || users.length === 0) {
+    return `<div class="empty-state"><div class="empty-icon">${ICONS.info}</div><h3>Hech kim topilmadi</h3><p>Iltimos, filtrlarni o'zgartiring va qayta urinib ko'ring.</p></div>`;
+  }
+
+  return users.map(u => {
+    const user = { ...u, id: u.telegram_id };
+    return renderProfileCard(user);
+  }).join('');
 }
 
 function renderSearchResults(filters) {
