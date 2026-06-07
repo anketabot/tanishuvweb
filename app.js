@@ -14,7 +14,7 @@ const userFirstName = tg?.initDataUnsafe?.user?.first_name || '';
 // 🆕 BACKEND DOMENINGIZNI SHU YERGA YOZING
 // Masalan: 'https://your-bot.up.railway.app' yoki 'https://mybot.herokuapp.com'
 // Agar WebApp va backend bir xil serverda bo'lsa, bo'sh qoldiring ('')
-const API_BASE_URL = '';  // TAHRIRLASHTIRING: Backend domeningiz
+const API_BASE_URL = 'https://tanishuvbot-production.up.railway.app';  // TAHRIRLASHTIRING: Backend domeningiz
 
 const MAX_WEBAPP_DATA_SIZE = 6000;
 
