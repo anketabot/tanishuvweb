@@ -11,6 +11,30 @@ const userId = tg?.initDataUnsafe?.user?.id || null;
 const userName = tg?.initDataUnsafe?.user?.username || '';
 const userFirstName = tg?.initDataUnsafe?.user?.first_name || '';
 
+const MAX_WEBAPP_DATA_SIZE = 6000;
+
+function sendWebAppData(payload) {
+  if (!tg) return;
+  const json = JSON.stringify(payload);
+  if (json.length <= MAX_WEBAPP_DATA_SIZE) {
+    tg.sendData(json);
+    return;
+  }
+
+  if (payload.action === 'save_profile' && payload.profile) {
+    const safeProfile = { ...payload.profile, photo_base64: null };
+    const safePayload = { ...payload, profile: safeProfile };
+    const safeJson = JSON.stringify(safePayload);
+    if (safeJson.length <= MAX_WEBAPP_DATA_SIZE) {
+      tg.sendData(safeJson);
+      showToast('Rasm telegramga yuborilmadi, lekin anketangiz saqlandi.');
+      return;
+    }
+  }
+
+  showToast('Xatolik: ma\'lumot juda uzun. Iltimos, rasm hajmini kamaytiring.');
+}
+
 // === SVG ICONS ===
 const ICONS = {
   search: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>`,
@@ -194,7 +218,7 @@ function saveProfile() {
   localStorage.setItem('dating_profile', JSON.stringify(profile));
 
   if (tg) {
-    tg.sendData(JSON.stringify({ action: 'save_profile', profile }));
+    sendWebAppData({ action: 'save_profile', profile });
   }
 
   showToast('Anketangiz muvaffaqiyatli saqlandi!');
