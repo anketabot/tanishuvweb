@@ -419,7 +419,7 @@ function loadMyProfile() {
 
 // === INVITE ===
 function loadInviteData() {
-  const botUsername = '@ZnakomstvouzBot';
+  const botUsername = 'ZnakomstvouzBot';
   const link = `https://t.me/${botUsername}?start=ref_${userId || '0'}`;
   document.getElementById('invite-link').innerHTML = `
     <span style="display:flex;align-items:center;gap:8px;">
