@@ -137,6 +137,7 @@ function showPage(name) {
   const navBtn = document.getElementById('nav-' + name);
   if (navBtn) navBtn.classList.add('active');
 
+  if (name === 'search') setDefaultSearchGender();
   if (name === 'myprofile') loadMyProfile();
   if (name === 'invite') loadInviteData();
 }
@@ -148,10 +149,22 @@ function selectGender(g) {
   document.getElementById('gender-ayol').classList.toggle('selected', g === 'ayol');
 }
 
+function getOppositeGender(g) {
+  return g === 'erkak' ? 'ayol' : g === 'ayol' ? 'erkak' : '';
+}
+
 function selectSearchGender(g) {
   selectedSearchGender = g;
   document.getElementById('sf-gender-erkak').classList.toggle('selected', g === 'erkak');
   document.getElementById('sf-gender-ayol').classList.toggle('selected', g === 'ayol');
+}
+
+function setDefaultSearchGender() {
+  const profile = getProfile();
+  const opposite = profile ? getOppositeGender(profile.gender) : '';
+  if (opposite) {
+    selectSearchGender(opposite);
+  }
 }
 
 // === CHIP TOGGLE ===
@@ -221,6 +234,7 @@ function saveProfile() {
     sendWebAppData({ action: 'save_profile', profile });
   }
 
+  setDefaultSearchGender();
   showToast('Anketangiz muvaffaqiyatli saqlandi!');
   
   // Asosiy ilovaga o'tish
@@ -241,24 +255,33 @@ function doSearch() {
   const resultsEl = document.getElementById('search-results');
   resultsEl.innerHTML = '<div class="loading"><div class="spinner"></div> Qidirilmoqda...</div>';
 
-  if (tg) {
-    tg.sendData(JSON.stringify({ action: 'search', filters }));
-    setTimeout(() => {
-      resultsEl.innerHTML = '<div class="empty-state"><div class="empty-icon">' + ICONS.message + '</div><h3>Natijalar botga yuborildi</h3><p>Telegram chatni oching va natijalarni ko\'ring.</p></div>';
-    }, 1500);
-  } else {
-    setTimeout(() => {
-      resultsEl.innerHTML = renderDemoResults();
-    }, 800);
-  }
+  setTimeout(() => {
+    resultsEl.innerHTML = renderSearchResults(filters);
+  }, 500);
 }
 
-function renderDemoResults() {
+function renderSearchResults(filters) {
   const demos = [
     { name: "Aziz", age: 24, city: "Toshkent", gender: "erkak", goals: ["Do'stlik", "Muloqot"], interests: ["Kitob", "Kino"], id: 1001 },
     { name: "Malika", age: 21, city: "Samarqand", gender: "ayol", goals: ["Sevgi", "Romantika"], interests: ["Raqs", "Musiqa"], id: 1002 },
+    { name: "Dilshod", age: 28, city: "Samarqand", gender: "erkak", goals: ["Tanishuv", "Oila"], interests: ["Sport", "Sayohat"], id: 1003 },
+    { name: "Nilufar", age: 23, city: "Farg'ona", gender: "ayol", goals: ["Do'stlik", "Romantika"], interests: ["Foto", "Musiqa"], id: 1004 }
   ];
-  return demos.map(u => renderProfileCard(u)).join('');
+
+  const filtered = demos.filter((u) => {
+    if (filters.gender && u.gender !== filters.gender) return false;
+    if (filters.age_from && u.age < Number(filters.age_from)) return false;
+    if (filters.age_to && u.age > Number(filters.age_to)) return false;
+    if (filters.city && !u.city.toLowerCase().includes(filters.city.toLowerCase())) return false;
+    if (filters.goals && filters.goals.length && !filters.goals.some(g => u.goals.includes(g))) return false;
+    return true;
+  });
+
+  if (!filtered.length) {
+    return `<div class="empty-state"><div class="empty-icon">${ICONS.info}</div><h3>Hech kim topilmadi</h3><p>Iltimos, filtrlarni o'zgartiring va qayta urinib ko'ring.</p></div>`;
+  }
+
+  return filtered.map(u => renderProfileCard(u)).join('');
 }
 
 function renderProfileCard(u) {
