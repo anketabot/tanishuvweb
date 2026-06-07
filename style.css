@@ -87,6 +87,9 @@ body {
   letter-spacing: -0.3px;
   position: relative;
   z-index: 1;
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
 .header-sub {
@@ -97,9 +100,22 @@ body {
   z-index: 1;
 }
 
-.header-emoji {
-  font-size: 28px;
-  margin-right: 8px;
+.header-icon {
+  width: 26px;
+  height: 26px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.header-icon svg {
+  width: 100%;
+  height: 100%;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  fill: none;
 }
 
 /* === BOTTOM NAV === */
@@ -131,9 +147,22 @@ body {
   transition: color 0.2s;
 }
 
-.nav-btn .icon { font-size: 22px; transition: transform 0.2s; }
+.nav-icon {
+  width: 24px;
+  height: 24px;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  fill: none;
+  transition: all 0.2s;
+  margin-bottom: 2px;
+}
+
 .nav-btn.active { color: var(--primary); }
-.nav-btn.active .icon { transform: scale(1.15); }
+.nav-btn.active .nav-icon {
+  stroke: var(--primary);
+  transform: scale(1.1);
+}
 
 /* === CARDS === */
 .card {
@@ -214,7 +243,20 @@ body {
   color: var(--gray-600);
 }
 
-.gender-btn .g-icon { font-size: 26px; display: block; margin-bottom: 4px; }
+.gender-btn .g-icon {
+  display: block;
+  margin-bottom: 4px;
+}
+.gender-btn .g-icon svg {
+  width: 28px;
+  height: 28px;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  fill: none;
+  display: block;
+  margin: 0 auto;
+}
 
 .gender-btn:active, .gender-btn.selected {
   border-color: var(--primary);
@@ -268,7 +310,16 @@ body {
 }
 
 .photo-upload:active { background: var(--gray-200); }
-.photo-upload .upload-icon { font-size: 36px; }
+
+.upload-icon svg {
+  width: 40px;
+  height: 40px;
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  fill: none;
+  stroke: var(--primary);
+}
 .photo-upload .upload-text { font-size: 13px; font-weight: 700; color: var(--primary); }
 .photo-upload .upload-sub { font-size: 11px; color: var(--text-muted); }
 
@@ -295,6 +346,10 @@ body {
   box-shadow: 0 4px 16px rgba(26,115,232,0.35);
   transition: all 0.2s;
   letter-spacing: 0.2px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
 }
 
 .btn-primary:active {
@@ -314,10 +369,25 @@ body {
   font-weight: 700;
   cursor: pointer;
   transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
 }
 
 .btn-secondary:active {
   background: var(--primary-ultra-light);
+}
+
+.btn-icon svg {
+  width: 18px;
+  height: 18px;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  fill: none;
+  display: inline-block;
+  vertical-align: middle;
 }
 
 /* === AGE RANGE === */
@@ -346,7 +416,6 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 64px;
 }
 
 .profile-photo img {
@@ -364,6 +433,18 @@ body {
   font-size: 20px;
   font-weight: 800;
   color: var(--text);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.profile-name svg {
+  width: 22px;
+  height: 22px;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  fill: none;
+  stroke: var(--primary);
 }
 
 .profile-age-city {
@@ -410,7 +491,14 @@ body {
   gap: 3px;
 }
 
-.action-btn .btn-icon { font-size: 20px; }
+.action-btn .btn-icon svg {
+  width: 20px;
+  height: 20px;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  fill: none;
+}
 
 .btn-like { background: #FFF0F5; color: var(--accent); }
 .btn-like:active { background: var(--accent); color: white; }
@@ -425,7 +513,20 @@ body {
   padding: 50px 30px;
   color: var(--text-muted);
 }
-.empty-state .empty-icon { font-size: 56px; margin-bottom: 14px; }
+.empty-icon {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 14px;
+}
+.empty-icon svg {
+  width: 56px;
+  height: 56px;
+  stroke: var(--primary);
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  fill: none;
+}
 .empty-state h3 { font-family: var(--font-main); font-size: 18px; font-weight: 800; color: var(--gray-800); }
 .empty-state p { font-size: 13px; margin-top: 6px; line-height: 1.6; }
 
@@ -482,7 +583,6 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 72px;
   margin-bottom: 16px;
   overflow: hidden;
 }
@@ -500,7 +600,25 @@ body {
 }
 
 .info-row:last-child { border-bottom: none; }
-.info-icon { font-size: 20px; width: 28px; flex-shrink: 0; }
+
+.info-icon {
+  width: 28px;
+  height: 28px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--primary);
+}
+.info-icon svg {
+  width: 22px;
+  height: 22px;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  fill: none;
+}
+
 .info-label { font-size: 11px; font-weight: 700; color: var(--primary); text-transform: uppercase; }
 .info-value { font-size: 14px; font-weight: 600; color: var(--text); margin-top: 2px; }
 
