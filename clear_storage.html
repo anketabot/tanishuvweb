@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Local Storage Tozalash</title>
+  <style>
+    body { font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; margin:0; min-height:100vh; display:flex; align-items:center; justify-content:center; background:#f4f7fb; color:#1d2939; }
+    .card { width: min(520px, calc(100% - 32px)); padding: 28px; border-radius: 24px; background:#ffffff; box-shadow: 0 24px 60px rgba(15, 23, 42, 0.08); text-align:center; }
+    h1 { margin:0 0 12px; font-size: 1.8rem; }
+    p { margin: 0 0 22px; line-height:1.7; }
+    button { appearance:none; border:none; border-radius: 999px; padding: 14px 24px; background:#1a73e8; color:#ffffff; font-size:1rem; cursor:pointer; transition:transform .15s ease, background .15s ease; }
+    button:hover { transform: translateY(-1px); background:#1662c4; }
+    .status { margin-top: 20px; padding: 16px; border-radius: 16px; background:#eff6ff; color:#1e3a8a; }
+    a { color:#1a73e8; text-decoration:none; font-weight:600; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>Web App LocalStorage Tozalash</h1>
+    <p>Bu sahifa ochilganda brauzerning localStorage qiymatlari o'chiriladi. Agar web-app ichida eski profil ma'lumotlari qolsagina, ularni butunlay tozalash uchun shu sahifani oching.</p>
+    <button id="clearBtn">LocalStorage tozalash</button>
+    <div id="status" class="status" style="display:none;"></div>
+    <p style="margin-top:18px; font-size:0.95rem;">Keyin <a href="index.html">asosiy sahifaga qaytish</a> mumkin.</p>
+  </div>
+
+  <script>
+    const statusEl = document.getElementById('status');
+    const clearBtn = document.getElementById('clearBtn');
+
+    function showStatus(text) {
+      statusEl.textContent = text;
+      statusEl.style.display = 'block';
+    }
+
+    function clearStorage() {
+      try {
+        localStorage.clear();
+        sessionStorage.clear();
+        showStatus('✅ Local storage va session storage muvaffaqiyatli tozalandi. Sahifani yangilang yoki qaytib botga boring.');
+      } catch (error) {
+        showStatus('❌ Xatolik yuz berdi: ' + error.message);
+      }
+    }
+
+    clearBtn.addEventListener('click', clearStorage);
+
+    // Avvaldan tozalashni avtomatik bajarish
+    clearStorage();
+  </script>
+</body>
+</html>
