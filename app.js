@@ -11,6 +11,11 @@ const userId = tg?.initDataUnsafe?.user?.id || null;
 const userName = tg?.initDataUnsafe?.user?.username || '';
 const userFirstName = tg?.initDataUnsafe?.user?.first_name || '';
 
+// 🆕 BACKEND DOMENINGIZNI SHU YERGA YOZING
+// Masalan: 'https://your-bot.up.railway.app' yoki 'https://mybot.herokuapp.com'
+// Agar WebApp va backend bir xil serverda bo'lsa, bo'sh qoldiring ('')
+const API_BASE_URL = '';  // TAHRIRLASHTIRING: Backend domeningiz
+
 const MAX_WEBAPP_DATA_SIZE = 6000;
 
 function sendWebAppData(payload) {
@@ -270,48 +275,42 @@ async function fetchSearchResults(telegramId, filters) {
   const resultsEl = document.getElementById('search-results');
   
   try {
-    // Try different API endpoints
-    const currentHost = window.location.hostname;
-    const endpoints = [
-      `http://${currentHost}:8080/api/search`,
-      'http://localhost:8080/api/search',
-      'http://127.0.0.1:8080/api/search',
-      '/api/search'
-    ];
-    
-    let response = null;
-    let lastError = null;
-    
-    for (const endpoint of endpoints) {
-      try {
-        response = await fetch(endpoint, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ telegram_id: telegramId, filters }),
-          mode: 'cors'
-        });
-        if (response.ok) break;
-      } catch (e) {
-        lastError = e;
-      }
+    // 🆕 To'g'ri URL hosil qilish
+    let baseUrl;
+    if (API_BASE_URL) {
+      baseUrl = API_BASE_URL.replace(/\/$/, ''); // oxiridagi / ni olib tashlash
+    } else {
+      // WebApp va backend bir xil origin da bo'lsa
+      baseUrl = `${window.location.protocol}//${window.location.host}`;
     }
     
-    if (!response || !response.ok) {
-      throw lastError || new Error('API not available');
+    const endpoint = `${baseUrl}/api/search`;
+    console.log('🔗 API ga so\'rov:', endpoint, { telegram_id: telegramId, filters });
+    
+    const response = await fetch(endpoint, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ telegram_id: telegramId, filters }),
+      mode: 'cors'
+    });
+    
+    if (!response.ok) {
+      throw new Error(`HTTP xatolik: ${response.status}`);
     }
     
     const data = await response.json();
-    if (data.success && data.users) {
+    console.log('✅ API javob:', data);
+    
+    if (data.success && data.users && data.users.length > 0) {
       resultsEl.innerHTML = renderRealSearchResults(data.users, filters);
     } else {
       resultsEl.innerHTML = `<div class="empty-state"><div class="empty-icon">${ICONS.info}</div><h3>Hech kim topilmadi</h3><p>Iltimos, filtrlarni o'zgartiring va qayta urinib ko'ring.</p></div>`;
     }
   } catch (error) {
-    console.warn('API search failed, using demo data', error);
-    // Fallback to demo data
-    setTimeout(() => {
-      resultsEl.innerHTML = renderSearchResults(filters);
-    }, 500);
+    console.error('❌ API xatolik:', error);
+    // Faqat API ishlamaganda demo data ko'rsatish
+    showToast('Server bilan aloqa yo\'q, demo data ko\'rsatilmoqda');
+    resultsEl.innerHTML = renderSearchResults(filters);
   }
 }
 
