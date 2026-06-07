@@ -1,15 +1,18 @@
-// === TELEGRAM WEBAPP INIT ===
 const tg = window.Telegram?.WebApp;
 if (tg) {
   tg.ready();
   tg.expand();
-  tg.setHeaderColor('#1A73E8');
-  tg.setBackgroundColor('#F8FAFF');
+  // Eski versiyalarda qo'llab-quvvatlanmaydi, xatolik bermasligi uchun try/catch
+  try { tg.setHeaderColor('#1A73E8'); } catch(e) {}
+  try { tg.setBackgroundColor('#F8FAFF'); } catch(e) {}
 }
 
 const userId = tg?.initDataUnsafe?.user?.id || null;
 const userName = tg?.initDataUnsafe?.user?.username || '';
 const userFirstName = tg?.initDataUnsafe?.user?.first_name || '';
+
+console.log('🔍 DEBUG userId:', userId);
+console.log('🔍 DEBUG initDataUnsafe:', tg?.initDataUnsafe);
 
 // 🆕 BACKEND DOMENINGIZNI SHU YERGA YOZING
 // Masalan: 'https://your-bot.up.railway.app' yoki 'https://mybot.herokuapp.com'
@@ -248,6 +251,7 @@ function saveProfile() {
 }
 
 // === SEARCH ===
+// === SEARCH ===
 function doSearch() {
   const filters = {
     gender: selectedSearchGender || null,
@@ -260,42 +264,44 @@ function doSearch() {
   const resultsEl = document.getElementById('search-results');
   resultsEl.innerHTML = '<div class="loading"><div class="spinner"></div> Qidirilmoqda...</div>';
 
-  // Try to fetch from backend API
-  if (userId) {
-    fetchSearchResults(userId, filters);
-  } else {
-    // Fallback to demo data if no userId
-    setTimeout(() => {
-      resultsEl.innerHTML = renderSearchResults(filters);
-    }, 500);
-  }
+  console.log('🔍 doSearch called, effectiveUserId:', effectiveUserId);
+
+  // ✅ Har doim backend ga so'rov yuborish, userId bo'lmasa ham
+  fetchSearchResults(effectiveUserId, filters);
 }
 
+
+// === fetchSearchResults - TO'LIQ TO'G'RILANGAN ===
 async function fetchSearchResults(telegramId, filters) {
   const resultsEl = document.getElementById('search-results');
   
   try {
-    // 🆕 To'g'ri URL hosil qilish
-    let baseUrl;
-    if (API_BASE_URL) {
-      baseUrl = API_BASE_URL.replace(/\/$/, ''); // oxiridagi / ni olib tashlash
-    } else {
-      // WebApp va backend bir xil origin da bo'lsa
-      baseUrl = `${window.location.protocol}//${window.location.host}`;
-    }
-    
+    let baseUrl = API_BASE_URL ? API_BASE_URL.replace(/\/$/, '') : `${window.location.protocol}//${window.location.host}`;
     const endpoint = `${baseUrl}/api/search`;
-    console.log('🔗 API ga so\'rov:', endpoint, { telegram_id: telegramId, filters });
+    
+    console.log('🔗 API so\'rov:', endpoint, { telegram_id: telegramId, filters });
+
+    const requestBody = { 
+      telegram_id: telegramId || 0,  // ✅ null emas, 0 yuborish
+      filters: filters 
+    };
     
     const response = await fetch(endpoint, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ telegram_id: telegramId, filters }),
+      headers: { 
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      },
+      body: JSON.stringify(requestBody),
       mode: 'cors'
     });
     
+    console.log('📡 Response status:', response.status);
+
     if (!response.ok) {
-      throw new Error(`HTTP xatolik: ${response.status}`);
+      const errorText = await response.text();
+      console.error('❌ Server xatosi:', response.status, errorText);
+      throw new Error(`HTTP ${response.status}: ${errorText}`);
     }
     
     const data = await response.json();
@@ -304,13 +310,13 @@ async function fetchSearchResults(telegramId, filters) {
     if (data.success && data.users && data.users.length > 0) {
       resultsEl.innerHTML = renderRealSearchResults(data.users, filters);
     } else {
-      resultsEl.innerHTML = `<div class="empty-state"><div class="empty-icon">${ICONS.info}</div><h3>Hech kim topilmadi</h3><p>Iltimos, filtrlarni o'zgartiring va qayta urinib ko'ring.</p></div>`;
+      // ✅ Backend bo'sh natija qaytarganda demo data ko'rsatmaslik
+      resultsEl.innerHTML = `<div class="empty-state"><div class="empty-icon">${ICONS.info}</div><h3>Hech kim topilmadi</h3><p>Hozircha sizga mos foydalanuvchilar yo'q. Keyinroq qayta urinib ko'ring.</p></div>`;
     }
   } catch (error) {
     console.error('❌ API xatolik:', error);
-    // Faqat API ishlamaganda demo data ko'rsatish
-    showToast('Server bilan aloqa yo\'q, demo data ko\'rsatilmoqda');
-    resultsEl.innerHTML = renderSearchResults(filters);
+    // ❌ Xatolik bo'lsa ham demo data ko'rsatmaslik
+    resultsEl.innerHTML = `<div class="empty-state"><div class="empty-icon">${ICONS.alert}</div><h3>Server bilan aloqa yo'q</h3><p>Iltimos, internet ulanishingizni tekshiring va qayta urinib ko'ring.<br><small style="color:var(--gray-400)">${error.message}</small></p></div>`;
   }
 }
 
@@ -324,6 +330,8 @@ function renderRealSearchResults(users, filters) {
     return renderProfileCard(user);
   }).join('');
 }
+
+
 
 function renderSearchResults(filters) {
   const demos = [
