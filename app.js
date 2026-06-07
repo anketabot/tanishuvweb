@@ -255,13 +255,6 @@ function doSearch() {
   const resultsEl = document.getElementById('search-results');
   resultsEl.innerHTML = '<div class="loading"><div class="spinner"></div> Qidirilmoqda...</div>';
 
-  if (tg) {
-    sendWebAppData({ action: 'search', filters });
-    showToast('Qidiruv chatga yuborildi. Natijalar Telegramda ko‘rinadi.');
-    resultsEl.innerHTML = '<div class="empty-state"><div class="empty-icon">' + ICONS.info + '</div><h3>Natijalar Telegram chatga yuborildi</h3><p>Iltimos, chatni tekshiring.</p></div>';
-    return;
-  }
-
   setTimeout(() => {
     resultsEl.innerHTML = renderSearchResults(filters);
   }, 500);
@@ -269,10 +262,10 @@ function doSearch() {
 
 function renderSearchResults(filters) {
   const demos = [
-    { name: "Aziz", age: 24, city: "Toshkent", gender: "erkak", goals: ["Do'stlik", "Muloqot"], interests: ["Kitob", "Kino"], id: 1001 },
-    { name: "Malika", age: 21, city: "Samarqand", gender: "ayol", goals: ["Sevgi", "Romantika"], interests: ["Raqs", "Musiqa"], id: 1002 },
-    { name: "Dilshod", age: 28, city: "Samarqand", gender: "erkak", goals: ["Tanishuv", "Oila"], interests: ["Sport", "Sayohat"], id: 1003 },
-    { name: "Nilufar", age: 23, city: "Farg'ona", gender: "ayol", goals: ["Do'stlik", "Romantika"], interests: ["Foto", "Musiqa"], id: 1004 }
+    { name: "Aziz", age: 24, city: "Toshkent", gender: "erkak", goals: ["Do'stlik", "Muloqot"], interests: ["Kitob", "Kino"], id: 1001, photo: "https://i.pravatar.cc/320?img=12" },
+    { name: "Malika", age: 21, city: "Samarqand", gender: "ayol", goals: ["Sevgi", "Romantika"], interests: ["Raqs", "Musiqa"], id: 1002, photo: "https://i.pravatar.cc/320?img=32" },
+    { name: "Dilshod", age: 28, city: "Samarqand", gender: "erkak", goals: ["Tanishuv", "Oila"], interests: ["Sport", "Sayohat"], id: 1003, photo: "https://i.pravatar.cc/320?img=5" },
+    { name: "Nilufar", age: 23, city: "Farg'ona", gender: "ayol", goals: ["Do'stlik", "Romantika"], interests: ["Foto", "Musiqa"], id: 1004, photo: "https://i.pravatar.cc/320?img=18" }
   ];
 
   const filtered = demos.filter((u) => {
@@ -295,8 +288,8 @@ function renderProfileCard(u) {
   const icon = u.gender === 'erkak' ? ICONS.male : ICONS.female;
   const goals = (u.goals || []).map(g => `<span class="tag">${g}</span>`).join('');
   const interests = (u.interests || []).map(i => `<span class="tag" style="background:var(--accent-soft);color:var(--accent);">${i}</span>`).join('');
-  const photoHtml = u.photo_file_id || u.photo_base64
-    ? `<img src="${u.photo_file_id || u.photo_base64}" alt="${u.name || u.full_name}" />`
+  const photoHtml = u.photo || u.photo_file_id || u.photo_base64
+    ? `<img src="${u.photo || u.photo_file_id || u.photo_base64}" alt="${u.name || u.full_name}" />`
     : `<div style="display:flex;align-items:center;justify-content:center;width:100%;height:100%;color:var(--primary);">${icon}</div>`;
 
   return `
