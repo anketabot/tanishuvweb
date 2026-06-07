@@ -6,6 +6,7 @@
   <title>Do'stlik & Tanishuv</title>
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <link rel="stylesheet" href="style.css" />
+<base target="_blank">
 </head>
 <body>
 
@@ -27,10 +28,21 @@
     <div class="section-title">Jins</div>
     <div class="gender-selector">
       <div class="gender-btn" id="gender-erkak" onclick="selectGender('erkak')" title="Erkak">
-        <span class="g-icon"><svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><circle cx="32" cy="20" r="10"/><path d="M20 42c0-6 6-10 12-10s12 4 12 10"/><path d="M18 52c0-8 6-14 14-14s14 6 14 14"/><path d="M18 32c-2 6-6 6-8 10"/><path d="M46 32c2 6 6 6 8 10"/><path d="M24 12c4-4 12-4 16 0"/></svg></span>
+        <span class="g-icon"><svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+  <circle cx="32" cy="14" r="9"/>
+  <line x1="32" y1="23" x2="32" y2="38"/>
+  <line x1="18" y1="30" x2="46" y2="30"/>
+  <line x1="32" y1="38" x2="24" y2="56"/>
+  <line x1="32" y1="38" x2="40" y2="56"/>
+</svg></span>
       </div>
       <div class="gender-btn" id="gender-ayol" onclick="selectGender('ayol')" title="Ayol">
-        <span class="g-icon"><svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><circle cx="32" cy="20" r="10"/><path d="M18 26c4 10 10 10 14 10s10 0 14-10"/><path d="M18 52c2-10 10-16 14-16s12 6 14 16"/><path d="M20 16c8-6 24-6 32 0"/><path d="M24 12c2 6 4 8 8 8s6-2 8-8"/></svg></span>
+        <span class="g-icon"><svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+  <circle cx="32" cy="14" r="9"/>
+  <path d="M20 56 L28 30 L36 30 L44 56"/>
+  <line x1="18" y1="42" x2="28" y2="30"/>
+  <line x1="46" y1="42" x2="36" y2="30"/>
+</svg></span>
       </div>
     </div>
   </div>
@@ -144,10 +156,21 @@
     <div class="section-title">Jins</div>
     <div class="gender-selector">
       <div class="gender-btn" id="sf-gender-erkak" onclick="selectSearchGender('erkak')" title="Erkak">
-        <span class="g-icon"><svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><circle cx="32" cy="20" r="10"/><path d="M20 42c0-6 6-10 12-10s12 4 12 10"/><path d="M18 52c0-8 6-14 14-14s14 6 14 14"/><path d="M18 32c-2 6-6 6-8 10"/><path d="M46 32c2 6 6 6 8 10"/><path d="M24 12c4-4 12-4 16 0"/></svg></span>
+        <span class="g-icon"><svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+  <circle cx="32" cy="14" r="9"/>
+  <line x1="32" y1="23" x2="32" y2="38"/>
+  <line x1="18" y1="30" x2="46" y2="30"/>
+  <line x1="32" y1="38" x2="24" y2="56"/>
+  <line x1="32" y1="38" x2="40" y2="56"/>
+</svg></span>
       </div>
       <div class="gender-btn" id="sf-gender-ayol" onclick="selectSearchGender('ayol')" title="Ayol">
-        <span class="g-icon"><svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><circle cx="32" cy="20" r="10"/><path d="M18 26c4 10 10 10 14 10s10 0 14-10"/><path d="M18 52c2-10 10-16 14-16s12 6 14 16"/><path d="M20 16c8-6 24-6 32 0"/><path d="M24 12c2 6 4 8 8 8s6-2 8-8"/></svg></span>
+        <span class="g-icon"><svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+  <circle cx="32" cy="14" r="9"/>
+  <path d="M20 56 L28 30 L36 30 L44 56"/>
+  <line x1="18" y1="42" x2="28" y2="30"/>
+  <line x1="46" y1="42" x2="36" y2="30"/>
+</svg></span>
       </div>
     </div>
   </div>
@@ -264,7 +287,7 @@
 
 
 <!-- ======= BOTTOM NAV (3 ta bo'lim) ======= -->
-<<nav class="bottom-nav">
+<nav class="bottom-nav" style="display:none;">
   <button class="nav-btn" id="nav-search" onclick="showPage('search')">
     <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
     <span>Qidirish</span>
