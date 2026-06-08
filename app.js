@@ -133,6 +133,39 @@ function setSavedProfile(profile) {
   savedProfile = profile;
   if (profile) {
     localStorage.setItem('dating_profile', JSON.stringify(profile));
+  } else {
+    localStorage.removeItem('dating_profile');
+  }
+}
+
+async function saveProfileToServer(profile, telegramId) {
+  if (!telegramId) return false;
+
+  const baseUrl = API_BASE_URL ? API_BASE_URL.replace(/\/$/, '') : `${window.location.protocol}//${window.location.host}`;
+  const endpoint = `${baseUrl}/api/save_profile`;
+
+  try {
+    const response = await fetch(endpoint, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      },
+      body: JSON.stringify({ telegram_id: telegramId, profile }),
+      mode: 'cors'
+    });
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.warn('Save profile server xatosi:', response.status, errorText);
+      return false;
+    }
+
+    const data = await response.json();
+    return data.success === true;
+  } catch (error) {
+    console.warn('Save profile server xatosi:', error);
+    return false;
   }
 }
 
@@ -308,12 +341,17 @@ function saveProfile() {
 
   setSavedProfile(profile);
 
+  let serverSaved = false;
+  if (userId) {
+    serverSaved = await saveProfileToServer(profile, userId);
+  }
+
   if (tg) {
     sendWebAppData({ action: 'save_profile', profile });
   }
 
   setDefaultSearchGender();
-  showToast('Anketangiz muvaffaqiyatli saqlandi!');
+  showToast(serverSaved ? 'Anketa muvaffaqiyatli saqlandi!' : 'Anketa mahalliy saqlandi. Serverga yetib bormadi.');
   
   // Asosiy ilovaga o'tish
   document.querySelector('.bottom-nav').style.display = 'flex';
@@ -576,9 +614,16 @@ function showToast(msg, duration = 2500) {
 // === INIT ===
 async function init() {
   if (userId) {
-    const profile = await fetchUserProfile(userId);
-    if (profile) {
-      setSavedProfile(profile);
+    const serverProfile = await fetchUserProfile(userId);
+    const localProfile = getProfile();
+
+    if (serverProfile) {
+      if (!localProfile || JSON.stringify(localProfile) !== JSON.stringify(serverProfile)) {
+        setSavedProfile(serverProfile);
+      }
+    } else if (localProfile) {
+      setSavedProfile(null);
+      showToast('Serverda profil topilmadi, local profil o\'chirildi. Iltimos, qayta ro\'yxatdan o\'ting.');
     }
   }
 
