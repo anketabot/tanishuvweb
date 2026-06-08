@@ -6,14 +6,50 @@
   <title>Do'stlik & Tanishuv</title>
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <link rel="stylesheet" href="style.css" />
-<base target="_blank">
 </head>
 <body>
 
 <!-- TOAST -->
 <div class="toast" id="toast"></div>
 
-<!-- ======= PAGE: PROFILE (Anketa to'ldirish) ======= -->
+<!-- MATCH OVERLAY -->
+<div id="match-overlay" class="match-overlay" style="display:none;">
+  <div class="match-emoji">🎉</div>
+  <h2 class="match-title">Match!</h2>
+  <p class="match-sub">Endi muloqot boshlashingiz mumkin</p>
+  <button class="match-btn" onclick="closeMatchOverlay()">Ajoyib!</button>
+</div>
+
+<!-- PROFILE DETAIL MODAL -->
+<div id="profile-modal" class="modal-overlay" style="display:none;" onclick="closeProfileModal(event)">
+  <div class="modal-content" onclick="event.stopPropagation()">
+    <button class="modal-close" onclick="closeProfileModal()">✕</button>
+    <div id="profile-modal-body"></div>
+  </div>
+</div>
+
+<!-- CHAT ROOM MODAL -->
+<div id="chat-modal" class="chat-modal" style="display:none;">
+  <div class="chat-header">
+    <button class="chat-back" onclick="closeChatRoom()">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+    </button>
+    <div class="chat-user-info">
+      <img id="chat-user-photo" src="" alt="" />
+      <span id="chat-user-name">User</span>
+    </div>
+  </div>
+  <div class="chat-messages" id="chat-messages"></div>
+  <div class="chat-input-area">
+    <input type="text" id="chat-input" placeholder="Xabar yozing..." maxlength="500" onkeypress="if(event.key==='Enter')sendChatMessage()" />
+    <button class="chat-send-btn" onclick="sendChatMessage()">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+    </button>
+  </div>
+</div>
+
+
+<!-- ======= PAGE: PROFILE ======= -->
 <div class="page" id="page-profile">
   <div class="header">
     <div class="header-title">
@@ -23,31 +59,18 @@
     <div class="header-sub">O'zingiz haqingizda ma'lumot bering</div>
   </div>
 
-  <!-- JINS -->
   <div class="card">
     <div class="section-title">Jins</div>
     <div class="gender-selector">
       <div class="gender-btn" id="gender-erkak" onclick="selectGender('erkak')" title="Erkak">
-        <span class="g-icon"><svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
-  <circle cx="32" cy="14" r="9"/>
-  <line x1="32" y1="23" x2="32" y2="38"/>
-  <line x1="18" y1="30" x2="46" y2="30"/>
-  <line x1="32" y1="38" x2="24" y2="56"/>
-  <line x1="32" y1="38" x2="40" y2="56"/>
-</svg></span>
+        <span class="g-icon"><svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><circle cx="32" cy="14" r="9"/><line x1="32" y1="23" x2="32" y2="38"/><line x1="18" y1="30" x2="46" y2="30"/><line x1="32" y1="38" x2="24" y2="56"/><line x1="32" y1="38" x2="40" y2="56"/></svg></span>
       </div>
       <div class="gender-btn" id="gender-ayol" onclick="selectGender('ayol')" title="Ayol">
-        <span class="g-icon"><svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
-  <circle cx="32" cy="14" r="9"/>
-  <path d="M20 56 L28 30 L36 30 L44 56"/>
-  <line x1="18" y1="42" x2="28" y2="30"/>
-  <line x1="46" y1="42" x2="36" y2="30"/>
-</svg></span>
+        <span class="g-icon"><svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><circle cx="32" cy="14" r="9"/><path d="M20 56 L28 30 L36 30 L44 56"/><line x1="18" y1="42" x2="28" y2="30"/><line x1="46" y1="42" x2="36" y2="30"/></svg></span>
       </div>
     </div>
   </div>
 
-  <!-- ISM, YOSH, SHAHAR -->
   <div class="card">
     <div class="section-title">Asosiy ma'lumotlar</div>
     <div class="form-group">
@@ -60,13 +83,11 @@
     </div>
     <div class="form-group">
       <label class="form-label">Shahar / Tuman</label>
-      <input class="form-input" id="inp-city" type="text" placeholder="Yashash joyingiz" maxlength="80"
-        oninput="suggestCity(this.value)" autocomplete="off" />
+      <input class="form-input" id="inp-city" type="text" placeholder="Yashash joyingiz" maxlength="80" oninput="suggestCity(this.value)" autocomplete="off" />
       <div id="city-suggestions" class="suggestions-box" style="display:none;"></div>
     </div>
   </div>
 
-  <!-- BURJ -->
   <div class="card">
     <div class="section-title">Burjingiz</div>
     <select class="form-select" id="sel-zodiac">
@@ -86,7 +107,6 @@
     </select>
   </div>
 
-  <!-- QIZIQISHLAR -->
   <div class="card">
     <div class="section-title">Qiziqishlar</div>
     <div class="chips-wrap" id="interests-chips">
@@ -105,7 +125,6 @@
     </div>
   </div>
 
-  <!-- MAQSAD -->
   <div class="card">
     <div class="section-title">Maqsadingiz</div>
     <div class="chips-wrap" id="goals-chips">
@@ -120,7 +139,6 @@
     </div>
   </div>
 
-  <!-- FOTO -->
   <div class="card">
     <div class="section-title">Fotosurat</div>
     <div class="photo-upload" id="photo-upload-area" onclick="document.getElementById('photo-input').click()">
@@ -132,7 +150,6 @@
     <input type="file" id="photo-input" accept="image/*" style="display:none" onchange="previewPhoto(this)" />
   </div>
 
-  <!-- SAQLASH -->
   <div style="padding: 16px;">
     <button class="btn-primary" onclick="saveProfile()">
       <span class="btn-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span> Anketani saqlash
@@ -141,7 +158,7 @@
 </div>
 
 
-<!-- ======= PAGE: SEARCH (Qidirish) ======= -->
+<!-- ======= PAGE: SEARCH ======= -->
 <div class="page" id="page-search">
   <div class="header">
     <div class="header-title">
@@ -151,26 +168,14 @@
     <div class="header-sub">Filtrlar bilan qidiring</div>
   </div>
 
-  <!-- FILTRLAR -->
   <div class="card">
     <div class="section-title">Jins</div>
     <div class="gender-selector">
       <div class="gender-btn" id="sf-gender-erkak" onclick="selectSearchGender('erkak')" title="Erkak">
-        <span class="g-icon"><svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
-  <circle cx="32" cy="14" r="9"/>
-  <line x1="32" y1="23" x2="32" y2="38"/>
-  <line x1="18" y1="30" x2="46" y2="30"/>
-  <line x1="32" y1="38" x2="24" y2="56"/>
-  <line x1="32" y1="38" x2="40" y2="56"/>
-</svg></span>
+        <span class="g-icon"><svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><circle cx="32" cy="14" r="9"/><line x1="32" y1="23" x2="32" y2="38"/><line x1="18" y1="30" x2="46" y2="30"/><line x1="32" y1="38" x2="24" y2="56"/><line x1="32" y1="38" x2="40" y2="56"/></svg></span>
       </div>
       <div class="gender-btn" id="sf-gender-ayol" onclick="selectSearchGender('ayol')" title="Ayol">
-        <span class="g-icon"><svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
-  <circle cx="32" cy="14" r="9"/>
-  <path d="M20 56 L28 30 L36 30 L44 56"/>
-  <line x1="18" y1="42" x2="28" y2="30"/>
-  <line x1="46" y1="42" x2="36" y2="30"/>
-</svg></span>
+        <span class="g-icon"><svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><circle cx="32" cy="14" r="9"/><path d="M20 56 L28 30 L36 30 L44 56"/><line x1="18" y1="42" x2="28" y2="30"/><line x1="46" y1="42" x2="36" y2="30"/></svg></span>
       </div>
     </div>
   </div>
@@ -191,8 +196,7 @@
 
   <div class="card">
     <div class="section-title">Yashash joyi</div>
-    <input class="form-input" id="sf-city" type="text" placeholder="Shahar yoki tuman nomi" maxlength="80"
-      oninput="suggestCitySearch(this.value)" autocomplete="off" />
+    <input class="form-input" id="sf-city" type="text" placeholder="Shahar yoki tuman nomi" maxlength="80" oninput="suggestCitySearch(this.value)" autocomplete="off" />
     <div id="sf-city-suggestions" class="suggestions-box" style="display:none; margin-top:6px;"></div>
   </div>
 
@@ -216,8 +220,35 @@
     </button>
   </div>
 
-  <!-- NATIJALAR -->
   <div id="search-results"></div>
+</div>
+
+
+<!-- ======= PAGE: CHATS ======= -->
+<div class="page" id="page-chats">
+  <div class="header">
+    <div class="header-title">
+      <span class="header-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></span>
+      Muloqot
+    </div>
+    <div class="header-sub">Like lar va suhbatingiz</div>
+  </div>
+
+  <!-- Incoming Likes -->
+  <div id="incoming-likes-section" style="display:none;">
+    <div class="section-title" style="margin: 16px 16px 8px;">💖 Sizga Like bosganlar</div>
+    <div id="incoming-likes-list"></div>
+  </div>
+
+  <!-- Active Chats -->
+  <div class="section-title" style="margin: 16px 16px 8px;">💬 Muloqotlar</div>
+  <div id="chat-list"></div>
+
+  <div id="chats-empty" class="empty-state" style="display:none;">
+    <div class="empty-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></div>
+    <h3>Hali suhbatingiz yo'q</h3>
+    <p>Qidirish bo'limidan yangi do'stlar toping va like bosing!</p>
+  </div>
 </div>
 
 
@@ -241,11 +272,16 @@
 </div>
 
 
-<!-- ======= BOTTOM NAV (2 ta bo'lim) ======= -->
-<nav class="bottom-nav" style="display:none;">
+<!-- ======= BOTTOM NAV (3 ta bo'lim) ======= -->
+<<nav class="bottom-nav" style="display:none;">
   <button class="nav-btn" id="nav-search" onclick="showPage('search')">
     <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
     <span>Qidirish</span>
+  </button>
+  <button class="nav-btn" id="nav-chats" onclick="showPage('chats')" style="position:relative;">
+    <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+    <span>Chat</span>
+    <span class="nav-badge" id="chat-badge" style="display:none;">0</span>
   </button>
   <button class="nav-btn" id="nav-myprofile" onclick="showPage('myprofile')">
     <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
