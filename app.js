@@ -191,12 +191,15 @@ function showPage(name) {
   const navBtn = document.getElementById('nav-' + name);
   if (navBtn) navBtn.classList.add('active');
 
-  if (name === 'search') setDefaultSearchGender();
+  if (name === 'search') {
+    setDefaultSearchGender();
+    loadPendingLikesIndicator();
+  }
   if (name === 'myprofile') loadMyProfile();
   if (name === 'chats') loadChats();
 }
 
-// === GENDER SELECT ===
+// === SEARCH ===
 function selectGender(g) {
   selectedGender = g;
   document.getElementById('gender-erkak').classList.toggle('selected', g === 'erkak');
@@ -329,6 +332,80 @@ async function fetchSearchResults(telegramId, filters) {
   } catch (error) {
     showToast('Server bilan aloqa yo\'q');
     resultsEl.innerHTML = `<div class="empty-state"><div class="empty-icon">${ICONS.alert}</div><h3>Ulana olmadi</h3><p>Internet aloqasini tekshiring.</p></div>`;
+  }
+}
+
+async function loadPendingLikesIndicator() {
+  const badge = document.getElementById('search-likes-badge');
+  if (!badge || !userId) return;
+  const data = await apiPost('/api/likes/received', { telegram_id: userId });
+  const count = data.success ? (data.likes || []).length : 0;
+  if (count > 0) {
+    badge.textContent = count > 9 ? '9+' : count;
+    badge.style.display = 'inline-flex';
+  } else {
+    badge.style.display = 'none';
+  }
+}
+
+async function openIncomingLikesModal() {
+  const modal = document.getElementById('likes-modal');
+  const body = document.getElementById('likes-modal-body');
+  if (!modal || !body) return;
+  modal.style.display = 'flex';
+  body.innerHTML = '<div class="loading"><div class="spinner"></div> Yuklanmoqda...</div>';
+
+  const data = await apiPost('/api/likes/received', { telegram_id: userId });
+  if (!data.success) {
+    body.innerHTML = `<div class="empty-state"><div class="empty-icon">${ICONS.alert}</div><h3>Xatolik yuz berdi</h3><p>Qayta urinib ko'ring.</p></div>`;
+    return;
+  }
+
+  const likes = data.likes || [];
+  if (!likes.length) {
+    body.innerHTML = `<div class="empty-state"><div class="empty-icon">${ICONS.info}</div><h3>Hozircha like yo'q</h3><p>Sizga hali hech kim like yubormagan.</p></div>`;
+    return;
+  }
+
+  body.innerHTML = `
+    <div class="section-title" style="margin-top:0;">Sizga like yuborganlar</div>
+    <div class="likes-modal-body">
+      ${likes.map(u => {
+        const photo = u.photo_base64 || u.photo_file_id || '';
+        return `
+          <div class="like-notification-card" onclick="showProfileDetail(${JSON.stringify(u).replace(/"/g,'&quot;')}); closeLikesModal();">
+            <div class="like-notification-photo">
+              ${photo ? `<img src="${photo}" alt="${escapeJs(u.full_name)}" />` : `${u.gender === 'erkak' ? ICONS.male : ICONS.female}`}
+            </div>
+            <div class="like-notification-info">
+              <div>
+                <strong>${u.full_name}</strong>
+                <div class="like-notification-meta">${u.age} yosh • ${u.city}</div>
+              </div>
+              <div class="like-notification-actions">
+                <button class="like-btn" onclick="event.stopPropagation(); acceptLike(${u.telegram_id}, '${escapeJs(u.full_name)}', '${escapeJs(photo)}'); closeLikesModal();">Qabul</button>
+                <button class="reject-btn" onclick="event.stopPropagation(); rejectLike(${u.telegram_id}, '${escapeJs(u.full_name)}');">Rad etish</button>
+              </div>
+            </div>
+          </div>`;
+      }).join('')}
+    </div>`;
+}
+
+function closeLikesModal(e) {
+  if (e && e.target !== e.currentTarget) return;
+  document.getElementById('likes-modal').style.display = 'none';
+}
+
+async function rejectLike(fromUserId, name) {
+  if (!userId) return;
+  const data = await apiPost('/api/likes/reject', { telegram_id: userId, from_user: fromUserId });
+  if (data.success) {
+    showToast(`Siz ${name} ni rad qildingiz.`);
+    loadPendingLikesIndicator();
+    openIncomingLikesModal();
+  } else {
+    showToast('Xatolik yuz berdi. Iltimos qayta urinib ko‘ring.');
   }
 }
 
@@ -543,6 +620,7 @@ async function acceptLike(fromUserId, name, photo) {
   if (data.success && data.match_id) {
     showMatchOverlay();
     loadChats();
+    loadPendingLikesIndicator();
     setTimeout(() => {
       openChatRoom(data.match_id, name, photo);
     }, 800);
