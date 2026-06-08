@@ -43,10 +43,20 @@
       }
     }
 
+    function detectOrigin() {
+      if (window.location.protocol === 'file:') {
+        showStatus('⚠️ Eslatma: bu sahifa local fayl sifatida ochilgan. Bu faqat file:// origin uchun storage ni tozalaydi. Telegram Web App uchun ushbu sahifani web app domeni (https://.../clear_storage.html) orqali oching.');
+        clearBtn.disabled = true;
+        return false;
+      }
+      return true;
+    }
+
     clearBtn.addEventListener('click', clearStorage);
 
-    // Avvaldan tozalashni avtomatik bajarish
-    clearStorage();
+    if (detectOrigin()) {
+      clearStorage();
+    }
   </script>
 </body>
 </html>
