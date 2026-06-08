@@ -2,12 +2,10 @@ const tg = window.Telegram?.WebApp;
 if (tg) {
   tg.ready();
   tg.expand();
-  // Eski versiyalarda qo'llab-quvvatlanmaydi, xatolik bermasligi uchun try/catch
   try { tg.setHeaderColor('#1A73E8'); } catch(e) {}
   try { tg.setBackgroundColor('#F8FAFF'); } catch(e) {}
 }
 
-// 🆕 MUSTAHKAM userId TOPISH
 let userId = null;
 let userName = '';
 let userFirstName = '';
@@ -16,9 +14,7 @@ if (tg?.initDataUnsafe?.user?.id) {
   userId = tg.initDataUnsafe.user.id;
   userName = tg.initDataUnsafe.user.username || '';
   userFirstName = tg.initDataUnsafe.user.first_name || '';
-  console.log('✅ userId topildi (initDataUnsafe):', userId);
 } else if (tg?.initData) {
-  // initData'dan user ma'lumotini chiqarish
   const params = new URLSearchParams(tg.initData);
   const userJson = params.get('user');
   if (userJson) {
@@ -27,27 +23,15 @@ if (tg?.initDataUnsafe?.user?.id) {
       userId = user.id;
       userName = user.username || '';
       userFirstName = user.first_name || '';
-      console.log('✅ userId topildi (initData parsing):', userId);
-    } catch (e) {
-      console.warn('⚠️ initData parse xatosi:', e);
-    }
+    } catch (e) {}
   }
 }
 
-// TEST MODEIDA AYLANIB KETSA
 if (!userId && localStorage.getItem('dating_profile')) {
-  userId = 123456789; // Test user ID
-  console.warn('🧪 TEST MODEIDA: Demo user ID ishlatilmoqda:', userId);
+  userId = 123456789;
 }
 
-console.log('🔍 DEBUG userId:', userId);
-console.log('🔍 DEBUG initDataUnsafe:', tg?.initDataUnsafe);
-console.log('🔍 DEBUG initData:', tg?.initData?.substring(0, 50) + '...');
-
-// 🆕 BACKEND DOMENINGIZNI SHU YERGA YOZING
-// Masalan: 'https://your-bot.up.railway.app' yoki 'https://mybot.herokuapp.com'
-// Agar WebApp va backend bir xil serverda bo'lsa, bo'sh qoldiring ('')
-const API_BASE_URL = 'https://tanishuvbot-production.up.railway.app';  // TAHRIRLASHTIRING: Backend domeningiz
+const API_BASE_URL = 'https://tanishuvbot-production.up.railway.app';
 
 const MAX_WEBAPP_DATA_SIZE = 6000;
 
@@ -58,7 +42,6 @@ function sendWebAppData(payload) {
     tg.sendData(json);
     return;
   }
-
   if (payload.action === 'save_profile' && payload.profile) {
     const safeProfile = { ...payload.profile, photo_base64: null };
     const safePayload = { ...payload, profile: safeProfile };
@@ -69,11 +52,9 @@ function sendWebAppData(payload) {
       return;
     }
   }
-
-  showToast('Xatolik: ma\'lumot juda uzun. Iltimos, rasm hajmini kamaytiring.');
+  showToast('Xatolik: ma\'lumot juda uzun.');
 }
 
-// === SVG ICONS ===
 const ICONS = {
   search: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>`,
   user: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>`,
@@ -97,14 +78,12 @@ const ICONS = {
   x: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>`
 };
 
-// === STATE ===
 let selectedGender = '';
 let selectedSearchGender = '';
 let selectedInterests = [];
 let selectedGoals = [];
 let selectedSearchGoals = [];
 let photoBase64 = '';
-let currentSearchResults = [];
 let savedProfile = null;
 
 const uzbekCities = [
@@ -118,7 +97,12 @@ const uzbekCities = [
   "Pop", "Toyloq", "Kattaqo'rg'on", "Urgut", "Payariq", "Paxtakor"
 ];
 
-// === REGISTRATION CHECK ===
+// Chat state
+let currentChatMatchId = null;
+let currentChatPartner = null;
+let chatRefreshInterval = null;
+let chatsPollInterval = null;
+
 function isRegistered() {
   return !!getProfile();
 }
@@ -138,68 +122,30 @@ function setSavedProfile(profile) {
   }
 }
 
-async function saveProfileToServer(profile, telegramId) {
-  if (!telegramId) return false;
-
+async function apiPost(endpoint, body) {
   const baseUrl = API_BASE_URL ? API_BASE_URL.replace(/\/$/, '') : `${window.location.protocol}//${window.location.host}`;
-  const endpoint = `${baseUrl}/api/save_profile`;
-
   try {
-    const response = await fetch(endpoint, {
+    const res = await fetch(`${baseUrl}${endpoint}`, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json'
-      },
-      body: JSON.stringify({ telegram_id: telegramId, profile }),
+      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+      body: JSON.stringify(body),
       mode: 'cors'
     });
-
-    if (!response.ok) {
-      const errorText = await response.text();
-      console.warn('Save profile server xatosi:', response.status, errorText);
-      return false;
-    }
-
-    const data = await response.json();
-    return data.success === true;
-  } catch (error) {
-    console.warn('Save profile server xatosi:', error);
-    return false;
+    return await res.json();
+  } catch (e) {
+    console.error('API error:', e);
+    return { success: false, error: e.message };
   }
 }
 
+async function saveProfileToServer(profile, telegramId) {
+  const data = await apiPost('/api/save_profile', { telegram_id: telegramId, profile });
+  return data.success === true;
+}
+
 async function fetchUserProfile(telegramId) {
-  if (!telegramId) return null;
-
-  const baseUrl = API_BASE_URL ? API_BASE_URL.replace(/\/$/, '') : `${window.location.protocol}//${window.location.host}`;
-  const endpoint = `${baseUrl}/api/profile`;
-
-  try {
-    const response = await fetch(endpoint, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json'
-      },
-      body: JSON.stringify({ telegram_id: telegramId }),
-      mode: 'cors'
-    });
-
-    if (!response.ok) {
-      console.warn('Profile API xatosi:', response.status);
-      return null;
-    }
-
-    const data = await response.json();
-    if (data.success && data.user) {
-      return data.user;
-    }
-  } catch (error) {
-    console.warn('Profile API fetch xatosi:', error);
-  }
-
-  return null;
+  const data = await apiPost('/api/profile', { telegram_id: telegramId });
+  return data.success ? data.user : null;
 }
 
 // === CITY SUGGEST ===
@@ -224,20 +170,14 @@ function showSuggestions(containerId, val, onSelect) {
   if (!filtered.length) { box.style.display = 'none'; return; }
 
   box.innerHTML = filtered.map(c =>
-    `<div class="suggestion-item" onclick="(${onSelect.toString()})('${c}')">${c}</div>`
+    `<div class="suggestion-item" onclick="window._sugg_${containerId} && window._sugg_${containerId}('${c}')">${c}</div>`
   ).join('');
+  window[`_sugg_${containerId}`] = (city) => {
+    onSelect(city);
+    box.style.display = 'none';
+  };
   box.style.display = 'block';
 }
-
-// Suggestion styles (injected dynamically)
-const suggStyle = document.createElement('style');
-suggStyle.textContent = `
-  .suggestions-box { background: white; border: 2px solid var(--border); border-radius: 10px; overflow: hidden; margin-top: 4px; }
-  .suggestion-item { padding: 10px 16px; font-size: 14px; font-weight: 600; color: var(--text); cursor: pointer; border-bottom: 1px solid var(--gray-100); }
-  .suggestion-item:last-child { border-bottom: none; }
-  .suggestion-item:active { background: var(--primary-ultra-light); color: var(--primary); }
-`;
-document.head.appendChild(suggStyle);
 
 // === PAGE NAVIGATION ===
 function showPage(name) {
@@ -252,6 +192,7 @@ function showPage(name) {
 
   if (name === 'search') setDefaultSearchGender();
   if (name === 'myprofile') loadMyProfile();
+  if (name === 'chats') loadChats();
 }
 
 // === GENDER SELECT ===
@@ -274,9 +215,7 @@ function selectSearchGender(g) {
 function setDefaultSearchGender() {
   const profile = getProfile();
   const opposite = profile ? getOppositeGender(profile.gender) : '';
-  if (opposite) {
-    selectSearchGender(opposite);
-  }
+  if (opposite) selectSearchGender(opposite);
 }
 
 // === CHIP TOGGLE ===
@@ -351,18 +290,15 @@ async function saveProfile() {
   }
 
   setDefaultSearchGender();
-  showToast(serverSaved ? 'Anketa muvaffaqiyatli saqlandi!' : 'Anketa mahalliy saqlandi. Serverga yetib bormadi.');
+  showToast(serverSaved ? 'Anketa muvaffaqiyatli saqlandi!' : 'Anketa mahalliy saqlandi.');
   
-  // Asosiy ilovaga o'tish
   document.querySelector('.bottom-nav').style.display = 'flex';
   showPage('search');
 }
 
 // === SEARCH ===
 function doSearch() {
-  // 🆕 FAQAT TO'LDIRILGAN FILTERLARNI YUBORING (null qiymatlarni olib tashlash)
   const filters = {};
-  
   if (selectedSearchGender) filters.gender = selectedSearchGender;
   const ageFrom = document.getElementById('sf-age-from').value?.trim();
   if (ageFrom) filters.age_from = parseInt(ageFrom);
@@ -375,158 +311,325 @@ function doSearch() {
   const resultsEl = document.getElementById('search-results');
   resultsEl.innerHTML = '<div class="loading"><div class="spinner"></div> Qidirilmoqda...</div>';
 
-  console.log('🔍 Qidiruv filteri:', filters);
-  console.log('👤 User ID:', userId);
-
-  const searchId = userId || 0;
-  fetchSearchResults(searchId, filters);
+  fetchSearchResults(userId || 0, filters);
 }
 
-
-// === fetchSearchResults - TO'LIQ TO'G'RILANGAN ===
 async function fetchSearchResults(telegramId, filters) {
   const resultsEl = document.getElementById('search-results');
   
   try {
-    let baseUrl = API_BASE_URL ? API_BASE_URL.replace(/\/$/, '') : `${window.location.protocol}//${window.location.host}`;
-    const endpoint = `${baseUrl}/api/search`;
-    
-    console.log('🔗 API so\'rov:', endpoint, { telegram_id: telegramId, filters });
-    const requestBody = { 
-      telegram_id: telegramId || 0,  // ✅ null emas, 0 yuborish
-      filters: filters 
-    };
-    
-    const response = await fetch(endpoint, {
-      method: 'POST',
-      headers: { 
-        'Content-Type': 'application/json',
-        'Accept': 'application/json'
-      },
-      body: JSON.stringify(requestBody),
-      mode: 'cors'
-    });
-    
-    console.log('📡 Response status:', response.status);
-
-    if (!response.ok) {
-      const errorText = await response.text();
-      console.error('❌ Server xatosi:', response.status, errorText);
-      throw new Error(`HTTP ${response.status}: ${errorText}`);
-    }
-    
-    const data = await response.json();
-    console.log('✅ API javob:', data);
+    const data = await apiPost('/api/search', { telegram_id: telegramId || 0, filters });
     
     if (data.success && data.users && data.users.length > 0) {
-      resultsEl.innerHTML = renderRealSearchResults(data.users, filters);
+      resultsEl.innerHTML = data.users.map(u => renderProfileCard(u)).join('');
     } else {
-      // ✅ Backend bo'sh natija qaytarganda demo data ko'rsatmaslik
       resultsEl.innerHTML = `<div class="empty-state"><div class="empty-icon">${ICONS.info}</div><h3>Hech kim topilmadi</h3><p>Hozircha sizga mos foydalanuvchilar yo'q. Keyinroq qayta urinib ko'ring.</p></div>`;
     }
   } catch (error) {
-    console.error('❌ API xatolik:', error);
-    // API ishlamaganda, demo data bilan fallback
-    showToast('Server bilan aloqa yo\'q, demo data ko\'rsatilmoqda');
-    resultsEl.innerHTML = renderSearchResults(filters);
+    showToast('Server bilan aloqa yo\'q');
+    resultsEl.innerHTML = `<div class="empty-state"><div class="empty-icon">${ICONS.alert}</div><h3>Ulana olmadi</h3><p>Internet aloqasini tekshiring.</p></div>`;
   }
-}
-
-function renderRealSearchResults(users, filters) {
-  if (!users || users.length === 0) {
-    return `<div class="empty-state"><div class="empty-icon">${ICONS.info}</div><h3>Hech kim topilmadi</h3><p>Iltimos, filtrlarni o'zgartiring va qayta urinib ko'ring.</p></div>`;
-  }
-
-  return users.map(u => {
-    const user = { ...u, id: u.telegram_id };
-    return renderProfileCard(user);
-  }).join('');
-}
-
-
-
-function renderSearchResults(filters) {
-  const demos = [
-    { name: "Aziz", age: 24, city: "Toshkent", gender: "erkak", goals: ["Do'stlik", "Muloqot"], interests: ["Kitob", "Kino"], id: 1001, photo: "https://i.pravatar.cc/320?img=12" },
-    { name: "Malika", age: 21, city: "Samarqand", gender: "ayol", goals: ["Sevgi", "Romantika"], interests: ["Raqs", "Musiqa"], id: 1002, photo: "https://i.pravatar.cc/320?img=32" },
-    { name: "Dilshod", age: 28, city: "Samarqand", gender: "erkak", goals: ["Tanishuv", "Oila"], interests: ["Sport", "Sayohat"], id: 1003, photo: "https://i.pravatar.cc/320?img=5" },
-    { name: "Nilufar", age: 23, city: "Farg'ona", gender: "ayol", goals: ["Do'stlik", "Romantika"], interests: ["Foto", "Musiqa"], id: 1004, photo: "https://i.pravatar.cc/320?img=18" }
-  ];
-
-  const filtered = demos.filter((u) => {
-    if (filters.gender && u.gender !== filters.gender) return false;
-    if (filters.age_from && u.age < Number(filters.age_from)) return false;
-    if (filters.age_to && u.age > Number(filters.age_to)) return false;
-    if (filters.city && !u.city.toLowerCase().includes(filters.city.toLowerCase())) return false;
-    if (filters.goals && filters.goals.length && !filters.goals.some(g => u.goals.includes(g))) return false;
-    return true;
-  });
-
-  if (!filtered.length) {
-    return `<div class="empty-state"><div class="empty-icon">${ICONS.info}</div><h3>Hech kim topilmadi</h3><p>Iltimos, filtrlarni o'zgartiring va qayta urinib ko'ring.</p></div>`;
-  }
-
-  return filtered.map(u => renderProfileCard(u)).join('');
 }
 
 function renderProfileCard(u) {
   const icon = u.gender === 'erkak' ? ICONS.male : ICONS.female;
   const goals = (u.goals || []).map(g => `<span class="tag">${g}</span>`).join('');
   const interests = (u.interests || []).map(i => `<span class="tag" style="background:var(--accent-soft);color:var(--accent);">${i}</span>`).join('');
-  const photoHtml = u.photo || u.photo_file_id || u.photo_base64
-    ? `<img src="${u.photo || u.photo_file_id || u.photo_base64}" alt="${u.name || u.full_name}" />`
+  const photo = u.photo || u.photo_file_id || u.photo_base64;
+  const photoHtml = photo
+    ? `<img src="${photo}" alt="${u.full_name}" loading="lazy" />`
     : `<div style="display:flex;align-items:center;justify-content:center;width:100%;height:100%;color:var(--primary);">${icon}</div>`;
 
+  const writeBtn = u.can_write
+    ? `<button class="action-btn btn-write" onclick="event.stopPropagation(); initiateChat(${u.telegram_id}, '${escapeJs(u.full_name)}', '${escapeJs(photo || '')}')">
+         <span class="btn-icon">${ICONS.message}</span> Yozish
+       </button>`
+    : `<button class="action-btn btn-write" onclick="event.stopPropagation(); showWriteRequirement()" style="opacity:0.5;">
+         <span class="btn-icon">${ICONS.message}</span> Yozish
+       </button>`;
+
   return `
-  <div class="profile-card">
+  <div class="profile-card" onclick="showProfileDetail(${JSON.stringify(u).replace(/"/g, '&quot;')})">
     <div class="profile-photo">${photoHtml}</div>
     <div class="profile-info">
-      <div class="profile-name"><span style="display:inline-flex;vertical-align:middle;margin-right:6px;">${icon}</span> ${u.name || u.full_name}</div>
+      <div class="profile-name"><span style="display:inline-flex;vertical-align:middle;margin-right:6px;">${icon}</span> ${u.full_name}</div>
       <div class="profile-age-city">Yosh: ${u.age} &nbsp;•&nbsp; Shahar: ${u.city}</div>
       <div class="profile-tags" style="margin-top:8px;">${goals}${interests}</div>
     </div>
     <div class="profile-actions">
-      <button class="action-btn btn-like" onclick="sendLike(${u.id || u.telegram_id})">
+      <button class="action-btn btn-like" onclick="event.stopPropagation(); sendLike(${u.telegram_id})">
         <span class="btn-icon">${ICONS.heart}</span> Like
       </button>
-      <button class="action-btn btn-write" onclick="sendWrite(${u.id || u.telegram_id})">
-        <span class="btn-icon">${ICONS.message}</span> Yozish
-      </button>
-      <button class="action-btn btn-block" onclick="sendBlock(${u.id || u.telegram_id})">
+      ${writeBtn}
+      <button class="action-btn btn-block" onclick="event.stopPropagation(); sendBlock(${u.telegram_id})">
         <span class="btn-icon">${ICONS.ban}</span> Blok
       </button>
     </div>
   </div>`;
 }
 
+function escapeJs(str) {
+  if (!str) return '';
+  return str.replace(/'/g, "\\'").replace(/"/g, '\\"');
+}
+
+function showWriteRequirement() {
+  showToast('Yozish uchun 2 ta do\'st taklif qiling yoki o\'zaro like bosing!');
+}
+
+// === PROFILE DETAIL MODAL ===
+function showProfileDetail(user) {
+  const modal = document.getElementById('profile-modal');
+  const body = document.getElementById('profile-modal-body');
+  
+  const icon = user.gender === 'erkak' ? ICONS.male : ICONS.female;
+  const goals = (user.goals || []).map(g => `<span class="tag">${g}</span>`).join('');
+  const interests = (user.interests || []).map(i => `<span class="tag" style="background:var(--accent-soft);color:var(--accent);">${i}</span>`).join('');
+  const photo = user.photo || user.photo_file_id || user.photo_base64;
+
+  body.innerHTML = `
+    <div style="text-align:center; margin-bottom:24px;">
+      <div style="width:130px;height:130px;border-radius:50%;margin:0 auto;overflow:hidden;background:linear-gradient(135deg, var(--primary-ultra-light), var(--gray-200));box-shadow:var(--shadow);">
+        ${photo ? `<img src="${photo}" style="width:100%;height:100%;object-fit:cover;" />` : `<div style="display:flex;align-items:center;justify-content:center;height:100%;">${icon}</div>`}
+      </div>
+      <h2 style="margin-top:16px;font-family:var(--font-main);font-size:24px;">${user.full_name}</h2>
+      <p style="color:var(--text-muted);font-size:15px;margin-top:4px;">${user.age} yosh • ${user.city} • ${user.zodiac || ''}</p>
+    </div>
+    <div style="margin-bottom:20px;">
+      <div class="section-title">Maqsad</div>
+      <div class="profile-tags">${goals}</div>
+    </div>
+    <div style="margin-bottom:24px;">
+      <div class="section-title">Qiziqishlar</div>
+      <div class="profile-tags">${interests}</div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+      <button class="btn-primary" onclick="sendLike(${user.telegram_id}); closeProfileModal();" style="padding:14px;">
+        <span class="btn-icon">${ICONS.heart}</span> Like
+      </button>
+      ${user.can_write ? `
+      <button class="btn-secondary" onclick="initiateChat(${user.telegram_id}, '${escapeJs(user.full_name)}', '${escapeJs(photo || '')}'); closeProfileModal();" style="padding:14px;">
+        <span class="btn-icon">${ICONS.message}</span> Yozish
+      </button>
+      ` : `
+      <button class="btn-secondary" onclick="showWriteRequirement();" style="padding:14px;opacity:0.6;">
+        <span class="btn-icon">${ICONS.message}</span> Yozish
+      </button>
+      `}
+    </div>
+  `;
+  
+  modal.style.display = 'flex';
+}
+
+function closeProfileModal(e) {
+  if (e && e.target !== e.currentTarget) return;
+  document.getElementById('profile-modal').style.display = 'none';
+}
+
 // === ACTIONS ===
 function sendLike(toUser) {
   if (tg) {
     tg.sendData(JSON.stringify({ action: 'like_user', to_user: toUser }));
-    showToast('Like yuborildi!');
-  } else {
-    showToast('Like yuborildi!');
   }
-}
-
-function sendWrite(toUser) {
-  if (tg) {
-    tg.sendData(JSON.stringify({ action: 'check_write', to_user: toUser }));
-    showToast('Tekshirilmoqda...');
-  } else {
-    showToast('Yozish tekshirildi!');
-  }
+  showToast('Like yuborildi! 💙');
 }
 
 function sendBlock(blockedId) {
   if (confirm('Bu foydalanuvchini bloklamoqchimisiz?')) {
     if (tg) {
       tg.sendData(JSON.stringify({ action: 'block_user', blocked_id: blockedId }));
-      showToast('Bloklandi!');
-    } else {
-      showToast('Bloklandi!');
     }
+    showToast('Bloklandi!');
   }
+}
+
+async function initiateChat(toUserId, name, photo) {
+  if (!userId) return;
+  
+  const data = await apiPost('/api/initiate_chat', { from_user: userId, to_user: toUserId });
+  if (data.success && data.match_id) {
+    openChatRoom(data.match_id, name, photo);
+  } else {
+    showToast('Yozish uchun 2 ta do\'st taklif qiling yoki o\'zaro like bosing!');
+  }
+}
+
+// === CHATS PAGE ===
+async function loadChats() {
+  if (!userId) return;
+  
+  const [likesData, matchesData] = await Promise.all([
+    apiPost('/api/likes/received', { telegram_id: userId }),
+    apiPost('/api/matches', { telegram_id: userId })
+  ]);
+
+  const likes = likesData.success ? likesData.likes : [];
+  const matches = matchesData.success ? matchesData.matches : [];
+
+  renderIncomingLikes(likes);
+  renderChatList(matches);
+
+  const badge = document.getElementById('chat-badge');
+  const totalCount = likes.length;
+  if (totalCount > 0) {
+    badge.textContent = totalCount > 9 ? '9+' : totalCount;
+    badge.style.display = 'block';
+  } else {
+    badge.style.display = 'none';
+  }
+}
+
+function renderIncomingLikes(likes) {
+  const section = document.getElementById('incoming-likes-section');
+  const list = document.getElementById('incoming-likes-list');
+  
+  if (!likes.length) {
+    section.style.display = 'none';
+    return;
+  }
+  
+  section.style.display = 'block';
+  list.innerHTML = likes.map(u => {
+    const photo = u.photo_base64 || u.photo_file_id || '';
+    return `
+    <div class="like-item">
+      <img class="like-item-photo" src="${photo}" alt="" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+      <div style="display:none;align-items:center;justify-content:center;width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg, var(--primary-ultra-light), var(--gray-200));flex-shrink:0;color:var(--primary);">
+        ${u.gender === 'erkak' ? ICONS.male : ICONS.female}
+      </div>
+      <div class="like-item-info">
+        <div class="like-item-name">${u.full_name}, ${u.age}</div>
+        <div class="like-item-details">${u.city}</div>
+      </div>
+      <div class="like-actions">
+        <button class="like-btn accept" onclick="acceptLike(${u.telegram_id}, '${escapeJs(u.full_name)}', '${escapeJs(photo)}')">Qabul</button>
+        <button class="like-btn reject" onclick="skipLike(${u.telegram_id})">O'tkaz</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function renderChatList(matches) {
+  const list = document.getElementById('chat-list');
+  const empty = document.getElementById('chats-empty');
+  
+  if (!matches.length) {
+    list.innerHTML = '';
+    empty.style.display = 'block';
+    return;
+  }
+  
+  empty.style.display = 'none';
+  list.innerHTML = matches.map(m => {
+    const photo = m.photo_base64 || m.photo_file_id || '';
+    return `
+    <div class="chat-list-item" onclick="openChatRoom(${m.match_id}, '${escapeJs(m.full_name)}', '${escapeJs(photo)}')">
+      <img class="chat-list-photo" src="${photo}" alt="" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+      <div style="display:none;align-items:center;justify-content:center;width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg, var(--primary-ultra-light), var(--gray-200));flex-shrink:0;color:var(--primary);">
+        ${m.gender === 'erkak' ? ICONS.male : ICONS.female}
+      </div>
+      <div class="chat-list-info">
+        <div class="chat-list-name">${m.full_name}</div>
+        <div class="chat-list-preview">Suhbatni boshlash uchun bosing</div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+async function acceptLike(fromUserId, name, photo) {
+  const data = await apiPost('/api/likes/accept', { telegram_id: userId, from_user: fromUserId });
+  if (data.success && data.match_id) {
+    showMatchOverlay();
+    loadChats();
+    setTimeout(() => {
+      openChatRoom(data.match_id, name, photo);
+    }, 800);
+  } else {
+    showToast('Xatolik yuz berdi');
+  }
+}
+
+async function skipLike(fromUserId) {
+  // Just hide for now (could add reject API)
+  showToast('O\'tkazib yuborildi');
+  loadChats();
+}
+
+function showMatchOverlay() {
+  document.getElementById('match-overlay').style.display = 'flex';
+}
+
+function closeMatchOverlay() {
+  document.getElementById('match-overlay').style.display = 'none';
+}
+
+// === CHAT ROOM ===
+async function openChatRoom(matchId, name, photo) {
+  currentChatMatchId = matchId;
+  currentChatPartner = { name, photo };
+  
+  document.getElementById('chat-user-name').textContent = name;
+  document.getElementById('chat-user-photo').src = photo || '';
+  document.getElementById('chat-modal').style.display = 'flex';
+  document.getElementById('chat-input').focus();
+  
+  await loadChatMessages(matchId);
+  
+  if (chatRefreshInterval) clearInterval(chatRefreshInterval);
+  chatRefreshInterval = setInterval(() => loadChatMessages(matchId), 3000);
+}
+
+async function loadChatMessages(matchId) {
+  const data = await apiPost('/api/chat/messages', { match_id: matchId });
+  if (data.success) {
+    renderMessages(data.messages);
+  }
+}
+
+function renderMessages(messages) {
+  const container = document.getElementById('chat-messages');
+  const wasAtBottom = container.scrollTop + container.clientHeight >= container.scrollHeight - 20;
+  
+  container.innerHTML = messages.map(m => `
+    <div class="chat-bubble ${m.sender_id == userId ? 'me' : 'them'}">
+      ${escapeHtml(m.message)}
+      <div class="chat-time">${new Date(m.created_at).toLocaleTimeString('uz-UZ', {hour: '2-digit', minute:'2-digit'})}</div>
+    </div>
+  `).join('');
+  
+  if (wasAtBottom || messages.length <= 5) {
+    container.scrollTop = container.scrollHeight;
+  }
+}
+
+async function sendChatMessage() {
+  const input = document.getElementById('chat-input');
+  const text = input.value.trim();
+  if (!text || !currentChatMatchId) return;
+  
+  const data = await apiPost('/api/chat/send', {
+    match_id: currentChatMatchId,
+    sender_id: userId,
+    message: text
+  });
+  
+  if (data.success) {
+    input.value = '';
+    await loadChatMessages(currentChatMatchId);
+  }
+}
+
+function closeChatRoom() {
+  document.getElementById('chat-modal').style.display = 'none';
+  if (chatRefreshInterval) clearInterval(chatRefreshInterval);
+  currentChatMatchId = null;
+}
+
+function escapeHtml(text) {
+  const div = document.createElement('div');
+  div.textContent = text;
+  return div.innerHTML;
 }
 
 // === MY PROFILE ===
@@ -602,7 +705,6 @@ function loadMyProfile() {
     </div>`;
 }
 
-
 // === TOAST ===
 function showToast(msg, duration = 2500) {
   const toast = document.getElementById('toast');
@@ -623,23 +725,33 @@ async function init() {
       }
     } else if (localProfile) {
       setSavedProfile(null);
-      showToast('Serverda profil topilmadi, local profil o\'chirildi. Iltimos, qayta ro\'yxatdan o\'ting.');
+      showToast('Serverda profil topilmadi, qayta ro\'yxatdan o\'ting.');
     }
   }
 
   if (!isRegistered()) {
-    // Birinchi marta: anketa ko'rsatish, menyu yashirish
     showPage('profile');
     document.querySelector('.bottom-nav').style.display = 'none';
   } else {
-    // Ro'yxatdan o'tgan: asosiy ilova
     const params = new URLSearchParams(window.location.search);
     const page = params.get('page') || 'search';
     showPage(page);
     document.querySelector('.bottom-nav').style.display = 'flex';
   }
 
-  // Close suggestions when clicking outside
+  // Poll for new likes every 30 seconds when chats page is not active
+  setInterval(() => {
+    if (userId && !document.getElementById('page-chats').classList.contains('active')) {
+      apiPost('/api/likes/received', { telegram_id: userId }).then(data => {
+        if (data.success && data.likes.length > 0) {
+          const badge = document.getElementById('chat-badge');
+          badge.textContent = data.likes.length > 9 ? '9+' : data.likes.length;
+          badge.style.display = 'block';
+        }
+      });
+    }
+  }, 30000);
+
   document.addEventListener('click', (e) => {
     if (!e.target.closest('.form-input')) {
       document.querySelectorAll('.suggestions-box').forEach(b => b.style.display = 'none');
