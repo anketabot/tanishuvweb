@@ -663,7 +663,7 @@ async function openChatRoom(matchId, name, photo) {
   await loadChatMessages(matchId);
   
   if (chatRefreshInterval) clearInterval(chatRefreshInterval);
-  chatRefreshInterval = setInterval(() => loadChatMessages(matchId), 3000);
+  chatRefreshInterval = setInterval(() => loadChatMessages(matchId), 1000);
 }
 
 async function loadChatMessages(matchId) {
@@ -703,6 +703,8 @@ async function sendChatMessage() {
   if (data.success) {
     input.value = '';
     await loadChatMessages(currentChatMatchId);
+  } else {
+    showToast('Xabar yuborilmadi: ' + (data.error || 'Noma\'lum xatolik'));
   }
 }
 
