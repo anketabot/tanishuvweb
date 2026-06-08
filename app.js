@@ -340,14 +340,8 @@ function doSearch() {
   console.log('🔍 Qidiruv filteri:', filters);
   console.log('👤 User ID:', userId);
 
-  if (userId) {
-    fetchSearchResults(userId, filters);
-  } else {
-    console.warn('⚠️ userId mavjud emas, demo data ko\'rsatilmoqda');
-    setTimeout(() => {
-      resultsEl.innerHTML = renderSearchResults(filters);
-    }, 500);
-  }
+  const searchId = userId || 0;
+  fetchSearchResults(searchId, filters);
 }
 
 
