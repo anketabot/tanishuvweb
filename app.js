@@ -316,7 +316,7 @@ function previewPhoto(input) {
 }
 
 // === SAVE PROFILE ===
-function saveProfile() {
+async function saveProfile() {
   const name = document.getElementById('inp-name').value.trim();
   const age = parseInt(document.getElementById('inp-age').value);
   const city = document.getElementById('inp-city').value.trim();
