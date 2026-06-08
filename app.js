@@ -169,10 +169,11 @@ function showSuggestions(containerId, val, onSelect) {
   const filtered = uzbekCities.filter(c => c.toLowerCase().includes(val.toLowerCase())).slice(0, 6);
   if (!filtered.length) { box.style.display = 'none'; return; }
 
+  const fnName = `_sugg_${containerId}`;
   box.innerHTML = filtered.map(c =>
-    `<div class="suggestion-item" onclick="window._sugg_${containerId} && window._sugg_${containerId}('${c}')">${c}</div>`
+    `<div class="suggestion-item" onclick="window['${fnName}'] && window['${fnName}']('${c}')">${c}</div>`
   ).join('');
-  window[`_sugg_${containerId}`] = (city) => {
+  window[fnName] = (city) => {
     onSelect(city);
     box.style.display = 'none';
   };
