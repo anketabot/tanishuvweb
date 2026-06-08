@@ -105,6 +105,7 @@ let selectedGoals = [];
 let selectedSearchGoals = [];
 let photoBase64 = '';
 let currentSearchResults = [];
+let savedProfile = null;
 
 const uzbekCities = [
   "Toshkent", "Samarqand", "Buxoro", "Namangan", "Andijon", "Farg'ona",
@@ -119,12 +120,53 @@ const uzbekCities = [
 
 // === REGISTRATION CHECK ===
 function isRegistered() {
-  return !!localStorage.getItem('dating_profile');
+  return !!getProfile();
 }
 
 function getProfile() {
+  if (savedProfile) return savedProfile;
   const data = localStorage.getItem('dating_profile');
   return data ? JSON.parse(data) : null;
+}
+
+function setSavedProfile(profile) {
+  savedProfile = profile;
+  if (profile) {
+    localStorage.setItem('dating_profile', JSON.stringify(profile));
+  }
+}
+
+async function fetchUserProfile(telegramId) {
+  if (!telegramId) return null;
+
+  const baseUrl = API_BASE_URL ? API_BASE_URL.replace(/\/$/, '') : `${window.location.protocol}//${window.location.host}`;
+  const endpoint = `${baseUrl}/api/profile`;
+
+  try {
+    const response = await fetch(endpoint, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      },
+      body: JSON.stringify({ telegram_id: telegramId }),
+      mode: 'cors'
+    });
+
+    if (!response.ok) {
+      console.warn('Profile API xatosi:', response.status);
+      return null;
+    }
+
+    const data = await response.json();
+    if (data.success && data.user) {
+      return data.user;
+    }
+  } catch (error) {
+    console.warn('Profile API fetch xatosi:', error);
+  }
+
+  return null;
 }
 
 // === CITY SUGGEST ===
@@ -177,7 +219,6 @@ function showPage(name) {
 
   if (name === 'search') setDefaultSearchGender();
   if (name === 'myprofile') loadMyProfile();
-  if (name === 'invite') loadInviteData();
 }
 
 // === GENDER SELECT ===
@@ -265,8 +306,7 @@ function saveProfile() {
     photo_base64: photoBase64 || null
   };
 
-  // LocalStorage ga saqlash (birinchi marta va keyingi tahrirlar uchun)
-  localStorage.setItem('dating_profile', JSON.stringify(profile));
+  setSavedProfile(profile);
 
   if (tg) {
     sendWebAppData({ action: 'save_profile', profile });
@@ -530,39 +570,6 @@ function loadMyProfile() {
     </div>`;
 }
 
-// === INVITE ===
-function loadInviteData() {
-  const botUsername = 'ZnakomstvouzBot';
-  const link = `https://t.me/${botUsername}?start=ref_${userId || '0'}`;
-  document.getElementById('invite-link').innerHTML = `
-    <span style="display:flex;align-items:center;gap:8px;">
-      ${ICONS.copy}
-      ${link}
-    </span>`;
-
-  updateInviteProgress(0);
-}
-
-function updateInviteProgress(count) {
-  document.getElementById('invite-count').innerHTML = `${count}<span>/2</span>`;
-  const pct = Math.min((count / 2) * 100, 100);
-  document.getElementById('invite-progress').style.width = pct + '%';
-}
-
-function copyInviteLink() {
-  const linkText = document.getElementById('invite-link').textContent.trim();
-  navigator.clipboard.writeText(linkText).then(() => showToast('Havola nusxalandi!'));
-}
-
-function shareInviteLink() {
-  const link = document.getElementById('invite-link').textContent.trim();
-  const text = `Do'stlik & Tanishuv botiga xush kelibsiz! Yangi do'stlar toping\n${link}`;
-  if (tg) {
-    tg.openTelegramLink(`https://t.me/share/url?url=${encodeURIComponent(link)}&text=${encodeURIComponent("Do'stlik & Tanishuv botiga qo'shiling!")}`);
-  } else {
-    navigator.share?.({ text }) || copyInviteLink();
-  }
-}
 
 // === TOAST ===
 function showToast(msg, duration = 2500) {
@@ -573,7 +580,14 @@ function showToast(msg, duration = 2500) {
 }
 
 // === INIT ===
-function init() {
+async function init() {
+  if (userId) {
+    const profile = await fetchUserProfile(userId);
+    if (profile) {
+      setSavedProfile(profile);
+    }
+  }
+
   if (!isRegistered()) {
     // Birinchi marta: anketa ko'rsatish, menyu yashirish
     showPage('profile');
