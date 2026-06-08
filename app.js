@@ -251,23 +251,33 @@ function saveProfile() {
 }
 
 // === SEARCH ===
-// === SEARCH ===
 function doSearch() {
-  const filters = {
-    gender: selectedSearchGender || null,
-    age_from: document.getElementById('sf-age-from').value || null,
-    age_to: document.getElementById('sf-age-to').value || null,
-    city: document.getElementById('sf-city').value.trim() || null,
-    goals: selectedSearchGoals.length > 0 ? selectedSearchGoals : null
-  };
+  // 🆕 FAQAT TO'LDIRILGAN FILTERLARNI YUBORING (null qiymatlarni olib tashlash)
+  const filters = {};
+  
+  if (selectedSearchGender) filters.gender = selectedSearchGender;
+  const ageFrom = document.getElementById('sf-age-from').value?.trim();
+  if (ageFrom) filters.age_from = parseInt(ageFrom);
+  const ageTo = document.getElementById('sf-age-to').value?.trim();
+  if (ageTo) filters.age_to = parseInt(ageTo);
+  const city = document.getElementById('sf-city').value?.trim();
+  if (city) filters.city = city;
+  if (selectedSearchGoals.length > 0) filters.goals = selectedSearchGoals;
 
   const resultsEl = document.getElementById('search-results');
   resultsEl.innerHTML = '<div class="loading"><div class="spinner"></div> Qidirilmoqda...</div>';
 
-  console.log('🔍 doSearch called, effectiveUserId:', effectiveUserId);
+  console.log('🔍 Qidiruv filteri:', filters);
+  console.log('👤 User ID:', userId);
 
-  // ✅ Har doim backend ga so'rov yuborish, userId bo'lmasa ham
-  fetchSearchResults(effectiveUserId, filters);
+  if (userId) {
+    fetchSearchResults(userId, filters);
+  } else {
+    console.warn('⚠️ userId mavjud emas, demo data ko\'rsatilmoqda');
+    setTimeout(() => {
+      resultsEl.innerHTML = renderSearchResults(filters);
+    }, 500);
+  }
 }
 
 
@@ -280,7 +290,6 @@ async function fetchSearchResults(telegramId, filters) {
     const endpoint = `${baseUrl}/api/search`;
     
     console.log('🔗 API so\'rov:', endpoint, { telegram_id: telegramId, filters });
-
     const requestBody = { 
       telegram_id: telegramId || 0,  // ✅ null emas, 0 yuborish
       filters: filters 
@@ -315,8 +324,9 @@ async function fetchSearchResults(telegramId, filters) {
     }
   } catch (error) {
     console.error('❌ API xatolik:', error);
-    // ❌ Xatolik bo'lsa ham demo data ko'rsatmaslik
-    resultsEl.innerHTML = `<div class="empty-state"><div class="empty-icon">${ICONS.alert}</div><h3>Server bilan aloqa yo'q</h3><p>Iltimos, internet ulanishingizni tekshiring va qayta urinib ko'ring.<br><small style="color:var(--gray-400)">${error.message}</small></p></div>`;
+    // API ishlamaganda, demo data bilan fallback
+    showToast('Server bilan aloqa yo\'q, demo data ko\'rsatilmoqda');
+    resultsEl.innerHTML = renderSearchResults(filters);
   }
 }
 
