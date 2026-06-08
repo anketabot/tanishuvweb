@@ -7,12 +7,42 @@ if (tg) {
   try { tg.setBackgroundColor('#F8FAFF'); } catch(e) {}
 }
 
-const userId = tg?.initDataUnsafe?.user?.id || null;
-const userName = tg?.initDataUnsafe?.user?.username || '';
-const userFirstName = tg?.initDataUnsafe?.user?.first_name || '';
+// 🆕 MUSTAHKAM userId TOPISH
+let userId = null;
+let userName = '';
+let userFirstName = '';
+
+if (tg?.initDataUnsafe?.user?.id) {
+  userId = tg.initDataUnsafe.user.id;
+  userName = tg.initDataUnsafe.user.username || '';
+  userFirstName = tg.initDataUnsafe.user.first_name || '';
+  console.log('✅ userId topildi (initDataUnsafe):', userId);
+} else if (tg?.initData) {
+  // initData'dan user ma'lumotini chiqarish
+  const params = new URLSearchParams(tg.initData);
+  const userJson = params.get('user');
+  if (userJson) {
+    try {
+      const user = JSON.parse(userJson);
+      userId = user.id;
+      userName = user.username || '';
+      userFirstName = user.first_name || '';
+      console.log('✅ userId topildi (initData parsing):', userId);
+    } catch (e) {
+      console.warn('⚠️ initData parse xatosi:', e);
+    }
+  }
+}
+
+// TEST MODEIDA AYLANIB KETSA
+if (!userId && localStorage.getItem('dating_profile')) {
+  userId = 123456789; // Test user ID
+  console.warn('🧪 TEST MODEIDA: Demo user ID ishlatilmoqda:', userId);
+}
 
 console.log('🔍 DEBUG userId:', userId);
 console.log('🔍 DEBUG initDataUnsafe:', tg?.initDataUnsafe);
+console.log('🔍 DEBUG initData:', tg?.initData?.substring(0, 50) + '...');
 
 // 🆕 BACKEND DOMENINGIZNI SHU YERGA YOZING
 // Masalan: 'https://your-bot.up.railway.app' yoki 'https://mybot.herokuapp.com'
