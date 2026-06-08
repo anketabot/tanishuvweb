@@ -337,7 +337,10 @@ async function fetchSearchResults(telegramId, filters) {
 
 async function loadPendingLikesIndicator() {
   const badge = document.getElementById('search-likes-badge');
-  if (!badge || !userId) return;
+  if (!badge || !userId) {
+    if (badge) badge.style.display = 'none';
+    return;
+  }
   const data = await apiPost('/api/likes/received', { telegram_id: userId });
   const count = data.success ? (data.likes || []).length : 0;
   if (count > 0) {
@@ -353,6 +356,10 @@ async function openIncomingLikesModal() {
   const body = document.getElementById('likes-modal-body');
   if (!modal || !body) return;
   modal.style.display = 'flex';
+  if (!userId) {
+    body.innerHTML = `<div class="empty-state"><div class="empty-icon">${ICONS.alert}</div><h3>Foydalanuvchi aniqlanmadi</h3><p>Telegram ID topilmadi. Web Appni Telegram ichida oching yoki qayta kirib ko'ring.</p></div>`;
+    return;
+  }
   body.innerHTML = '<div class="loading"><div class="spinner"></div> Yuklanmoqda...</div>';
 
   const data = await apiPost('/api/likes/received', { telegram_id: userId });
