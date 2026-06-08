@@ -622,56 +622,6 @@ body {
 .info-label { font-size: 11px; font-weight: 700; color: var(--primary); text-transform: uppercase; }
 .info-value { font-size: 14px; font-weight: 600; color: var(--text); margin-top: 2px; }
 
-/* === INVITE PAGE === */
-.invite-banner {
-  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
-  border-radius: var(--radius);
-  padding: 24px 20px;
-  text-align: center;
-  color: white;
-  margin: 16px 16px 0;
-}
-
-.invite-count {
-  font-family: var(--font-main);
-  font-size: 48px;
-  font-weight: 900;
-  line-height: 1;
-}
-
-.invite-count span { font-size: 24px; opacity: 0.7; }
-.invite-subtitle { font-size: 14px; opacity: 0.85; margin-top: 8px; }
-
-.progress-bar {
-  background: rgba(255,255,255,0.25);
-  border-radius: 30px;
-  height: 10px;
-  margin-top: 14px;
-  overflow: hidden;
-}
-
-.progress-fill {
-  height: 100%;
-  background: white;
-  border-radius: 30px;
-  transition: width 0.5s ease;
-}
-
-.invite-link-box {
-  background: var(--primary-ultra-light);
-  border: 2px solid var(--primary);
-  border-radius: var(--radius-sm);
-  padding: 14px 16px;
-  font-size: 13px;
-  font-weight: 600;
-  color: var(--primary);
-  word-break: break-all;
-  cursor: pointer;
-  transition: background 0.2s;
-}
-
-.invite-link-box:active { background: var(--gray-200); }
-
 /* Scrollbar */
 ::-webkit-scrollbar { width: 5px; }
 ::-webkit-scrollbar-track { background: transparent; }
