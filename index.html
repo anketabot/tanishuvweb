@@ -3,9 +3,15 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="theme-color" content="#F2F2F7" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
   <title>Do'stlik & Tanishuv</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <link rel="stylesheet" href="style.css" />
+<base target="_blank">
 </head>
 <body>
 
@@ -158,9 +164,12 @@
   </div>
 
   <div style="padding: 16px;">
-    <button class="btn-primary" onclick="saveProfile()">
-      <span class="btn-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span> Anketani saqlash
-    </button>
+    <div class="btn-primary-wrap">
+      <div class="btn-primary-shadow"></div>
+      <button class="btn-primary" onclick="saveProfile()">
+        <span><span class="btn-icon" style="display:inline-flex;vertical-align:middle;margin-right:6px;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>Anketani saqlash</span>
+      </button>
+    </div>
   </div>
 </div>
 
@@ -230,9 +239,12 @@
   </div>
 
   <div style="padding: 16px;">
-    <button class="btn-primary" onclick="doSearch()">
-      <span class="btn-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg></span> Qidirish
-    </button>
+    <div class="btn-primary-wrap">
+      <div class="btn-primary-shadow"></div>
+      <button class="btn-primary" onclick="doSearch()">
+        <span><span class="btn-icon" style="display:inline-flex;vertical-align:middle;margin-right:6px;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg></span>Qidirish</span>
+      </button>
+    </div>
   </div>
 
   <div id="search-results"></div>
