@@ -693,15 +693,33 @@ async function loadChatMessages(matchId) {
 function renderMessages(messages) {
   const container = document.getElementById('chat-messages');
   const wasAtBottom = container.scrollTop + container.clientHeight >= container.scrollHeight - 20;
-  
-  container.innerHTML = messages.map(m => `
-    <div class="chat-bubble ${m.sender_id == userId ? 'me' : 'them'}">
-      ${escapeHtml(m.message)}
-      <div class="chat-time">${new Date(m.created_at).toLocaleTimeString('uz-UZ', {hour: '2-digit', minute:'2-digit'})}</div>
-    </div>
-  `).join('');
-  
-  if (wasAtBottom || messages.length <= 5) {
+
+  // DOM diffing: faqat yangi xabarlarni qo'sh, barchasini qayta render qilma
+  const existingIds = new Set(
+    Array.from(container.querySelectorAll('.chat-bubble[data-id]')).map(el => el.dataset.id)
+  );
+
+  let added = false;
+  messages.forEach(m => {
+    const key = String(m.id || (m.sender_id + '_' + m.created_at));
+    if (!existingIds.has(key)) {
+      const bubble = document.createElement('div');
+      bubble.className = `chat-bubble ${m.sender_id == userId ? 'me' : 'them'}`;
+      bubble.dataset.id = key;
+      bubble.innerHTML = `${escapeHtml(m.message)}<div class="chat-time">${new Date(m.created_at).toLocaleTimeString('uz-UZ', {hour: '2-digit', minute:'2-digit'})}</div>`;
+      container.appendChild(bubble);
+      added = true;
+    }
+  });
+
+  // Eski o'chirilgan xabarlarni tozala (ixtiyoriy)
+  if (messages.length === 0) {
+    container.innerHTML = '';
+  }
+
+  if (added && wasAtBottom) {
+    container.scrollTop = container.scrollHeight;
+  } else if (messages.length <= 5) {
     container.scrollTop = container.scrollHeight;
   }
 }
@@ -844,18 +862,36 @@ async function init() {
     document.querySelector('.bottom-nav').style.display = 'flex';
   }
 
-  // Poll for new likes every 30 seconds when chats page is not active
+  // Like va chat real-time: har 3 soniyada yangilanadi
   setInterval(() => {
-    if (userId && !document.getElementById('page-chats').classList.contains('active')) {
-      apiPost('/api/likes/received', { telegram_id: userId }).then(data => {
-        if (data.success && data.likes.length > 0) {
-          const badge = document.getElementById('chat-badge');
-          badge.textContent = data.likes.length > 9 ? '9+' : data.likes.length;
+    if (!userId) return;
+    apiPost('/api/likes/received', { telegram_id: userId }).then(data => {
+      if (data.success) {
+        const count = (data.likes || []).length;
+        const badge = document.getElementById('chat-badge');
+        if (count > 0) {
+          badge.textContent = count > 9 ? '9+' : count;
           badge.style.display = 'block';
+        } else {
+          badge.style.display = 'none';
         }
-      });
-    }
-  }, 30000);
+        // Chats sahifasi ochiq bo'lsa, likes listini ham yangilash
+        if (document.getElementById('page-chats').classList.contains('active')) {
+          renderIncomingLikes(data.likes || []);
+        }
+        // Search sahifasidagi badge
+        const searchBadge = document.getElementById('search-likes-badge');
+        if (searchBadge) {
+          if (count > 0) {
+            searchBadge.textContent = count > 9 ? '9+' : count;
+            searchBadge.style.display = 'inline-flex';
+          } else {
+            searchBadge.style.display = 'none';
+          }
+        }
+      }
+    });
+  }, 3000);
 
   document.addEventListener('click', (e) => {
     if (!e.target.closest('.form-input')) {
