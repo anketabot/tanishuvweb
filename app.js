@@ -278,10 +278,9 @@ async function previewPhoto(input) {
     const bitmap = await createImageBitmap(file);
     const detector = new FaceDetector({ fastMode: true, maxDetectedFaces: 5 });
     const faces = await detector.detect(bitmap);
+
     if (!faces.length) {
-      showToast('Rasmda odam ko\'rinsa, faqat shu rasm qabul qilinadi.');
-      input.value = '';
-      return;
+      console.info('FaceDetector found no faces; continuing because body-only person images should also be accepted.');
     }
   } catch (error) {
     showFaceDetectionWarning(
