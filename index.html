@@ -101,9 +101,36 @@
     </div>
   </div>
 
-  <div class="card">
+  <div class="card zodiac-card">
     <div class="section-title">Burjingiz</div>
-    <select class="form-select" id="sel-zodiac">
+    <div class="zodiac-shell">
+      <div class="zodiac-icon">♒</div>
+      <div>
+        <div class="zodiac-title">Burjni tanlang</div>
+        <div class="zodiac-caption">Yaxshi moslik uchun burjingizni belgilang.</div>
+      </div>
+    </div>
+
+    <button type="button" class="zodiac-picker-toggle" id="zodiac-picker-toggle" onclick="toggleZodiacMenu()">
+      Burj tanlang...
+    </button>
+
+    <div class="zodiac-options" id="zodiac-options" style="display:none;">
+      <button type="button" class="zodiac-option" onclick="selectZodiac('Qo\'y (Aries)', '♈ Qo\'y (Aries)')">♈ Qo'y (Aries)</button>
+      <button type="button" class="zodiac-option" onclick="selectZodiac('Buqa (Taurus)', '♉ Buqa (Taurus)')">♉ Buqa (Taurus)</button>
+      <button type="button" class="zodiac-option" onclick="selectZodiac('Egizaklar (Gemini)', '♊ Egizaklar (Gemini)')">♊ Egizaklar (Gemini)</button>
+      <button type="button" class="zodiac-option" onclick="selectZodiac('Qisqichbaqa (Cancer)', '♋ Qisqichbaqa (Cancer)')">♋ Qisqichbaqa (Cancer)</button>
+      <button type="button" class="zodiac-option" onclick="selectZodiac('Sher (Leo)', '♌ Sher (Leo)')">♌ Sher (Leo)</button>
+      <button type="button" class="zodiac-option" onclick="selectZodiac('Qiz (Virgo)', '♍ Qiz (Virgo)')">♍ Qiz (Virgo)</button>
+      <button type="button" class="zodiac-option" onclick="selectZodiac('Tarozi (Libra)', '♎ Tarozi (Libra)')">♎ Tarozi (Libra)</button>
+      <button type="button" class="zodiac-option" onclick="selectZodiac('Chayonlar (Scorpio)', '♏ Chayonlar (Scorpio)')">♏ Chayonlar (Scorpio)</button>
+      <button type="button" class="zodiac-option" onclick="selectZodiac('Yoy (Sagittarius)', '♐ Yoy (Sagittarius)')">♐ Yoy (Sagittarius)</button>
+      <button type="button" class="zodiac-option" onclick="selectZodiac('Tog\' echkisi (Capricorn)', '♑ Tog\' echkisi (Capricorn)')">♑ Tog' echkisi (Capricorn)</button>
+      <button type="button" class="zodiac-option" onclick="selectZodiac('Qovunchi (Aquarius)', '♒ Qovunchi (Aquarius)')">♒ Qovunchi (Aquarius)</button>
+      <button type="button" class="zodiac-option" onclick="selectZodiac('Baliq (Pisces)', '♓ Baliq (Pisces)')">♓ Baliq (Pisces)</button>
+    </div>
+
+    <select class="form-select zodiac-select" id="sel-zodiac" style="display:none;">
       <option value="">Tanlang...</option>
       <option>Qo'y (Aries)</option>
       <option>Buqa (Taurus)</option>
