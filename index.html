@@ -316,6 +316,18 @@
   </button>
 </nav>
 
+<!-- STICKER MODAL -->
+<div id="sticker-overlay" class="sticker-overlay" style="display:none;" onclick="closeStickerModal(event)">
+  <div class="sticker-sheet" onclick="event.stopPropagation()">
+    <div class="sticker-handle"></div>
+    <div class="sticker-title">⭐ Super Like — Sticker yuborish</div>
+    <div class="sticker-grid" id="sticker-grid">
+      <!-- filled by JS -->
+    </div>
+    <button class="sticker-close" onclick="closeStickerModal()">Bekor qilish</button>
+  </div>
+</div>
+
 <script src="app.js"></script>
 </body>
 </html>
