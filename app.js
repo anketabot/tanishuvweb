@@ -514,10 +514,27 @@ function closeProfileModal(e) {
 
 // === ACTIONS ===
 function sendLike(toUser) {
-  if (tg) {
-    tg.sendData(JSON.stringify({ action: 'like_user', to_user: toUser }));
+  if (!userId) {
+    showToast('Foydalanuvchi ID topilmadi');
+    return;
   }
-  showToast('Like yuborildi! 💙');
+  
+  apiPost('/api/likes/send', { from_user: userId, to_user: toUser })
+    .then(data => {
+      if (data.success) {
+        if (data.match) {
+          showToast('🎉 Match! Muloqotni boshlashingiz mumkin');
+        } else {
+          showToast('💙 Like yuborildi!');
+        }
+      } else {
+        showToast('Xatolik: ' + (data.error || 'Like yuborilmadi'));
+      }
+    })
+    .catch(err => {
+      logger.error('Like send error:', err);
+      showToast('Xatolik: Like yuborilmadi');
+    });
 }
 
 function sendBlock(blockedId) {
