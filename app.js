@@ -260,7 +260,7 @@ async function previewPhoto(input) {
     return;
   }
 
-  if (!window.isSecureContext || !('FaceDetector' in window) || typeof FaceDetector !== 'function') {
+  if (!window.isSecureContext) {
     showFaceDetectionWarning(
       'Rasmda odam borligini tekshirish uchun bu sahifa xavfsiz kontekstda emas (masalan, file:// yoki Telegram WebView). HTTPS sahifada yoki Telegram ichida oching.',
       {
@@ -274,21 +274,22 @@ async function previewPhoto(input) {
     return;
   }
 
-  try {
-    const bitmap = await createImageBitmap(file);
-    const detector = new FaceDetector({ fastMode: true, maxDetectedFaces: 5 });
-    const faces = await detector.detect(bitmap);
+  const canUseFaceDetector = 'FaceDetector' in window && typeof FaceDetector === 'function';
 
-    if (!faces.length) {
-      console.info('FaceDetector found no faces; continuing because body-only person images should also be accepted.');
+  if (!canUseFaceDetector) {
+    console.info('FaceDetector is not available in this browser/runtime; continuing without face validation.');
+  } else {
+    try {
+      const bitmap = await createImageBitmap(file);
+      const detector = new FaceDetector({ fastMode: true, maxDetectedFaces: 5 });
+      const faces = await detector.detect(bitmap);
+
+      if (faces.length === 0) {
+        console.info('FaceDetector found no faces; accepting the image because body-only person images are allowed.');
+      }
+    } catch (error) {
+      console.warn('FaceDetector failed in this browser/runtime; continuing without blocking the upload.', error);
     }
-  } catch (error) {
-    showFaceDetectionWarning(
-      'Rasmda odam borligini tekshirishda xatolik yuz berdi. Buni boshqa brauzer yoki Telegram ichida qayta urinib ko‘ring.',
-      error
-    );
-    input.value = '';
-    return;
   }
 
   const reader = new FileReader();
