@@ -482,10 +482,15 @@ function doSearch() {
   if (city) filters.city = city;
   if (selectedSearchGoals.length > 0) filters.goals = selectedSearchGoals;
 
-  const resultsEl = document.getElementById('search-results');
-  resultsEl.innerHTML = '<div class="loading"><div class="spinner"></div> Qidirilmoqda...</div>';
+  const resultsEl = document.getElementById('search-results-panel-body');
+  const oldResultsEl = document.getElementById('search-results');
+  if (oldResultsEl) oldResultsEl.innerHTML = '';
+  if (resultsEl) {
+    resultsEl.innerHTML = '<div class="loading"><div class="spinner"></div> Qidirilmoqda...</div>';
+    document.getElementById('search-results-modal').style.display = 'flex';
+  }
 
-  fetchSearchResults(userId || 0, filters);
+  fetchSearchResults(userId || 0, filters, 'search-results-panel-body');
 }
 
 // === TINDER CARD STATE ===
@@ -493,8 +498,9 @@ let tinderUsers = [];
 let tinderIndex = 0;
 let tinderHistory = []; // for back button
 
-async function fetchSearchResults(telegramId, filters) {
-  const resultsEl = document.getElementById('search-results');
+async function fetchSearchResults(telegramId, filters, containerId = 'search-results') {
+  const resultsEl = document.getElementById(containerId);
+  if (!resultsEl) return;
   
   try {
     const data = await apiPost('/api/search', { telegram_id: telegramId || 0, filters });
@@ -629,7 +635,7 @@ async function openStickerModal(toUserId) {
   try {
     const canUse = await apiPost('/api/can_write', { from_user: userId, to_user: toUserId });
     if (!canUse.success || !canUse.can_write) {
-      showToast('Super Like uchun 2 ta do\'st taklif qilgan bo\'lishingiz kerak.');
+      showToast('Super Like uchun 5 ta imkoniyat bor. 5 tadan keyin 2 ta do\'st kerak.');
       return;
     }
   } catch (error) {
@@ -660,7 +666,7 @@ async function sendSticker(sticker) {
 
   const canUse = await apiPost('/api/can_write', { from_user: userId, to_user: stickerTargetId });
   if (!canUse.success || !canUse.can_write) {
-    showToast('Super Like uchun 2 ta do\'st taklif qilgan bo\'lishingiz kerak.');
+    showToast('Super Like uchun 5 ta imkoniyat bor. 5 tadan keyin 2 ta do\'st kerak.');
     return;
   }
 
@@ -818,7 +824,7 @@ function escapeJs(str) {
 }
 
 function showWriteRequirement() {
-  showToast('Yozish uchun 2 ta do\'st taklif qiling yoki o\'zaro like bosing!');
+  showToast('Yozish uchun 2 ta do\'st kerak.');
 }
 
 // === PROFILE DETAIL MODAL ===
@@ -869,6 +875,12 @@ function showProfileDetail(user) {
 function closeProfileModal(e) {
   if (e && e.target !== e.currentTarget) return;
   document.getElementById('profile-modal').style.display = 'none';
+}
+
+function closeSearchResultsModal(e) {
+  if (e && e.target !== e.currentTarget) return;
+  const modal = document.getElementById('search-results-modal');
+  if (modal) modal.style.display = 'none';
 }
 
 function openPhotoViewer(src, title) {
@@ -928,7 +940,7 @@ async function initiateChat(toUserId, name, photo) {
   if (data.success && data.match_id) {
     openChatRoom(data.match_id, name, photo);
   } else {
-    showToast('Yozish uchun 2 ta do\'st taklif qiling yoki o\'zaro like bosing!');
+    showToast('Yozish uchun 2 ta do\'st kerak.');
   }
 }
 
