@@ -41,6 +41,20 @@
   </div>
 </div>
 
+<div id="search-results-modal" class="modal-overlay search-results-overlay" style="display:none;" onclick="closeSearchResultsModal(event)">
+  <div class="search-results-sheet" onclick="event.stopPropagation()">
+    <div class="sheet-handle"></div>
+    <div class="sheet-header">
+      <div>
+        <div class="section-title" style="margin-bottom:4px;">Nomzodlar</div>
+        <div class="sheet-subtitle">Qidiruv natijalari alohida panelda ochildi</div>
+      </div>
+      <button class="modal-close" onclick="closeSearchResultsModal()">✕</button>
+    </div>
+    <div id="search-results-panel-body" class="search-results-panel-body"></div>
+  </div>
+</div>
+
 <div id="photo-viewer-modal" class="modal-overlay photo-viewer-overlay" style="display:none;" onclick="closePhotoViewer(event)">
   <div class="photo-viewer-shell" onclick="event.stopPropagation()">
     <button class="modal-close" onclick="closePhotoViewer()">✕</button>
