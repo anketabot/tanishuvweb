@@ -670,14 +670,19 @@ async function sendSticker(sticker) {
   if (card) card.classList.add('animate-up');
 
   // Send super like (like) + sticker via message API
-  const likeData = await apiPost('/api/likes/send', { from_user: userId, to_user: stickerTargetId });
+  const likeData = await apiPost('/api/likes/send', {
+    from_user: userId,
+    to_user: stickerTargetId,
+    super_like: true,
+    sticker: sticker
+  });
   
   // Also send sticker as chat message if match exists
   if (likeData.match && likeData.match_id) {
     await apiPost('/api/chat/send', {
       match_id: likeData.match_id,
       sender_id: userId,
-      message: sticker + ' (Super Like!)'
+      message: `${sticker} ⭐ Super Like!`
     });
     showToast('🎉 Match! ' + sticker + ' Super Like yuborildi!');
   } else {
