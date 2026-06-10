@@ -41,6 +41,16 @@
   </div>
 </div>
 
+<div id="photo-viewer-modal" class="modal-overlay photo-viewer-overlay" style="display:none;" onclick="closePhotoViewer(event)">
+  <div class="photo-viewer-shell" onclick="event.stopPropagation()">
+    <button class="modal-close" onclick="closePhotoViewer()">✕</button>
+    <div class="photo-viewer-frame">
+      <img id="photo-viewer-img" src="" alt="" />
+    </div>
+    <div class="photo-viewer-caption" id="photo-viewer-caption">Foto</div>
+  </div>
+</div>
+
 <!-- CHAT ROOM MODAL -->
 <div id="chat-modal" class="chat-modal" style="display:none;">
   <div class="chat-header">
