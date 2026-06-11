@@ -1056,18 +1056,36 @@ function closeMatchOverlay() {
 
 // === CHAT ROOM ===
 async function openChatRoom(matchId, name, photo) {
+  // Oldingi chatni tozala
+  if (chatRefreshInterval) {
+    clearInterval(chatRefreshInterval);
+    chatRefreshInterval = null;
+  }
+  
   currentChatMatchId = matchId;
   currentChatPartner = { name, photo };
   
   document.getElementById('chat-user-name').textContent = name;
-  document.getElementById('chat-user-photo').src = photo || '';
+  const photoEl = document.getElementById('chat-user-photo');
+  photoEl.src = photo || '';
+  photoEl.onerror = function() { this.style.display = 'none'; };
+  
+  // Xabarlar containerini tozala (boshqa chatning xabarlari qolmasin)
+  document.getElementById('chat-messages').innerHTML = '';
+  
   document.getElementById('chat-modal').style.display = 'flex';
+  document.getElementById('chat-input').value = '';
   document.getElementById('chat-input').focus();
   
   await loadChatMessages(matchId);
   
-  if (chatRefreshInterval) clearInterval(chatRefreshInterval);
-  chatRefreshInterval = setInterval(() => loadChatMessages(matchId), 1000);
+  chatRefreshInterval = setInterval(() => {
+    if (currentChatMatchId === matchId) {
+      loadChatMessages(matchId);
+    } else {
+      clearInterval(chatRefreshInterval);
+    }
+  }, 1500);
 }
 
 async function loadChatMessages(matchId) {
@@ -1091,9 +1109,15 @@ function renderMessages(messages) {
     const key = String(m.id || (m.sender_id + '_' + m.created_at));
     if (!existingIds.has(key)) {
       const bubble = document.createElement('div');
-      bubble.className = `chat-bubble ${m.sender_id == userId ? 'me' : 'them'}`;
+      bubble.className = `chat-bubble ${String(m.sender_id) === String(userId) ? 'me' : 'them'}`;
       bubble.dataset.id = key;
-      bubble.innerHTML = `${escapeHtml(m.message)}<div class="chat-time">${new Date(m.created_at).toLocaleTimeString('uz-UZ', {hour: '2-digit', minute:'2-digit'})}</div>`;
+      const timeStr = new Date(m.created_at).toLocaleTimeString('uz-UZ', {hour: '2-digit', minute:'2-digit'});
+      const isImage = m.type === 'image' || (m.message && m.message.startsWith('data:image'));
+      if (isImage) {
+        bubble.innerHTML = `<img src="${m.message}" style="max-width:200px;max-height:200px;border-radius:10px;display:block;cursor:zoom-in;" onclick="openPhotoViewer('${m.message}', 'Rasm')" /><div class="chat-time">${timeStr}</div>`;
+      } else {
+        bubble.innerHTML = `${escapeHtml(m.message)}<div class="chat-time">${timeStr}</div>`;
+      }
       container.appendChild(bubble);
       added = true;
     }
@@ -1288,3 +1312,44 @@ async function init() {
 }
 
 init();
+// === EMOJI PANEL ===
+function toggleEmojiPanel() {
+  const panel = document.getElementById('emoji-panel');
+  panel.style.display = panel.style.display === 'none' ? 'block' : 'none';
+}
+
+function insertEmoji(emoji) {
+  const input = document.getElementById('chat-input');
+  const pos = input.selectionStart;
+  input.value = input.value.slice(0, pos) + emoji + input.value.slice(pos);
+  input.selectionStart = input.selectionEnd = pos + emoji.length;
+  input.focus();
+  document.getElementById('emoji-panel').style.display = 'none';
+}
+
+// === RASM YUBORISH (base64) ===
+async function sendImageMessage(input) {
+  const file = input.files[0];
+  if (!file || !currentChatMatchId) return;
+  if (!file.type.startsWith('image/')) { showToast('Faqat rasm yuborish mumkin'); return; }
+  if (file.size > 3 * 1024 * 1024) { showToast('Rasm 3MB dan kichik bo\'lsin'); return; }
+
+  showToast('Rasm yuborilmoqda...');
+  const reader = new FileReader();
+  reader.onload = async (e) => {
+    const base64 = e.target.result;
+    const data = await apiPost('/api/chat/send', {
+      match_id: currentChatMatchId,
+      sender_id: userId,
+      message: base64,
+      type: 'image'
+    });
+    if (data.success) {
+      await loadChatMessages(currentChatMatchId);
+    } else {
+      showToast('Rasm yuborilmadi: ' + (data.error || ''));
+    }
+  };
+  reader.readAsDataURL(file);
+  input.value = '';
+}
