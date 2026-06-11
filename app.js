@@ -31,6 +31,9 @@ if (!userId && localStorage.getItem('dating_profile')) {
   userId = 123456789;
 }
 
+// Sync group subscription from backend
+syncGroupSubscription();
+
 const API_BASE_URL = 'https://tanishuvbot-production.up.railway.app';
 
 const MAX_WEBAPP_DATA_SIZE = 6000;
@@ -83,18 +86,84 @@ let selectedSearchGender = '';
 let selectedInterests = [];
 let selectedGoals = [];
 let selectedSearchGoals = [];
+let selectedSearchInterests = [];
 let photoBase64 = '';
 let savedProfile = null;
 
 const uzbekCities = [
-  "Toshkent", "Samarqand", "Buxoro", "Namangan", "Andijon", "Farg'ona",
-  "Nukus", "Qarshi", "Termiz", "Jizzax", "Sirdaryo", "Guliston",
-  "Navoiy", "Urganch", "Xiva", "Marg'ilon", "Qo'qon", "Chirchiq",
-  "Olmaliq", "Bekobod", "Yangiyo'l", "Nurafshon", "Denov", "Bog'ot",
-  "Muborak", "G'uzor", "Kitob", "Shahrisabz", "Karshi", "Shofirkon",
-  "Kogon", "Vobkent", "Qorovulbozor", "Beshariq", "Rishton", "Quva",
-  "Oʻzbekiston", "Iskandar", "Zarafshon", "Uchqo'rg'on", "Chust",
-  "Pop", "Toyloq", "Kattaqo'rg'on", "Urgut", "Payariq", "Paxtakor"
+  "Andijon shahri", "Xonobod shahri", "Asaka shahri", "Qorasuv shahri",
+  "Andijon tumani", "Asaka tumani", "Baliqchi tumani", "Boʻston tumani",
+  "Buloqboshi tumani", "Izboskan tumani", "Jalaquduq tumani", "Marhamat tumani",
+  "Oltinkoʻl tumani", "Paxtaobod tumani", "Shahrixon tumani", "Ulugʻnor tumani",
+  "Xoʻjaobod tumani", "Qoʻrgʻontepa tumani",
+  "Buxoro shahri", "Kogon shahri", "Olot shahri", "Vobkent shahri",
+  "Gazli shahri", "Galaosiyo shahri", "Gʻijduvon shahri", "Qorakoʻl shahri",
+  "Qorovulbozor shahri", "Romitan shahri", "Shofirkon shahri",
+  "Buxoro tumani", "Jondor tumani", "Kogon tumani", "Qorakoʻl tumani",
+  "Qorovulbozor tumani", "Olot tumani", "Peshku tumani", "Romitan tumani",
+  "Shofirkon tumani", "Vobkent tumani", "Gʻijduvon tumani",
+  "Fargʻona shahri", "Qoʻqon shahri", "Margʻilon shahri", "Quvasoy shahri",
+  "Quva shahri", "Rishton shahri", "Yaypan shahri", "Tinchlik shahri",
+  "Bogʻdod tumani", "Beshariq tumani", "Buvayda tumani", "Dangʻara tumani",
+  "Fargʻona tumani", "Furqat tumani", "Qoʻshtepa tumani", "Quva tumani",
+  "Rishton tumani", "Soʻx tumani", "Toshloq tumani", "Uchkoʻprik tumani",
+  "Oltiariq tumani", "Oʻzbekiston tumani", "Yozyovon tumani",
+  "Jizzax shahri", "Dashtobod shahri",
+  "Arnasoy tumani", "Baxmal tumani", "Doʻstlik tumani", "Forish tumani",
+  "Gallaorol tumani", "Sharof Rashidov tumani", "Mirzachoʻl tumani",
+  "Paxtakor tumani", "Yangiobod tumani", "Zomin tumani", "Zafarobod tumani",
+  "Zarbdor tumani",
+  "Urganch shahri", "Xiva shahri", "Pitnak shahri", "Gurlan shahri", "Shovot shahri",
+  "Bogʻot tumani", "Gurlan tumani", "Qoʻshkoʻpir tumani", "Shovot tumani",
+  "Yangiariq tumani", "Tuproqqalʼa tumani", "Urganch tumani", "Xonqa tumani",
+  "Xiva tumani", "Hazorasp tumani", "Yangibozor tumani",
+  "Namangan shahri", "Chust shahri", "Chartaq shahri", "Kosonsoy shahri",
+  "Uchqoʻrgʻon shahri", "Haqqulobod shahri", "Toʻraqoʻrgʻon shahri", "Pop shahri",
+  "Chartaq tumani", "Chust tumani", "Kosonsoy tumani", "Mingbuloq tumani",
+  "Namangan tumani", "Norin tumani", "Pop tumani", "Toʻraqoʻrgʻon tumani",
+  "Uychi tumani", "Uchqoʻrgʻon tumani", "Yangiqoʻrgʻon tumani", "Yangi Namangan tumani",
+  "Navoiy shahri", "Zarafshon shahri", "Uchquduq shahri", "Nurota shahri",
+  "Qiziltepa shahri", "Gʻozgʻon shahri",
+  "Karmana tumani", "Konimex tumani", "Qiziltepa tumani", "Xatirchi tumani",
+  "Navbahor tumani", "Nurota tumani", "Tomdi tumani", "Uchquduq tumani",
+  "Qarshi shahri", "Shahrisabz shahri", "Kitob shahri", "Koson shahri",
+  "Muborak shahri", "Yakkabogʻ shahri", "Gʻuzor shahri", "Kamashi shahri",
+  "Chiroqchi tumani", "Dehqonobod tumani", "Kamashi tumani", "Qarshi tumani",
+  "Koson tumani", "Koʻkdala tumani", "Kitob tumani", "Mirishkor tumani",
+  "Muborak tumani", "Nishon tumani", "Kasbi tumani", "Shahrisabz tumani",
+  "Yakkabogʻ tumani", "Gʻuzor tumani",
+  "Samarqand shahri", "Kattaqoʻrgʻon shahri", "Urgut shahri", "Oqtosh shahri",
+  "Bulungʻur shahri", "Jomboy shahri", "Chelak shahri", "Nurobod shahri",
+  "Bulungʻur tumani", "Ishtixon tumani", "Jomboy tumani", "Kattaqoʻrgʻon tumani",
+  "Qoʻshrabot tumani", "Narpay tumani", "Nurobod tumani", "Oqdaryo tumani",
+  "Paxtachi tumani", "Payariq tumani", "Pastdargʻom tumani", "Samarqand tumani",
+  "Toyloq tumani", "Urgut tumani",
+  "Guliston shahri", "Shirin shahri", "Yangiyer shahri", "Baxt shahri",
+  "Sirdaryo shahri",
+  "Boyovut tumani", "Guliston tumani", "Xovos tumani", "Mirzaobod tumani",
+  "Oqoltin tumani", "Sardoba tumani", "Sayxunobod tumani", "Sirdaryo tumani",
+  "Termiz shahri", "Denov shahri", "Boysun shahri", "Jarqoʻrgʻon shahri",
+  "Qumqoʻrgʻon shahri", "Shargʻun shahri", "Sherobod shahri", "Shoʻrchi shahri",
+  "Angor tumani", "Boysun tumani", "Denov tumani", "Jarqoʻrgʻon tumani",
+  "Qiziriq tumani", "Qumqoʻrgʻon tumani", "Muzrabot tumani", "Oltinsoy tumani",
+  "Sariosiyo tumani", "Sherobod tumani", "Shoʻrchi tumani", "Termiz tumani",
+  "Uzun tumani", "Bandixon tumani",
+  "Nurafshon shahri", "Angren shahri", "Olmaliq shahri", "Chirchiq shahri",
+  "Ohangaron shahri", "Bekobod shahri", "Yangiyoʻl shahri", "Gʻazalkent shahri",
+  "Keles shahri", "Piskent shahri", "Chinoz shahri", "Boʻka shahri",
+  "Oqqoʻrgʻon shahri", "Parkent shahri",
+  "Bekobod tumani", "Boʻstonliq tumani", "Boʻka tumani", "Chinoz tumani",
+  "Qibray tumani", "Ohangaron tumani", "Oqqoʻrgʻon tumani", "Parkent tumani",
+  "Piskent tumani", "Quyi Chirchiq tumani", "Oʻrta Chirchiq tumani",
+  "Yuqori Chirchiq tumani", "Zangiota tumani", "Toshkent tumani", "Yangiyoʻl tumani",
+  "Nukus shahri", "Beruniy shahri", "Boʻston shahri", "Mangʻit shahri",
+  "Moʻynoq shahri", "Taxiatosh shahri", "Toʻrtkoʻl shahri", "Xalqobod shahri",
+  "Chimboy shahri", "Shumanay shahri", "Xoʻjayli shahri", "Qoʻngʻirot shahri",
+  "Amudaryo tumani", "Beruniy tumani", "Chimboy tumani", "Ellikqalʼa tumani",
+  "Kegeyli tumani", "Moʻynoq tumani", "Nukus tumani", "Qonlikoʻl tumani",
+  "Qorauzyak tumani", "Qoʻngʻirot tumani", "Shumanay tumani", "Taxtakoʻpir tumani",
+  "Toʻrtkoʻl tumani", "Xoʻjayli tumani", "Taxiatosh tumani", "Boʻzatov tumani",
+  "Toshkent shahri"
 ];
 
 // Chat state
@@ -102,6 +171,115 @@ let currentChatMatchId = null;
 let currentChatPartner = null;
 let chatRefreshInterval = null;
 let chatsPollInterval = null;
+
+// Group subscription state
+let isGroupSubscribed = localStorage.getItem('group_subscribed') === 'true';
+
+// Message target for modal
+let messageTargetUserId = null;
+let messageTargetName = '';
+let messageTargetPhoto = '';
+
+// ===== GROUP SUBSCRIPTION =====
+function checkGroupSubscription() {
+  return isGroupSubscribed;
+}
+
+function showGroupSubModal() {
+  document.getElementById('group-sub-modal').style.display = 'flex';
+}
+
+function closeGroupSubModal(e) {
+  if (e && e.target !== e.currentTarget) return;
+  document.getElementById('group-sub-modal').style.display = 'none';
+}
+
+async function markGroupSubscribed() {
+  isGroupSubscribed = true;
+  localStorage.setItem('group_subscribed', 'true');
+  // Also update backend
+  if (userId) {
+    await apiPost('/api/group/subscribe', { telegram_id: userId });
+  }
+  closeGroupSubModal();
+  showToast('✅ Guruhga obuna bo'ldingiz!');
+}
+
+// ===== MESSAGE MODAL =====
+function openMessageModal(toUserId, name, photo) {
+  messageTargetUserId = toUserId;
+  messageTargetName = name;
+  messageTargetPhoto = photo;
+  document.getElementById('message-modal-sub').textContent = name + ' ga birinchi xabaringizni yozing.';
+  document.getElementById('first-message-input').value = '';
+  document.getElementById('message-modal').style.display = 'flex';
+}
+
+function closeMessageModal(e) {
+  if (e && e.target !== e.currentTarget) return;
+  document.getElementById('message-modal').style.display = 'none';
+  messageTargetUserId = null;
+}
+
+async function sendFirstMessage() {
+  const message = document.getElementById('first-message-input').value.trim();
+  if (!message) {
+    showToast('Xabar matnini kiriting!');
+    return;
+  }
+  if (!messageTargetUserId || !userId) {
+    showToast('Xatolik: foydalanuvchi topilmadi');
+    return;
+  }
+
+  closeMessageModal();
+
+  // First send like
+  const likeData = await apiPost('/api/likes/send', {
+    from_user: userId,
+    to_user: messageTargetUserId
+  });
+
+  if (likeData.success) {
+    // Create match and send message
+    const matchData = await apiPost('/api/initiate_chat', {
+      from_user: userId,
+      to_user: messageTargetUserId
+    });
+
+    if (matchData.success && matchData.match_id) {
+      await apiPost('/api/chat/send', {
+        match_id: matchData.match_id,
+        sender_id: userId,
+        message: message
+      });
+      showToast('💬 Xabar yuborildi!');
+      openChatRoom(matchData.match_id, messageTargetName, messageTargetPhoto);
+    } else {
+      showToast('💙 Like yuborildi! Xabar match bo'lgandan keyin ko'rinadi.');
+    }
+  } else {
+    showToast('Xatolik: ' + (likeData.error || 'Like yuborilmadi'));
+  }
+}
+
+// ===== SYNC GROUP SUBSCRIPTION FROM BACKEND =====
+async function syncGroupSubscription() {
+  if (!userId) return;
+  const data = await apiPost('/api/group/check', { telegram_id: userId });
+  if (data.success && data.group_subscribed) {
+    isGroupSubscribed = true;
+    localStorage.setItem('group_subscribed', 'true');
+  }
+}
+
+// ===== WRAPPER: Check permissions before actions =====
+async function checkCanInteract(toUserId) {
+  if (!userId) return false;
+  const canUse = await apiPost('/api/can_write', { from_user: userId, to_user: toUserId });
+  return canUse.success && canUse.can_write;
+}
+
 
 function isRegistered() {
   return !!getProfile();
@@ -245,6 +423,9 @@ function toggleChip(el, group) {
   } else if (group === 'sf-goals') {
     if (el.classList.contains('selected')) selectedSearchGoals.push(value);
     else selectedSearchGoals = selectedSearchGoals.filter(i => i !== value);
+  } else if (group === 'sf-interests') {
+    if (el.classList.contains('selected')) selectedSearchInterests.push(value);
+    else selectedSearchInterests = selectedSearchInterests.filter(i => i !== value);
   }
 }
 
@@ -481,6 +662,7 @@ function doSearch() {
   const city = document.getElementById('sf-city').value?.trim();
   if (city) filters.city = city;
   if (selectedSearchGoals.length > 0) filters.goals = selectedSearchGoals;
+  if (selectedSearchInterests.length > 0) filters.interests = selectedSearchInterests;
 
   const resultsEl = document.getElementById('search-results-panel-body');
   const oldResultsEl = document.getElementById('search-results');
@@ -551,7 +733,7 @@ function renderTinderCard(direction) {
   }).join('');
 
   const msgBtn = u.can_write
-    ? `<button class="tinder-btn tinder-btn-msg" onclick="event.stopPropagation(); initiateChat(${u.telegram_id},'${escapeJs(u.full_name)}','${escapeJs(photo||'')}');" title="Xabar yuborish">💬</button>`
+    ? `<button class="tinder-btn tinder-btn-msg" onclick="event.stopPropagation(); openMessageModal(${u.telegram_id},'${escapeJs(u.full_name)}','${escapeJs(photo||'')}');" title="Xabar yuborish">💬</button>`
     : `<button class="tinder-btn tinder-btn-msg" onclick="event.stopPropagation(); showWriteRequirement();" title="Yozish" style="opacity:0.4;">💬</button>`;
 
   const aboutHtml = u.about
@@ -792,11 +974,11 @@ function renderProfileCard(u) {
     : `<div style="display:flex;align-items:center;justify-content:center;width:100%;height:100%;color:var(--primary);">${icon}</div>`;
 
   const writeBtn = u.can_write
-    ? `<button class="action-btn btn-write" onclick="event.stopPropagation(); initiateChat(${u.telegram_id}, '${escapeJs(u.full_name)}', '${escapeJs(photo || '')}')">
-         <span class="btn-icon">${ICONS.message}</span> Yozish
+    ? `<button class="action-btn btn-write" onclick="event.stopPropagation(); openMessageModal(${u.telegram_id}, '${escapeJs(u.full_name)}', '${escapeJs(photo || '')}')">
+         <span class="btn-icon">${ICONS.message}</span> Xabar yuborish
        </button>`
     : `<button class="action-btn btn-write" onclick="event.stopPropagation(); showWriteRequirement()" style="opacity:0.5;">
-         <span class="btn-icon">${ICONS.message}</span> Yozish
+         <span class="btn-icon">${ICONS.message}</span> Xabar yuborish
        </button>`;
 
   return `
@@ -859,8 +1041,8 @@ function showProfileDetail(user) {
         <span class="btn-icon">${ICONS.heart}</span> Like
       </button>
       ${user.can_write ? `
-      <button class="btn-secondary" onclick="initiateChat(${user.telegram_id}, '${escapeJs(user.full_name)}', '${escapeJs(photo || '')}'); closeProfileModal();" style="padding:14px;">
-        <span class="btn-icon">${ICONS.message}</span> Yozish
+      <button class="btn-secondary" onclick="openMessageModal(${user.telegram_id}, '${escapeJs(user.full_name)}', '${escapeJs(photo || '')}'); closeProfileModal();" style="padding:14px;">
+        <span class="btn-icon">${ICONS.message}</span> Xabar yuborish
       </button>
       ` : `
       <button class="btn-secondary" onclick="showWriteRequirement();" style="padding:14px;opacity:0.6;">
@@ -937,12 +1119,20 @@ function sendBlock(blockedId) {
 async function initiateChat(toUserId, name, photo) {
   if (!userId) return;
   
-  const data = await apiPost('/api/initiate_chat', { from_user: userId, to_user: toUserId });
-  if (data.success && data.match_id) {
-    openChatRoom(data.match_id, name, photo);
-  } else {
-    showToast('Yozish uchun 2 ta do\'st kerak.');
+  // Check if group subscribed first
+  if (!checkGroupSubscription()) {
+    showGroupSubModal();
+    return;
   }
+  
+  // Check permissions
+  const canInteract = await checkCanInteract(toUserId);
+  if (!canInteract) {
+    showWriteRequirement();
+    return;
+  }
+  
+  openMessageModal(toUserId, name, photo);
 }
 
 // === CHATS PAGE ===
