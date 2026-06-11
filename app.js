@@ -544,9 +544,6 @@ function renderTinderCard(direction) {
     ? `<img src="${photo}" alt="${u.full_name}" loading="lazy" />`
     : `<div style="display:flex;align-items:center;justify-content:center;width:100%;height:100%;color:var(--ios-blue);opacity:0.4;">${icon}</div>`;
 
-  const goalTags = (u.goals||[]).map(g => `<span class="tinder-tag goal">${g}</span>`).join('');
-  const intTags  = (u.interests||[]).map(i => `<span class="tinder-tag">${i}</span>`).join('');
-
   // Progress dots
   const dots = Array.from({length: Math.min(total, 7)}, (_, i) => {
     const ci = Math.min(tinderIndex, 6);
@@ -556,6 +553,10 @@ function renderTinderCard(direction) {
   const msgBtn = u.can_write
     ? `<button class="tinder-btn tinder-btn-msg" onclick="event.stopPropagation(); initiateChat(${u.telegram_id},'${escapeJs(u.full_name)}','${escapeJs(photo||'')}');" title="Xabar yuborish">💬</button>`
     : `<button class="tinder-btn tinder-btn-msg" onclick="event.stopPropagation(); showWriteRequirement();" title="Yozish" style="opacity:0.4;">💬</button>`;
+
+  const aboutHtml = u.about
+    ? `<div class="tinder-about">${escapeHtml(u.about)}</div>`
+    : '';
 
   container.innerHTML = `
     <div class="swipe-counter">
@@ -575,7 +576,7 @@ function renderTinderCard(direction) {
         </div>
       </div>
       <div class="tinder-body">
-        <div class="tinder-tags">${goalTags}${intTags}</div>
+        ${aboutHtml}
       </div>
       <div class="tinder-actions" onclick="event.stopPropagation()">
         <button class="tinder-btn tinder-btn-back" onclick="tinderBack()" title="Orqaga">↩️</button>
