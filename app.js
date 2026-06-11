@@ -202,7 +202,7 @@ async function markGroupSubscribed() {
     await apiPost('/api/group/subscribe', { telegram_id: userId });
   }
   closeGroupSubModal();
-  showToast('✅ Guruhga obuna bo'ldingiz!');
+  showToast('✅ Guruhga obuna bo\'ldingiz!');
 }
 
 // ===== MESSAGE MODAL =====
@@ -256,7 +256,7 @@ async function sendFirstMessage() {
       showToast('💬 Xabar yuborildi!');
       openChatRoom(matchData.match_id, messageTargetName, messageTargetPhoto);
     } else {
-      showToast('💙 Like yuborildi! Xabar match bo'lgandan keyin ko'rinadi.');
+      showToast('💙 Like yuborildi! Xabar match bo\'lgandan keyin ko\'rinadi.');
     }
   } else {
     showToast('Xatolik: ' + (likeData.error || 'Like yuborilmadi'));
