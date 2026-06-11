@@ -2840,3 +2840,58 @@ body {
     grid-template-columns: repeat(2, 1fr);
   }
 }
+
+/* === CHAT EMOJI & IMAGE BUTTONS === */
+.chat-input-area {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 12px;
+  background: #fff;
+  border-top: 1px solid rgba(0,0,0,0.08);
+}
+
+.chat-emoji-btn, .chat-img-btn {
+  flex-shrink: 0;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(0,122,255,0.08);
+  color: var(--primary, #1A73E8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.chat-emoji-btn:active, .chat-img-btn:active {
+  background: rgba(0,122,255,0.18);
+}
+
+.emoji-panel {
+  background: #fff;
+  border-top: 1px solid rgba(0,0,0,0.08);
+  padding: 8px;
+}
+
+.emoji-grid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 4px;
+}
+
+.emoji-grid span {
+  font-size: 22px;
+  text-align: center;
+  padding: 6px 2px;
+  cursor: pointer;
+  border-radius: 8px;
+  transition: background 0.1s;
+  user-select: none;
+}
+
+.emoji-grid span:active {
+  background: rgba(0,122,255,0.12);
+}
