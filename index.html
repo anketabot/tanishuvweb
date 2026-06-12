@@ -12,7 +12,6 @@
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <link rel="stylesheet" href="style.css" />
 <base target="_blank">
-<base target="_blank">
 </head>
 <body>
 
@@ -48,7 +47,7 @@
     <div class="sheet-header">
       <div>
         <div class="section-title" style="margin-bottom:4px;">Nomzodlar</div>
-        <div class="sheet-subtitle">Qidiruv natijalari alohida panelda ochildi</div>
+        <div class="sheet-subtitle">Qidiruv natijalari</div>
       </div>
       <button class="modal-close" onclick="closeSearchResultsModal()">✕</button>
     </div>
@@ -66,6 +65,77 @@
   </div>
 </div>
 
+<!-- LIMIT EXCEEDED MODAL -->
+<div id="limit-modal" class="modal-overlay" style="display:none;" onclick="closeLimitModal(event)">
+  <div class="modal-content" onclick="event.stopPropagation()">
+    <button class="modal-close" onclick="closeLimitModal()">✕</button>
+    <div style="text-align:center; margin-bottom:20px;">
+      <div style="font-size:48px; margin-bottom:12px;">⏳</div>
+      <h2 style="font-size:22px; font-weight:800; margin-bottom:8px;">Kunlik limit tugadi</h2>
+      <p style="color:var(--text-secondary); font-size:15px; line-height:1.5;" id="limit-modal-text">
+        Sizning kunlik limitingiz tugadi.
+      </p>
+    </div>
+    <div style="background:rgba(0,122,255,0.06); border:1px solid var(--glass-border); border-radius:16px; padding:16px; margin-bottom:16px;">
+      <div style="font-weight:700; font-size:15px; margin-bottom:10px; color:var(--ios-blue);">📊 Kunlik limitlar:</div>
+      <div style="font-size:14px; color:var(--text-secondary); line-height:2;">
+        • Like: 25 ta<br>
+        • Xabar yuborish: 25 ta<br>
+        • Super Like: 10 ta
+      </div>
+    </div>
+    <div style="background:rgba(255,200,0,0.06); border:1px solid rgba(255,200,0,0.2); border-radius:16px; padding:16px; margin-bottom:16px;">
+      <div style="font-weight:700; font-size:15px; margin-bottom:10px; color:#FF9500;">🎁 Limitni oshirish:</div>
+      <div style="font-size:14px; color:var(--text-secondary); line-height:2;">
+        • Guruhga 5 ta odam qo'shing → 1 hafta limitsiz<br>
+        • Guruhga 10 ta odam qo'shing → 1 oy limitsiz
+      </div>
+    </div>
+    <button class="btn-primary" onclick="openReferralModal()" style="width:100%; padding:16px; border-radius:999rem; margin-bottom:10px;">
+      <span>👥 Do'stlarni taklif qilish</span>
+    </button>
+    <div style="text-align:center;">
+      <button onclick="closeLimitModal()" style="background:none; border:none; color:var(--text-secondary); font-size:14px; cursor:pointer;">
+        Ertaga davom etish
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- REFERRAL MODAL -->
+<div id="referral-modal" class="modal-overlay" style="display:none;" onclick="closeReferralModal(event)">
+  <div class="modal-content" onclick="event.stopPropagation()">
+    <button class="modal-close" onclick="closeReferralModal()">✕</button>
+    <div style="text-align:center; margin-bottom:20px;">
+      <div style="font-size:48px; margin-bottom:12px;">👥</div>
+      <h2 style="font-size:22px; font-weight:800; margin-bottom:8px;">Do'stlarni taklif qiling</h2>
+      <p style="color:var(--text-secondary); font-size:15px; line-height:1.5;">
+        Do'stlaringizni botga taklif qiling va limitsiz foydalanish imkoniyatiga ega bo'ling!
+      </p>
+    </div>
+    <div style="background:rgba(0,122,255,0.06); border:1px solid var(--glass-border); border-radius:16px; padding:16px; margin-bottom:16px;">
+      <div style="font-weight:700; font-size:15px; margin-bottom:10px; color:var(--ios-blue);">🎁 Mukofotlar:</div>
+      <div style="font-size:14px; color:var(--text-secondary); line-height:2;">
+        • 5 ta do'st → 1 hafta limitsiz<br>
+        • 10 ta do'st → 1 oy limitsiz
+      </div>
+    </div>
+    <div id="referral-stats" style="font-size:14px; color:var(--text-secondary); margin-bottom:16px; text-align:center;"></div>
+    <div style="display:flex; gap:10px;">
+      <input type="text" id="referral-link-input" readonly style="flex:1; padding:14px 18px; border:1.5px solid rgba(0,122,255,0.18); border-radius:18px; font-size:14px; background:rgba(255,255,255,0.8);" />
+      <button onclick="copyReferralLink()" style="padding:14px 20px; background:var(--ios-blue); color:white; border:none; border-radius:18px; font-weight:600; cursor:pointer;">
+        Nusxa
+      </button>
+    </div>
+    <div style="margin-top:16px; text-align:center;">
+      <a id="referral-share-link" href="#" target="_blank" style="display:inline-flex; align-items:center; gap:8px; color:var(--ios-blue); font-size:14px; font-weight:600; text-decoration:none;">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+        Telegramda ulashish
+      </a>
+    </div>
+  </div>
+</div>
+
 <!-- CHAT ROOM MODAL -->
 <div id="chat-modal" class="chat-modal" style="display:none;">
   <div class="chat-header">
@@ -78,7 +148,6 @@
     </div>
   </div>
   <div class="chat-messages" id="chat-messages"></div>
-  <!-- Emoji panel -->
   <div id="emoji-panel" class="emoji-panel" style="display:none;">
     <div class="emoji-grid">
       <span onclick="insertEmoji('😊')">😊</span><span onclick="insertEmoji('😂')">😂</span><span onclick="insertEmoji('❤️')">❤️</span><span onclick="insertEmoji('🥰')">🥰</span><span onclick="insertEmoji('😍')">😍</span><span onclick="insertEmoji('🔥')">🔥</span>
@@ -256,15 +325,15 @@
 </div>
 
 
-<!-- ======= PAGE: SEARCH ======= -->
-<div class="page" id="page-search">
+<!-- ======= PAGE: SEARCH (YANGILANGAN) ======= -->
+<div class="page active" id="page-search">
   <div class="header">
     <div>
       <div class="header-title">
         <span class="header-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg></span>
         Qidirish
       </div>
-      <div class="header-sub">Filtrlar bilan qidiring</div>
+      <div class="header-sub">Yangi do'stlar toping</div>
     </div>
     <div class="header-actions">
       <button class="icon-btn" id="search-likes-btn" onclick="openIncomingLikesModal()" title="Sizga like yuborganlar">
@@ -274,81 +343,72 @@
     </div>
   </div>
 
+  <!-- Asosiy qidirish -->
   <div class="card">
-    <div class="section-title">Jins</div>
+    <div class="section-title">Qidirish</div>
+    <div class="form-group">
+      <label class="form-label">Ism bo'yicha</label>
+      <input class="form-input" id="sf-name" type="text" placeholder="Ism kiriting..." maxlength="50" />
+    </div>
+    <div class="section-title" style="margin-top:16px;">Jins</div>
     <div class="gender-selector">
       <div class="gender-btn" id="sf-gender-erkak" onclick="selectSearchGender('erkak')" title="Erkak">
         <span class="g-icon"><svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><circle cx="32" cy="14" r="9"/><line x1="32" y1="23" x2="32" y2="38"/><line x1="18" y1="30" x2="46" y2="30"/><line x1="32" y1="38" x2="24" y2="56"/><line x1="32" y1="38" x2="40" y2="56"/></svg></span>
+        <span style="font-size:13px; margin-top:4px;">Erkak</span>
       </div>
       <div class="gender-btn" id="sf-gender-ayol" onclick="selectSearchGender('ayol')" title="Ayol">
         <span class="g-icon"><svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><circle cx="32" cy="14" r="9"/><path d="M20 56 L28 30 L36 30 L44 56"/><line x1="18" y1="42" x2="28" y2="30"/><line x1="46" y1="42" x2="36" y2="30"/></svg></span>
+        <span style="font-size:13px; margin-top:4px;">Ayol</span>
       </div>
     </div>
   </div>
 
-  <div class="card">
-    <div class="section-title">Yoshi</div>
-    <div class="age-range-wrap">
-      <div class="form-group" style="margin:0">
-        <label class="form-label">Dan</label>
-        <input class="form-input" id="sf-age-from" type="number" placeholder="16" min="16" max="80" />
+  <!-- Kengaytirilgan filtrlar (ixtiyoriy) -->
+  <div class="card" style="padding:16px;">
+    <button class="btn-secondary" onclick="toggleAdvancedFilters()" style="width:100%; justify-content:center;">
+      <span id="adv-filter-btn-text">🔍 Kengaytirilgan filtrlar</span>
+    </button>
+    <div id="advanced-filters" style="display:none; margin-top:16px;">
+      <div class="section-title">Yoshi</div>
+      <div class="age-range-wrap">
+        <div class="form-group" style="margin:0">
+          <label class="form-label">Dan</label>
+          <input class="form-input" id="sf-age-from" type="number" placeholder="16" min="16" max="80" />
+        </div>
+        <div class="form-group" style="margin:0">
+          <label class="form-label">Gacha</label>
+          <input class="form-input" id="sf-age-to" type="number" placeholder="50" min="16" max="80" />
+        </div>
       </div>
-      <div class="form-group" style="margin:0">
-        <label class="form-label">Gacha</label>
-        <input class="form-input" id="sf-age-to" type="number" placeholder="50" min="16" max="80" />
+      <div class="section-title" style="margin-top:16px;">Shahar</div>
+      <input class="form-input" id="sf-city" type="text" placeholder="Shahar yoki tuman" maxlength="80" oninput="suggestCitySearch(this.value)" autocomplete="off" />
+      <div id="sf-city-suggestions" class="suggestions-box" style="display:none; margin-top:6px;"></div>
+      <div class="section-title" style="margin-top:16px;">Maqsad</div>
+      <div class="chips-wrap" id="sf-goals-chips">
+        <div class="chip" onclick="toggleChip(this,'sf-goals')">Do'stlik</div>
+        <div class="chip" onclick="toggleChip(this,'sf-goals')">Tanishuv</div>
+        <div class="chip" onclick="toggleChip(this,'sf-goals')">Oila</div>
+        <div class="chip" onclick="toggleChip(this,'sf-goals')">Sevgi</div>
+        <div class="chip" onclick="toggleChip(this,'sf-goals')">Romantika</div>
+        <div class="chip" onclick="toggleChip(this,'sf-goals')">Uchrashuv</div>
+        <div class="chip" onclick="toggleChip(this,'sf-goals')">Virtual muloqot</div>
+        <div class="chip" onclick="toggleChip(this,'sf-goals')">Boshqa</div>
       </div>
-    </div>
-  </div>
-
-  <div class="card">
-    <div class="section-title">Yashash joyi</div>
-    <input class="form-input" id="sf-city" type="text" placeholder="Shahar yoki tuman nomi" maxlength="80" oninput="suggestCitySearch(this.value)" autocomplete="off" />
-    <div id="sf-city-suggestions" class="suggestions-box" style="display:none; margin-top:6px;"></div>
-  </div>
-
-  <div class="card">
-    <div class="section-title">Maqsad</div>
-    <div class="chips-wrap" id="sf-goals-chips">
-      <div class="chip" onclick="toggleChip(this,'sf-goals')">Do'stlik</div>
-      <div class="chip" onclick="toggleChip(this,'sf-goals')">Tanishuv</div>
-      <div class="chip" onclick="toggleChip(this,'sf-goals')">Oila</div>
-      <div class="chip" onclick="toggleChip(this,'sf-goals')">Sevgi</div>
-      <div class="chip" onclick="toggleChip(this,'sf-goals')">Romantika</div>
-      <div class="chip" onclick="toggleChip(this,'sf-goals')">Uchrashuv</div>
-      <div class="chip" onclick="toggleChip(this,'sf-goals')">Virtual muloqot</div>
-      <div class="chip" onclick="toggleChip(this,'sf-goals')">Boshqa</div>
-    </div>
-  </div>
-
-  <div class="card">
-    <div class="section-title">Qiziqishlar bo'yicha</div>
-    <div class="chips-wrap" id="sf-interests-chips">
-      <div class="chip" onclick="toggleChip(this,'sf-interests')">🍿 Kino</div>
-      <div class="chip" onclick="toggleChip(this,'sf-interests')">🎵 Musiqa</div>
-      <div class="chip" onclick="toggleChip(this,'sf-interests')">📚 Kitob oʻqish</div>
-      <div class="chip" onclick="toggleChip(this,'sf-interests')">🎮 Oʻyinlar</div>
-      <div class="chip" onclick="toggleChip(this,'sf-interests')">🎭 Teatr</div>
-      <div class="chip" onclick="toggleChip(this,'sf-interests')">🏛️ Muzeylar</div>
-      <div class="chip" onclick="toggleChip(this,'sf-interests')">🎨 San'at</div>
-      <div class="chip" onclick="toggleChip(this,'sf-interests')">📸 Foto</div>
-      <div class="chip" onclick="toggleChip(this,'sf-interests')">📜 She'riyat</div>
-      <div class="chip" onclick="toggleChip(this,'sf-interests')">💃 Raqs</div>
-      <div class="chip" onclick="toggleChip(this,'sf-interests')">⚽ Sport</div>
-      <div class="chip" onclick="toggleChip(this,'sf-interests')">🧘‍♂️ Yoga</div>
-      <div class="chip" onclick="toggleChip(this,'sf-interests')">🚶‍♂️ Sayr</div>
-      <div class="chip" onclick="toggleChip(this,'sf-interests')">🏓 Stol tennisi</div>
-      <div class="chip" onclick="toggleChip(this,'sf-interests')">✈️ Sayohat</div>
-      <div class="chip" onclick="toggleChip(this,'sf-interests')">🏖️ Plyaj</div>
-      <div class="chip" onclick="toggleChip(this,'sf-interests')">🛍️ Shopping</div>
-      <div class="chip" onclick="toggleChip(this,'sf-interests')">👗 Moda</div>
-      <div class="chip" onclick="toggleChip(this,'sf-interests')">☕ Qahva</div>
-      <div class="chip" onclick="toggleChip(this,'sf-interests')">🍷 Vino</div>
-      <div class="chip" onclick="toggleChip(this,'sf-interests')">🍺 Pivo</div>
-      <div class="chip" onclick="toggleChip(this,'sf-interests')">✍️ Blog yuritish</div>
-      <div class="chip" onclick="toggleChip(this,'sf-interests')">💻 Dasturlash</div>
-      <div class="chip" onclick="toggleChip(this,'sf-interests')">♟️ Shaxmat</div>
-      <div class="chip" onclick="toggleChip(this,'sf-interests')">🎨 Rasm chizish</div>
-      <div class="chip" onclick="toggleChip(this,'sf-interests')">🗣️ Tillar oʻrganish</div>
+      <div class="section-title" style="margin-top:16px;">Qiziqishlar</div>
+      <div class="chips-wrap" id="sf-interests-chips">
+        <div class="chip" onclick="toggleChip(this,'sf-interests')">🍿 Kino</div>
+        <div class="chip" onclick="toggleChip(this,'sf-interests')">🎵 Musiqa</div>
+        <div class="chip" onclick="toggleChip(this,'sf-interests')">📚 Kitob oʻqish</div>
+        <div class="chip" onclick="toggleChip(this,'sf-interests')">🎮 Oʻyinlar</div>
+        <div class="chip" onclick="toggleChip(this,'sf-interests')">🎭 Teatr</div>
+        <div class="chip" onclick="toggleChip(this,'sf-interests')">🏛️ Muzeylar</div>
+        <div class="chip" onclick="toggleChip(this,'sf-interests')">🎨 San'at</div>
+        <div class="chip" onclick="toggleChip(this,'sf-interests')">📸 Foto</div>
+        <div class="chip" onclick="toggleChip(this,'sf-interests')">💃 Raqs</div>
+        <div class="chip" onclick="toggleChip(this,'sf-interests')">⚽ Sport</div>
+        <div class="chip" onclick="toggleChip(this,'sf-interests')">✈️ Sayohat</div>
+        <div class="chip" onclick="toggleChip(this,'sf-interests')">☕ Qahva</div>
+      </div>
     </div>
   </div>
 
@@ -361,7 +421,26 @@
     </div>
   </div>
 
-  <div id="search-results"></div>
+  <!-- Qidiruv natijalari Tinder kartochkasida -->
+  <div id="search-results" style="display:none;">
+    <div class="swipe-container" id="swipe-container"></div>
+  </div>
+
+  <!-- Limit status indicator -->
+  <div id="limit-status-bar" class="limit-status-bar" style="display:none;">
+    <div class="limit-item" onclick="openReferralModal()">
+      <span class="limit-icon">❤️</span>
+      <span class="limit-text" id="limit-likes">25</span>
+    </div>
+    <div class="limit-item" onclick="openReferralModal()">
+      <span class="limit-icon">💬</span>
+      <span class="limit-text" id="limit-messages">25</span>
+    </div>
+    <div class="limit-item" onclick="openReferralModal()">
+      <span class="limit-icon">⭐</span>
+      <span class="limit-text" id="limit-superlikes">10</span>
+    </div>
+  </div>
 </div>
 
 
@@ -375,13 +454,11 @@
     <div class="header-sub">Like lar va suhbatingiz</div>
   </div>
 
-  <!-- Incoming Likes -->
   <div id="incoming-likes-section" style="display:none;">
     <div class="section-title" style="margin: 16px 16px 8px;">💖 Sizga Like bosganlar</div>
     <div id="incoming-likes-list"></div>
   </div>
 
-  <!-- Active Chats -->
   <div class="section-title" style="margin: 16px 16px 8px;">💬 Muloqotlar</div>
   <div id="chat-list"></div>
 
@@ -413,7 +490,7 @@
 </div>
 
 
-<!-- ======= BOTTOM NAV (3 ta bo'lim) ======= -->
+<!-- ======= BOTTOM NAV ======= -->
 <nav class="bottom-nav" style="display:none;">
   <button class="nav-btn" id="nav-search" onclick="showPage('search')">
     <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
@@ -435,38 +512,8 @@
   <div class="sticker-sheet" onclick="event.stopPropagation()">
     <div class="sticker-handle"></div>
     <div class="sticker-title">⭐ Super Like — Sticker yuborish</div>
-    <div class="sticker-grid" id="sticker-grid">
-      <!-- filled by JS -->
-    </div>
+    <div class="sticker-grid" id="sticker-grid"></div>
     <button class="sticker-close" onclick="closeStickerModal()">Bekor qilish</button>
-  </div>
-</div>
-
-<script src="app.js"></script>
-
-<!-- GROUP SUBSCRIPTION MODAL -->
-<div id="group-sub-modal" class="modal-overlay" style="display:none;" onclick="closeGroupSubModal(event)">
-  <div class="modal-content" onclick="event.stopPropagation()">
-    <button class="modal-close" onclick="closeGroupSubModal()">✕</button>
-    <div style="text-align:center; margin-bottom:20px;">
-      <div style="font-size:48px; margin-bottom:12px;">📢</div>
-      <h2 style="font-size:22px; font-weight:800; margin-bottom:8px;">Guruhga obuna bo'ling</h2>
-      <p style="color:var(--text-secondary); font-size:15px; line-height:1.5;">
-        Xabar yuborish va Super Like ishlatish uchun quyidagi guruhga obuna bo'lishingiz kerak.
-      </p>
-    </div>
-    <div style="background:rgba(0,122,255,0.06); border:1px solid var(--glass-border); border-radius:16px; padding:16px; margin-bottom:16px;">
-      <div style="font-weight:700; font-size:16px; margin-bottom:8px; color:var(--ios-blue);">📣 OrzuGo - Tanishuv</div>
-      <p style="font-size:14px; color:var(--text-secondary);">Yangi tanishuvlar va imkoniyatlar haqida ma'lumotlar</p>
-    </div>
-    <a href="https://t.me/OrzuGoGroup" target="_blank" class="btn-primary" style="display:block; text-align:center; text-decoration:none; padding:16px; border-radius:999rem;">
-      <span>📲 Guruhga obuna bo'lish</span>
-    </a>
-    <div style="margin-top:16px; text-align:center;">
-      <button onclick="markGroupSubscribed()" style="background:none; border:none; color:var(--ios-blue); font-size:14px; font-weight:600; cursor:pointer; text-decoration:underline;">
-        ✅ Obuna bo'ldim
-      </button>
-    </div>
   </div>
 </div>
 
@@ -488,5 +535,6 @@
   </div>
 </div>
 
+<script src="app.js"></script>
 </body>
 </html>
