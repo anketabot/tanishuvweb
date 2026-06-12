@@ -1500,7 +1500,7 @@ async function loadChats() {
 
   chatList.innerHTML = data.matches.map(m => {
     const photo = m.photo_base64 || m.photo_file_id || '';
-    const partnerData = escapeHtmlAttr(JSON.stringify(m));
+    const partnerData = encodeURIComponent(JSON.stringify(m));
     return `
       <div class="chat-item" onclick="openChatRoom(${m.match_id}, '${escapeJs(m.full_name)}', '${escapeJs(photo)}', '${partnerData}')">
         <div class="chat-item-photo">
@@ -1517,9 +1517,26 @@ async function loadChats() {
 
 function openChatRoom(matchId, name, photo, partnerData = null) {
   currentChatMatchId = matchId;
-  const decodedPartner = partnerData
-    ? JSON.parse(String(partnerData).replace(/&quot;/g, '"').replace(/&#39;/g, "'").replace(/&amp;/g, '&'))
-    : null;
+  let decodedPartner = null;
+
+  try {
+    if (partnerData) {
+      const normalized = String(partnerData)
+        .replace(/&quot;/g, '"')
+        .replace(/&#39;/g, "'")
+        .replace(/&amp;/g, '&');
+      decodedPartner = JSON.parse(decodeURIComponent(normalized));
+    }
+  } catch (e) {
+    try {
+      decodedPartner = JSON.parse(String(partnerData)
+        .replace(/&quot;/g, '"')
+        .replace(/&#39;/g, "'")
+        .replace(/&amp;/g, '&'));
+    } catch (fallbackError) {
+      console.warn('Chat partner data parse failed', fallbackError);
+    }
+  }
   currentChatPartner = { name, photo, user: decodedPartner };
   document.getElementById('chat-modal').style.display = 'flex';
   document.getElementById('chat-user-name').textContent = name;
