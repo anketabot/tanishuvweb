@@ -335,23 +335,19 @@ async function sendFirstMessage() {
       showLimitExceeded('likes');
       return;
     }
-    // Create match and send message
-    const matchData = await apiPost('/api/initiate_chat', {
-      from_user: fromUserId,
-      to_user: toUserId
-    });
 
-    if (matchData.success && matchData.match_id) {
+    if (likeData.match && likeData.match_id) {
       await apiPost('/api/chat/send', {
-        match_id: matchData.match_id,
+        match_id: likeData.match_id,
         sender_id: fromUserId,
         message: message
       });
       showToast('💬 Xabar yuborildi!');
-      openChatRoom(matchData.match_id, messageTargetName, messageTargetPhoto);
-    } else {
-      showToast('💙 Like yuborildi! Xabar match bo\'lgandan keyin ko\'rinadi.');
+      openChatRoom(likeData.match_id, messageTargetName, messageTargetPhoto);
+      return;
     }
+
+    showToast('💙 Like yuborildi! Agar u ham sizni yoqtirsa, match bo\'lib suhbat ochiladi.');
   } else {
     if (likeData.error === 'limit_exceeded') {
       showLimitExceeded('likes');
