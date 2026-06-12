@@ -755,8 +755,6 @@ function renderTinderCardInModal(direction) {
   const u = tinderUsers[tinderIndex];
   const total = tinderUsers.length;
   const photo = u.photo_base64 || u.photo_file_id;
-  const goals = (u.goals || []).map(g => `<span class="tinder-tag">${g}</span>`).join('');
-  const interests = (u.interests || []).map(i => `<span class="tinder-tag tinder-tag-alt">${i}</span>`).join('');
 
   const animClass = direction === 'left' ? 'animate-left' : direction === 'right' ? 'animate-right' : direction === 'up' ? 'animate-up' : 'animate-in';
 
@@ -777,9 +775,9 @@ function renderTinderCardInModal(direction) {
           <div class="tinder-photo-meta">📍 ${u.city}${u.zodiac?' • '+u.zodiac:''}</div>
         </div>
       </div>
-      <div class="tinder-body">
-        <div class="tinder-tags-wrap">${goals}${interests}</div>
-        ${u.about ? `<div class="tinder-about">${escapeHtml(u.about)}</div>` : ''}
+      <div class="tinder-body compact-card-body">
+        <div class="tinder-mini-meta">${u.full_name}, ${u.age}</div>
+        <div class="tinder-mini-location">📍 ${u.city}${u.zodiac ? ' • ' + u.zodiac : ''}</div>
       </div>
       <div class="tinder-actions">
         <button class="tinder-btn tinder-btn-back" onclick="tinderBackModal()" title="Orqaga">↩</button>
