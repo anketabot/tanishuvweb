@@ -1316,30 +1316,35 @@ function showProfileDetail(u, showTags = true) {
   const icon = u.gender === 'erkak' ? ICONS.male : ICONS.female;
   const photo = u.photo || u.photo_file_id || u.photo_base64;
   const locationLabel = formatLocationLabel(u.city || '');
-  const profileLocation = locationLabel ? `${u.city} • ${locationLabel}` : (u.city || 'Joy ko\'rsatilmagan');
+  const profileLocation = locationLabel || (u.city || 'Joy ko\'rsatilmagan');
   const goals = (u.goals || []).map(g => `<span class="tag">${g}</span>`).join('');
-  const interests = (u.interests || []).map(i => `<span class="tag" style="background:var(--accent-soft);color:var(--accent);">${i}</span>`).join('');
+  const interests = (u.interests || []).map(i => `<span class="tag" style="background:rgba(0,122,255,0.10);color:var(--ios-blue);">${i}</span>`).join('');
   const photoHtml = photo
-    ? `<img src="${photo}" alt="${u.full_name}" onclick="openPhotoViewer('${escapeJs(photo)}', '${escapeJs(u.full_name)}')" style="width:100%;height:280px;object-fit:cover;border-radius:20px;margin-bottom:16px;cursor:zoom-in;" />`
+    ? `<div class="profile-detail-photo-wrap"><img src="${photo}" alt="${u.full_name}" onclick="openPhotoViewer('${escapeJs(photo)}', '${escapeJs(u.full_name)}')" /></div>`
     : '';
 
   body.innerHTML = `
-    ${photoHtml}
-    <div style="text-align:center; margin-bottom:16px;">
-      <div style="font-size:24px; font-weight:800;">${icon} ${u.full_name}, ${u.age}</div>
-      <div style="color:var(--text-secondary); margin-top:6px;">📍 ${profileLocation}${u.zodiac ? ' • ' + u.zodiac : ''}</div>
-    </div>
-    <div style="margin-bottom:10px; color:var(--text-secondary); font-size:14px; line-height:1.5;">${u.about || 'Bu foydalanuvchi o\'z maqsad va qiziqishlarini aniqlab qo\'ygan.'}</div>
-    ${showTags ? `<div style="margin-bottom:12px;"><div style="font-size:13px; font-weight:700; color:var(--text-secondary); text-transform:uppercase; letter-spacing:0.8px; margin-bottom:8px;">Maqsadlar</div>${goals || '<span style="color:var(--text-secondary);">Maqsad ko\'rsatilmagan</span>'}</div>` : ''}
-    ${showTags ? `<div style="margin-bottom:16px;"><div style="font-size:13px; font-weight:700; color:var(--text-secondary); text-transform:uppercase; letter-spacing:0.8px; margin-bottom:8px;">Qiziqishlar</div>${interests || '<span style="color:var(--text-secondary);">Qiziqishlar ko\'rsatilmagan</span>'}</div>` : ''}
-    <div style="display:flex; gap:10px; justify-content:center; flex-wrap:wrap;">
-      <button class="action-btn btn-like" onclick="sendLike(${u.telegram_id}); closeProfileModal();">
-        <span class="btn-icon">${ICONS.heart}</span> Like
-      </button>
-      <button class="action-btn btn-write" onclick="openMessageModal(${u.telegram_id}, '${escapeJs(u.full_name)}', '${escapeJs(photo || '')}'); closeProfileModal();">
-        <span class="btn-icon">${ICONS.message}</span> Xabar
-      </button>
-    </div>
+    <article class="profile-detail-shell">
+      ${photoHtml}
+      <section class="profile-detail-card">
+        <div class="profile-detail-badge">${u.gender === 'erkak' ? 'Erkak' : 'Ayol'} • ${u.age} yosh</div>
+        <div class="profile-detail-title">${icon} ${u.full_name}</div>
+        <div class="profile-detail-meta">📍 ${profileLocation}${u.zodiac ? ' • ' + u.zodiac : ''}</div>
+        <p class="profile-detail-summary">${u.about || 'Bu foydalanuvchi o\'z maqsadi va qiziqishlarini ko\'rsatib ketgan.'}</p>
+        ${showTags ? `<div class="profile-detail-section"><div class="profile-detail-label">Maqsadlar</div><div class="chip-row">${goals || '<span class="muted-chip">Ko\'rsatilmagan</span>'}</div></div>` : ''}
+        ${showTags ? `<div class="profile-detail-section"><div class="profile-detail-label">Qiziqishlar</div><div class="chip-row">${interests || '<span class="muted-chip">Ko\'rsatilmagan</span>'}</div></div>` : ''}
+      </section>
+      <div class="profile-action-grid">
+        <button class="action-btn btn-like" onclick="sendLike(${u.telegram_id}); closeProfileModal();">
+          <span class="btn-icon">${ICONS.heart}</span>
+          <span>Like</span>
+        </button>
+        <button class="action-btn btn-write" onclick="openMessageModal(${u.telegram_id}, '${escapeJs(u.full_name)}', '${escapeJs(photo || '')}'); closeProfileModal();">
+          <span class="btn-icon">${ICONS.message}</span>
+          <span>Xabar</span>
+        </button>
+      </div>
+    </article>
   `;
   modal.style.display = 'flex';
 }
