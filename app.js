@@ -811,9 +811,6 @@ function tinderSuperLikeModal() {
   const btn = document.querySelector('.tinder-btn-superlike');
   if (btn) { btn.classList.add('flash'); setTimeout(()=>btn.classList.remove('flash'),600); }
   openStickerModal(u.telegram_id);
-  tinderHistory.push(tinderIndex);
-  tinderIndex++;
-  setTimeout(() => renderTinderCardInModal('up'), 600);
 }
 
 function tinderBackModal() {
@@ -1065,8 +1062,15 @@ async function sendSticker(sticker) {
     showToast('⭐ ' + sticker + ' Super Like yuborildi!');
   }
 
+  const renderNextCard = document.getElementById('swipe-container-modal')
+    ? renderTinderCardInModal
+    : renderTinderCard;
+
   tinderHistory.push(tinderIndex);
-  setTimeout(() => { tinderIndex++; renderTinderCard(); }, 380);
+  setTimeout(() => {
+    tinderIndex++;
+    renderNextCard();
+  }, 380);
   stickerTargetId = null;
 }
 
