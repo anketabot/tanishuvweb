@@ -31,9 +31,6 @@ if (!userId && localStorage.getItem('dating_profile')) {
   userId = 123456789;
 }
 
-// Sync group subscription from backend
-syncGroupSubscription();
-
 const API_BASE_URL = 'https://tanishuvbot-production.up.railway.app';
 
 const MAX_WEBAPP_DATA_SIZE = 6000;
@@ -172,37 +169,115 @@ let currentChatPartner = null;
 let chatRefreshInterval = null;
 let chatsPollInterval = null;
 
-// Group subscription state
-let isGroupSubscribed = localStorage.getItem('group_subscribed') === 'true';
-
 // Message target for modal
 let messageTargetUserId = null;
 let messageTargetName = '';
 let messageTargetPhoto = '';
 
-// ===== GROUP SUBSCRIPTION =====
-function checkGroupSubscription() {
-  return isGroupSubscribed;
-}
+// ===== LIMIT STATUS =====
+let currentLimitStatus = null;
 
-function showGroupSubModal() {
-  document.getElementById('group-sub-modal').style.display = 'flex';
-}
-
-function closeGroupSubModal(e) {
-  if (e && e.target !== e.currentTarget) return;
-  document.getElementById('group-sub-modal').style.display = 'none';
-}
-
-async function markGroupSubscribed() {
-  isGroupSubscribed = true;
-  localStorage.setItem('group_subscribed', 'true');
-  // Also update backend
-  if (userId) {
-    await apiPost('/api/group/subscribe', { telegram_id: userId });
+async function loadLimitStatus() {
+  if (!userId) return;
+  try {
+    const data = await apiPost('/api/limits/status', { telegram_id: userId });
+    if (data.success) {
+      currentLimitStatus = data.limits;
+      updateLimitBar(data.limits);
+    }
+  } catch (e) {
+    console.error('Limit status load error:', e);
   }
-  closeGroupSubModal();
-  showToast('✅ Guruhga obuna bo\'ldingiz!');
+}
+
+function updateLimitBar(limits) {
+  const bar = document.getElementById('limit-status-bar');
+  if (!bar) return;
+
+  if (limits.unlimited) {
+    bar.style.display = 'flex';
+    document.getElementById('limit-likes').textContent = '∞';
+    document.getElementById('limit-messages').textContent = '∞';
+    document.getElementById('limit-superlikes').textContent = '∞';
+  } else {
+    bar.style.display = 'flex';
+    document.getElementById('limit-likes').textContent = limits.likes_remaining;
+    document.getElementById('limit-messages').textContent = limits.messages_remaining;
+    document.getElementById('limit-superlikes').textContent = limits.super_likes_remaining;
+  }
+}
+
+function showLimitExceeded(type) {
+  const modal = document.getElementById('limit-modal');
+  const text = document.getElementById('limit-modal-text');
+  if (modal && text) {
+    const messages = {
+      'likes': 'Sizning kunlik like limitingiz tugadi.',
+      'messages': 'Sizning kunlik xabar yuborish limitingiz tugadi.',
+      'super_likes': 'Sizning kunlik Super Like limitingiz tugadi.'
+    };
+    text.textContent = messages[type] || 'Kunlik limitingiz tugadi.';
+    modal.style.display = 'flex';
+  }
+}
+
+function closeLimitModal(e) {
+  if (e && e.target !== e.currentTarget && e.target !== document.getElementById('limit-modal')) return;
+  document.getElementById('limit-modal').style.display = 'none';
+}
+
+// ===== REFERRAL MODAL =====
+async function openReferralModal() {
+  closeLimitModal();
+  const modal = document.getElementById('referral-modal');
+  if (!modal) return;
+
+  if (userId) {
+    try {
+      const data = await apiPost('/api/referral/status', { telegram_id: userId });
+      if (data.success) {
+        const stats = document.getElementById('referral-stats');
+        const linkInput = document.getElementById('referral-link-input');
+        const shareLink = document.getElementById('referral-share-link');
+
+        if (stats) {
+          const count = data.referral.referral_count || 0;
+          const unlimited = data.referral.unlimited_until;
+          let html = `👥 Taklif qilinganlar: <strong>${count}</strong> ta`;
+          if (unlimited) {
+            html += `<br>✅ Limitsiz davr: <strong>${new Date(unlimited).toLocaleDateString('uz-UZ')}</strong> gacha`;
+          }
+          stats.innerHTML = html;
+        }
+
+        if (linkInput) linkInput.value = data.referral.referral_link || '';
+        if (shareLink) {
+          const text = encodeURIComponent('Tanishuv botiga qo\'shiling!');
+          const url = encodeURIComponent(data.referral.referral_link || '');
+          shareLink.href = `https://t.me/share/url?url=${url}&text=${text}`;
+        }
+      }
+    } catch (e) {
+      console.error('Referral status error:', e);
+    }
+  }
+
+  modal.style.display = 'flex';
+}
+
+function closeReferralModal(e) {
+  if (e && e.target !== e.currentTarget && e.target !== document.getElementById('referral-modal')) return;
+  document.getElementById('referral-modal').style.display = 'none';
+}
+
+function copyReferralLink() {
+  const input = document.getElementById('referral-link-input');
+  if (input) {
+    input.select();
+    navigator.clipboard.writeText(input.value).then(() => {
+      showToast('Link nusxalandi!');
+    });
+  }
 }
 
 // ===== MESSAGE MODAL =====
@@ -232,6 +307,14 @@ async function sendFirstMessage() {
     return;
   }
 
+  // Xabar limit tekshirish
+  const limitOk = await checkLimit('messages');
+  if (!limitOk) {
+    showLimitExceeded('messages');
+    closeMessageModal();
+    return;
+  }
+
   closeMessageModal();
 
   // First send like
@@ -241,6 +324,10 @@ async function sendFirstMessage() {
   });
 
   if (likeData.success) {
+    if (likeData.error === 'limit_exceeded') {
+      showLimitExceeded('likes');
+      return;
+    }
     // Create match and send message
     const matchData = await apiPost('/api/initiate_chat', {
       from_user: userId,
@@ -259,126 +346,53 @@ async function sendFirstMessage() {
       showToast('💙 Like yuborildi! Xabar match bo\'lgandan keyin ko\'rinadi.');
     }
   } else {
-    showToast('Xatolik: ' + (likeData.error || 'Like yuborilmadi'));
+    if (likeData.error === 'limit_exceeded') {
+      showLimitExceeded('likes');
+    } else {
+      showToast('Xatolik: ' + (likeData.error || 'Like yuborilmadi'));
+    }
   }
 }
 
-// ===== SYNC GROUP SUBSCRIPTION FROM BACKEND =====
-async function syncGroupSubscription() {
-  if (!userId) return;
-  const data = await apiPost('/api/group/check', { telegram_id: userId });
-  if (data.success && data.group_subscribed) {
-    isGroupSubscribed = true;
-    localStorage.setItem('group_subscribed', 'true');
-  }
-}
-
-// ===== WRAPPER: Check permissions before actions =====
-async function checkCanInteract(toUserId) {
+// ===== LIMIT CHECK HELPER =====
+async function checkLimit(type) {
   if (!userId) return false;
-  const canUse = await apiPost('/api/can_write', { from_user: userId, to_user: toUserId });
-  return canUse.success && canUse.can_write;
-}
-
-
-function isRegistered() {
-  return !!getProfile();
-}
-
-function getProfile() {
-  if (savedProfile) return savedProfile;
-  const data = localStorage.getItem('dating_profile');
-  return data ? JSON.parse(data) : null;
-}
-
-function setSavedProfile(profile) {
-  savedProfile = profile;
-  if (profile) {
-    localStorage.setItem('dating_profile', JSON.stringify(profile));
-  } else {
-    localStorage.removeItem('dating_profile');
+  if (!currentLimitStatus) {
+    await loadLimitStatus();
   }
-}
+  if (currentLimitStatus && currentLimitStatus.unlimited) return true;
 
-async function apiPost(endpoint, body) {
-  const baseUrl = API_BASE_URL ? API_BASE_URL.replace(/\/$/, '') : `${window.location.protocol}//${window.location.host}`;
-  try {
-    const res = await fetch(`${baseUrl}${endpoint}`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-      body: JSON.stringify(body),
-      mode: 'cors'
-    });
-    return await res.json();
-  } catch (e) {
-    console.error('API error:', e);
-    return { success: false, error: e.message };
+  if (currentLimitStatus) {
+    if (type === 'likes' && currentLimitStatus.likes_remaining <= 0) return false;
+    if (type === 'messages' && currentLimitStatus.messages_remaining <= 0) return false;
+    if (type === 'super_likes' && currentLimitStatus.super_likes_remaining <= 0) return false;
   }
+  return true;
 }
 
-async function saveProfileToServer(profile, telegramId) {
-  const data = await apiPost('/api/save_profile', { telegram_id: telegramId, profile });
-  return data.success === true;
+async function decrementLocalLimit(type) {
+  if (!currentLimitStatus || currentLimitStatus.unlimited) return;
+  if (type === 'likes') currentLimitStatus.likes_remaining = Math.max(0, currentLimitStatus.likes_remaining - 1);
+  if (type === 'messages') currentLimitStatus.messages_remaining = Math.max(0, currentLimitStatus.messages_remaining - 1);
+  if (type === 'super_likes') currentLimitStatus.super_likes_remaining = Math.max(0, currentLimitStatus.super_likes_remaining - 1);
+  updateLimitBar(currentLimitStatus);
 }
 
-async function fetchUserProfile(telegramId) {
-  const data = await apiPost('/api/profile', { telegram_id: telegramId });
-  return data.success ? data.user : null;
-}
-
-// === CITY SUGGEST ===
-function suggestCity(val) {
-  showSuggestions('city-suggestions', val, (city) => {
-    document.getElementById('inp-city').value = city;
-    document.getElementById('city-suggestions').style.display = 'none';
-  });
-}
-
-function suggestCitySearch(val) {
-  showSuggestions('sf-city-suggestions', val, (city) => {
-    document.getElementById('sf-city').value = city;
-    document.getElementById('sf-city-suggestions').style.display = 'none';
-  });
-}
-
-function showSuggestions(containerId, val, onSelect) {
-  const box = document.getElementById(containerId);
-  if (!val || val.length < 1) { box.style.display = 'none'; return; }
-  const filtered = uzbekCities.filter(c => c.toLowerCase().includes(val.toLowerCase())).slice(0, 6);
-  if (!filtered.length) { box.style.display = 'none'; return; }
-
-  const fnName = `_sugg_${containerId}`;
-  box.innerHTML = filtered.map(c =>
-    `<div class="suggestion-item" onclick="window['${fnName}'] && window['${fnName}']('${c}')">${c}</div>`
-  ).join('');
-  window[fnName] = (city) => {
-    onSelect(city);
-    box.style.display = 'none';
-  };
-  box.style.display = 'block';
-}
-
-function showFaceDetectionWarning(message, detail) {
-  if (detail !== undefined) {
-    console.warn('Face detection warning:', detail);
-  }
-  showToast(message);
-}
-
-// === PAGE NAVIGATION ===
+// ===== PAGE NAVIGATION =====
 function showPage(name) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-  
+
   const pageEl = document.getElementById('page-' + name);
   if (pageEl) pageEl.classList.add('active');
-  
+
   const navBtn = document.getElementById('nav-' + name);
   if (navBtn) navBtn.classList.add('active');
 
   if (name === 'search') {
     setDefaultSearchGender();
     loadPendingLikesIndicator();
+    loadLimitStatus();
   }
   if (name === 'myprofile') loadMyProfile();
   if (name === 'chats') loadChats();
@@ -386,7 +400,18 @@ function showPage(name) {
   syncZodiacPicker();
 }
 
-// === SEARCH ===
+// ===== ADVANCED FILTERS TOGGLE =====
+function toggleAdvancedFilters() {
+  const el = document.getElementById('advanced-filters');
+  const btnText = document.getElementById('adv-filter-btn-text');
+  if (el) {
+    const showing = el.style.display !== 'none';
+    el.style.display = showing ? 'none' : 'block';
+    if (btnText) btnText.textContent = showing ? '🔍 Kengaytirilgan filtrlar' : '❌ Filtrni yopish';
+  }
+}
+
+// ===== SEARCH =====
 function selectGender(g) {
   selectedGender = g;
   document.getElementById('gender-erkak').classList.toggle('selected', g === 'erkak');
@@ -409,7 +434,7 @@ function setDefaultSearchGender() {
   if (opposite) selectSearchGender(opposite);
 }
 
-// === CHIP TOGGLE ===
+// ===== CHIP TOGGLE =====
 function toggleChip(el, group) {
   el.classList.toggle('selected');
   const value = el.textContent.trim();
@@ -574,7 +599,6 @@ async function previewPhoto(input) {
     return;
   }
 
-  // 1) FaceDetector tekshiruvi (tez, brauzer ichida)
   let faceDetected = false;
   if (window.isSecureContext && 'FaceDetector' in window && typeof FaceDetector === 'function') {
     try {
@@ -592,7 +616,6 @@ async function previewPhoto(input) {
     return;
   }
 
-  // 2) FaceDetector yuz topa olmadi yoki mavjud emas → COCO-SSD bilan inson qidirish
   showToast('Rasm tekshirilmoqda, biroz kuting...', 12000);
   try {
     const personDetected = await detectPersonCocoSsd(file);
@@ -646,7 +669,7 @@ async function saveProfile() {
 
   setDefaultSearchGender();
   showToast(serverSaved ? 'Anketa muvaffaqiyatli saqlandi!' : 'Anketa mahalliy saqlandi.');
-  
+
   document.querySelector('.bottom-nav').style.display = 'flex';
   showPage('search');
 }
@@ -654,51 +677,67 @@ async function saveProfile() {
 // === SEARCH ===
 function doSearch() {
   const filters = {};
+
+  // Ism bo'yicha qidirish
+  const nameVal = document.getElementById('sf-name')?.value?.trim();
+  if (nameVal) filters.name = nameVal;
+
+  // Jins
   if (selectedSearchGender) filters.gender = selectedSearchGender;
-  const ageFrom = document.getElementById('sf-age-from').value?.trim();
+
+  // Kengaytirilgan filtrlar
+  const ageFrom = document.getElementById('sf-age-from')?.value?.trim();
   if (ageFrom) filters.age_from = parseInt(ageFrom);
-  const ageTo = document.getElementById('sf-age-to').value?.trim();
+  const ageTo = document.getElementById('sf-age-to')?.value?.trim();
   if (ageTo) filters.age_to = parseInt(ageTo);
-  const city = document.getElementById('sf-city').value?.trim();
+  const city = document.getElementById('sf-city')?.value?.trim();
   if (city) filters.city = city;
   if (selectedSearchGoals.length > 0) filters.goals = selectedSearchGoals;
   if (selectedSearchInterests.length > 0) filters.interests = selectedSearchInterests;
 
-  const resultsEl = document.getElementById('search-results-panel-body');
-  const oldResultsEl = document.getElementById('search-results');
-  if (oldResultsEl) oldResultsEl.innerHTML = '';
-  if (resultsEl) {
-    resultsEl.innerHTML = '<div class="loading"><div class="spinner"></div> Qidirilmoqda...</div>';
-    document.getElementById('search-results-modal').style.display = 'flex';
-  }
+  // Search results container
+  const resultsEl = document.getElementById('search-results');
+  const swipeContainer = document.getElementById('swipe-container');
+  if (resultsEl) resultsEl.style.display = 'none';
+  if (swipeContainer) swipeContainer.innerHTML = '<div class="loading"><div class="spinner"></div> Qidirilmoqda...</div>';
 
-  fetchSearchResults(userId || 0, filters, 'search-results-panel-body');
+  fetchSearchResults(userId || 0, filters);
 }
 
 // === TINDER CARD STATE ===
 let tinderUsers = [];
 let tinderIndex = 0;
-let tinderHistory = []; // for back button
+let tinderHistory = [];
 
-async function fetchSearchResults(telegramId, filters, containerId = 'search-results') {
-  const resultsEl = document.getElementById(containerId);
-  if (!resultsEl) return;
-  
+async function fetchSearchResults(telegramId, filters) {
+  const swipeContainer = document.getElementById('swipe-container');
+  const resultsEl = document.getElementById('search-results');
+
+  if (swipeContainer) {
+    swipeContainer.innerHTML = '<div class="loading"><div class="spinner"></div> Qidirilmoqda...</div>';
+  }
+
   try {
     const data = await apiPost('/api/search', { telegram_id: telegramId || 0, filters });
-    
+
     if (data.success && data.users && data.users.length > 0) {
       tinderUsers = data.users;
       tinderIndex = 0;
       tinderHistory = [];
-      resultsEl.innerHTML = '<div class="swipe-container" id="swipe-container"></div>';
+      if (resultsEl) resultsEl.style.display = 'block';
       renderTinderCard();
     } else {
-      resultsEl.innerHTML = `<div class="empty-state"><div class="empty-icon">${ICONS.info}</div><h3>Hech kim topilmadi</h3><p>Hozircha sizga mos foydalanuvchilar yo'q. Keyinroq qayta urinib ko'ring.</p></div>`;
+      if (swipeContainer) {
+        swipeContainer.innerHTML = `<div class="empty-state"><div class="empty-icon">${ICONS.info}</div><h3>Hech kim topilmadi</h3><p>Hozircha sizga mos foydalanuvchilar yo'q. Keyinroq qayta urinib ko'ring.</p></div>`;
+      }
+      if (resultsEl) resultsEl.style.display = 'block';
     }
   } catch (error) {
     showToast('Server bilan aloqa yo\'q');
-    resultsEl.innerHTML = `<div class="empty-state"><div class="empty-icon">${ICONS.alert}</div><h3>Ulana olmadi</h3><p>Internet aloqasini tekshiring.</p></div>`;
+    if (swipeContainer) {
+      swipeContainer.innerHTML = `<div class="empty-state"><div class="empty-icon">${ICONS.alert}</div><h3>Ulana olmadi</h3><p>Internet aloqasini tekshiring.</p></div>`;
+    }
+    if (resultsEl) resultsEl.style.display = 'block';
   }
 }
 
@@ -711,8 +750,8 @@ function renderTinderCard(direction) {
       <div class="no-more-wrap">
         <div class="no-more-emoji">✨</div>
         <div class="no-more-title">Hammasi ko'rildi!</div>
-        <div class="no-more-sub">Siz barcha nomzodlarni ko'rib chiqdingiz.<br>Filtrni o'zgartirib qayta qidiring.</div>
-        <button class="no-more-btn" onclick="showPage('search')">🔍 Qayta qidirish</button>
+        <div class="no-more-sub">Siz barcha nomzodlarni ko'rib chiqdingiz.<br>Qayta qidiring.</div>
+        <button class="no-more-btn" onclick="doSearch()">🔍 Qayta qidirish</button>
       </div>`;
     return;
   }
@@ -726,19 +765,13 @@ function renderTinderCard(direction) {
     ? `<img src="${photo}" alt="${u.full_name}" loading="lazy" />`
     : `<div style="display:flex;align-items:center;justify-content:center;width:100%;height:100%;color:var(--ios-blue);opacity:0.4;">${icon}</div>`;
 
-  // Progress dots
   const dots = Array.from({length: Math.min(total, 7)}, (_, i) => {
     const ci = Math.min(tinderIndex, 6);
     return `<div class="swipe-dot ${i === ci ? 'active' : ''}"></div>`;
   }).join('');
 
-  const msgBtn = u.can_write
-    ? `<button class="tinder-btn tinder-btn-msg" onclick="event.stopPropagation(); openMessageModal(${u.telegram_id},'${escapeJs(u.full_name)}','${escapeJs(photo||'')}');" title="Xabar yuborish">💬</button>`
-    : `<button class="tinder-btn tinder-btn-msg" onclick="event.stopPropagation(); showWriteRequirement();" title="Yozish" style="opacity:0.4;">💬</button>`;
-
-  const aboutHtml = u.about
-    ? `<div class="tinder-about">${escapeHtml(u.about)}</div>`
-    : '';
+  const goals = (u.goals || []).map(g => `<span class="tinder-tag">${g}</span>`).join('');
+  const interests = (u.interests || []).map(i => `<span class="tinder-tag tinder-tag-alt">${i}</span>`).join('');
 
   container.innerHTML = `
     <div class="swipe-counter">
@@ -758,14 +791,14 @@ function renderTinderCard(direction) {
         </div>
       </div>
       <div class="tinder-body">
-        ${aboutHtml}
+        <div class="tinder-tags-wrap">${goals}${interests}</div>
       </div>
       <div class="tinder-actions" onclick="event.stopPropagation()">
         <button class="tinder-btn tinder-btn-back" onclick="tinderBack()" title="Orqaga">↩️</button>
         <button class="tinder-btn tinder-btn-nope" onclick="tinderDislike()" title="Yoqmadi">❌</button>
         <button class="tinder-btn tinder-btn-superlike" id="superlike-btn" onclick="openStickerModal(${u.telegram_id})" title="Super Like">⭐</button>
         <button class="tinder-btn tinder-btn-like" onclick="tinderLike()" title="Like">💚</button>
-        ${msgBtn}
+        <button class="tinder-btn tinder-btn-msg" onclick="event.stopPropagation(); openMessageModal(${u.telegram_id},'${escapeJs(u.full_name)}','${escapeJs(photo||'')}', ${u.can_write});" title="Xabar yuborish">💬</button>
       </div>
     </div>`;
 }
@@ -777,9 +810,17 @@ function showStamp(type) {
   setTimeout(() => { if(el) el.style.opacity = '0'; }, 600);
 }
 
-function tinderLike() {
+async function tinderLike() {
   const u = tinderUsers[tinderIndex];
   if (!u) return;
+
+  // Limit tekshirish
+  const limitOk = await checkLimit('likes');
+  if (!limitOk) {
+    showLimitExceeded('likes');
+    return;
+  }
+
   showStamp('like');
   const card = document.getElementById('tinder-card');
   if (card) card.classList.add('animate-right');
@@ -815,14 +856,10 @@ async function openStickerModal(toUserId) {
     return;
   }
 
-  try {
-    const canUse = await apiPost('/api/can_write', { from_user: userId, to_user: toUserId });
-    if (!canUse.success || !canUse.can_write) {
-      showToast('Super Like uchun 5 ta imkoniyat bor. 5 tadan keyin 2 ta do\'st kerak.');
-      return;
-    }
-  } catch (error) {
-    showToast('Super Like tekshiruvi bajarilmadi.');
+  // Super Like limit tekshirish
+  const limitOk = await checkLimit('super_likes');
+  if (!limitOk) {
+    showLimitExceeded('super_likes');
     return;
   }
 
@@ -832,7 +869,6 @@ async function openStickerModal(toUserId) {
     `<button class="sticker-btn" onclick="sendSticker('${s}')">${s}</button>`
   ).join('');
   document.getElementById('sticker-overlay').style.display = 'flex';
-  // flash animation
   const btn = document.getElementById('superlike-btn');
   if (btn) { btn.classList.add('flash'); setTimeout(()=>btn.classList.remove('flash'),500); }
 }
@@ -847,26 +883,22 @@ async function sendSticker(sticker) {
   document.getElementById('sticker-overlay').style.display = 'none';
   if (!stickerTargetId || !userId) { showToast('Xatolik'); return; }
 
-  const canUse = await apiPost('/api/can_write', { from_user: userId, to_user: stickerTargetId });
-  if (!canUse.success || !canUse.can_write) {
-    showToast('Super Like uchun 5 ta imkoniyat bor. 5 tadan keyin 2 ta do\'st kerak.');
-    return;
-  }
-
-  // Show stamp on card
   showStamp('super');
   const card = document.getElementById('tinder-card');
   if (card) card.classList.add('animate-up');
 
-  // Send super like (like) + sticker via message API
   const likeData = await apiPost('/api/likes/send', {
     from_user: userId,
     to_user: stickerTargetId,
     super_like: true,
     sticker: sticker
   });
-  
-  // Also send sticker as chat message if match exists
+
+  if (likeData.error === 'limit_exceeded') {
+    showLimitExceeded('super_likes');
+    return;
+  }
+
   if (likeData.match && likeData.match_id) {
     await apiPost('/api/chat/send', {
       match_id: likeData.match_id,
@@ -960,7 +992,7 @@ async function rejectLike(fromUserId, name) {
     loadPendingLikesIndicator();
     openIncomingLikesModal();
   } else {
-    showToast('Xatolik yuz berdi. Iltimos qayta urinib ko‘ring.');
+    showToast('Xatolik yuz berdi. Iltimos qayta urinib ko\'ring.');
   }
 }
 
@@ -972,14 +1004,6 @@ function renderProfileCard(u) {
   const photoHtml = photo
     ? `<img src="${photo}" alt="${u.full_name}" loading="lazy" />`
     : `<div style="display:flex;align-items:center;justify-content:center;width:100%;height:100%;color:var(--primary);">${icon}</div>`;
-
-  const writeBtn = u.can_write
-    ? `<button class="action-btn btn-write" onclick="event.stopPropagation(); openMessageModal(${u.telegram_id}, '${escapeJs(u.full_name)}', '${escapeJs(photo || '')}')">
-         <span class="btn-icon">${ICONS.message}</span> Xabar yuborish
-       </button>`
-    : `<button class="action-btn btn-write" onclick="event.stopPropagation(); showWriteRequirement()" style="opacity:0.5;">
-         <span class="btn-icon">${ICONS.message}</span> Xabar yuborish
-       </button>`;
 
   return `
   <div class="profile-card" onclick="showProfileDetail(${JSON.stringify(u).replace(/"/g, '&quot;')})">
@@ -993,7 +1017,9 @@ function renderProfileCard(u) {
       <button class="action-btn btn-like" onclick="event.stopPropagation(); sendLike(${u.telegram_id})">
         <span class="btn-icon">${ICONS.heart}</span> Like
       </button>
-      ${writeBtn}
+      <button class="action-btn btn-write" onclick="event.stopPropagation(); openMessageModal(${u.telegram_id}, '${escapeJs(u.full_name)}', '${escapeJs(photo || '')}')">
+        <span class="btn-icon">${ICONS.message}</span> Xabar
+      </button>
       <button class="action-btn btn-block" onclick="event.stopPropagation(); sendBlock(${u.telegram_id})">
         <span class="btn-icon">${ICONS.ban}</span> Blok
       </button>
@@ -1001,57 +1027,90 @@ function renderProfileCard(u) {
   </div>`;
 }
 
-function escapeJs(str) {
-  if (!str) return '';
-  return str.replace(/'/g, "\\'").replace(/"/g, '\\"');
+async function acceptLike(fromUserId, name, photo) {
+  if (!userId) return;
+  const data = await apiPost('/api/likes/accept', { telegram_id: userId, from_user: fromUserId });
+  if (data.success) {
+    showToast(`${name} bilan match bo'ldingiz!`);
+    loadPendingLikesIndicator();
+    loadChats();
+  } else {
+    showToast('Xatolik yuz berdi.');
+  }
 }
 
-function showWriteRequirement() {
-  showToast('Yozish uchun 2 ta do\'st kerak.');
+async function sendLike(toUserId) {
+  if (!userId) { showToast('Avval profilingizni to\'ldiring'); return; }
+
+  // Limit tekshirish
+  const limitOk = await checkLimit('likes');
+  if (!limitOk) {
+    showLimitExceeded('likes');
+    return;
+  }
+
+  const data = await apiPost('/api/likes/send', { from_user: userId, to_user: toUserId });
+
+  if (data.error === 'limit_exceeded') {
+    showLimitExceeded('likes');
+    return;
+  }
+
+  if (data.success) {
+    if (data.match) {
+      showMatchOverlay();
+      loadChats();
+    } else {
+      showToast('💙 Like yuborildi!');
+    }
+  } else {
+    showToast('Xatolik: ' + (data.error || 'Noma\'lum'));
+  }
 }
 
-// === PROFILE DETAIL MODAL ===
-function showProfileDetail(user) {
+async function sendBlock(blockedId) {
+  if (!userId) return;
+  await apiPost('/api/block', { blocker: userId, blocked: blockedId });
+  showToast('🚫 Bloklandi');
+}
+
+function showMatchOverlay() {
+  document.getElementById('match-overlay').style.display = 'flex';
+}
+function closeMatchOverlay() {
+  document.getElementById('match-overlay').style.display = 'none';
+}
+
+function showProfileDetail(u) {
   const modal = document.getElementById('profile-modal');
   const body = document.getElementById('profile-modal-body');
-  
-  const icon = user.gender === 'erkak' ? ICONS.male : ICONS.female;
-  const goals = (user.goals || []).map(g => `<span class="tag">${g}</span>`).join('');
-  const interests = (user.interests || []).map(i => `<span class="tag" style="background:var(--accent-soft);color:var(--accent);">${i}</span>`).join('');
-  const photo = user.photo || user.photo_file_id || user.photo_base64;
+  if (!modal || !body) return;
+
+  const icon = u.gender === 'erkak' ? ICONS.male : ICONS.female;
+  const goals = (u.goals || []).map(g => `<span class="tag">${g}</span>`).join('');
+  const interests = (u.interests || []).map(i => `<span class="tag" style="background:var(--accent-soft);color:var(--accent);">${i}</span>`).join('');
+  const photo = u.photo || u.photo_file_id || u.photo_base64;
+  const photoHtml = photo
+    ? `<img src="${photo}" alt="${u.full_name}" style="width:100%;height:280px;object-fit:cover;border-radius:20px;margin-bottom:16px;" />`
+    : '';
 
   body.innerHTML = `
-    <div style="text-align:center; margin-bottom:24px;">
-      <div style="width:130px;height:130px;border-radius:50%;margin:0 auto;overflow:hidden;background:linear-gradient(135deg, var(--primary-ultra-light), var(--gray-200));box-shadow:var(--shadow);cursor:zoom-in;">
-        ${photo ? `<img src="${photo}" style="width:100%;height:100%;object-fit:contain;object-position:center;background:linear-gradient(135deg, rgba(255,255,255,0.94), rgba(240,245,255,0.98));" onclick="openPhotoViewer('${escapeJs(photo)}', '${escapeJs(user.full_name)}');" />` : `<div style="display:flex;align-items:center;justify-content:center;height:100%;">${icon}</div>`}
-      </div>
-      <h2 style="margin-top:16px;font-family:var(--font-main);font-size:24px;">${user.full_name}</h2>
-      <p style="color:var(--text-muted);font-size:15px;margin-top:4px;">${user.age} yosh • ${user.city} • ${user.zodiac || ''}</p>
+    ${photoHtml}
+    <div style="text-align:center; margin-bottom:16px;">
+      <div style="font-size:24px; font-weight:800;">${icon} ${u.full_name}, ${u.age}</div>
+      <div style="color:var(--text-secondary); margin-top:4px;">📍 ${u.city}${u.zodiac ? ' • ' + u.zodiac : ''}</div>
     </div>
-    <div style="margin-bottom:20px;">
-      <div class="section-title">Maqsad</div>
-      <div class="profile-tags">${goals}</div>
-    </div>
-    <div style="margin-bottom:24px;">
-      <div class="section-title">Qiziqishlar</div>
-      <div class="profile-tags">${interests}</div>
-    </div>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
-      <button class="btn-primary" onclick="sendLike(${user.telegram_id}); closeProfileModal();" style="padding:14px;">
+    <div style="margin-bottom:12px;">${goals}</div>
+    <div style="margin-bottom:16px;">${interests}</div>
+    <div style="display:flex; gap:10px; justify-content:center;">
+      <button class="action-btn btn-like" onclick="sendLike(${u.telegram_id}); closeProfileModal();">
         <span class="btn-icon">${ICONS.heart}</span> Like
       </button>
-      ${user.can_write ? `
-      <button class="btn-secondary" onclick="openMessageModal(${user.telegram_id}, '${escapeJs(user.full_name)}', '${escapeJs(photo || '')}'); closeProfileModal();" style="padding:14px;">
-        <span class="btn-icon">${ICONS.message}</span> Xabar yuborish
+      <button class="action-btn btn-write" onclick="openMessageModal(${u.telegram_id}, '${escapeJs(u.full_name)}', '${escapeJs(photo || '')}'); closeProfileModal();">
+        <span class="btn-icon">${ICONS.message}</span> Xabar
       </button>
-      ` : `
-      <button class="btn-secondary" onclick="showWriteRequirement();" style="padding:14px;opacity:0.6;">
-        <span class="btn-icon">${ICONS.message}</span> Yozish
-      </button>
-      `}
     </div>
   `;
-  
   modal.style.display = 'flex';
 }
 
@@ -1060,450 +1119,203 @@ function closeProfileModal(e) {
   document.getElementById('profile-modal').style.display = 'none';
 }
 
-function closeSearchResultsModal(e) {
-  if (e && e.target !== e.currentTarget) return;
-  const modal = document.getElementById('search-results-modal');
-  if (modal) modal.style.display = 'none';
+function escapeHtml(str) {
+  if (!str) return '';
+  return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+function escapeJs(str) {
+  if (!str) return '';
+  return str.replace(/'/g,"\\'").replace(/"/g,'\\"');
 }
 
-function openPhotoViewer(src, title) {
-  const modal = document.getElementById('photo-viewer-modal');
-  const img = document.getElementById('photo-viewer-img');
-  const caption = document.getElementById('photo-viewer-caption');
-  if (!modal || !img) return;
-  img.src = src || '';
-  caption.textContent = title || 'Foto';
-  modal.style.display = 'flex';
+function showToast(message, duration = 3000) {
+  const toast = document.getElementById('toast');
+  toast.textContent = message;
+  toast.style.display = 'block';
+  toast.style.animation = 'none';
+  toast.offsetHeight;
+  toast.style.animation = '';
+  setTimeout(() => { toast.style.display = 'none'; }, duration);
 }
 
-function closePhotoViewer(e) {
-  const modal = document.getElementById('photo-viewer-modal');
-  if (e && e.target !== e.currentTarget) return;
-  if (modal) modal.style.display = 'none';
+// ===== PROFILE HELPERS =====
+function isRegistered() {
+  return !!getProfile();
 }
 
-// === ACTIONS ===
-function sendLike(toUser) {
-  if (!userId) {
-    showToast('Foydalanuvchi ID topilmadi');
-    return;
-  }
-  
-  apiPost('/api/likes/send', { from_user: userId, to_user: toUser })
-    .then(data => {
-      if (data.success) {
-        if (data.match) {
-          showToast('🎉 Match! Muloqotni boshlashingiz mumkin');
-        } else {
-          showToast('💙 Like yuborildi!');
-        }
-      } else {
-        showToast('Xatolik: ' + (data.error || 'Like yuborilmadi'));
-      }
-    })
-    .catch(err => {
-      logger.error('Like send error:', err);
-      showToast('Xatolik: Like yuborilmadi');
-    });
+function getProfile() {
+  if (savedProfile) return savedProfile;
+  const data = localStorage.getItem('dating_profile');
+  return data ? JSON.parse(data) : null;
 }
 
-function sendBlock(blockedId) {
-  if (confirm('Bu foydalanuvchini bloklamoqchimisiz?')) {
-    if (tg) {
-      tg.sendData(JSON.stringify({ action: 'block_user', blocked_id: blockedId }));
-    }
-    showToast('Bloklandi!');
-  }
-}
-
-async function initiateChat(toUserId, name, photo) {
-  if (!userId) return;
-  
-  // Check if group subscribed first
-  if (!checkGroupSubscription()) {
-    showGroupSubModal();
-    return;
-  }
-  
-  // Check permissions
-  const canInteract = await checkCanInteract(toUserId);
-  if (!canInteract) {
-    showWriteRequirement();
-    return;
-  }
-  
-  openMessageModal(toUserId, name, photo);
-}
-
-// === CHATS PAGE ===
-async function loadChats() {
-  if (!userId) return;
-  
-  const [likesData, matchesData] = await Promise.all([
-    apiPost('/api/likes/received', { telegram_id: userId }),
-    apiPost('/api/matches', { telegram_id: userId })
-  ]);
-
-  const likes = likesData.success ? likesData.likes : [];
-  const matches = matchesData.success ? matchesData.matches : [];
-
-  renderIncomingLikes(likes);
-  renderChatList(matches);
-
-  const badge = document.getElementById('chat-badge');
-  const totalCount = likes.length;
-  if (totalCount > 0) {
-    badge.textContent = totalCount > 9 ? '9+' : totalCount;
-    badge.style.display = 'block';
+function setSavedProfile(profile) {
+  savedProfile = profile;
+  if (profile) {
+    localStorage.setItem('dating_profile', JSON.stringify(profile));
   } else {
-    badge.style.display = 'none';
+    localStorage.removeItem('dating_profile');
   }
 }
 
-function renderIncomingLikes(likes) {
-  const section = document.getElementById('incoming-likes-section');
-  const list = document.getElementById('incoming-likes-list');
-  
-  if (!likes.length) {
-    section.style.display = 'none';
-    return;
+async function apiPost(endpoint, body) {
+  const baseUrl = API_BASE_URL ? API_BASE_URL.replace(/\/$/, '') : `${window.location.protocol}//${window.location.host}`;
+  try {
+    const res = await fetch(`${baseUrl}${endpoint}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+      body: JSON.stringify(body),
+      mode: 'cors'
+    });
+    return await res.json();
+  } catch (e) {
+    console.error('API error:', e);
+    return { success: false, error: e.message };
   }
-  
-  section.style.display = 'block';
-  list.innerHTML = likes.map(u => {
-    const photo = u.photo_base64 || u.photo_file_id || '';
-    return `
-    <div class="like-item">
-      <img class="like-item-photo" src="${photo}" alt="" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-      <div style="display:none;align-items:center;justify-content:center;width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg, var(--primary-ultra-light), var(--gray-200));flex-shrink:0;color:var(--primary);">
-        ${u.gender === 'erkak' ? ICONS.male : ICONS.female}
-      </div>
-      <div class="like-item-info">
-        <div class="like-item-name">${u.full_name}, ${u.age}</div>
-        <div class="like-item-details">${u.city}</div>
-      </div>
-      <div class="like-actions">
-        <button class="like-btn accept" onclick="acceptLike(${u.telegram_id}, '${escapeJs(u.full_name)}', '${escapeJs(photo)}')">Qabul</button>
-        <button class="like-btn reject" onclick="skipLike(${u.telegram_id})">O'tkaz</button>
-      </div>
-    </div>`;
-  }).join('');
 }
 
-function renderChatList(matches) {
-  const list = document.getElementById('chat-list');
-  const empty = document.getElementById('chats-empty');
-  
-  if (!matches.length) {
-    list.innerHTML = '';
-    empty.style.display = 'block';
+async function saveProfileToServer(profile, telegramId) {
+  const data = await apiPost('/api/save_profile', { telegram_id: telegramId, profile });
+  return data.success === true;
+}
+
+async function fetchUserProfile(telegramId) {
+  const data = await apiPost('/api/profile', { telegram_id: telegramId });
+  return data.success ? data.user : null;
+}
+
+// === CITY SUGGEST ===
+function suggestCity(val) {
+  showSuggestions('city-suggestions', val, (city) => {
+    document.getElementById('inp-city').value = city;
+    document.getElementById('city-suggestions').style.display = 'none';
+  });
+}
+
+function suggestCitySearch(val) {
+  showSuggestions('sf-city-suggestions', val, (city) => {
+    document.getElementById('sf-city').value = city;
+    document.getElementById('sf-city-suggestions').style.display = 'none';
+  });
+}
+
+function showSuggestions(containerId, val, onSelect) {
+  const box = document.getElementById(containerId);
+  if (!val || val.length < 1) { box.style.display = 'none'; return; }
+  const filtered = uzbekCities.filter(c => c.toLowerCase().includes(val.toLowerCase())).slice(0, 6);
+  if (!filtered.length) { box.style.display = 'none'; return; }
+
+  const fnName = `_sugg_${containerId}`;
+  box.innerHTML = filtered.map(c =>
+    `<div class="suggestion-item" onclick="window['${fnName}'] && window['${fnName}']('${c}')">${c}</div>`
+  ).join('');
+  window[fnName] = (city) => {
+    onSelect(city);
+    box.style.display = 'none';
+  };
+  box.style.display = 'block';
+}
+
+function showFaceDetectionWarning(message, detail) {
+  if (detail !== undefined) {
+    console.warn('Face detection warning:', detail);
+  }
+  showToast(message);
+}
+
+// === CHAT FUNCTIONS ===
+async function loadChats() {
+  const chatList = document.getElementById('chat-list');
+  const emptyState = document.getElementById('chats-empty');
+  if (!chatList) return;
+
+  chatList.innerHTML = '<div class="loading"><div class="spinner"></div> Yuklanmoqda...</div>';
+
+  const data = await apiPost('/api/matches', { telegram_id: userId });
+  if (!data.success || !data.matches || data.matches.length === 0) {
+    chatList.innerHTML = '';
+    if (emptyState) emptyState.style.display = 'flex';
     return;
   }
-  
-  empty.style.display = 'none';
-  list.innerHTML = matches.map(m => {
+
+  if (emptyState) emptyState.style.display = 'none';
+
+  chatList.innerHTML = data.matches.map(m => {
     const photo = m.photo_base64 || m.photo_file_id || '';
     return `
-    <div class="chat-list-item" onclick="openChatRoom(${m.match_id}, '${escapeJs(m.full_name)}', '${escapeJs(photo)}')">
-      <img class="chat-list-photo" src="${photo}" alt="" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-      <div style="display:none;align-items:center;justify-content:center;width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg, var(--primary-ultra-light), var(--gray-200));flex-shrink:0;color:var(--primary);">
-        ${m.gender === 'erkak' ? ICONS.male : ICONS.female}
+      <div class="chat-item" onclick="openChatRoom(${m.match_id}, '${escapeJs(m.full_name)}', '${escapeJs(photo)}')">
+        <div class="chat-item-photo">
+          ${photo ? `<img src="${photo}" alt="" />` : (m.gender === 'erkak' ? ICONS.male : ICONS.female)}
+        </div>
+        <div class="chat-item-info">
+          <div class="chat-item-name">${m.full_name}</div>
+          <div class="chat-item-preview">Suhbatni ochish...</div>
+        </div>
       </div>
-      <div class="chat-list-info">
-        <div class="chat-list-name">${m.full_name}</div>
-        <div class="chat-list-preview">Suhbatni boshlash uchun bosing</div>
-      </div>
-    </div>`;
+    `;
   }).join('');
 }
 
-async function acceptLike(fromUserId, name, photo) {
-  const data = await apiPost('/api/likes/accept', { telegram_id: userId, from_user: fromUserId });
-  if (data.success && data.match_id) {
-    showMatchOverlay();
-    loadChats();
-    loadPendingLikesIndicator();
-    setTimeout(() => {
-      openChatRoom(data.match_id, name, photo);
-    }, 800);
-  } else {
-    showToast('Xatolik yuz berdi');
-  }
-}
-
-async function skipLike(fromUserId) {
-  // Just hide for now (could add reject API)
-  showToast('O\'tkazib yuborildi');
-  loadChats();
-}
-
-function showMatchOverlay() {
-  document.getElementById('match-overlay').style.display = 'flex';
-}
-
-function closeMatchOverlay() {
-  document.getElementById('match-overlay').style.display = 'none';
-}
-
-// === CHAT ROOM ===
-async function openChatRoom(matchId, name, photo) {
-  // Oldingi chatni tozala
-  if (chatRefreshInterval) {
-    clearInterval(chatRefreshInterval);
-    chatRefreshInterval = null;
-  }
-  
+function openChatRoom(matchId, name, photo) {
   currentChatMatchId = matchId;
   currentChatPartner = { name, photo };
-  
-  document.getElementById('chat-user-name').textContent = name;
-  const photoEl = document.getElementById('chat-user-photo');
-  photoEl.src = photo || '';
-  photoEl.onerror = function() { this.style.display = 'none'; };
-  
-  // Xabarlar containerini tozala (boshqa chatning xabarlari qolmasin)
-  document.getElementById('chat-messages').innerHTML = '';
-  
   document.getElementById('chat-modal').style.display = 'flex';
-  document.getElementById('chat-input').value = '';
-  document.getElementById('chat-input').focus();
-  
-  await loadChatMessages(matchId);
-  
-  chatRefreshInterval = setInterval(() => {
-    if (currentChatMatchId === matchId) {
-      loadChatMessages(matchId);
-    } else {
-      clearInterval(chatRefreshInterval);
-    }
-  }, 1500);
-}
+  document.getElementById('chat-user-name').textContent = name;
+  document.getElementById('chat-user-photo').src = photo || '';
+  loadChatMessages(matchId);
 
-async function loadChatMessages(matchId) {
-  const data = await apiPost('/api/chat/messages', { match_id: matchId });
-  if (data.success) {
-    renderMessages(data.messages);
-  }
-}
-
-function renderMessages(messages) {
-  const container = document.getElementById('chat-messages');
-  const wasAtBottom = container.scrollTop + container.clientHeight >= container.scrollHeight - 20;
-
-  // DOM diffing: faqat yangi xabarlarni qo'sh, barchasini qayta render qilma
-  const existingIds = new Set(
-    Array.from(container.querySelectorAll('.chat-bubble[data-id]')).map(el => el.dataset.id)
-  );
-
-  let added = false;
-  messages.forEach(m => {
-    const key = String(m.id || (m.sender_id + '_' + m.created_at));
-    if (!existingIds.has(key)) {
-      const bubble = document.createElement('div');
-      bubble.className = `chat-bubble ${String(m.sender_id) === String(userId) ? 'me' : 'them'}`;
-      bubble.dataset.id = key;
-      const timeStr = new Date(m.created_at).toLocaleTimeString('uz-UZ', {hour: '2-digit', minute:'2-digit'});
-      const isImage = m.type === 'image' || (m.message && m.message.startsWith('data:image'));
-      if (isImage) {
-        bubble.innerHTML = `<img src="${m.message}" style="max-width:200px;max-height:200px;border-radius:10px;display:block;cursor:zoom-in;" onclick="openPhotoViewer('${m.message}', 'Rasm')" /><div class="chat-time">${timeStr}</div>`;
-      } else {
-        bubble.innerHTML = `${escapeHtml(m.message)}<div class="chat-time">${timeStr}</div>`;
-      }
-      container.appendChild(bubble);
-      added = true;
-    }
-  });
-
-  // Eski o'chirilgan xabarlarni tozala (ixtiyoriy)
-  if (messages.length === 0) {
-    container.innerHTML = '';
-  }
-
-  if (added && wasAtBottom) {
-    container.scrollTop = container.scrollHeight;
-  } else if (messages.length <= 5) {
-    container.scrollTop = container.scrollHeight;
-  }
-}
-
-async function sendChatMessage() {
-  const input = document.getElementById('chat-input');
-  const text = input.value.trim();
-  if (!text || !currentChatMatchId) return;
-  
-  const data = await apiPost('/api/chat/send', {
-    match_id: currentChatMatchId,
-    sender_id: userId,
-    message: text
-  });
-  
-  if (data.success) {
-    input.value = '';
-    await loadChatMessages(currentChatMatchId);
-  } else {
-    showToast('Xabar yuborilmadi: ' + (data.error || 'Noma\'lum xatolik'));
-  }
+  if (chatRefreshInterval) clearInterval(chatRefreshInterval);
+  chatRefreshInterval = setInterval(() => loadChatMessages(matchId), 3000);
 }
 
 function closeChatRoom() {
   document.getElementById('chat-modal').style.display = 'none';
   if (chatRefreshInterval) clearInterval(chatRefreshInterval);
+  chatRefreshInterval = null;
   currentChatMatchId = null;
 }
 
-function escapeHtml(text) {
-  const div = document.createElement('div');
-  div.textContent = text;
-  return div.innerHTML;
+async function loadChatMessages(matchId) {
+  const data = await apiPost('/api/chat/messages', { match_id: matchId });
+  const container = document.getElementById('chat-messages');
+  if (!data.success || !container) return;
+
+  container.innerHTML = data.messages.map(m => {
+    const isMe = m.sender_id == userId;
+    return `<div class="chat-msg ${isMe ? 'chat-msg-me' : 'chat-msg-them'}">${escapeHtml(m.message)}</div>`;
+  }).join('');
+  container.scrollTop = container.scrollHeight;
 }
 
-// === MY PROFILE ===
-function loadMyProfile() {
-  const el = document.getElementById('my-profile-content');
-  const profile = getProfile();
-  
-  if (!profile) {
-    el.innerHTML = `
-      <div class="empty-state">
-        <div class="empty-icon">${ICONS.info}</div>
-        <h3>Anketa topilmadi</h3>
-        <p>Iltimos, anketangizni to'ldiring.</p>
-      </div>`;
+async function sendChatMessage() {
+  const input = document.getElementById('chat-input');
+  const message = input.value.trim();
+  if (!message || !currentChatMatchId) return;
+
+  // Xabar limit tekshirish
+  const limitOk = await checkLimit('messages');
+  if (!limitOk) {
+    showLimitExceeded('messages');
     return;
   }
 
-  const genderIcon = profile.gender === 'erkak' ? ICONS.male : ICONS.female;
-  const goalsText = (profile.goals || []).join(', ') || 'ko\'rsatilmagan';
-  const interestsText = (profile.interests || []).join(', ') || 'ko\'rsatilmagan';
-
-  const photoHtml = profile.photo_base64
-    ? `<img src="${profile.photo_base64}" alt="photo" onclick="openPhotoViewer('${escapeJs(profile.photo_base64)}', '${escapeJs(profile.full_name || 'Profil foto')}');" />`
-    : `<div style="display:flex;align-items:center;justify-content:center;width:100%;height:100%;color:var(--primary);">${genderIcon}</div>`;
-
-  el.innerHTML = `
-    <div class="my-profile-wrap">
-      <div class="my-profile-photo">${photoHtml}</div>
-      <div class="card">
-        <div class="info-row">
-          <span class="info-icon">${ICONS.user}</span>
-          <div>
-            <div class="info-label">Ism</div>
-            <div class="info-value">${profile.full_name}</div>
-          </div>
-        </div>
-        <div class="info-row">
-          <span class="info-icon">${ICONS.atSign}</span>
-          <div>
-            <div class="info-label">Username</div>
-            <div class="info-value">${userName ? '@' + userName : 'Yo\'q'}</div>
-          </div>
-        </div>
-        <div class="info-row">
-          <span class="info-icon">${ICONS.info}</span>
-          <div>
-            <div class="info-label">Yosh</div>
-            <div class="info-value">${profile.age} yosh</div>
-          </div>
-        </div>
-        <div class="info-row">
-          <span class="info-icon">${ICONS.mapPin}</span>
-          <div>
-            <div class="info-label">Shahar</div>
-            <div class="info-value">${profile.city}</div>
-          </div>
-        </div>
-        <div class="info-row">
-          <span class="info-icon">${ICONS.target}</span>
-          <div>
-            <div class="info-label">Maqsad</div>
-            <div class="info-value">${goalsText}</div>
-          </div>
-        </div>
-        <div class="info-row">
-          <span class="info-icon">${ICONS.book}</span>
-          <div>
-            <div class="info-label">Qiziqishlar</div>
-            <div class="info-value">${interestsText}</div>
-          </div>
-        </div>
-      </div>
-    </div>`;
-}
-
-// === TOAST ===
-function showToast(msg, duration = 2500) {
-  const toast = document.getElementById('toast');
-  toast.textContent = msg;
-  toast.classList.add('show');
-  setTimeout(() => toast.classList.remove('show'), duration);
-}
-
-// === INIT ===
-async function init() {
-  if (userId) {
-    const serverProfile = await fetchUserProfile(userId);
-    const localProfile = getProfile();
-
-    if (serverProfile) {
-      if (!localProfile || JSON.stringify(localProfile) !== JSON.stringify(serverProfile)) {
-        setSavedProfile(serverProfile);
-      }
-    } else if (localProfile) {
-      setSavedProfile(null);
-      showToast('Serverda profil topilmadi, qayta ro\'yxatdan o\'ting.');
-    }
-  }
-
-  if (!isRegistered()) {
-    showPage('profile');
-    document.querySelector('.bottom-nav').style.display = 'none';
-  } else {
-    const params = new URLSearchParams(window.location.search);
-    const page = params.get('page') || 'search';
-    showPage(page);
-    document.querySelector('.bottom-nav').style.display = 'flex';
-  }
-
-  // Like va chat real-time: har 3 soniyada yangilanadi
-  setInterval(() => {
-    if (!userId) return;
-    apiPost('/api/likes/received', { telegram_id: userId }).then(data => {
-      if (data.success) {
-        const count = (data.likes || []).length;
-        const badge = document.getElementById('chat-badge');
-        if (count > 0) {
-          badge.textContent = count > 9 ? '9+' : count;
-          badge.style.display = 'block';
-        } else {
-          badge.style.display = 'none';
-        }
-        // Chats sahifasi ochiq bo'lsa, likes listini ham yangilash
-        if (document.getElementById('page-chats').classList.contains('active')) {
-          renderIncomingLikes(data.likes || []);
-        }
-        // Search sahifasidagi badge
-        const searchBadge = document.getElementById('search-likes-badge');
-        if (searchBadge) {
-          if (count > 0) {
-            searchBadge.textContent = count > 9 ? '9+' : count;
-            searchBadge.style.display = 'inline-flex';
-          } else {
-            searchBadge.style.display = 'none';
-          }
-        }
-      }
-    });
-  }, 3000);
-
-  document.addEventListener('click', (e) => {
-    if (!e.target.closest('.form-input')) {
-      document.querySelectorAll('.suggestions-box').forEach(b => b.style.display = 'none');
-    }
+  const data = await apiPost('/api/chat/send', {
+    match_id: currentChatMatchId,
+    sender_id: userId,
+    message: message
   });
+
+  if (data.error === 'limit_exceeded') {
+    showLimitExceeded('messages');
+    return;
+  }
+
+  if (data.success) {
+    input.value = '';
+    loadChatMessages(currentChatMatchId);
+  }
 }
 
-init();
-// === EMOJI PANEL ===
 function toggleEmojiPanel() {
   const panel = document.getElementById('emoji-panel');
   panel.style.display = panel.style.display === 'none' ? 'block' : 'none';
@@ -1511,36 +1323,113 @@ function toggleEmojiPanel() {
 
 function insertEmoji(emoji) {
   const input = document.getElementById('chat-input');
-  const pos = input.selectionStart;
-  input.value = input.value.slice(0, pos) + emoji + input.value.slice(pos);
-  input.selectionStart = input.selectionEnd = pos + emoji.length;
+  input.value += emoji;
   input.focus();
-  document.getElementById('emoji-panel').style.display = 'none';
 }
 
-// === RASM YUBORISH (base64) ===
 async function sendImageMessage(input) {
+  // Rasm yuborish - base64 orqali
   const file = input.files[0];
-  if (!file || !currentChatMatchId) return;
-  if (!file.type.startsWith('image/')) { showToast('Faqat rasm yuborish mumkin'); return; }
-  if (file.size > 3 * 1024 * 1024) { showToast('Rasm 3MB dan kichik bo\'lsin'); return; }
+  if (!file) return;
 
-  showToast('Rasm yuborilmoqda...');
+  // Xabar limit tekshirish
+  const limitOk = await checkLimit('messages');
+  if (!limitOk) {
+    showLimitExceeded('messages');
+    return;
+  }
+
   const reader = new FileReader();
   reader.onload = async (e) => {
     const base64 = e.target.result;
     const data = await apiPost('/api/chat/send', {
       match_id: currentChatMatchId,
       sender_id: userId,
-      message: base64,
-      type: 'image'
+      message: `[RASM] ${base64.substring(0, 100)}...`
     });
+
+    if (data.error === 'limit_exceeded') {
+      showLimitExceeded('messages');
+      return;
+    }
+
     if (data.success) {
-      await loadChatMessages(currentChatMatchId);
-    } else {
-      showToast('Rasm yuborilmadi: ' + (data.error || ''));
+      loadChatMessages(currentChatMatchId);
     }
   };
   reader.readAsDataURL(file);
-  input.value = '';
 }
+
+// === MY PROFILE ===
+async function loadMyProfile() {
+  const container = document.getElementById('my-profile-content');
+  if (!container) return;
+
+  if (!userId) {
+    container.innerHTML = '<div class="empty-state"><h3>Profilingiz yuklanmadi</h3></div>';
+    return;
+  }
+
+  const user = await fetchUserProfile(userId);
+  if (!user) {
+    container.innerHTML = '<div class="empty-state"><h3>Anketa topilmadi</h3><p>Iltimos, avval anketa to\'ldiring.</p></div>';
+    return;
+  }
+
+  const genderIcon = user.gender === 'erkak' ? ICONS.male : ICONS.female;
+  const goals = (user.goals || []).map(g => `<span class="tag">${g}</span>`).join('');
+  const interests = (user.interests || []).map(i => `<span class="tag" style="background:var(--accent-soft);color:var(--accent);">${i}</span>`).join('');
+  const photo = user.photo_base64 || user.photo_file_id;
+
+  container.innerHTML = `
+    <div style="text-align:center; padding:20px;">
+      ${photo ? `<img src="${photo}" style="width:120px;height:120px;object-fit:cover;border-radius:50%;margin-bottom:16px;" />` : `<div style="font-size:64px;">${genderIcon}</div>`}
+      <h2 style="font-size:22px; font-weight:800;">${user.full_name}, ${user.age}</h2>
+      <p style="color:var(--text-secondary);">📍 ${user.city}${user.zodiac ? ' • ' + user.zodiac : ''}</p>
+    </div>
+    <div class="card">
+      <div class="section-title">Maqsad</div>
+      <div>${goals || 'Ko\'rsatilmagan'}</div>
+    </div>
+    <div class="card">
+      <div class="section-title">Qiziqishlar</div>
+      <div>${interests || 'Ko\'rsatilmagan'}</div>
+    </div>
+  `;
+}
+
+// === MODAL HELPERS ===
+function closeSearchResultsModal(e) {
+  if (e && e.target !== e.currentTarget) return;
+  document.getElementById('search-results-modal').style.display = 'none';
+}
+
+function closePhotoViewer(e) {
+  if (e && e.target !== e.currentTarget) return;
+  document.getElementById('photo-viewer-modal').style.display = 'none';
+}
+
+// === INIT ===
+document.addEventListener('DOMContentLoaded', () => {
+  // Check if user has profile
+  if (userId) {
+    fetchUserProfile(userId).then(user => {
+      if (user) {
+        setSavedProfile(user);
+        document.querySelector('.bottom-nav').style.display = 'flex';
+        showPage('search');
+        loadLimitStatus();
+      } else {
+        showPage('profile');
+      }
+    });
+  } else {
+    const profile = getProfile();
+    if (profile) {
+      document.querySelector('.bottom-nav').style.display = 'flex';
+      showPage('search');
+    } else {
+      showPage('profile');
+    }
+  }
+});
