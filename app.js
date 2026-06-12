@@ -1500,9 +1500,15 @@ async function loadChats() {
 
   chatList.innerHTML = data.matches.map(m => {
     const photo = m.photo_base64 || m.photo_file_id || '';
-    const partnerData = encodeURIComponent(JSON.stringify(m));
+    const partnerData = escapeHtmlAttr(JSON.stringify(m));
     return `
-      <div class="chat-item" onclick="openChatRoom(${m.match_id}, '${escapeJs(m.full_name)}', '${escapeJs(photo)}', '${partnerData}')">
+      <div
+        class="chat-item"
+        data-match-id="${m.match_id}"
+        data-name="${escapeHtmlAttr(m.full_name || '')}"
+        data-photo="${escapeHtmlAttr(photo)}"
+        data-partner="${partnerData}"
+      >
         <div class="chat-item-photo">
           ${photo ? `<img src="${photo}" alt="" />` : (m.gender === 'erkak' ? ICONS.male : ICONS.female)}
         </div>
@@ -1513,6 +1519,17 @@ async function loadChats() {
       </div>
     `;
   }).join('');
+
+  chatList.querySelectorAll('.chat-item').forEach(item => {
+    item.addEventListener('click', () => {
+      openChatRoom(
+        Number(item.dataset.matchId || 0),
+        String(item.dataset.name || ''),
+        String(item.dataset.photo || ''),
+        item.dataset.partner || null
+      );
+    });
+  });
 }
 
 function openChatRoom(matchId, name, photo, partnerData = null) {
