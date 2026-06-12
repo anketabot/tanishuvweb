@@ -342,6 +342,7 @@ async function sendFirstMessage() {
         sender_id: fromUserId,
         message: message
       });
+      await loadLimitStatus();
       showToast('💬 Xabar yuborildi!');
       openChatRoom(likeData.match_id, messageTargetName, messageTargetPhoto);
       return;
@@ -932,7 +933,7 @@ function renderTinderCard(direction) {
       <div class="swipe-dots">${dots}</div>
       <span style="margin-left:6px;">${tinderIndex+1} / ${total}</span>
     </div>
-    <div class="tinder-card animate-in" id="tinder-card" onclick="showProfileDetail(${JSON.stringify(u).replace(/"/g,'&quot;')})">
+    <div class="tinder-card animate-in" id="tinder-card" onclick="showProfileDetail(${escapeHtmlAttr(JSON.stringify(u))})">
       <span class="stamp like" id="stamp-like">LIKE 💚</span>
       <span class="stamp nope" id="stamp-nope">NOPE ✗</span>
       <span class="stamp superlike" id="stamp-super">SUPER ⭐</span>
@@ -1114,7 +1115,7 @@ async function openIncomingLikesModal() {
       ${likes.map(u => {
         const photo = u.photo_base64 || u.photo_file_id || '';
         return `
-          <div class="like-notification-card" onclick="showProfileDetail(${JSON.stringify(u).replace(/"/g,'&quot;')}); closeLikesModal();">
+          <div class="like-notification-card" onclick="showProfileDetail(${escapeHtmlAttr(JSON.stringify(u))}); closeLikesModal();">
             <div class="like-notification-photo">
               ${photo ? `<img src="${photo}" alt="${escapeJs(u.full_name)}" />` : `${u.gender === 'erkak' ? ICONS.male : ICONS.female}`}
             </div>
@@ -1160,7 +1161,7 @@ function renderProfileCard(u) {
     : `<div style="display:flex;align-items:center;justify-content:center;width:100%;height:100%;color:var(--primary);">${icon}</div>`;
 
   return `
-  <div class="profile-card" onclick="showProfileDetail(${JSON.stringify(u).replace(/"/g, '&quot;')})">
+  <div class="profile-card" onclick="showProfileDetail(${escapeHtmlAttr(JSON.stringify(u))})">
     <div class="profile-photo">${photoHtml}</div>
     <div class="profile-info">
       <div class="profile-name"><span style="display:inline-flex;vertical-align:middle;margin-right:6px;">${icon}</span> ${u.full_name}</div>
@@ -1221,6 +1222,7 @@ async function sendLike(toUserId) {
   }
 
   if (data.success) {
+    await loadLimitStatus();
     if (data.match) {
       showMatchOverlay();
       loadChats();
