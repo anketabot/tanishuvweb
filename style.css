@@ -2239,8 +2239,8 @@ body {
 /* ========== TINDER CARD VIEW ========== */
 .swipe-container {
   position: relative;
-  padding: 16px;
-  min-height: 520px;
+  padding: 8px 8px 12px;
+  min-height: auto;
 }
 
 .swipe-counter {
@@ -2277,7 +2277,9 @@ body {
   background: var(--glass-bg-strong);
   backdrop-filter: blur(24px) saturate(160%);
   -webkit-backdrop-filter: blur(24px) saturate(160%);
-  border-radius: 28px;
+  border-radius: 24px;
+  max-width: 440px;
+  margin: 0 auto;
   border: 1px solid var(--glass-border);
   box-shadow:
     0 20px 60px rgba(0, 122, 255, 0.1),
@@ -2363,7 +2365,7 @@ body {
 /* Photo area */
 .tinder-photo {
   width: 100%;
-  height: 380px;
+  height: 260px;
   object-fit: cover;
   background: linear-gradient(135deg, rgba(0,122,255,0.07), rgba(0,0,0,0.07));
   display: flex;
@@ -2394,13 +2396,13 @@ body {
   color: white;
 }
 .tinder-photo-name {
-  font-size: 26px;
+  font-size: 20px;
   font-weight: 800;
   letter-spacing: -0.5px;
   text-shadow: 0 2px 8px rgba(0,0,0,0.3);
 }
 .tinder-photo-meta {
-  font-size: 15px;
+  font-size: 13px;
   font-weight: 500;
   opacity: 0.92;
   margin-top: 3px;
@@ -2409,8 +2411,21 @@ body {
 
 /* Card body (tags) */
 .tinder-body {
-  padding: 14px 18px 10px;
+  padding: 10px 12px 6px;
   min-height: 0;
+}
+
+.tinder-mini-meta {
+  font-size: 15px;
+  font-weight: 800;
+  color: var(--text-primary);
+  letter-spacing: -0.2px;
+}
+
+.tinder-mini-location {
+  font-size: 13px;
+  color: var(--text-secondary);
+  margin-top: 2px;
 }
 .tinder-about {
   font-size: 14px;
@@ -2419,6 +2434,7 @@ body {
   line-height: 1.5;
   display: -webkit-box;
   -webkit-line-clamp: 3;
+  line-clamp: 3;
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
@@ -2448,8 +2464,8 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 14px;
-  padding: 4px 16px 18px;
+  gap: 10px;
+  padding: 6px 10px 14px;
 }
 
 .tinder-btn {
@@ -2470,17 +2486,17 @@ body {
 }
 
 .tinder-btn-back {
-  width: 48px; height: 48px;
+  width: 44px; height: 44px;
   background: rgba(255,200,0,0.12);
   border: 2px solid rgba(255,200,0,0.35);
-  font-size: 18px;
+  font-size: 17px;
   box-shadow: 0 4px 16px rgba(255,200,0,0.15);
   color: #FFCC00;
 }
 .tinder-btn-back:active { transform: scale(0.88); }
 
 .tinder-btn-nope {
-  width: 62px; height: 62px;
+  width: 54px; height: 54px;
   background: linear-gradient(135deg, rgba(255,59,48,0.1), rgba(255,59,48,0.04));
   border: 2px solid rgba(255,59,48,0.3);
   box-shadow: 0 6px 24px rgba(255,59,48,0.15);
@@ -2489,7 +2505,7 @@ body {
 .tinder-btn-nope:active { transform: scale(0.88); box-shadow: 0 2px 8px rgba(255,59,48,0.1); }
 
 .tinder-btn-superlike {
-  width: 56px; height: 56px;
+  width: 50px; height: 50px;
   background: linear-gradient(135deg, rgba(0,122,255,0.12), rgba(90,200,250,0.08));
   border: 2px solid rgba(0,122,255,0.3);
   box-shadow: 0 6px 24px rgba(0,122,255,0.15);
@@ -2497,7 +2513,7 @@ body {
 }
 
 .tinder-btn-like {
-  width: 62px; height: 62px;
+  width: 54px; height: 54px;
   background: linear-gradient(135deg, rgba(76,217,100,0.12), rgba(76,217,100,0.05));
   border: 2px solid rgba(76,217,100,0.35);
   box-shadow: 0 6px 24px rgba(76,217,100,0.15);
@@ -2505,10 +2521,10 @@ body {
 }
 
 .tinder-btn-msg {
-  width: 48px; height: 48px;
+  width: 44px; height: 44px;
   background: linear-gradient(135deg, rgba(0,122,255,0.12), rgba(0,122,255,0.05));
   border: 2px solid rgba(0,122,255,0.25);
-  font-size: 18px;
+  font-size: 17px;
   box-shadow: 0 4px 16px rgba(0,122,255,0.12);
   color: var(--ios-blue);
 }
