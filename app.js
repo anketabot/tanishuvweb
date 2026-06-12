@@ -1287,9 +1287,23 @@ function escapeHtml(str) {
   if (!str) return '';
   return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
 }
+
+function escapeHtmlAttr(str) {
+  if (!str) return '';
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;');
+}
+
 function escapeJs(str) {
   if (!str) return '';
-  return str.replace(/'/g,"\\'").replace(/"/g,'\\"');
+  return String(str)
+    .replace(/\\/g, '\\\\')
+    .replace(/'/g, "\\'")
+    .replace(/"/g, '\\"');
 }
 
 function showToast(message, duration = 3000) {
@@ -1462,7 +1476,7 @@ async function loadChats() {
 
   chatList.innerHTML = data.matches.map(m => {
     const photo = m.photo_base64 || m.photo_file_id || '';
-    const partnerData = JSON.stringify(m).replace(/"/g, '&quot;');
+    const partnerData = escapeHtmlAttr(JSON.stringify(m));
     return `
       <div class="chat-item" onclick="openChatRoom(${m.match_id}, '${escapeJs(m.full_name)}', '${escapeJs(photo)}', '${partnerData}')">
         <div class="chat-item-photo">
@@ -1479,7 +1493,10 @@ async function loadChats() {
 
 function openChatRoom(matchId, name, photo, partnerData = null) {
   currentChatMatchId = matchId;
-  currentChatPartner = { name, photo, user: partnerData ? JSON.parse(partnerData.replace(/&quot;/g, '"')) : null };
+  const decodedPartner = partnerData
+    ? JSON.parse(String(partnerData).replace(/&quot;/g, '"').replace(/&#39;/g, "'").replace(/&amp;/g, '&'))
+    : null;
+  currentChatPartner = { name, photo, user: decodedPartner };
   document.getElementById('chat-modal').style.display = 'flex';
   document.getElementById('chat-user-name').textContent = name;
   document.getElementById('chat-user-photo').src = photo || '';
