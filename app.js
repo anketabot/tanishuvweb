@@ -1314,22 +1314,25 @@ function showProfileDetail(u, showTags = true) {
   if (!modal || !body) return;
 
   const icon = u.gender === 'erkak' ? ICONS.male : ICONS.female;
+  const photo = u.photo || u.photo_file_id || u.photo_base64;
+  const locationLabel = formatLocationLabel(u.city || '');
+  const profileLocation = locationLabel ? `${u.city} • ${locationLabel}` : (u.city || 'Joy ko\'rsatilmagan');
   const goals = (u.goals || []).map(g => `<span class="tag">${g}</span>`).join('');
   const interests = (u.interests || []).map(i => `<span class="tag" style="background:var(--accent-soft);color:var(--accent);">${i}</span>`).join('');
-  const photo = u.photo || u.photo_file_id || u.photo_base64;
   const photoHtml = photo
-    ? `<img src="${photo}" alt="${u.full_name}" style="width:100%;height:280px;object-fit:cover;border-radius:20px;margin-bottom:16px;" />`
+    ? `<img src="${photo}" alt="${u.full_name}" onclick="openPhotoViewer('${escapeJs(photo)}', '${escapeJs(u.full_name)}')" style="width:100%;height:280px;object-fit:cover;border-radius:20px;margin-bottom:16px;cursor:zoom-in;" />`
     : '';
 
   body.innerHTML = `
     ${photoHtml}
     <div style="text-align:center; margin-bottom:16px;">
       <div style="font-size:24px; font-weight:800;">${icon} ${u.full_name}, ${u.age}</div>
-      <div style="color:var(--text-secondary); margin-top:4px;">📍 ${locationLabel}${u.zodiac ? ' • ' + u.zodiac : ''}</div>
+      <div style="color:var(--text-secondary); margin-top:6px;">📍 ${profileLocation}${u.zodiac ? ' • ' + u.zodiac : ''}</div>
     </div>
-    ${showTags ? `<div style="margin-bottom:12px;">${goals || '<span style="color:var(--text-secondary);">Maqsad ko\'rsatilmagan</span>'}</div>` : ''}
-    ${showTags ? `<div style="margin-bottom:16px;">${interests || '<span style="color:var(--text-secondary);">Qiziqishlar ko\'rsatilmagan</span>'}</div>` : ''}
-    <div style="display:flex; gap:10px; justify-content:center;">
+    <div style="margin-bottom:10px; color:var(--text-secondary); font-size:14px; line-height:1.5;">${u.about || 'Bu foydalanuvchi o\'z maqsad va qiziqishlarini aniqlab qo\'ygan.'}</div>
+    ${showTags ? `<div style="margin-bottom:12px;"><div style="font-size:13px; font-weight:700; color:var(--text-secondary); text-transform:uppercase; letter-spacing:0.8px; margin-bottom:8px;">Maqsadlar</div>${goals || '<span style="color:var(--text-secondary);">Maqsad ko\'rsatilmagan</span>'}</div>` : ''}
+    ${showTags ? `<div style="margin-bottom:16px;"><div style="font-size:13px; font-weight:700; color:var(--text-secondary); text-transform:uppercase; letter-spacing:0.8px; margin-bottom:8px;">Qiziqishlar</div>${interests || '<span style="color:var(--text-secondary);">Qiziqishlar ko\'rsatilmagan</span>'}</div>` : ''}
+    <div style="display:flex; gap:10px; justify-content:center; flex-wrap:wrap;">
       <button class="action-btn btn-like" onclick="sendLike(${u.telegram_id}); closeProfileModal();">
         <span class="btn-icon">${ICONS.heart}</span> Like
       </button>
@@ -1338,6 +1341,17 @@ function showProfileDetail(u, showTags = true) {
       </button>
     </div>
   `;
+  modal.style.display = 'flex';
+}
+
+function openPhotoViewer(src, caption = 'Rasm') {
+  const modal = document.getElementById('photo-viewer-modal');
+  const img = document.getElementById('photo-viewer-img');
+  const label = document.getElementById('photo-viewer-caption');
+  if (!modal || !img) return;
+
+  img.src = src || '';
+  if (label) label.textContent = caption || 'Rasm';
   modal.style.display = 'flex';
 }
 
@@ -1628,7 +1642,8 @@ async function loadChatMessages(matchId) {
     const isMe = m.sender_id == userId;
     if (typeof m.message === 'string' && m.message.startsWith('[RASM]')) {
       const imageSrc = m.message.replace(/^\[RASM\]\s*/, '').trim();
-      return `<div class="chat-msg ${isMe ? 'chat-msg-me' : 'chat-msg-them'}"><img src="${escapeHtml(imageSrc)}" alt="Rasm" style="max-width:100%;border-radius:14px;display:block;" /></div>`;
+      const caption = isMe ? 'Siz yuborgan rasm' : 'Suhbatdosh rasmi';
+      return `<div class="chat-msg ${isMe ? 'chat-msg-me' : 'chat-msg-them'}"><img src="${escapeHtml(imageSrc)}" alt="${caption}" title="To'liq ko'rinishda ochish" onclick="openPhotoViewer('${escapeJs(imageSrc)}', '${escapeJs(caption)}')" style="max-width:100%;border-radius:16px;display:block;cursor:zoom-in;" /></div>`;
     }
     return `<div class="chat-msg ${isMe ? 'chat-msg-me' : 'chat-msg-them'}">${escapeHtml(m.message)}</div>`;
   }).join('');
