@@ -695,19 +695,174 @@ function doSearch() {
   if (selectedSearchGoals.length > 0) filters.goals = selectedSearchGoals;
   if (selectedSearchInterests.length > 0) filters.interests = selectedSearchInterests;
 
-  // Search results container
-  const resultsEl = document.getElementById('search-results');
-  const swipeContainer = document.getElementById('swipe-container');
-  if (resultsEl) resultsEl.style.display = 'none';
-  if (swipeContainer) swipeContainer.innerHTML = '<div class="loading"><div class="spinner"></div> Qidirilmoqda...</div>';
+  // Open modal immediately with loading
+  const modal = document.getElementById('search-results-modal');
+  const panelBody = document.getElementById('search-results-panel-body');
+  if (panelBody) panelBody.innerHTML = '<div class="loading"><div class="spinner"></div> Qidirilmoqda...</div>';
+  if (modal) modal.style.display = 'flex';
 
-  fetchSearchResults(userId || 0, filters);
+  fetchSearchResultsModal(userId || 0, filters);
 }
 
 // === TINDER CARD STATE ===
 let tinderUsers = [];
 let tinderIndex = 0;
 let tinderHistory = [];
+
+async function fetchSearchResultsModal(telegramId, filters) {
+  const panelBody = document.getElementById('search-results-panel-body');
+
+  try {
+    const data = await apiPost('/api/search', { telegram_id: telegramId || 0, filters });
+
+    if (data.success && data.users && data.users.length > 0) {
+      tinderUsers = data.users;
+      tinderIndex = 0;
+      tinderHistory = [];
+      // Render tinder cards inside modal panel
+      if (panelBody) {
+        panelBody.innerHTML = '<div id="swipe-container-modal" class="swipe-container"></div>';
+        renderTinderCardInModal();
+      }
+    } else {
+      if (panelBody) {
+        panelBody.innerHTML = `<div class="empty-state"><div class="empty-icon">${ICONS.info}</div><h3>Hech kim topilmadi</h3><p>Hozircha sizga mos foydalanuvchilar yo'q. Keyinroq qayta urinib ko'ring.</p></div>`;
+      }
+    }
+  } catch (error) {
+    showToast('Server bilan aloqa yo\'q');
+    if (panelBody) {
+      panelBody.innerHTML = `<div class="empty-state"><div class="empty-icon">${ICONS.alert}</div><h3>Ulana olmadi</h3><p>Internet aloqasini tekshiring.</p></div>`;
+    }
+  }
+}
+
+function renderTinderCardInModal(direction) {
+  const container = document.getElementById('swipe-container-modal');
+  if (!container) { renderTinderCard(direction); return; }
+
+  if (tinderIndex >= tinderUsers.length) {
+    container.innerHTML = `
+      <div class="no-more-wrap">
+        <div class="no-more-emoji">✨</div>
+        <div class="no-more-title">Hammasi ko'rildi!</div>
+        <div class="no-more-sub">Siz barcha nomzodlarni ko'rib chiqdingiz.<br>Qayta qidiring.</div>
+        <button class="no-more-btn" onclick="closeSearchResultsModal();doSearch()">🔍 Qayta qidirish</button>
+      </div>`;
+    return;
+  }
+
+  const u = tinderUsers[tinderIndex];
+  const total = tinderUsers.length;
+  const photo = u.photo_base64 || u.photo_file_id;
+  const goals = (u.goals || []).map(g => `<span class="tinder-tag">${g}</span>`).join('');
+  const interests = (u.interests || []).map(i => `<span class="tinder-tag tinder-tag-alt">${i}</span>`).join('');
+
+  const animClass = direction === 'left' ? 'animate-left' : direction === 'right' ? 'animate-right' : direction === 'up' ? 'animate-up' : 'animate-in';
+
+  container.innerHTML = `
+    <div class="swipe-counter">
+      <div class="swipe-dots">${tinderUsers.map((_,i)=>`<div class="swipe-dot${i===tinderIndex?' active':''}"></div>`).join('')}</div>
+      <span>${tinderIndex+1} / ${total}</span>
+    </div>
+    <div class="tinder-card ${animClass}" id="tinder-card-el">
+      <div class="stamp like">❤️ LIKE</div>
+      <div class="stamp nope">✕ NOPE</div>
+      <div class="stamp superlike">⭐ SUPER</div>
+      <div class="tinder-photo">
+        ${photo ? `<img src="${photo}" alt="${u.full_name}" onclick="openPhotoViewer('${escapeJs(photo)}','${escapeJs(u.full_name)}')" />` : `<div style="display:flex;align-items:center;justify-content:center;width:100%;height:100%;font-size:80px;">${u.gender==='erkak'?'👨':'👩'}</div>`}
+        <div class="tinder-photo-gradient"></div>
+        <div class="tinder-photo-info">
+          <div class="tinder-photo-name">${u.full_name}, ${u.age}</div>
+          <div class="tinder-photo-meta">📍 ${u.city}${u.zodiac?' • '+u.zodiac:''}</div>
+        </div>
+      </div>
+      <div class="tinder-body">
+        <div class="tinder-tags-wrap">${goals}${interests}</div>
+        ${u.about ? `<div class="tinder-about">${escapeHtml(u.about)}</div>` : ''}
+      </div>
+      <div class="tinder-actions">
+        <button class="tinder-btn tinder-btn-back" onclick="tinderBackModal()" title="Orqaga">↩</button>
+        <button class="tinder-btn tinder-btn-nope" onclick="tinderSwipeModal('left')" title="O'tkazib yuborish">✕</button>
+        <button class="tinder-btn tinder-btn-superlike" onclick="tinderSuperLikeModal()" title="Super Like">⭐</button>
+        <button class="tinder-btn tinder-btn-like" onclick="tinderSwipeModal('right')" title="Like">❤️</button>
+        <button class="tinder-btn tinder-btn-msg" onclick="openMessageModalFromTinder(${u.telegram_id},'${escapeJs(u.full_name)}')" title="Xabar">💬</button>
+      </div>
+    </div>`;
+
+  setupTinderDragOnModal(document.getElementById('tinder-card-el'));
+}
+
+function tinderSwipeModal(direction) {
+  const card = document.getElementById('tinder-card-el');
+  const u = tinderUsers[tinderIndex];
+  if (direction === 'right') sendLike(u.telegram_id);
+  tinderHistory.push(tinderIndex);
+  tinderIndex++;
+  if (card) {
+    card.classList.add(direction === 'right' ? 'animate-right' : 'animate-left');
+    setTimeout(() => renderTinderCardInModal(), 380);
+  } else {
+    renderTinderCardInModal();
+  }
+}
+
+function tinderSuperLikeModal() {
+  const u = tinderUsers[tinderIndex];
+  const btn = document.querySelector('.tinder-btn-superlike');
+  if (btn) { btn.classList.add('flash'); setTimeout(()=>btn.classList.remove('flash'),600); }
+  openStickerModal(u.telegram_id);
+  tinderHistory.push(tinderIndex);
+  tinderIndex++;
+  setTimeout(() => renderTinderCardInModal('up'), 600);
+}
+
+function tinderBackModal() {
+  if (tinderHistory.length === 0) { showToast('Orqaga qaytish imkoni yo\'q'); return; }
+  tinderIndex = tinderHistory.pop();
+  renderTinderCardInModal();
+}
+
+function openMessageModalFromTinder(targetId, name) {
+  openMessageModal(targetId, name);
+}
+
+function setupTinderDragOnModal(card) {
+  if (!card) return;
+  let startX = 0, startY = 0, dx = 0;
+  const onStart = (e) => {
+    startX = (e.touches ? e.touches[0].clientX : e.clientX);
+    startY = (e.touches ? e.touches[0].clientY : e.clientY);
+    card.style.transition = 'none';
+  };
+  const onMove = (e) => {
+    dx = (e.touches ? e.touches[0].clientX : e.clientX) - startX;
+    const dy = (e.touches ? e.touches[0].clientY : e.clientY) - startY;
+    const rotate = dx * 0.05;
+    card.style.transform = `translateX(${dx}px) translateY(${dy*0.3}px) rotate(${rotate}deg)`;
+    const likeStamp = card.querySelector('.stamp.like');
+    const nopeStamp = card.querySelector('.stamp.nope');
+    if (likeStamp) likeStamp.style.opacity = dx > 30 ? Math.min((dx-30)/60,1) : '0';
+    if (nopeStamp) nopeStamp.style.opacity = dx < -30 ? Math.min((-dx-30)/60,1) : '0';
+  };
+  const onEnd = () => {
+    card.style.transition = '';
+    card.style.transform = '';
+    const likeStamp = card.querySelector('.stamp.like');
+    const nopeStamp = card.querySelector('.stamp.nope');
+    if (likeStamp) likeStamp.style.opacity = '0';
+    if (nopeStamp) nopeStamp.style.opacity = '0';
+    if (dx > 80) tinderSwipeModal('right');
+    else if (dx < -80) tinderSwipeModal('left');
+    dx = 0;
+  };
+  card.addEventListener('touchstart', onStart, {passive:true});
+  card.addEventListener('touchmove', onMove, {passive:true});
+  card.addEventListener('touchend', onEnd);
+  card.addEventListener('mousedown', onStart);
+  card.addEventListener('mousemove', (e) => { if (e.buttons) onMove(e); });
+  card.addEventListener('mouseup', onEnd);
+}
 
 async function fetchSearchResults(telegramId, filters) {
   const swipeContainer = document.getElementById('swipe-container');
@@ -1377,8 +1532,8 @@ async function loadMyProfile() {
   }
 
   const genderIcon = user.gender === 'erkak' ? ICONS.male : ICONS.female;
-  const goals = (user.goals || []).map(g => `<span class="tag">${g}</span>`).join('');
-  const interests = (user.interests || []).map(i => `<span class="tag" style="background:var(--accent-soft);color:var(--accent);">${i}</span>`).join('');
+  const goals = (user.goals || []).map(g => `<span class="chip selected" style="pointer-events:none;">${g}</span>`).join('');
+  const interests = (user.interests || []).map(i => `<span class="chip selected" style="pointer-events:none;background:rgba(255,45,85,0.10);color:#FF2D55;border-color:rgba(255,45,85,0.25);">${i}</span>`).join('');
   const photo = user.photo_base64 || user.photo_file_id;
 
   container.innerHTML = `
@@ -1389,11 +1544,11 @@ async function loadMyProfile() {
     </div>
     <div class="card">
       <div class="section-title">Maqsad</div>
-      <div>${goals || 'Ko\'rsatilmagan'}</div>
+      <div class="chips-wrap">${goals || '<span style="color:var(--text-tertiary);font-size:14px;">Ko\'rsatilmagan</span>'}</div>
     </div>
     <div class="card">
       <div class="section-title">Qiziqishlar</div>
-      <div>${interests || 'Ko\'rsatilmagan'}</div>
+      <div class="chips-wrap">${interests || '<span style="color:var(--text-tertiary);font-size:14px;">Ko\'rsatilmagan</span>'}</div>
     </div>
   `;
 }
