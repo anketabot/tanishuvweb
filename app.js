@@ -32,6 +32,7 @@ if (!userId && localStorage.getItem('dating_profile')) {
 }
 
 const API_BASE_URL = 'https://tanishuvbot-production.up.railway.app';
+const DEFAULT_GROUP_INVITE_LINK = 'https://t.me/+HA4J8P7lht0zZTdi';
 
 const MAX_WEBAPP_DATA_SIZE = 6000;
 
@@ -228,18 +229,30 @@ function closeLimitModal(e) {
 }
 
 // ===== REFERRAL MODAL (YANGILANGAN - Guruhga odam qo'shish) =====
+function applyGroupInviteLink(groupLink = DEFAULT_GROUP_INVITE_LINK) {
+  const linkInput = document.getElementById('referral-link-input');
+  const shareLink = document.getElementById('referral-share-link');
+
+  if (linkInput) linkInput.value = groupLink;
+  if (shareLink) {
+    const text = encodeURIComponent('Tanishuv guruhiga qo\'shiling! Yangi do\'stlarni toping.');
+    const url = encodeURIComponent(groupLink);
+    shareLink.href = `https://t.me/share/url?url=${url}&text=${text}`;
+  }
+}
+
 async function openReferralModal() {
   closeLimitModal();
   const modal = document.getElementById('referral-modal');
   if (!modal) return;
+
+  applyGroupInviteLink();
 
   if (userId) {
     try {
       const data = await apiPost('/api/referral/status', { telegram_id: userId });
       if (data.success) {
         const stats = document.getElementById('referral-stats');
-        const linkInput = document.getElementById('referral-link-input');
-        const shareLink = document.getElementById('referral-share-link');
 
         const count = data.referral.group_invite_count || 0;
         const unlimited = data.referral.unlimited_until;
@@ -252,22 +265,18 @@ async function openReferralModal() {
         if (invitees.length > 0) {
           html += `<br><br>📝 So'ngi taklif qilinganlar:<br>`;
           invitees.slice(0, 5).forEach(inv => {
-            html += `• ${inv.full_name || 'Ismsiz'}<<br>`;
+            html += `• ${inv.full_name || 'Ismsiz'}<br>`;
           });
         }
         if (stats) stats.innerHTML = html;
 
         // Guruh invite link
-        const groupLink = data.referral.referral_link || '';
-        if (linkInput) linkInput.value = groupLink;
-        if (shareLink) {
-          const text = encodeURIComponent('Tanishuv guruhiga qo\'shiling! Yangi do\'stlarni toping.');
-          const url = encodeURIComponent(groupLink);
-          shareLink.href = `https://t.me/share/url?url=${url}&text=${text}`;
-        }
+        const groupLink = data.referral.referral_link || DEFAULT_GROUP_INVITE_LINK;
+        applyGroupInviteLink(groupLink);
       }
     } catch (e) {
       console.error('Referral status error:', e);
+      applyGroupInviteLink();
     }
   }
 
