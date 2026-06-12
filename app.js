@@ -680,6 +680,10 @@ async function saveProfile() {
 
 // === SEARCH ===
 function doSearch() {
+  tinderUsers = [];
+  tinderIndex = 0;
+  tinderHistory = [];
+
   const filters = {};
 
   // Ism bo'yicha qidirish
@@ -716,6 +720,10 @@ let tinderHistory = [];
 async function fetchSearchResultsModal(telegramId, filters) {
   const panelBody = document.getElementById('search-results-panel-body');
 
+  tinderUsers = [];
+  tinderIndex = 0;
+  tinderHistory = [];
+
   try {
     const data = await apiPost('/api/search', { telegram_id: telegramId || 0, filters });
 
@@ -729,6 +737,9 @@ async function fetchSearchResultsModal(telegramId, filters) {
         renderTinderCardInModal();
       }
     } else {
+      tinderUsers = [];
+      tinderIndex = 0;
+      tinderHistory = [];
       if (panelBody) {
         panelBody.innerHTML = `<div class="empty-state"><div class="empty-icon">${ICONS.info}</div><h3>Hech kim topilmadi</h3><p>Hozircha sizga mos foydalanuvchilar yo'q. Keyinroq qayta urinib ko'ring.</p></div>`;
       }
@@ -864,6 +875,10 @@ async function fetchSearchResults(telegramId, filters) {
   const swipeContainer = document.getElementById('swipe-container');
   const resultsEl = document.getElementById('search-results');
 
+  tinderUsers = [];
+  tinderIndex = 0;
+  tinderHistory = [];
+
   if (swipeContainer) {
     swipeContainer.innerHTML = '<div class="loading"><div class="spinner"></div> Qidirilmoqda...</div>';
   }
@@ -878,6 +893,9 @@ async function fetchSearchResults(telegramId, filters) {
       if (resultsEl) resultsEl.style.display = 'block';
       renderTinderCard();
     } else {
+      tinderUsers = [];
+      tinderIndex = 0;
+      tinderHistory = [];
       if (swipeContainer) {
         swipeContainer.innerHTML = `<div class="empty-state"><div class="empty-icon">${ICONS.info}</div><h3>Hech kim topilmadi</h3><p>Hozircha sizga mos foydalanuvchilar yo'q. Keyinroq qayta urinib ko'ring.</p></div>`;
       }
