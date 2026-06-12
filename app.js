@@ -755,6 +755,7 @@ function renderTinderCardInModal(direction) {
   const u = tinderUsers[tinderIndex];
   const total = tinderUsers.length;
   const photo = u.photo_base64 || u.photo_file_id;
+  const locationLabel = formatLocationLabel(u.city);
 
   const animClass = direction === 'left' ? 'animate-left' : direction === 'right' ? 'animate-right' : direction === 'up' ? 'animate-up' : 'animate-in';
 
@@ -772,7 +773,7 @@ function renderTinderCardInModal(direction) {
         <div class="tinder-photo-gradient"></div>
         <div class="tinder-photo-info">
           <div class="tinder-photo-name">${u.full_name}, ${u.age}</div>
-          <div class="tinder-photo-meta">📍 ${u.city}${u.zodiac?' • '+u.zodiac:''}</div>
+          <div class="tinder-photo-meta">📍 ${locationLabel}${u.zodiac ? ' • ' + u.zodiac : ''}</div>
         </div>
       </div>
       <div class="tinder-actions">
@@ -909,6 +910,7 @@ function renderTinderCard(direction) {
   const total = tinderUsers.length;
   const icon = u.gender === 'erkak' ? ICONS.male : ICONS.female;
   const photo = u.photo || u.photo_file_id || u.photo_base64;
+  const locationLabel = formatLocationLabel(u.city);
 
   const photoHtml = photo
     ? `<img src="${photo}" alt="${u.full_name}" loading="lazy" />`
@@ -936,7 +938,7 @@ function renderTinderCard(direction) {
         <div class="tinder-photo-gradient"></div>
         <div class="tinder-photo-info">
           <div class="tinder-photo-name">${u.full_name}, ${u.age}</div>
-          <div class="tinder-photo-meta">📍 ${u.city}${u.zodiac ? ' &nbsp;•&nbsp; ' + u.zodiac : ''}</div>
+          <div class="tinder-photo-meta">📍 ${locationLabel}${u.zodiac ? ' &nbsp;•&nbsp; ' + u.zodiac : ''}</div>
         </div>
       </div>
       <div class="tinder-body">
@@ -1159,7 +1161,7 @@ function renderProfileCard(u) {
     <div class="profile-photo">${photoHtml}</div>
     <div class="profile-info">
       <div class="profile-name"><span style="display:inline-flex;vertical-align:middle;margin-right:6px;">${icon}</span> ${u.full_name}</div>
-      <div class="profile-age-city">Yosh: ${u.age} &nbsp;•&nbsp; Shahar: ${u.city}</div>
+      <div class="profile-age-city">Yosh: ${u.age} &nbsp;•&nbsp; Shahar: ${locationLabel}</div>
       <div class="profile-tags" style="margin-top:8px;">${goals}${interests}</div>
     </div>
     <div class="profile-actions">
@@ -1230,7 +1232,7 @@ function closeMatchOverlay() {
   document.getElementById('match-overlay').style.display = 'none';
 }
 
-function showProfileDetail(u) {
+function showProfileDetail(u, showTags = true) {
   const modal = document.getElementById('profile-modal');
   const body = document.getElementById('profile-modal-body');
   if (!modal || !body) return;
@@ -1247,10 +1249,10 @@ function showProfileDetail(u) {
     ${photoHtml}
     <div style="text-align:center; margin-bottom:16px;">
       <div style="font-size:24px; font-weight:800;">${icon} ${u.full_name}, ${u.age}</div>
-      <div style="color:var(--text-secondary); margin-top:4px;">📍 ${u.city}${u.zodiac ? ' • ' + u.zodiac : ''}</div>
+      <div style="color:var(--text-secondary); margin-top:4px;">📍 ${locationLabel}${u.zodiac ? ' • ' + u.zodiac : ''}</div>
     </div>
-    <div style="margin-bottom:12px;">${goals}</div>
-    <div style="margin-bottom:16px;">${interests}</div>
+    ${showTags ? `<div style="margin-bottom:12px;">${goals || '<span style="color:var(--text-secondary);">Maqsad ko\'rsatilmagan</span>'}</div>` : ''}
+    ${showTags ? `<div style="margin-bottom:16px;">${interests || '<span style="color:var(--text-secondary);">Qiziqishlar ko\'rsatilmagan</span>'}</div>` : ''}
     <div style="display:flex; gap:10px; justify-content:center;">
       <button class="action-btn btn-like" onclick="sendLike(${u.telegram_id}); closeProfileModal();">
         <span class="btn-icon">${ICONS.heart}</span> Like
@@ -1285,6 +1287,35 @@ function showToast(message, duration = 3000) {
   toast.offsetHeight;
   toast.style.animation = '';
   setTimeout(() => { toast.style.display = 'none'; }, duration);
+}
+
+function getCityRegion(city = '') {
+  const value = String(city || '').toLowerCase();
+  const rules = [
+    { region: 'Andijon viloyati', terms: ['andijon', 'xonobod', 'asaka', 'qorasuv', 'baliqchi', 'buloqboshi', 'izboskan', 'jalaquduq', 'marhamat', 'oltinkoʻl', 'paxtaobod', 'shahrixon', 'ulugʻnor', 'xoʻjaobod', 'qoʻrgʻontepa'] },
+    { region: 'Buxoro viloyati', terms: ['buxoro', 'kogon', 'olot', 'vobkent', 'gijduvon', 'romitan', 'shofirkon', 'galaosiyo', 'gazli'] },
+    { region: 'Fargʻona viloyati', terms: ['fargʻona', 'fargona', 'qoʻqon', 'qoqon', 'margʻilon', 'margilon', 'quvasoy', 'quva', 'rishton', 'yaypan', 'tinchlik', 'oltiariq', 'furqat', 'bogʻdod', 'beshariq', 'dangʻara', 'soʻx', 'toshloq', 'uchkoʻprik'] },
+    { region: 'Jizzax viloyati', terms: ['jizzax', 'dashtobod', 'arnasoy', 'baxmal', 'doʻstlik', 'forish', 'gallaorol', 'mirzachoʻl', 'paxtakor', 'yangiobod', 'zomin', 'zafarobod', 'zarbdor'] },
+    { region: 'Xorazm viloyati', terms: ['xorazm', 'urganch', 'xiva', 'pitnak', 'gurlan', 'shovot', 'bogʻot', 'yangiariq', 'tuproqqalʼa', 'hazorasp', 'yangibozor', 'xonqa'] },
+    { region: 'Namangan viloyati', terms: ['namangan', 'chust', 'chartaq', 'kosonsoy', 'uchqoʻrgʻon', 'haqqulobod', 'toʻraqoʻrgʻon', 'pop', 'mingbuloq', 'norin', 'uychi', 'yangiqoʻrgʻon'] },
+    { region: 'Navoiy viloyati', terms: ['navoiy', 'zarafshon', 'uchquduq', 'nurota', 'qiziltepa', 'goʻzgon', 'gozgon', 'karmana', 'konimex', 'navbahor', 'tomdi', 'xatirchi'] },
+    { region: 'Qashqadaryo viloyati', terms: ['qarshi', 'shahrisabz', 'kitob', 'koson', 'muborak', 'yakkabogʻ', 'gʻuzor', 'guzor', 'kamashi', 'chiroqchi', 'dehqonobod', 'mirishkor', 'kasbi', 'nishon'] },
+    { region: 'Samarqand viloyati', terms: ['samarqand', 'kattaqoʻrgʻon', 'kattaqorgon', 'urgut', 'oqtosh', 'bulungʻur', 'jomboy', 'chelak', 'nurobod', 'qoshrabot', 'narpay', 'paxtachi', 'payariq', 'pastdargʻom', 'toyloq'] },
+    { region: 'Sirdaryo viloyati', terms: ['guliston', 'shirin', 'yangiyer', 'baxt', 'sirdaryo', 'boyovut', 'hovos', 'mirzaobod', 'oqoltin', 'sardoba', 'sayxunobod'] },
+    { region: 'Surxondaryo viloyati', terms: ['termiz', 'denov', 'boysun', 'jarqoʻrgʻon', 'qumqoʻrgʻon', 'shargʻun', 'sherobod', 'shoʻrchi', 'angor', 'muzrabot', 'oltinsoy', 'sariosiyo', 'uzun', 'bandixon'] },
+    { region: 'Toshkent viloyati', terms: ['toshkent', 'nurafshon', 'angren', 'olmaliq', 'chirchiq', 'ohangaron', 'bekobod', 'yangiyoʻl', 'gazalkent', 'keles', 'piskent', 'chinoz', 'boka', 'oqqoʻrgʻon', 'parkent', 'quyi chirchiq', 'oʻrta chirchiq', 'yuqori chirchiq', 'zangiota'] },
+    { region: 'Qoraqalpogʻiston Respublikasi', terms: ['nukus', 'beruniy', 'boʻston', 'mangʻit', 'moʻynoq', 'taxiatosh', 'toʻrtkoʻl', 'xalqobod', 'chimboy', 'shumanay', 'xoʻjayli', 'qoʻngʻirot', 'amudaryo', 'kegeyli', 'qonlikoʻl', 'qorauzyak', 'taxtakoʻpir', 'boʻzatov'] },
+  ];
+
+  for (const item of rules) {
+    if (item.terms.some(term => value.includes(term))) return item.region;
+  }
+  return '';
+}
+
+function formatLocationLabel(city = '') {
+  const region = getCityRegion(city);
+  return region ? `${city} • ${region}` : city;
 }
 
 // ===== PROFILE HELPERS =====
@@ -1351,13 +1382,15 @@ function suggestCitySearch(val) {
 function showSuggestions(containerId, val, onSelect) {
   const box = document.getElementById(containerId);
   if (!val || val.length < 1) { box.style.display = 'none'; return; }
-  const filtered = uzbekCities.filter(c => c.toLowerCase().includes(val.toLowerCase())).slice(0, 6);
+  const filtered = uzbekCities.filter(c => c.toLowerCase().includes(val.toLowerCase())).slice(0, 8);
   if (!filtered.length) { box.style.display = 'none'; return; }
 
   const fnName = `_sugg_${containerId}`;
-  box.innerHTML = filtered.map(c =>
-    `<div class="suggestion-item" onclick="window['${fnName}'] && window['${fnName}']('${c}')">${c}</div>`
-  ).join('');
+  box.innerHTML = filtered.map(c => {
+    const region = getCityRegion(c);
+    const label = region ? `${c} • ${region}` : c;
+    return `<div class="suggestion-item" onclick="window['${fnName}'] && window['${fnName}']('${c}')">${label}</div>`;
+  }).join('');
   window[fnName] = (city) => {
     onSelect(city);
     box.style.display = 'none';
@@ -1391,8 +1424,9 @@ async function loadChats() {
 
   chatList.innerHTML = data.matches.map(m => {
     const photo = m.photo_base64 || m.photo_file_id || '';
+    const partnerData = JSON.stringify(m).replace(/"/g, '&quot;');
     return `
-      <div class="chat-item" onclick="openChatRoom(${m.match_id}, '${escapeJs(m.full_name)}', '${escapeJs(photo)}')">
+      <div class="chat-item" onclick="openChatRoom(${m.match_id}, '${escapeJs(m.full_name)}', '${escapeJs(photo)}', '${partnerData}')">
         <div class="chat-item-photo">
           ${photo ? `<img src="${photo}" alt="" />` : (m.gender === 'erkak' ? ICONS.male : ICONS.female)}
         </div>
@@ -1405,16 +1439,25 @@ async function loadChats() {
   }).join('');
 }
 
-function openChatRoom(matchId, name, photo) {
+function openChatRoom(matchId, name, photo, partnerData = null) {
   currentChatMatchId = matchId;
-  currentChatPartner = { name, photo };
+  currentChatPartner = { name, photo, user: partnerData ? JSON.parse(partnerData.replace(/&quot;/g, '"')) : null };
   document.getElementById('chat-modal').style.display = 'flex';
   document.getElementById('chat-user-name').textContent = name;
   document.getElementById('chat-user-photo').src = photo || '';
+  document.getElementById('chat-user-name').style.cursor = 'pointer';
+  document.getElementById('chat-user-photo').style.cursor = 'pointer';
+  document.getElementById('chat-user-name').onclick = () => openPartnerProfile();
+  document.getElementById('chat-user-photo').onclick = () => openPartnerProfile();
   loadChatMessages(matchId);
 
   if (chatRefreshInterval) clearInterval(chatRefreshInterval);
   chatRefreshInterval = setInterval(() => loadChatMessages(matchId), 3000);
+}
+
+function openPartnerProfile() {
+  if (!currentChatPartner?.user) return;
+  showProfileDetail(currentChatPartner.user, false);
 }
 
 function closeChatRoom() {
@@ -1431,6 +1474,10 @@ async function loadChatMessages(matchId) {
 
   container.innerHTML = data.messages.map(m => {
     const isMe = m.sender_id == userId;
+    if (typeof m.message === 'string' && m.message.startsWith('[RASM]')) {
+      const imageSrc = m.message.replace(/^\[RASM\]\s*/, '').trim();
+      return `<div class="chat-msg ${isMe ? 'chat-msg-me' : 'chat-msg-them'}"><img src="${escapeHtml(imageSrc)}" alt="Rasm" style="max-width:100%;border-radius:14px;display:block;" /></div>`;
+    }
     return `<div class="chat-msg ${isMe ? 'chat-msg-me' : 'chat-msg-them'}">${escapeHtml(m.message)}</div>`;
   }).join('');
   container.scrollTop = container.scrollHeight;
@@ -1494,7 +1541,7 @@ async function sendImageMessage(input) {
     const data = await apiPost('/api/chat/send', {
       match_id: currentChatMatchId,
       sender_id: userId,
-      message: `[RASM] ${base64.substring(0, 100)}...`
+      message: `[RASM] ${base64}`
     });
 
     if (data.error === 'limit_exceeded') {
