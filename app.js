@@ -1347,7 +1347,25 @@ async function apiPost(endpoint, body) {
       body: JSON.stringify(body),
       mode: 'cors'
     });
-    return await res.json();
+
+    const rawText = await res.text();
+    let data = {};
+    try {
+      data = rawText ? JSON.parse(rawText) : {};
+    } catch (e) {
+      data = { error: rawText || 'Invalid JSON response from API' };
+    }
+
+    if (!res.ok) {
+      return {
+        success: false,
+        error: data.error || `HTTP ${res.status}`,
+        status: res.status,
+        ...data
+      };
+    }
+
+    return data;
   } catch (e) {
     console.error('API error:', e);
     return { success: false, error: e.message };
@@ -1411,9 +1429,16 @@ async function loadChats() {
   const emptyState = document.getElementById('chats-empty');
   if (!chatList) return;
 
+  const telegramId = Number(userId);
+  if (!Number.isFinite(telegramId) || telegramId <= 0) {
+    chatList.innerHTML = '';
+    if (emptyState) emptyState.style.display = 'flex';
+    return;
+  }
+
   chatList.innerHTML = '<div class="loading"><div class="spinner"></div> Yuklanmoqda...</div>';
 
-  const data = await apiPost('/api/matches', { telegram_id: userId });
+  const data = await apiPost('/api/matches', { telegram_id: telegramId });
   if (!data.success || !data.matches || data.matches.length === 0) {
     chatList.innerHTML = '';
     if (emptyState) emptyState.style.display = 'flex';
