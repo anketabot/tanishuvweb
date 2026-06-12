@@ -1313,6 +1313,35 @@ function showProfileDetail(u, showTags = true) {
   const body = document.getElementById('profile-modal-body');
   if (!modal || !body) return;
 
+  // Chat suhbatdoshi uchun minimal toza dizayn
+  if (!showTags) {
+    const photo = u.photo || u.photo_file_id || u.photo_base64;
+    const region = getCityRegion(u.city || '');
+
+    body.innerHTML = `
+      <article class="profile-detail-minimal">
+        ${photo ? `<div class="minimal-photo-wrap"><img src="${photo}" alt="${u.full_name}" onclick="openPhotoViewer('${escapeJs(photo)}', '${escapeJs(u.full_name)}')" /></div>` : ''}
+        <div class="minimal-info">
+          <h2 class="minimal-name">${u.full_name}</h2>
+          <div class="minimal-badge">${u.age} yosh • ${u.gender === 'erkak' ? 'Erkak' : 'Ayol'}</div>
+          ${u.city ? `
+          <div class="minimal-location">
+            <div class="minimal-loc-card">
+              <div class="minimal-loc-icon">📍</div>
+              <div class="minimal-loc-text">
+                <div class="minimal-loc-city">${u.city}</div>
+                ${region ? `<div class="minimal-loc-region">${region}</div>` : ''}
+              </div>
+            </div>
+          </div>` : ''}
+        </div>
+      </article>
+    `;
+    modal.style.display = 'flex';
+    return;
+  }
+
+  // Asosiy profil ko'rinishi (qidiruv natijalaridan ochilganda)
   const icon = u.gender === 'erkak' ? ICONS.male : ICONS.female;
   const photo = u.photo || u.photo_file_id || u.photo_base64;
   const locationLabel = formatLocationLabel(u.city || '');
@@ -1320,7 +1349,7 @@ function showProfileDetail(u, showTags = true) {
   const goals = (u.goals || []).map(g => `<span class="tag">${g}</span>`).join('');
   const interests = (u.interests || []).map(i => `<span class="tag" style="background:rgba(0,122,255,0.10);color:var(--ios-blue);">${i}</span>`).join('');
   const photoHtml = photo
-    ? `<div class="profile-detail-photo-wrap"><img src="${photo}" alt="${u.full_name}" onclick="openPhotoViewer('${escapeJs(photo)}', '${escapeJs(u.full_name)}')" /></div>`
+    ? `<div class="profile-detail-photo-wrap"><img src="${photo}" alt="${u.full_name}" onclick="openPhotoViewer('${escapeJs(photo)}','${escapeJs(u.full_name)}')" /></div>`
     : '';
 
   body.innerHTML = `
