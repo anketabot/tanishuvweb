@@ -298,12 +298,19 @@ function closeMessageModal(e) {
 
 async function sendFirstMessage() {
   const message = document.getElementById('first-message-input').value.trim();
+  const fromUserId = Number(userId);
+  const toUserId = Number(messageTargetUserId);
+
   if (!message) {
     showToast('Xabar matnini kiriting!');
     return;
   }
-  if (!messageTargetUserId || !userId) {
-    showToast('Xatolik: foydalanuvchi topilmadi');
+  if (!Number.isFinite(fromUserId) || fromUserId <= 0) {
+    showToast('Xatolik: sizning foydalanuvchi identifikatoringiz topilmadi.');
+    return;
+  }
+  if (!Number.isFinite(toUserId) || toUserId <= 0) {
+    showToast('Xatolik: qabul qiluvchi topilmadi. Iltimos, qayta urinib ko‘ring.');
     return;
   }
 
@@ -319,8 +326,8 @@ async function sendFirstMessage() {
 
   // First send like
   const likeData = await apiPost('/api/likes/send', {
-    from_user: userId,
-    to_user: messageTargetUserId
+    from_user: fromUserId,
+    to_user: toUserId
   });
 
   if (likeData.success) {
@@ -330,14 +337,14 @@ async function sendFirstMessage() {
     }
     // Create match and send message
     const matchData = await apiPost('/api/initiate_chat', {
-      from_user: userId,
-      to_user: messageTargetUserId
+      from_user: fromUserId,
+      to_user: toUserId
     });
 
     if (matchData.success && matchData.match_id) {
       await apiPost('/api/chat/send', {
         match_id: matchData.match_id,
-        sender_id: userId,
+        sender_id: fromUserId,
         message: message
       });
       showToast('💬 Xabar yuborildi!');
@@ -1191,7 +1198,17 @@ async function acceptLike(fromUserId, name, photo) {
 }
 
 async function sendLike(toUserId) {
-  if (!userId) { showToast('Avval profilingizni to\'ldiring'); return; }
+  const fromUserId = Number(userId);
+  const toUser = Number(toUserId);
+
+  if (!Number.isFinite(fromUserId) || fromUserId <= 0) {
+    showToast('Avval profilingizni to\'ldiring');
+    return;
+  }
+  if (!Number.isFinite(toUser) || toUser <= 0) {
+    showToast('Xatolik: qabul qiluvchi topilmadi.');
+    return;
+  }
 
   // Limit tekshirish
   const limitOk = await checkLimit('likes');
@@ -1200,7 +1217,7 @@ async function sendLike(toUserId) {
     return;
   }
 
-  const data = await apiPost('/api/likes/send', { from_user: userId, to_user: toUserId });
+  const data = await apiPost('/api/likes/send', { from_user: fromUserId, to_user: toUser });
 
   if (data.error === 'limit_exceeded') {
     showLimitExceeded('likes');
