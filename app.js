@@ -768,16 +768,12 @@ function renderTinderCardInModal(direction) {
       <div class="stamp nope">✕ NOPE</div>
       <div class="stamp superlike">⭐ SUPER</div>
       <div class="tinder-photo">
-        ${photo ? `<img src="${photo}" alt="${u.full_name}" onclick="openPhotoViewer('${escapeJs(photo)}','${escapeJs(u.full_name)}')" />` : `<div style="display:flex;align-items:center;justify-content:center;width:100%;height:100%;font-size:80px;">${u.gender==='erkak'?'👨':'👩'}</div>`}
+        ${photo ? `<img src="${photo}" alt="${u.full_name}" onclick="openPhotoViewer('${escapeJs(photo)}','${escapeJs(u.full_name)}')" />` : `<div style="display:flex;align-items:center;justify-content:center;width:100%;height:100%;font-size:100px;">${u.gender==='erkak'?'👨':'👩'}</div>`}
         <div class="tinder-photo-gradient"></div>
         <div class="tinder-photo-info">
           <div class="tinder-photo-name">${u.full_name}, ${u.age}</div>
           <div class="tinder-photo-meta">📍 ${u.city}${u.zodiac?' • '+u.zodiac:''}</div>
         </div>
-      </div>
-      <div class="tinder-body compact-card-body">
-        <div class="tinder-mini-meta">${u.full_name}, ${u.age}</div>
-        <div class="tinder-mini-location">📍 ${u.city}${u.zodiac ? ' • ' + u.zodiac : ''}</div>
       </div>
       <div class="tinder-actions">
         <button class="tinder-btn tinder-btn-back" onclick="tinderBackModal()" title="Orqaga">↩</button>
