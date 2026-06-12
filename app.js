@@ -207,16 +207,17 @@ function updateLimitBar(limits) {
   }
 }
 
+// ===== LIMIT MODAL MATNI (YANGILANGAN) =====
 function showLimitExceeded(type) {
   const modal = document.getElementById('limit-modal');
   const text = document.getElementById('limit-modal-text');
   if (modal && text) {
     const messages = {
-      'likes': 'Sizning kunlik like limitingiz tugadi.',
-      'messages': 'Sizning kunlik xabar yuborish limitingiz tugadi.',
-      'super_likes': 'Sizning kunlik Super Like limitingiz tugadi.'
+      'likes': 'Sizning kunlik like limitingiz tugadi. Guruhga odam qo\'shib, limitni oshiring!',
+      'messages': 'Sizning kunlik xabar yuborish limitingiz tugadi. Guruhga odam qo\'shib, limitni oshiring!',
+      'super_likes': 'Sizning kunlik Super Like limitingiz tugadi. Guruhga odam qo\'shib, limitni oshiring!'
     };
-    text.textContent = messages[type] || 'Kunlik limitingiz tugadi.';
+    text.textContent = messages[type] || 'Kunlik limitingiz tugadi. Guruhga odam qo\'shib, limitni oshiring!';
     modal.style.display = 'flex';
   }
 }
@@ -226,7 +227,7 @@ function closeLimitModal(e) {
   document.getElementById('limit-modal').style.display = 'none';
 }
 
-// ===== REFERRAL MODAL =====
+// ===== REFERRAL MODAL (YANGILANGAN - Guruhga odam qo'shish) =====
 async function openReferralModal() {
   closeLimitModal();
   const modal = document.getElementById('referral-modal');
@@ -240,20 +241,28 @@ async function openReferralModal() {
         const linkInput = document.getElementById('referral-link-input');
         const shareLink = document.getElementById('referral-share-link');
 
-        if (stats) {
-          const count = data.referral.referral_count || 0;
-          const unlimited = data.referral.unlimited_until;
-          let html = `👥 Taklif qilinganlar: <strong>${count}</strong> ta`;
-          if (unlimited) {
-            html += `<br>✅ Limitsiz davr: <strong>${new Date(unlimited).toLocaleDateString('uz-UZ')}</strong> gacha`;
-          }
-          stats.innerHTML = html;
-        }
+        const count = data.referral.group_invite_count || 0;
+        const unlimited = data.referral.unlimited_until;
+        const invitees = data.referral.group_invitees || [];
 
-        if (linkInput) linkInput.value = data.referral.referral_link || '';
+        let html = `👥 Guruhga taklif qilinganlar: <strong>${count}</strong> ta`;
+        if (unlimited) {
+          html += `<br>✅ Limitsiz davr: <strong>${new Date(unlimited).toLocaleDateString('uz-UZ')}</strong> gacha`;
+        }
+        if (invitees.length > 0) {
+          html += `<br><br>📝 So'ngi taklif qilinganlar:<br>`;
+          invitees.slice(0, 5).forEach(inv => {
+            html += `• ${inv.full_name || 'Ismsiz'}<<br>`;
+          });
+        }
+        if (stats) stats.innerHTML = html;
+
+        // Guruh invite link
+        const groupLink = data.referral.referral_link || '';
+        if (linkInput) linkInput.value = groupLink;
         if (shareLink) {
-          const text = encodeURIComponent('Tanishuv botiga qo\'shiling!');
-          const url = encodeURIComponent(data.referral.referral_link || '');
+          const text = encodeURIComponent('Tanishuv guruhiga qo\'shiling! Yangi do\'stlarni toping.');
+          const url = encodeURIComponent(groupLink);
           shareLink.href = `https://t.me/share/url?url=${url}&text=${text}`;
         }
       }
