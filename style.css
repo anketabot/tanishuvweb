@@ -1265,6 +1265,7 @@ body {
 .action-btn .btn-icon svg {
   width: 20px;
   height: 20px;
+  stroke: currentColor;
   stroke-width: 2;
   stroke-linecap: round;
   stroke-linejoin: round;
@@ -1675,22 +1676,135 @@ body {
 }
 
 .modal-content {
-  background: rgba(255, 255, 255, 0.85);
-  backdrop-filter: blur(40px) saturate(150%);
-  -webkit-backdrop-filter: blur(40px) saturate(150%);
-  width: 100%;
-  max-height: 85vh;
-  border-radius: var(--ios-radius-xl) var(--ios-radius-xl) 0 0;
-  padding: 24px;
+  background: linear-gradient(180deg, rgba(255,255,255,0.94) 0%, rgba(245,248,255,0.92) 100%);
+  backdrop-filter: blur(40px) saturate(180%);
+  -webkit-backdrop-filter: blur(40px) saturate(180%);
+  width: min(100%, 460px);
+  max-height: 92vh;
+  border-radius: 28px 28px 18px 18px;
+  padding: 18px 16px 18px;
   overflow-y: auto;
   animation: slideUpModal 0.4s var(--ease-spring);
-  border-top: 1px solid var(--glass-border);
-  box-shadow: 0 -8px 40px rgba(0, 122, 255, 0.08);
+  border: 1px solid rgba(255,255,255,0.85);
+  box-shadow:
+    0 24px 60px rgba(15, 23, 42, 0.18),
+    inset 0 1px 1px rgba(255,255,255,0.9);
 }
 
 @keyframes slideUpModal {
   from { transform: translateY(100%); }
   to { transform: translateY(0); }
+}
+
+.profile-detail-shell {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.profile-detail-photo-wrap {
+  overflow: hidden;
+  border-radius: 24px;
+  border: 1px solid rgba(0, 122, 255, 0.14);
+  background: linear-gradient(135deg, rgba(255,255,255,0.98), rgba(240,246,255,0.98));
+  box-shadow: 0 14px 36px rgba(0, 122, 255, 0.12);
+}
+
+.profile-detail-photo-wrap img {
+  width: 100%;
+  height: 300px;
+  object-fit: cover;
+  display: block;
+  cursor: zoom-in;
+}
+
+.profile-detail-card {
+  padding: 12px 4px 2px;
+}
+
+.profile-detail-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border-radius: 999rem;
+  padding: 6px 10px;
+  background: rgba(0, 122, 255, 0.08);
+  color: var(--ios-blue);
+  border: 1px solid rgba(0, 122, 255, 0.16);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.2px;
+}
+
+.profile-detail-title {
+  margin-top: 10px;
+  font-size: 24px;
+  font-weight: 800;
+  letter-spacing: -0.4px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.profile-detail-meta {
+  margin-top: 6px;
+  color: var(--text-secondary);
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.profile-detail-summary {
+  margin-top: 10px;
+  color: var(--text-primary);
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.profile-detail-section {
+  margin-top: 12px;
+}
+
+.profile-detail-label {
+  font-size: 12px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.9px;
+  color: var(--text-secondary);
+  margin-bottom: 8px;
+}
+
+.chip-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.muted-chip {
+  padding: 6px 10px;
+  border-radius: 999rem;
+  background: rgba(28, 28, 30, 0.04);
+  color: var(--text-secondary);
+  border: 1px solid rgba(0, 122, 255, 0.12);
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.profile-action-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  padding-top: 2px;
+}
+
+.profile-action-grid .action-btn {
+  min-height: 58px;
+  border-radius: 18px;
+  padding: 12px 10px;
+  box-shadow: 0 10px 24px rgba(0, 122, 255, 0.10);
+}
+
+.profile-action-grid .action-btn:hover {
+  transform: translateY(-1px);
 }
 
 .modal-close {
