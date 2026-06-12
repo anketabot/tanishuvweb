@@ -800,7 +800,14 @@ function renderTinderCardInModal(direction) {
       </div>
     </div>`;
 
-  setupTinderDragOnModal(document.getElementById('tinder-card-el'));
+  const tinderCardEl = document.getElementById('tinder-card-el');
+  setupTinderDragOnModal(tinderCardEl);
+  if (tinderCardEl) {
+    tinderCardEl.addEventListener('click', function(e) {
+      if (e.target.closest('.tinder-actions')) return;
+      showProfileDetail(u);
+    });
+  }
 }
 
 function tinderSwipeModal(direction) {
@@ -948,7 +955,7 @@ function renderTinderCard(direction) {
       <div class="swipe-dots">${dots}</div>
       <span style="margin-left:6px;">${tinderIndex+1} / ${total}</span>
     </div>
-    <div class="tinder-card animate-in" id="tinder-card" onclick="showProfileDetail(${escapeHtmlAttr(JSON.stringify(u))})">
+    <div class="tinder-card animate-in" id="tinder-card" data-user="${escapeHtmlAttr(JSON.stringify(u))}">
       <span class="stamp like" id="stamp-like">LIKE 💚</span>
       <span class="stamp nope" id="stamp-nope">NOPE ✗</span>
       <span class="stamp superlike" id="stamp-super">SUPER ⭐</span>
@@ -971,6 +978,25 @@ function renderTinderCard(direction) {
         <button class="tinder-btn tinder-btn-msg" onclick="event.stopPropagation(); openMessageModal(${u.telegram_id},'${escapeJs(u.full_name)}','${escapeJs(photo||'')}', ${u.can_write});" title="Xabar yuborish">💬</button>
       </div>
     </div>`;
+
+  // Tinder card click - data attribute orqali showProfileDetail
+  const tinderCard = document.getElementById('tinder-card');
+  if (tinderCard) {
+    tinderCard.addEventListener('click', function(e) {
+      if (e.target.closest('.tinder-actions')) return;
+      try {
+        const raw = this.dataset.user
+          .replace(/&quot;/g, '"')
+          .replace(/&#39;/g, "'")
+          .replace(/&amp;/g, '&')
+          .replace(/&lt;/g, '<')
+          .replace(/&gt;/g, '>');
+        showProfileDetail(JSON.parse(raw));
+      } catch(err) {
+        showProfileDetail(tinderUsers[tinderIndex]);
+      }
+    });
+  }
 }
 
 function showStamp(type) {
@@ -1137,7 +1163,7 @@ async function openIncomingLikesModal() {
       ${likes.map(u => {
         const photo = u.photo_base64 || u.photo_file_id || '';
         return `
-          <div class="like-notification-card" onclick="showProfileDetail(${escapeHtmlAttr(JSON.stringify(u))}); closeLikesModal();">
+          <div class="like-notification-card" data-user="${escapeHtmlAttr(JSON.stringify(u))}">
             <div class="like-notification-photo">
               ${photo ? `<img src="${photo}" alt="${escapeJs(u.full_name)}" />` : `${u.gender === 'erkak' ? ICONS.male : ICONS.female}`}
             </div>
@@ -1154,6 +1180,19 @@ async function openIncomingLikesModal() {
           </div>`;
       }).join('')}
     </div>`;
+
+  // Like kartochkalariga click event
+  body.querySelectorAll('.like-notification-card').forEach(card => {
+    card.addEventListener('click', function() {
+      try {
+        const raw = this.dataset.user
+          .replace(/&quot;/g, '"').replace(/&#39;/g, "'")
+          .replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>');
+        showProfileDetail(JSON.parse(raw));
+        closeLikesModal();
+      } catch(e) {}
+    });
+  });
 }
 
 function closeLikesModal(e) {
@@ -1183,7 +1222,7 @@ function renderProfileCard(u) {
     : `<div style="display:flex;align-items:center;justify-content:center;width:100%;height:100%;color:var(--primary);">${icon}</div>`;
 
   return `
-  <div class="profile-card" onclick="showProfileDetail(${escapeHtmlAttr(JSON.stringify(u))})">
+  <div class="profile-card" data-user="${escapeHtmlAttr(JSON.stringify(u))}">
     <div class="profile-photo">${photoHtml}</div>
     <div class="profile-info">
       <div class="profile-name"><span style="display:inline-flex;vertical-align:middle;margin-right:6px;">${icon}</span> ${u.full_name}</div>
