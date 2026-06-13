@@ -524,7 +524,73 @@ function selectZodiac(value, label) {
   }
 }
 
-// ========== PERSON DETECTION (FaceDetector + COCO-SSD fallback) ==========
+// ========== BURJ MOSLIK MA'LUMOTLARI ==========
+const ZODIAC_COMPATIBILITY = {
+  "Qo'y (Aries)": {
+    mos: ["Sher (Leo)", "Egizaklar (Gemini)", "Yoy (Sagittarius)"],
+    qiyin: ["Qisqichbaqa (Cancer)", "Chayonlar (Scorpio)", "Baliq (Pisces)"]
+  },
+  "Buqa (Taurus)": {
+    mos: ["Qiz (Virgo)", "Qisqichbaqa (Cancer)", "Tog' echkisi (Capricorn)"],
+    qiyin: ["Egizaklar (Gemini)", "Yoy (Sagittarius)", "Qovunchi (Aquarius)"]
+  },
+  "Egizaklar (Gemini)": {
+    mos: ["Qo'y (Aries)", "Tarozi (Libra)", "Qovunchi (Aquarius)"],
+    qiyin: ["Buqa (Taurus)", "Chayonlar (Scorpio)", "Tog' echkisi (Capricorn)"]
+  },
+  "Qisqichbaqa (Cancer)": {
+    mos: ["Buqa (Taurus)", "Baliq (Pisces)", "Chayonlar (Scorpio)"],
+    qiyin: ["Qo'y (Aries)", "Egizaklar (Gemini)", "Yoy (Sagittarius)"]
+  },
+  "Sher (Leo)": {
+    mos: ["Qo'y (Aries)", "Egizaklar (Gemini)", "Tarozi (Libra)"],
+    qiyin: ["Buqa (Taurus)", "Tog' echkisi (Capricorn)", "Baliq (Pisces)"]
+  },
+  "Qiz (Virgo)": {
+    mos: ["Buqa (Taurus)", "Tog' echkisi (Capricorn)", "Chayonlar (Scorpio)"],
+    qiyin: ["Egizaklar (Gemini)", "Sher (Leo)", "Yoy (Sagittarius)"]
+  },
+  "Tarozi (Libra)": {
+    mos: ["Egizaklar (Gemini)", "Sher (Leo)", "Qovunchi (Aquarius)"],
+    qiyin: ["Chayonlar (Scorpio)", "Qisqichbaqa (Cancer)", "Tog' echkisi (Capricorn)"]
+  },
+  "Chayonlar (Scorpio)": {
+    mos: ["Qisqichbaqa (Cancer)", "Baliq (Pisces)", "Buqa (Taurus)"],
+    qiyin: ["Egizaklar (Gemini)", "Qo'y (Aries)", "Tarozi (Libra)"]
+  },
+  "Yoy (Sagittarius)": {
+    mos: ["Qo'y (Aries)", "Sher (Leo)", "Qovunchi (Aquarius)"],
+    qiyin: ["Buqa (Taurus)", "Qisqichbaqa (Cancer)", "Tog' echkisi (Capricorn)"]
+  },
+  "Tog' echkisi (Capricorn)": {
+    mos: ["Buqa (Taurus)", "Qiz (Virgo)", "Chayonlar (Scorpio)"],
+    qiyin: ["Egizaklar (Gemini)", "Tarozi (Libra)", "Yoy (Sagittarius)"]
+  },
+  "Qovunchi (Aquarius)": {
+    mos: ["Yoy (Sagittarius)", "Egizaklar (Gemini)", "Tarozi (Libra)"],
+    qiyin: ["Buqa (Taurus)", "Chayonlar (Scorpio)", "Qisqichbaqa (Cancer)"]
+  },
+  "Baliq (Pisces)": {
+    mos: ["Buqa (Taurus)", "Qisqichbaqa (Cancer)", "Chayonlar (Scorpio)"],
+    qiyin: ["Qo'y (Aries)", "Egizaklar (Gemini)", "Sher (Leo)"]
+  }
+};
+
+// Foydalanuvchining burjini olish
+function getMyZodiac() {
+  const profile = getSavedProfile();
+  return profile?.zodiac || null;
+}
+
+// Burjga mos kelish statusini tekshirish
+function getZodiacCompatStatus(myZodiac, theirZodiac) {
+  if (!myZodiac || !theirZodiac) return null;
+  const compat = ZODIAC_COMPATIBILITY[myZodiac];
+  if (!compat) return null;
+  if (compat.mos.some(z => theirZodiac.includes(z.replace(" (", "").replace(")", "")) || theirZodiac === z)) return 'mos';
+  if (compat.qiyin.some(z => theirZodiac.includes(z.replace(" (", "").replace(")", "")) || theirZodiac === z)) return 'qiyin';
+  return 'neytral';
+}
 let cocoSsdModel = null;
 let cocoSsdLoadPromise = null;
 
@@ -721,6 +787,21 @@ function doSearch() {
   if (selectedSearchGoals.length > 0) filters.goals = selectedSearchGoals;
   if (selectedSearchInterests.length > 0) filters.interests = selectedSearchInterests;
 
+  // Burj bo'yicha qidirish
+  const zodiacFilterEl = document.getElementById('sf-zodiac');
+  if (zodiacFilterEl && zodiacFilterEl.value) {
+    filters.zodiac = zodiacFilterEl.value;
+  }
+
+  // Burjga mos qidirish
+  const zodiacCompatEl = document.getElementById('sf-zodiac-compat');
+  if (zodiacCompatEl && zodiacCompatEl.checked) {
+    const myZodiac = getMyZodiac();
+    if (myZodiac && ZODIAC_COMPATIBILITY[myZodiac]) {
+      filters.zodiac_compat_list = ZODIAC_COMPATIBILITY[myZodiac].mos;
+    }
+  }
+
   // Open modal immediately with loading
   const modal = document.getElementById('search-results-modal');
   const panelBody = document.getElementById('search-results-panel-body');
@@ -789,6 +870,13 @@ function renderTinderCardInModal(direction) {
   const total = tinderUsers.length;
   const photo = u.photo_base64 || u.photo_file_id;
   const locationLabel = formatLocationLabel(u.city);
+  const myZodiac = getMyZodiac();
+  const compatStatus = u.zodiac ? getZodiacCompatStatus(myZodiac, u.zodiac) : null;
+  const compatBadge = compatStatus === 'mos'
+    ? `<span style="background:#27ae60;color:#fff;border-radius:12px;padding:2px 10px;font-size:12px;font-weight:600;margin-left:6px;">💚 Mos burj</span>`
+    : compatStatus === 'qiyin'
+    ? `<span style="background:#e74c3c;color:#fff;border-radius:12px;padding:2px 10px;font-size:12px;font-weight:600;margin-left:6px;">⚡ Murakkab</span>`
+    : '';
 
   const animClass = direction === 'left' ? 'animate-left' : direction === 'right' ? 'animate-right' : direction === 'up' ? 'animate-up' : 'animate-in';
 
@@ -806,15 +894,25 @@ function renderTinderCardInModal(direction) {
         <div class="tinder-photo-gradient"></div>
         <div class="tinder-photo-info">
           <div class="tinder-photo-name">${u.full_name}, ${u.age}</div>
-          <div class="tinder-photo-meta">📍 ${locationLabel}${u.zodiac ? ' • ' + u.zodiac : ''}</div>
+          <div class="tinder-photo-meta">📍 ${locationLabel}${u.zodiac ? ' • ' + u.zodiac : ''}${compatBadge}</div>
         </div>
       </div>
       <div class="tinder-actions">
-        <button class="tinder-btn tinder-btn-back" onclick="tinderBackModal()" title="Orqaga">↩</button>
-        <button class="tinder-btn tinder-btn-nope" onclick="tinderSwipeModal('left')" title="O'tkazib yuborish">✕</button>
-        <button class="tinder-btn tinder-btn-superlike" onclick="tinderSuperLikeModal()" title="Super Like">⭐</button>
-        <button class="tinder-btn tinder-btn-like" onclick="tinderSwipeModal('right')" title="Like">❤️</button>
-        <button class="tinder-btn tinder-btn-msg" onclick="openMessageModalFromTinder(${u.telegram_id},'${escapeJs(u.full_name)}')" title="Xabar">💬</button>
+        <button class="tinder-btn tinder-btn-back" onclick="tinderBackModal()" title="Orqaga">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h18M3 12l6-6M3 12l6 6"/></svg>
+        </button>
+        <button class="tinder-btn tinder-btn-nope" onclick="tinderSwipeModal('left')" title="O'tkazib yuborish">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+        <button class="tinder-btn tinder-btn-superlike" onclick="tinderSuperLikeModal()" title="Super Like">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" stroke="none"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+        </button>
+        <button class="tinder-btn tinder-btn-like" onclick="tinderSwipeModal('right')" title="Like">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+        </button>
+        <button class="tinder-btn tinder-btn-msg" onclick="openMessageModalFromTinder(${u.telegram_id},'${escapeJs(u.full_name)}')" title="Xabar">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        </button>
       </div>
     </div>`;
 
@@ -989,11 +1087,21 @@ function renderTinderCard(direction) {
         <div class="tinder-tags-wrap">${goals}${interests}</div>
       </div>
       <div class="tinder-actions" onclick="event.stopPropagation()">
-        <button class="tinder-btn tinder-btn-back" onclick="tinderBack()" title="Orqaga">↩️</button>
-        <button class="tinder-btn tinder-btn-nope" onclick="tinderDislike()" title="Yoqmadi">❌</button>
-        <button class="tinder-btn tinder-btn-superlike" id="superlike-btn" onclick="openStickerModal(${u.telegram_id})" title="Super Like">⭐</button>
-        <button class="tinder-btn tinder-btn-like" onclick="tinderLike()" title="Like">💚</button>
-        <button class="tinder-btn tinder-btn-msg" onclick="event.stopPropagation(); openMessageModal(${u.telegram_id},'${escapeJs(u.full_name)}','${escapeJs(photo||'')}', ${u.can_write});" title="Xabar yuborish">💬</button>
+        <button class="tinder-btn tinder-btn-back" onclick="tinderBack()" title="Orqaga">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h18M3 12l6-6M3 12l6 6"/></svg>
+        </button>
+        <button class="tinder-btn tinder-btn-nope" onclick="tinderDislike()" title="Yoqmadi">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+        <button class="tinder-btn tinder-btn-superlike" id="superlike-btn" onclick="openStickerModal(${u.telegram_id})" title="Super Like">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" stroke="none"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+        </button>
+        <button class="tinder-btn tinder-btn-like" onclick="tinderLike()" title="Like">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+        </button>
+        <button class="tinder-btn tinder-btn-msg" onclick="event.stopPropagation(); openMessageModal(${u.telegram_id},'${escapeJs(u.full_name)}','${escapeJs(photo||'')}', ${u.can_write});" title="Xabar yuborish">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        </button>
       </div>
     </div>`;
 
