@@ -493,18 +493,18 @@ function syncZodiacPicker() {
   });
   button.classList.toggle('selected', !!value);
   const labelMap = {
-    "Qo'y (Aries)": '♈ Qo\'y (Aries)',
-    'Buqa (Taurus)': '♉ Buqa (Taurus)',
-    'Egizaklar (Gemini)': '♊ Egizaklar (Gemini)',
-    'Qisqichbaqa (Cancer)': '♋ Qisqichbaqa (Cancer)',
-    'Sher (Leo)': '♌ Sher (Leo)',
-    'Qiz (Virgo)': '♍ Qiz (Virgo)',
-    'Tarozi (Libra)': '♎ Tarozi (Libra)',
-    'Chayonlar (Scorpio)': '♏ Chayonlar (Scorpio)',
-    'Yoy (Sagittarius)': '♐ Yoy (Sagittarius)',
-    'Tog\' echkisi (Capricorn)': '♑ Tog\' echkisi (Capricorn)',
-    'Qovunchi (Aquarius)': '♒ Qovunchi (Aquarius)',
-    'Baliq (Pisces)': '♓ Baliq (Pisces)'
+    "Qo'y": '♈ Qo\'y',
+    'Buzoq': '♉ Buzoq',
+    'Egizak': '♊ Egizak',
+    'Qisqichbaqa': '♋ Qisqichbaqa',
+    'Arslon': '♌ Arslon',
+    'Sunbula': '♍ Sunbula',
+    'Tarozi': '♎ Tarozi',
+    'Chayon': '♏ Chayon',
+    "O'qotar": '♐ O\'qotar',
+    "Tog' echkisi": '♑ Tog\' echkisi',
+    "Qovg'a": '♒ Qovg\'a',
+    'Baliq': '♓ Baliq'
   };
 
   button.textContent = value ? (labelMap[value] || value) : 'Burj tanlang...';
