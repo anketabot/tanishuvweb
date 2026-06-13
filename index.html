@@ -49,8 +49,7 @@
     <div class="sheet-handle"></div>
     <div class="sheet-header">
       <div>
-        <div class="section-title" style="margin-bottom:4px;">Nomzodlar</div>
-        <div class="sheet-subtitle">Qidiruv natijalari</div>
+        <div class="sheet-title">Qidiruv natijalari</div>
       </div>
       <button class="modal-close" onclick="closeSearchResultsModal()">✕</button>
     </div>
@@ -231,6 +230,10 @@
       <label class="form-label">Shahar / Tuman</label>
       <input class="form-input" id="inp-city" type="text" placeholder="Yashash joyingiz" maxlength="80" oninput="suggestCity(this.value)" autocomplete="off" />
       <div id="city-suggestions" class="suggestions-box" style="display:none;"></div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">O'zingiz haqingizda qisqacha</label>
+      <textarea class="form-input" id="inp-about" rows="3" maxlength="220" placeholder="Kim bo'lishni xohlaysiz, qiziqishlaringiz, o'zingiz haqingizda qisqacha ma'lumot..."></textarea>
     </div>
   </div>
 
