@@ -35,6 +35,7 @@ const API_BASE_URL = 'https://tanishuvbot-production.up.railway.app';
 const DEFAULT_GROUP_INVITE_LINK = 'https://t.me/+HA4J8P7lht0zZTdi';
 
 const MAX_WEBAPP_DATA_SIZE = 6000;
+const MAX_INTERESTS_ALLOWED = 5;
 
 function sendWebAppData(payload) {
   if (!tg) return;
@@ -463,8 +464,16 @@ function toggleChip(el, group) {
   const value = el.textContent.trim();
 
   if (group === 'interests') {
-    if (el.classList.contains('selected')) selectedInterests.push(value);
-    else selectedInterests = selectedInterests.filter(i => i !== value);
+    if (el.classList.contains('selected')) {
+      if (selectedInterests.length >= MAX_INTERESTS_ALLOWED) {
+        el.classList.remove('selected');
+        showToast('Maksimal 5 ta qiziqish tanlash mumkin.');
+        return;
+      }
+      selectedInterests = Array.from(new Set([...selectedInterests, value]));
+    } else {
+      selectedInterests = selectedInterests.filter(i => i !== value);
+    }
   } else if (group === 'goals') {
     if (el.classList.contains('selected')) selectedGoals.push(value);
     else selectedGoals = selectedGoals.filter(i => i !== value);
@@ -838,6 +847,7 @@ async function saveProfile() {
   const name = document.getElementById('inp-name').value.trim();
   const age = parseInt(document.getElementById('inp-age').value);
   const city = document.getElementById('inp-city').value.trim();
+  const about = document.getElementById('inp-about')?.value?.trim() || '';
   const zodiac = document.getElementById('sel-zodiac').value;
 
   if (!selectedGender) { showToast('Jinsni tanlang!'); return; }
@@ -846,13 +856,19 @@ async function saveProfile() {
   if (!city) { showToast('Shahar/tuman kiriting!'); return; }
   if (selectedGoals.length === 0) { showToast('Kamida 1 ta maqsad tanlang!'); return; }
 
+  const trimmedInterests = Array.from(new Set((selectedInterests || []).filter(Boolean))).slice(0, MAX_INTERESTS_ALLOWED);
+  if ((selectedInterests || []).length > MAX_INTERESTS_ALLOWED) {
+    showToast('Maksimal 5 ta qiziqish tanlash mumkin.');
+  }
+
   const profile = {
     gender: selectedGender,
     full_name: name,
     age: age,
     city: city,
+    about: about,
     zodiac: zodiac,
-    interests: selectedInterests,
+    interests: trimmedInterests,
     goals: selectedGoals,
     photo_base64: photoBase64 || null
   };
@@ -1466,18 +1482,20 @@ async function rejectLike(fromUserId, name) {
 function renderProfileCard(u) {
   const icon = u.gender === 'erkak' ? ICONS.male : ICONS.female;
   const goals = (u.goals || []).map(g => `<span class="tag">${g}</span>`).join('');
-  const interests = (u.interests || []).map(i => `<span class="tag" style="background:var(--accent-soft);color:var(--accent);">${i}</span>`).join('');
+  const interests = (u.interests || []).slice(0, MAX_INTERESTS_ALLOWED).map(i => `<span class="tag" style="background:var(--accent-soft);color:var(--accent);">${i}</span>`).join('');
   const photo = u.photo || u.photo_file_id || u.photo_base64;
   const photoHtml = photo
     ? `<img src="${photo}" alt="${u.full_name}" loading="lazy" />`
     : `<div style="display:flex;align-items:center;justify-content:center;width:100%;height:100%;color:var(--primary);">${icon}</div>`;
+  const locationLabel = formatLocationLabel(u.city || '');
 
   return `
   <div class="profile-card" data-user="${escapeHtmlAttr(JSON.stringify(u))}">
     <div class="profile-photo">${photoHtml}</div>
     <div class="profile-info">
       <div class="profile-name"><span style="display:inline-flex;vertical-align:middle;margin-right:6px;">${icon}</span> ${u.full_name}</div>
-      <div class="profile-age-city">Yosh: ${u.age} &nbsp;•&nbsp; Shahar: ${locationLabel}</div>
+      <div class="profile-age-city">Yosh: ${u.age} &nbsp;•&nbsp; ${locationLabel || 'Shahar ko\'rsatilmagan'}${u.zodiac ? ' • ' + u.zodiac : ''}</div>
+      ${u.about ? `<div class="profile-bio" style="margin-top:6px;color:var(--text-secondary);font-size:13px;line-height:1.4;">${escapeHtml(u.about)}</div>` : ''}
       <div class="profile-tags" style="margin-top:8px;">${goals}${interests}</div>
     </div>
     <div class="profile-actions">
@@ -1598,7 +1616,9 @@ function showProfileDetail(u, showTags = true) {
   const locationLabel = formatLocationLabel(u.city || '');
   const profileLocation = locationLabel || (u.city || 'Joy ko\'rsatilmagan');
   const goals = (u.goals || []).map(g => `<span class="tag">${g}</span>`).join('');
-  const interests = (u.interests || []).map(i => `<span class="tag" style="background:rgba(0,122,255,0.10);color:var(--ios-blue);">${i}</span>`).join('');
+  const visibleInterests = (u.interests || []).slice(0, MAX_INTERESTS_ALLOWED);
+  const interests = visibleInterests.map(i => `<span class="tag" style="background:rgba(0,122,255,0.10);color:var(--ios-blue);">${i}</span>`).join('');
+  const aboutText = (u.about || '').trim() || 'Bu foydalanuvchi o\'z maqsadi va qiziqishlarini ko\'rsatib ketgan.';
   const photoHtml = photo
     ? `<div class="profile-detail-photo-wrap"><img src="${photo}" alt="${u.full_name}" onclick="openPhotoViewer('${escapeJs(photo)}','${escapeJs(u.full_name)}')" /></div>`
     : '';
@@ -1610,9 +1630,12 @@ function showProfileDetail(u, showTags = true) {
         <div class="profile-detail-badge">${u.gender === 'erkak' ? 'Erkak' : 'Ayol'} • ${u.age} yosh</div>
         <div class="profile-detail-title">${icon} ${u.full_name}</div>
         <div class="profile-detail-meta">📍 ${profileLocation}${u.zodiac ? ' • ' + u.zodiac : ''}</div>
-        <p class="profile-detail-summary">${u.about || 'Bu foydalanuvchi o\'z maqsadi va qiziqishlarini ko\'rsatib ketgan.'}</p>
+        <div class="profile-detail-section">
+          <div class="profile-detail-label">Men haqimda</div>
+          <p class="profile-detail-summary">${escapeHtml(aboutText)}</p>
+        </div>
         ${showTags ? `<div class="profile-detail-section"><div class="profile-detail-label">Maqsadlar</div><div class="chip-row">${goals || '<span class="muted-chip">Ko\'rsatilmagan</span>'}</div></div>` : ''}
-        ${showTags ? `<div class="profile-detail-section"><div class="profile-detail-label">Qiziqishlar</div><div class="chip-row">${interests || '<span class="muted-chip">Ko\'rsatilmagan</span>'}</div></div>` : ''}
+        ${showTags ? `<div class="profile-detail-section"><div class="profile-detail-label">Qiziqishlar</div><div class="chip-row">${interests || '<span class="muted-chip">Ko\'rsatilmagan</span>'}</div><div class="muted-chip" style="margin-top:6px;">Maksimal 5 ta qiziqish ko\'rsatiladi.</div></div>` : ''}
       </section>
       <div class="profile-action-grid">
         <button class="action-btn btn-like" onclick="sendLike(${u.telegram_id}); closeProfileModal();">
@@ -1679,7 +1702,10 @@ function showToast(message, duration = 3000) {
 }
 
 function getCityRegion(city = '') {
-  const value = String(city || '').toLowerCase();
+  const value = String(city || '').toLowerCase().trim();
+  if (value === 'toshkent shahri' || value === 'toshkent city') {
+    return '';
+  }
   const rules = [
     { region: 'Andijon viloyati', terms: ['andijon', 'xonobod', 'asaka', 'qorasuv', 'baliqchi', 'buloqboshi', 'izboskan', 'jalaquduq', 'marhamat', 'oltinkoʻl', 'paxtaobod', 'shahrixon', 'ulugʻnor', 'xoʻjaobod', 'qoʻrgʻontepa'] },
     { region: 'Buxoro viloyati', terms: ['buxoro', 'kogon', 'olot', 'vobkent', 'gijduvon', 'romitan', 'shofirkon', 'galaosiyo', 'gazli'] },
@@ -2026,14 +2052,16 @@ async function loadMyProfile() {
 
   const genderIcon = user.gender === 'erkak' ? ICONS.male : ICONS.female;
   const goals = (user.goals || []).map(g => `<span class="chip selected" style="pointer-events:none;">${g}</span>`).join('');
-  const interests = (user.interests || []).map(i => `<span class="chip selected" style="pointer-events:none;background:rgba(255,45,85,0.10);color:#FF2D55;border-color:rgba(255,45,85,0.25);">${i}</span>`).join('');
+  const interests = (user.interests || []).slice(0, MAX_INTERESTS_ALLOWED).map(i => `<span class="chip selected" style="pointer-events:none;background:rgba(255,45,85,0.10);color:#FF2D55;border-color:rgba(255,45,85,0.25);">${i}</span>`).join('');
+  const locationLabel = formatLocationLabel(user.city || '');
   const photo = user.photo_base64 || user.photo_file_id;
 
   container.innerHTML = `
     <div style="text-align:center; padding:20px;">
       ${photo ? `<img src="${photo}" style="width:120px;height:120px;object-fit:cover;border-radius:50%;margin-bottom:16px;" />` : `<div style="font-size:64px;">${genderIcon}</div>`}
       <h2 style="font-size:22px; font-weight:800;">${user.full_name}, ${user.age}</h2>
-      <p style="color:var(--text-secondary);">📍 ${user.city}${user.zodiac ? ' • ' + user.zodiac : ''}</p>
+      <p style="color:var(--text-secondary);">📍 ${locationLabel || user.city || 'Joy ko\'rsatilmagan'}${user.zodiac ? ' • ' + user.zodiac : ''}</p>
+      ${user.about ? `<p style="color:var(--text-secondary);font-size:14px;line-height:1.4;margin-top:8px;">${escapeHtml(user.about)}</p>` : ''}
     </div>
     <div class="card">
       <div class="section-title">Maqsad</div>
