@@ -237,7 +237,7 @@
   <div class="card zodiac-card">
     <div class="section-title">Burjingiz</div>
     <div class="zodiac-shell">
-      <div class="zodiac-icon">♈</div>
+      <div class="zodiac-icon">♒</div>
       <div class="zodiac-lead">
         <div class="zodiac-title">Burjni tanlang</div>
         <div class="zodiac-caption">Yaxshi moslik uchun burjingizni belgilang.</div>
@@ -247,22 +247,6 @@
     <button type="button" class="zodiac-picker-toggle" id="zodiac-picker-toggle" onclick="toggleZodiacMenu()">
       Burj tanlang...
     </button>
-
-    <select id="sel-zodiac" style="display:none;">
-      <option value="">Hech qaysi</option>
-      <option value="Qo'y">Qo'y</option>
-      <option value="Buzoq">Buzoq</option>
-      <option value="Egizak">Egizak</option>
-      <option value="Qisqichbaqa">Qisqichbaqa</option>
-      <option value="Arslon">Arslon</option>
-      <option value="Sunbula">Sunbula</option>
-      <option value="Tarozi">Tarozi</option>
-      <option value="Chayon">Chayon</option>
-      <option value="O'qotar">O'qotar</option>
-      <option value="Tog' echkisi">Tog' echkisi</option>
-      <option value="Qovg'a">Qovg'a</option>
-      <option value="Baliq">Baliq</option>
-    </select>
 
     <div class="zodiac-options" id="zodiac-options" style="display:none;">
       <button type="button" class="zodiac-option" data-zodiac="Qo'y" onclick="selectZodiac('Qo\'y', '♈ Qo\'y')">♈ Qo'y</button>
@@ -278,6 +262,23 @@
       <button type="button" class="zodiac-option" data-zodiac="Qovg'a" onclick="selectZodiac('Qovg\'a', '♒ Qovg\'a')">♒ Qovg'a</button>
       <button type="button" class="zodiac-option" data-zodiac="Baliq" onclick="selectZodiac('Baliq', '♓ Baliq')">♓ Baliq</button>
     </div>
+
+    <select class="form-select zodiac-select" id="sel-zodiac" style="display:none;">
+      <option value="">Tanlang...</option>
+      <option>Qo'y</option>
+      <option>Buzoq</option>
+      <option>Egizak</option>
+      <option>Qisqichbaqa</option>
+      <option>Arslon</option>
+      <option>Sunbula</option>
+      <option>Tarozi</option>
+      <option>Chayon</option>
+      <option>O'qotar</option>
+      <option>Tog' echkisi</option>
+      <option>Qovg'a</option>
+      <option>Baliq</option>
+    </select>
+  </div>
 
   <div class="card">
     <div class="section-title">Qiziqishlar</div>
@@ -432,21 +433,51 @@
         <div class="chip" onclick="toggleChip(this,'sf-goals')">Boshqa</div>
       </div>
       <div class="section-title" style="margin-top:16px;">⭐ Burj bo'yicha qidirish</div>
-      <select class="form-select" id="sf-zodiac" style="margin-bottom:10px;">
-        <option value="">Barcha burjlar</option>
-        <option value="Qo'y">♈ Qo'y</option>
-        <option value="Buzoq">♉ Buzoq</option>
-        <option value="Egizak">♊ Egizak</option>
-        <option value="Qisqichbaqa">♋ Qisqichbaqa</option>
-        <option value="Arslon">♌ Arslon</option>
-        <option value="Sunbula">♍ Sunbula</option>
-        <option value="Tarozi">♎ Tarozi</option>
-        <option value="Chayon">♏ Chayon</option>
-        <option value="O'qotar">♐ O'qotar</option>
-        <option value="Tog' echkisi">♑ Tog' echkisi</option>
-        <option value="Qovg'a">♒ Qovg'a</option>
-        <option value="Baliq">♓ Baliq</option>
-      </select>
+      <div class="zodiac-card" style="padding:14px; margin-bottom:10px;">
+        <div class="zodiac-shell" style="margin-bottom:10px;">
+          <div class="zodiac-icon">♒</div>
+          <div class="zodiac-lead">
+            <div class="zodiac-title" style="font-size:14px;">Burj tanlang</div>
+            <div class="zodiac-caption" style="font-size:12px;">Qidiruvda burj bo'yicha filtr qo'llang.</div>
+          </div>
+        </div>
+
+        <button type="button" class="zodiac-picker-toggle" id="sf-zodiac-toggle" onclick="toggleSearchZodiacMenu()">
+          Barcha burjlar
+        </button>
+
+        <div class="zodiac-options" id="sf-zodiac-options" style="display:none;">
+          <button type="button" class="zodiac-option" data-zodiac="" onclick="selectSearchZodiac('', 'Barcha burjlar')">📋 Barcha burjlar</button>
+          <button type="button" class="zodiac-option" data-zodiac="Qo'y" onclick="selectSearchZodiac('Qo\'y', '♈ Qo\'y')">♈ Qo'y</button>
+          <button type="button" class="zodiac-option" data-zodiac="Buzoq" onclick="selectSearchZodiac('Buzoq', '♉ Buzoq')">♉ Buzoq</button>
+          <button type="button" class="zodiac-option" data-zodiac="Egizak" onclick="selectSearchZodiac('Egizak', '♊ Egizak')">♊ Egizak</button>
+          <button type="button" class="zodiac-option" data-zodiac="Qisqichbaqa" onclick="selectSearchZodiac('Qisqichbaqa', '♋ Qisqichbaqa')">♋ Qisqichbaqa</button>
+          <button type="button" class="zodiac-option" data-zodiac="Arslon" onclick="selectSearchZodiac('Arslon', '♌ Arslon')">♌ Arslon</button>
+          <button type="button" class="zodiac-option" data-zodiac="Sunbula" onclick="selectSearchZodiac('Sunbula', '♍ Sunbula')">♍ Sunbula</button>
+          <button type="button" class="zodiac-option" data-zodiac="Tarozi" onclick="selectSearchZodiac('Tarozi', '♎ Tarozi')">♎ Tarozi</button>
+          <button type="button" class="zodiac-option" data-zodiac="Chayon" onclick="selectSearchZodiac('Chayon', '♏ Chayon')">♏ Chayon</button>
+          <button type="button" class="zodiac-option" data-zodiac="O'qotar" onclick="selectSearchZodiac('O\'qotar', '♐ O\'qotar')">♐ O'qotar</button>
+          <button type="button" class="zodiac-option" data-zodiac="Tog' echkisi" onclick="selectSearchZodiac('Tog\' echkisi', '♑ Tog\' echkisi')">♑ Tog' echkisi</button>
+          <button type="button" class="zodiac-option" data-zodiac="Qovg'a" onclick="selectSearchZodiac('Qovg\'a', '♒ Qovg\'a')">♒ Qovg'a</button>
+          <button type="button" class="zodiac-option" data-zodiac="Baliq" onclick="selectSearchZodiac('Baliq', '♓ Baliq')">♓ Baliq</button>
+        </div>
+
+        <select class="form-select zodiac-select" id="sf-zodiac" style="display:none;">
+          <option value="">Barcha burjlar</option>
+          <option value="Qo'y">Qo'y</option>
+          <option value="Buzoq">Buzoq</option>
+          <option value="Egizak">Egizak</option>
+          <option value="Qisqichbaqa">Qisqichbaqa</option>
+          <option value="Arslon">Arslon</option>
+          <option value="Sunbula">Sunbula</option>
+          <option value="Tarozi">Tarozi</option>
+          <option value="Chayon">Chayon</option>
+          <option value="O'qotar">O'qotar</option>
+          <option value="Tog' echkisi">Tog' echkisi</option>
+          <option value="Qovg'a">Qovg'a</option>
+          <option value="Baliq">Baliq</option>
+        </select>
+      </div>
       <label style="display:flex;align-items:center;gap:8px;font-size:14px;cursor:pointer;margin-bottom:14px;">
         <input type="checkbox" id="sf-zodiac-compat" style="width:18px;height:18px;cursor:pointer;" />
         <span>Faqat burjimga mos odamlarni ko'rsat ⭐</span>
