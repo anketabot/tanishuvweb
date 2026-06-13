@@ -9,6 +9,14 @@ if (tg) {
 let userId = null;
 let userName = '';
 let userFirstName = '';
+let __sessionId = null; // UNIQUE per page load for guest isolation
+
+function getSessionId() {
+  if (!__sessionId) {
+    __sessionId = 'sess_' + Date.now() + '_' + Math.random().toString(36).slice(2, 8);
+  }
+  return __sessionId;
+}
 
 if (tg?.initDataUnsafe?.user?.id) {
   userId = tg.initDataUnsafe.user.id;
@@ -33,7 +41,8 @@ function getProfileStorageKey(targetId = userId) {
   if (targetId && Number.isFinite(Number(targetId))) {
     return `${PROFILE_STORAGE_PREFIX}${Number(targetId)}`;
   }
-  return `${PROFILE_STORAGE_PREFIX}guest`;
+  // Guest users get a unique session-based key so they don't share data
+  return `${PROFILE_STORAGE_PREFIX}guest_${getSessionId()}`;
 }
 
 function removeLegacyProfileStorage() {
@@ -102,7 +111,7 @@ let selectedSearchInterests = [];
 let photoBase64 = '';
 let photoReady = false;
 let photoUploading = false;
-let savedProfile = null;
+// REMOVED: let savedProfile = null; — always read from storage per-user
 
 const uzbekCities = [
   "Andijon shahri", "Xonobod shahri", "Asaka shahri", "Qorasuv shahri",
@@ -417,6 +426,125 @@ async function decrementLocalLimit(type) {
 }
 
 // ===== PAGE NAVIGATION =====
+
+function populateProfileForm(profile) {
+  if (!profile) return;
+
+  // Set gender
+  if (profile.gender) {
+    selectGender(profile.gender);
+  }
+
+  // Set text inputs
+  const nameInput = document.getElementById('inp-name');
+  const ageInput = document.getElementById('inp-age');
+  const cityInput = document.getElementById('inp-city');
+  const aboutInput = document.getElementById('inp-about');
+
+  if (nameInput && profile.full_name) nameInput.value = profile.full_name;
+  if (ageInput && profile.age) ageInput.value = profile.age;
+  if (cityInput && profile.city) cityInput.value = profile.city;
+  if (aboutInput && profile.about) aboutInput.value = profile.about;
+
+  // Set zodiac
+  if (profile.zodiac) {
+    const zodiacSelect = document.getElementById('sel-zodiac');
+    if (zodiacSelect) zodiacSelect.value = profile.zodiac;
+    syncZodiacPicker();
+  }
+
+  // Set interests chips
+  if (profile.interests && Array.isArray(profile.interests)) {
+    selectedInterests = [...profile.interests];
+    document.querySelectorAll('#interests-chips .chip').forEach(chip => {
+      const text = chip.textContent.trim();
+      if (selectedInterests.includes(text)) {
+        chip.classList.add('selected');
+      }
+    });
+  }
+
+  // Set goals chips
+  if (profile.goals && Array.isArray(profile.goals)) {
+    selectedGoals = [...profile.goals];
+    document.querySelectorAll('#goals-chips .chip').forEach(chip => {
+      const text = chip.textContent.trim();
+      if (selectedGoals.includes(text)) {
+        chip.classList.add('selected');
+      }
+    });
+  }
+
+  // Set photo
+  if (profile.photo_base64 || profile.photo_file_id) {
+    photoBase64 = profile.photo_base64 || profile.photo_file_id || '';
+    photoReady = true;
+    photoUploading = false;
+    const preview = document.getElementById('photo-preview');
+    const uploadIcon = document.getElementById('upload-icon');
+    const uploadText = document.getElementById('upload-text');
+    const uploadSub = document.getElementById('upload-sub');
+
+    if (preview) {
+      preview.src = photoBase64;
+      preview.style.display = 'block';
+    }
+    if (uploadIcon) uploadIcon.style.display = 'none';
+    if (uploadText) uploadText.style.display = 'none';
+    if (uploadSub) uploadSub.style.display = 'none';
+    updatePhotoUploadState('✅ Rasm yuklangan. Anketa saqlash mumkin.', true, false);
+  }
+}
+
+function resetProfileFormState() {
+  // Clear all form state so previous user's data doesn't leak
+  selectedGender = '';
+  selectedInterests = [];
+  selectedGoals = [];
+  photoBase64 = '';
+  photoReady = false;
+  photoUploading = false;
+
+  // Clear form inputs
+  const nameInput = document.getElementById('inp-name');
+  const ageInput = document.getElementById('inp-age');
+  const cityInput = document.getElementById('inp-city');
+  const aboutInput = document.getElementById('inp-about');
+  const zodiacSelect = document.getElementById('sel-zodiac');
+
+  if (nameInput) nameInput.value = '';
+  if (ageInput) ageInput.value = '';
+  if (cityInput) cityInput.value = '';
+  if (aboutInput) aboutInput.value = '';
+  if (zodiacSelect) zodiacSelect.value = '';
+
+  // Clear gender selection visuals
+  const maleBtn = document.getElementById('gender-erkak');
+  const femaleBtn = document.getElementById('gender-ayol');
+  if (maleBtn) maleBtn.classList.remove('selected');
+  if (femaleBtn) femaleBtn.classList.remove('selected');
+
+  // Clear chips
+  document.querySelectorAll('.chip.selected').forEach(chip => chip.classList.remove('selected'));
+
+  // Clear photo preview
+  const preview = document.getElementById('photo-preview');
+  const uploadIcon = document.getElementById('upload-icon');
+  const uploadText = document.getElementById('upload-text');
+  const uploadSub = document.getElementById('upload-sub');
+
+  if (preview) {
+    preview.src = '';
+    preview.style.display = 'none';
+  }
+  if (uploadIcon) uploadIcon.style.display = 'inline-flex';
+  if (uploadText) uploadText.style.display = 'inline';
+  if (uploadSub) uploadSub.style.display = 'inline';
+
+  // Reset upload status
+  updatePhotoUploadState('Rasm yuklangandan so\'ng saqlash mumkin.', false, false);
+}
+
 function showPage(name) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
@@ -435,6 +563,16 @@ function showPage(name) {
   }
   if (name === 'myprofile') loadMyProfile();
   if (name === 'chats') loadChats();
+  if (name === 'profile') {
+    // CRITICAL: Reset form state when entering profile page
+    // so previous user's data doesn't appear
+    resetProfileFormState();
+    // Then load existing profile if available for CURRENT user
+    const existing = getProfile();
+    if (existing) {
+      populateProfileForm(existing);
+    }
+  }
 
   syncZodiacPicker();
 }
@@ -811,8 +949,17 @@ function updatePhotoUploadState(message, ready = false, uploading = photoUploadi
 }
 
 function restoreExistingPhotoState() {
+  // CRITICAL: Only restore photo for the CURRENT user, not any cached data
   const existing = getProfile();
   if (existing?.photo_base64 || existing?.photo_file_id) {
+    // Verify this profile belongs to current user before restoring
+    const currentUserId = userId || getSessionId();
+    const profileUserId = existing.telegram_id;
+    if (profileUserId && userId && profileUserId !== userId) {
+      // Profile belongs to different user — don't restore!
+      console.warn('Photo state blocked: profile belongs to different user');
+      return;
+    }
     photoBase64 = existing.photo_base64 || existing.photo_file_id || '';
     photoReady = true;
     photoUploading = false;
@@ -1830,8 +1977,7 @@ function isRegistered() {
 }
 
 function getProfile() {
-  if (savedProfile) return savedProfile;
-
+  // ALWAYS read from storage — never use a global cache that could leak between users
   const storageKey = getProfileStorageKey();
   const data = localStorage.getItem(storageKey);
   if (data) {
@@ -1857,7 +2003,7 @@ function getProfile() {
 }
 
 function setSavedProfile(profile) {
-  savedProfile = profile;
+  // REMOVED: savedProfile = profile; — no global cache
 
   if (profile) {
     const storageKey = getProfileStorageKey(profile.telegram_id || userId);
@@ -2205,7 +2351,9 @@ function closePhotoViewer(e) {
 // === INIT ===
 document.addEventListener('DOMContentLoaded', () => {
   removeLegacyProfileStorage();
-  restoreExistingPhotoState();
+
+  // CRITICAL: Don't restore photo state until we know who the user is
+  // This prevents cross-user photo leakage
 
   // Check if user has profile
   if (userId) {
@@ -2216,16 +2364,15 @@ document.addEventListener('DOMContentLoaded', () => {
         showPage('search');
         loadLimitStatus();
       } else {
+        // No profile on server — clear any local data that might be from another user
+        resetProfileFormState();
         showPage('profile');
       }
     });
   } else {
-    const profile = getProfile();
-    if (profile) {
-      document.querySelector('.bottom-nav').style.display = 'flex';
-      showPage('search');
-    } else {
-      showPage('profile');
-    }
+    // No userId detected — this is a fresh/guest session
+    // Clear any stale data and show profile page
+    resetProfileFormState();
+    showPage('profile');
   }
 });
