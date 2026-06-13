@@ -530,118 +530,123 @@ function selectZodiac(value, label) {
   }
 }
 
-// ========== BURJ MOSLIK MA'LUMOTLARI ==========
+// ========== BURJ NOMLARI VA MOSLIK MA'LUMOTLARI ==========
+const ZODIAC_SIGNS = {
+  "qoy": ("Qo'y", "♈"),
+  "buzoq": ("Buzoq", "♉"),
+  "egizak": ("Egizak", "♊"),
+  "qisqichbaqa": ("Qisqichbaqa", "♋"),
+  "arslon": ("Arslon", "♌"),
+  "sunbula": ("Sunbula", "♍"),
+  "tarozi": ("Tarozi", "♎"),
+  "chayon": ("Chayon", "♏"),
+  "oqotar": ("O'qotar", "♐"),
+  "tog_echkisi": ("Tog' echkisi", "♑"),
+  "qovga": ("Qovg'a", "♒"),
+  "baliq": ("Baliq", "♓"),
+};
+
 const ZODIAC_COMPATIBILITY = {
-  "Qo'y (Aries)": {
-    mos: ["Sher (Leo)", "Egizaklar (Gemini)", "Yoy (Sagittarius)"],
-    qiyin: ["Qisqichbaqa (Cancer)", "Chayonlar (Scorpio)", "Baliq (Pisces)"]
+  "qoy": {
+    "mos": ["arslon", "egizak", "oqotar"],
+    "qiyin": ["qisqichbaqa", "chayon", "baliq"]
   },
-  "Buqa (Taurus)": {
-    mos: ["Qiz (Virgo)", "Qisqichbaqa (Cancer)", "Tog' echkisi (Capricorn)"],
-    qiyin: ["Egizaklar (Gemini)", "Yoy (Sagittarius)", "Qovunchi (Aquarius)"]
+  "buzoq": {
+    "mos": ["sunbula", "qisqichbaqa", "tog_echkisi"],
+    "qiyin": ["egizak", "oqotar", "qovga"]
   },
-  "Egizaklar (Gemini)": {
-    mos: ["Qo'y (Aries)", "Tarozi (Libra)", "Qovunchi (Aquarius)"],
-    qiyin: ["Buqa (Taurus)", "Chayonlar (Scorpio)", "Tog' echkisi (Capricorn)"]
+  "egizak": {
+    "mos": ["qoy", "tarozi", "qovga"],
+    "qiyin": ["buzoq", "chayon", "tog_echkisi"]
   },
-  "Qisqichbaqa (Cancer)": {
-    mos: ["Buqa (Taurus)", "Baliq (Pisces)", "Chayonlar (Scorpio)"],
-    qiyin: ["Qo'y (Aries)", "Egizaklar (Gemini)", "Yoy (Sagittarius)"]
+  "qisqichbaqa": {
+    "mos": ["buzoq", "baliq", "chayon"],
+    "qiyin": ["qoy", "egizak", "oqotar"]
   },
-  "Sher (Leo)": {
-    mos: ["Qo'y (Aries)", "Egizaklar (Gemini)", "Tarozi (Libra)"],
-    qiyin: ["Buqa (Taurus)", "Tog' echkisi (Capricorn)", "Baliq (Pisces)"]
+  "arslon": {
+    "mos": ["qoy", "egizak", "tarozi"],
+    "qiyin": ["buzoq", "tog_echkisi", "baliq"]
   },
-  "Qiz (Virgo)": {
-    mos: ["Buqa (Taurus)", "Tog' echkisi (Capricorn)", "Chayonlar (Scorpio)"],
-    qiyin: ["Egizaklar (Gemini)", "Sher (Leo)", "Yoy (Sagittarius)"]
+  "sunbula": {
+    "mos": ["buzoq", "tog_echkisi", "chayon"],
+    "qiyin": ["egizak", "arslon", "oqotar"]
   },
-  "Tarozi (Libra)": {
-    mos: ["Egizaklar (Gemini)", "Sher (Leo)", "Qovunchi (Aquarius)"],
-    qiyin: ["Chayonlar (Scorpio)", "Qisqichbaqa (Cancer)", "Tog' echkisi (Capricorn)"]
+  "tarozi": {
+    "mos": ["egizak", "arslon", "qovga"],
+    "qiyin": ["chayon", "qisqichbaqa", "tog_echkisi"]
   },
-  "Chayonlar (Scorpio)": {
-    mos: ["Qisqichbaqa (Cancer)", "Baliq (Pisces)", "Buqa (Taurus)"],
-    qiyin: ["Egizaklar (Gemini)", "Qo'y (Aries)", "Tarozi (Libra)"]
+  "chayon": {
+    "mos": ["qisqichbaqa", "baliq", "buzoq"],
+    "qiyin": ["egizak", "qoy", "tarozi"]
   },
-  "Yoy (Sagittarius)": {
-    mos: ["Qo'y (Aries)", "Sher (Leo)", "Qovunchi (Aquarius)"],
-    qiyin: ["Buqa (Taurus)", "Qisqichbaqa (Cancer)", "Tog' echkisi (Capricorn)"]
+  "oqotar": {
+    "mos": ["qoy", "arslon", "qovga"],
+    "qiyin": ["buzoq", "qisqichbaqa", "tog_echkisi"]
   },
-  "Tog' echkisi (Capricorn)": {
-    mos: ["Buqa (Taurus)", "Qiz (Virgo)", "Chayonlar (Scorpio)"],
-    qiyin: ["Egizaklar (Gemini)", "Tarozi (Libra)", "Yoy (Sagittarius)"]
+  "tog_echkisi": {
+    "mos": ["buzoq", "sunbula", "chayon"],
+    "qiyin": ["egizak", "tarozi", "oqotar"]
   },
-  "Qovunchi (Aquarius)": {
-    mos: ["Yoy (Sagittarius)", "Egizaklar (Gemini)", "Tarozi (Libra)"],
-    qiyin: ["Buqa (Taurus)", "Chayonlar (Scorpio)", "Qisqichbaqa (Cancer)"]
+  "qovga": {
+    "mos": ["oqotar", "egizak", "tarozi"],
+    "qiyin": ["buzoq", "chayon", "qisqichbaqa"]
   },
-  "Baliq (Pisces)": {
-    mos: ["Buqa (Taurus)", "Qisqichbaqa (Cancer)", "Chayonlar (Scorpio)"],
-    qiyin: ["Qo'y (Aries)", "Egizaklar (Gemini)", "Sher (Leo)"]
+  "baliq": {
+    "mos": ["buzoq", "qisqichbaqa", "chayon"],
+    "qiyin": ["qoy", "egizak", "arslon"]
   }
 };
 
-// Burj nomlari mapping - turli formatlarni ZODIAC_COMPATIBILITY kalitlariga aylantirish
-const ZODIAC_NAME_MAP = {
-  "Qo'y": "Qo'y (Aries)", "Aries": "Qo'y (Aries)", "♈": "Qo'y (Aries)",
-  "Buqa": "Buqa (Taurus)", "Buzoq": "Buqa (Taurus)", "Taurus": "Buqa (Taurus)", "♉": "Buqa (Taurus)",
-  "Egizak": "Egizaklar (Gemini)", "Egizaklar": "Egizaklar (Gemini)", "Gemini": "Egizaklar (Gemini)", "♊": "Egizaklar (Gemini)",
-  "Qisqichbaqa": "Qisqichbaqa (Cancer)", "Cancer": "Qisqichbaqa (Cancer)", "♋": "Qisqichbaqa (Cancer)",
-  "Arslon": "Sher (Leo)", "Sher": "Sher (Leo)", "Leo": "Sher (Leo)", "♌": "Sher (Leo)",
-  "Sunbula": "Qiz (Virgo)", "Qiz": "Qiz (Virgo)", "Virgo": "Qiz (Virgo)", "♍": "Qiz (Virgo)",
-  "Tarozi": "Tarozi (Libra)", "Libra": "Tarozi (Libra)", "♎": "Tarozi (Libra)",
-  "Chayon": "Chayonlar (Scorpio)", "Chayonlar": "Chayonlar (Scorpio)", "Scorpio": "Chayonlar (Scorpio)", "♏": "Chayonlar (Scorpio)",
-  "O'qotar": "Yoy (Sagittarius)", "Yoy": "Yoy (Sagittarius)", "Sagittarius": "Yoy (Sagittarius)", "♐": "Yoy (Sagittarius)",
-  "Tog' echkisi": "Tog' echkisi (Capricorn)", "Capricorn": "Tog' echkisi (Capricorn)", "♑": "Tog' echkisi (Capricorn)",
-  "Qovg'a": "Qovunchi (Aquarius)", "Qovunchi": "Qovunchi (Aquarius)", "Aquarius": "Qovunchi (Aquarius)", "♒": "Qovunchi (Aquarius)",
-  "Baliq": "Baliq (Pisces)", "Pisces": "Baliq (Pisces)", "♓": "Baliq (Pisces)",
-};
+function normalizeZodiacKey(value) {
+  if (!value) return null;
 
-// Foydalanuvchining burjini olish (ZODIAC_COMPATIBILITY kalitlariga mos formatda)
+  const text = String(value)
+    .normalize('NFKC')
+    .replace(/[♈♉♊♋♌♍♎♏♐♑♒♓]/g, '')
+    .replace(/[’'`]/g, '')
+    .toLowerCase()
+    .replace(/\s+/g, ' ')
+    .trim();
+
+  const aliases = {
+    'qoy': 'qoy', 'qo y': 'qoy', 'aries': 'qoy',
+    'buzoq': 'buzoq', 'buqa': 'buzoq', 'taurus': 'buzoq',
+    'egizak': 'egizak', 'egizaklar': 'egizak', 'gemini': 'egizak',
+    'qisqichbaqa': 'qisqichbaqa', 'cancer': 'qisqichbaqa',
+    'arslon': 'arslon', 'sher': 'arslon', 'leo': 'arslon',
+    'sunbula': 'sunbula', 'qiz': 'sunbula', 'virgo': 'sunbula',
+    'tarozi': 'tarozi', 'libra': 'tarozi',
+    'chayon': 'chayon', 'chayonlar': 'chayon', 'scorpio': 'chayon',
+    'oqotar': 'oqotar', 'o qotar': 'oqotar', 'yoy': 'oqotar', 'sagittarius': 'oqotar',
+    'tog echkisi': 'tog_echkisi', 'tog echkisi': 'tog_echkisi', 'capricorn': 'tog_echkisi',
+    'qovga': 'qovga', 'qovg a': 'qovga', 'qovunchi': 'qovga', 'aquarius': 'qovga',
+    'baliq': 'baliq', 'pisces': 'baliq'
+  };
+
+  return aliases[text] || text.replace(/\s*\([^)]*\)\s*$/, '');
+}
+
+// Foydalanuvchining burjini olish
 function getMyZodiac() {
   const profile = getProfile();
   if (!profile?.zodiac) return null;
 
-  const zodiac = profile.zodiac.trim();
-
-  // Agar to'g'ridan-to'g'ri ZODIAC_COMPATIBILITY kaliti bo'lsa
-  if (ZODIAC_COMPATIBILITY[zodiac]) {
-    return zodiac;
-  }
-
-  // Agar ZODIAC_NAME_MAP da bo'lsa
-  const mapped = ZODIAC_NAME_MAP[zodiac];
-  if (mapped && ZODIAC_COMPATIBILITY[mapped]) {
-    return mapped;
-  }
-
-  // Emoji va qavs ichidagi qismini olib tashlash
-  const cleaned = zodiac.replace(/[♈♉♊♋♌♍♎♏♐♑♒♓]/g, '').trim();
-  if (ZODIAC_COMPATIBILITY[cleaned]) {
-    return cleaned;
-  }
-  if (ZODIAC_NAME_MAP[cleaned]) {
-    return ZODIAC_NAME_MAP[cleaned];
-  }
-
-  // Kalitlarni qisman tekshirish
-  for (const [key, value] of Object.entries(ZODIAC_NAME_MAP)) {
-    if (zodiac.includes(key) || key.includes(zodiac)) {
-      return value;
-    }
-  }
-
-  return null;
+  const key = normalizeZodiacKey(profile.zodiac);
+  return ZODIAC_COMPATIBILITY[key] ? key : null;
 }
 
 // Burjga mos kelish statusini tekshirish
 function getZodiacCompatStatus(myZodiac, theirZodiac) {
   if (!myZodiac || !theirZodiac) return null;
-  const compat = ZODIAC_COMPATIBILITY[myZodiac];
-  if (!compat) return null;
-  if (compat.mos.some(z => theirZodiac.includes(z.replace(" (", "").replace(")", "")) || theirZodiac === z)) return 'mos';
-  if (compat.qiyin.some(z => theirZodiac.includes(z.replace(" (", "").replace(")", "")) || theirZodiac === z)) return 'qiyin';
+
+  const myKey = normalizeZodiacKey(myZodiac);
+  const theirKey = normalizeZodiacKey(theirZodiac);
+  const compat = ZODIAC_COMPATIBILITY[myKey];
+
+  if (!compat || !theirKey) return null;
+  if (compat.mos.includes(theirKey)) return 'mos';
+  if (compat.qiyin.includes(theirKey)) return 'qiyin';
+
   return 'neytral';
 }
 let cocoSsdModel = null;
