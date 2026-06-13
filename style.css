@@ -1612,7 +1612,7 @@ body {
 
 .search-results-sheet {
   width: 100%;
-  max-width: 520px;
+  max-width: 100%;
   height: 100vh;
   max-height: 100vh;
   border-radius: 0;
@@ -1659,7 +1659,7 @@ body {
 .search-results-panel-body {
   flex: 1;
   overflow-y: auto;
-  padding: 0 6px calc(24px + var(--safe-bottom));
+  padding: 0 0 calc(24px + var(--safe-bottom));
 }
 
 /* ========== MODAL - WHITE GLASS ========== */
@@ -2372,8 +2372,9 @@ body {
 /* ========== TINDER CARD VIEW ========== */
 .swipe-container {
   position: relative;
-  padding: 8px 8px 12px;
+  padding: 0;
   min-height: auto;
+  width: 100%;
 }
 
 .swipe-counter {
@@ -2405,14 +2406,15 @@ body {
   box-shadow: 0 0 8px var(--ios-blue-glow);
 }
 
-/* Big Tinder-style card */
+/* Big Tinder-style card - FULL SCREEN */
 .tinder-card {
   background: var(--glass-bg-strong);
   backdrop-filter: blur(24px) saturate(160%);
   -webkit-backdrop-filter: blur(24px) saturate(160%);
   border-radius: 24px;
-  max-width: 480px;
-  margin: 0 auto;
+  width: 100%;
+  max-width: 100%;
+  margin: 0;
   border: 1px solid var(--glass-border);
   box-shadow:
     0 20px 60px rgba(0, 122, 255, 0.1),
@@ -2495,10 +2497,12 @@ body {
   background: rgba(0,122,255,0.08);
 }
 
-/* Photo area */
+/* Photo area - FULL HEIGHT */
 .tinder-photo {
   width: 100%;
-  height: 420px;
+  height: 62vh;
+  min-height: 480px;
+  max-height: 680px;
   object-fit: cover;
   background: linear-gradient(135deg, rgba(0,122,255,0.07), rgba(0,0,0,0.07));
   display: flex;
@@ -2592,13 +2596,13 @@ body {
   border-color: rgba(255,45,85,0.15);
 }
 
-/* 5 action buttons at bottom */
+/* 5 action buttons at bottom - FULL WIDTH */
 .tinder-actions {
   display: flex;
-  justify-content: space-between;
+  justify-content: space-evenly;
   align-items: center;
-  gap: 6px;
-  padding: 6px 6px 14px;
+  gap: 8px;
+  padding: 12px 16px 20px;
   width: 100%;
   box-sizing: border-box;
 }
@@ -2610,9 +2614,8 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 22px;
-  flex: 1 1 auto;
-  min-width: 0;
+  font-size: 24px;
+  flex: 0 0 auto;
   transition: all 0.3s var(--ease-spring);
   position: relative;
   box-shadow: 0 6px 20px rgba(0,0,0,0.1);
@@ -2623,45 +2626,45 @@ body {
 }
 
 .tinder-btn-back {
-  width: 42px; height: 42px;
+  width: 52px; height: 52px;
   background: rgba(255,200,0,0.12);
-  border: 2px solid rgba(255,200,0,0.35);
-  font-size: 17px;
+  border: 2.5px solid rgba(255,200,0,0.35);
+  font-size: 20px;
   box-shadow: 0 4px 16px rgba(255,200,0,0.15);
   color: #FFCC00;
 }
 .tinder-btn-back:active { transform: scale(0.88); }
 
 .tinder-btn-nope {
-  width: 50px; height: 50px;
+  width: 60px; height: 60px;
   background: linear-gradient(135deg, rgba(255,59,48,0.1), rgba(255,59,48,0.04));
-  border: 2px solid rgba(255,59,48,0.3);
+  border: 2.5px solid rgba(255,59,48,0.3);
   box-shadow: 0 6px 24px rgba(255,59,48,0.15);
   color: #FF3B30;
 }
 .tinder-btn-nope:active { transform: scale(0.88); box-shadow: 0 2px 8px rgba(255,59,48,0.1); }
 
 .tinder-btn-superlike {
-  width: 48px; height: 48px;
+  width: 56px; height: 56px;
   background: linear-gradient(135deg, rgba(0,122,255,0.12), rgba(90,200,250,0.08));
-  border: 2px solid rgba(0,122,255,0.3);
+  border: 2.5px solid rgba(0,122,255,0.3);
   box-shadow: 0 6px 24px rgba(0,122,255,0.15);
   color: var(--ios-blue);
 }
 
 .tinder-btn-like {
-  width: 50px; height: 50px;
+  width: 60px; height: 60px;
   background: linear-gradient(135deg, rgba(76,217,100,0.12), rgba(76,217,100,0.05));
-  border: 2px solid rgba(76,217,100,0.35);
+  border: 2.5px solid rgba(76,217,100,0.35);
   box-shadow: 0 6px 24px rgba(76,217,100,0.15);
   color: #4CD964;
 }
 
 .tinder-btn-msg {
-  width: 42px; height: 42px;
+  width: 52px; height: 52px;
   background: linear-gradient(135deg, rgba(0,122,255,0.12), rgba(0,122,255,0.05));
-  border: 2px solid rgba(0,122,255,0.25);
-  font-size: 17px;
+  border: 2.5px solid rgba(0,122,255,0.25);
+  font-size: 20px;
   box-shadow: 0 4px 16px rgba(0,122,255,0.12);
   color: var(--ios-blue);
 }
