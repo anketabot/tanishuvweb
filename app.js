@@ -780,10 +780,11 @@ async function previewPhoto(input) {
 
 // === SAVE PROFILE ===
 async function saveProfile() {
-  const name = document.getElementById('inp-name').value.trim();
-  const age = parseInt(document.getElementById('inp-age').value);
-  const city = document.getElementById('inp-city').value.trim();
-  const zodiac = document.getElementById('sel-zodiac').value;
+  const name = document.getElementById('inp-name')?.value?.trim() || '';
+  const age = parseInt(document.getElementById('inp-age')?.value || '0', 10);
+  const city = document.getElementById('inp-city')?.value?.trim() || '';
+  const zodiacEl = document.getElementById('sel-zodiac');
+  const zodiac = zodiacEl ? zodiacEl.value : '';
 
   if (!selectedGender) { showToast('Jinsni tanlang!'); return; }
   if (!name) { showToast('Ismingizni kiriting!'); return; }
