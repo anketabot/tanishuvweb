@@ -1605,25 +1605,31 @@ body {
   align-items: stretch;
   justify-content: center;
   padding: 0;
-  background: rgba(0, 0, 0, 0.3);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
+  background: var(--bg);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  position: fixed;
+  inset: 0;
+  z-index: 250;
 }
 
 .search-results-sheet {
-  width: 100%;
-  max-width: 100%;
+  width: 100vw;
+  max-width: 100vw;
   height: 100vh;
   max-height: 100vh;
+  min-height: 100vh;
   border-radius: 0;
   background: var(--bg);
-  backdrop-filter: blur(30px) saturate(180%);
-  -webkit-backdrop-filter: blur(30px) saturate(180%);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
   border: none;
   box-shadow: none;
   overflow: hidden;
   display: flex;
   flex-direction: column;
+  position: fixed;
+  inset: 0;
   animation: slideInFromRight 0.35s var(--ease-spring);
 }
 
@@ -1641,7 +1647,7 @@ body {
   align-items: flex-start;
   justify-content: space-between;
   gap: 12px;
-  padding: calc(16px + var(--safe-top)) 16px 12px;
+  padding: calc(12px + var(--safe-top)) 16px 10px;
   background: rgba(255, 255, 255, 0.85);
   backdrop-filter: blur(24px) saturate(180%);
   -webkit-backdrop-filter: blur(24px) saturate(180%);
@@ -1649,6 +1655,7 @@ body {
   position: sticky;
   top: 0;
   z-index: 10;
+  flex-shrink: 0;
 }
 
 .sheet-subtitle {
@@ -1659,7 +1666,12 @@ body {
 .search-results-panel-body {
   flex: 1;
   overflow-y: auto;
-  padding: 0 0 calc(24px + var(--safe-bottom));
+  overflow-x: hidden;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 0;
 }
 
 /* ========== MODAL - WHITE GLASS ========== */
@@ -2375,6 +2387,10 @@ body {
   padding: 0;
   min-height: auto;
   width: 100%;
+  height: 100%;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
 }
 
 .swipe-counter {
@@ -2382,11 +2398,13 @@ body {
   font-size: 13px;
   font-weight: 600;
   color: var(--text-secondary);
-  margin-bottom: 12px;
+  margin-bottom: 8px;
+  margin-top: 8px;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 8px;
+  flex-shrink: 0;
 }
 
 .swipe-dots {
@@ -2406,7 +2424,7 @@ body {
   box-shadow: 0 0 8px var(--ios-blue-glow);
 }
 
-/* Big Tinder-style card - FULL SCREEN */
+/* Big Tinder-style card - FULL SCREEN HEIGHT */
 .tinder-card {
   background: var(--glass-bg-strong);
   backdrop-filter: blur(24px) saturate(160%);
@@ -2414,6 +2432,9 @@ body {
   border-radius: 24px;
   width: 100%;
   max-width: 100%;
+  height: calc(100vh - 80px);
+  min-height: calc(100vh - 80px);
+  max-height: calc(100vh - 80px);
   margin: 0;
   border: 1px solid var(--glass-border);
   box-shadow:
@@ -2425,6 +2446,8 @@ body {
   transition: transform 0.25s var(--ease-spring);
   will-change: transform;
   user-select: none;
+  display: flex;
+  flex-direction: column;
 }
 
 .tinder-card.animate-left {
@@ -2497,12 +2520,11 @@ body {
   background: rgba(0,122,255,0.08);
 }
 
-/* Photo area - FULL HEIGHT */
+/* Photo area - FLEX GROW TO FILL ALL SPACE */
 .tinder-photo {
   width: 100%;
-  height: 62vh;
-  min-height: 480px;
-  max-height: 680px;
+  flex: 1 1 0;
+  min-height: 0;
   object-fit: cover;
   background: linear-gradient(135deg, rgba(0,122,255,0.07), rgba(0,0,0,0.07));
   display: flex;
@@ -2515,22 +2537,21 @@ body {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: center top;
+  object-position: center center;
   background: linear-gradient(135deg, rgba(255,255,255,0.96), rgba(240,245,255,0.98));
+  position: absolute;
+  inset: 0;
 }
 .tinder-photo-gradient {
-  position: absolute;
-  bottom: 0; left: 0; right: 0;
-  height: 55%;
-  background: linear-gradient(to top, rgba(0,0,0,0.7) 0%, transparent 100%);
-  z-index: 2;
+  display: none;
 }
 .tinder-photo-info {
   position: absolute;
   bottom: 0; left: 0; right: 0;
-  padding: 20px 20px 14px;
+  padding: 30px 20px 16px;
   z-index: 3;
   color: white;
+  background: linear-gradient(to top, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.3) 40%, transparent 100%);
 }
 .tinder-photo-name {
   font-size: 20px;
@@ -2546,10 +2567,11 @@ body {
   text-shadow: 0 1px 4px rgba(0,0,0,0.25);
 }
 
-/* Card body (tags) */
+/* Card body (tags) - COMPACT */
 .tinder-body {
-  padding: 10px 12px 6px;
+  padding: 6px 12px 2px;
   min-height: 0;
+  flex-shrink: 0;
 }
 
 .tinder-mini-meta {
@@ -2596,15 +2618,17 @@ body {
   border-color: rgba(255,45,85,0.15);
 }
 
-/* 5 action buttons at bottom - FULL WIDTH */
+/* 5 action buttons at bottom - FIXED AT BOTTOM */
 .tinder-actions {
   display: flex;
   justify-content: space-evenly;
   align-items: center;
-  gap: 8px;
-  padding: 12px 16px 20px;
+  gap: 6px;
+  padding: 8px 12px 12px;
   width: 100%;
   box-sizing: border-box;
+  flex-shrink: 0;
+  margin-top: auto;
 }
 
 .tinder-btn {
@@ -2626,45 +2650,45 @@ body {
 }
 
 .tinder-btn-back {
-  width: 52px; height: 52px;
+  width: 48px; height: 48px;
   background: rgba(255,200,0,0.12);
-  border: 2.5px solid rgba(255,200,0,0.35);
-  font-size: 20px;
+  border: 2px solid rgba(255,200,0,0.35);
+  font-size: 18px;
   box-shadow: 0 4px 16px rgba(255,200,0,0.15);
   color: #FFCC00;
 }
 .tinder-btn-back:active { transform: scale(0.88); }
 
 .tinder-btn-nope {
-  width: 60px; height: 60px;
+  width: 56px; height: 56px;
   background: linear-gradient(135deg, rgba(255,59,48,0.1), rgba(255,59,48,0.04));
-  border: 2.5px solid rgba(255,59,48,0.3);
+  border: 2px solid rgba(255,59,48,0.3);
   box-shadow: 0 6px 24px rgba(255,59,48,0.15);
   color: #FF3B30;
 }
 .tinder-btn-nope:active { transform: scale(0.88); box-shadow: 0 2px 8px rgba(255,59,48,0.1); }
 
 .tinder-btn-superlike {
-  width: 56px; height: 56px;
+  width: 52px; height: 52px;
   background: linear-gradient(135deg, rgba(0,122,255,0.12), rgba(90,200,250,0.08));
-  border: 2.5px solid rgba(0,122,255,0.3);
+  border: 2px solid rgba(0,122,255,0.3);
   box-shadow: 0 6px 24px rgba(0,122,255,0.15);
   color: var(--ios-blue);
 }
 
 .tinder-btn-like {
-  width: 60px; height: 60px;
+  width: 56px; height: 56px;
   background: linear-gradient(135deg, rgba(76,217,100,0.12), rgba(76,217,100,0.05));
-  border: 2.5px solid rgba(76,217,100,0.35);
+  border: 2px solid rgba(76,217,100,0.35);
   box-shadow: 0 6px 24px rgba(76,217,100,0.15);
   color: #4CD964;
 }
 
 .tinder-btn-msg {
-  width: 52px; height: 52px;
+  width: 48px; height: 48px;
   background: linear-gradient(135deg, rgba(0,122,255,0.12), rgba(0,122,255,0.05));
-  border: 2.5px solid rgba(0,122,255,0.25);
-  font-size: 20px;
+  border: 2px solid rgba(0,122,255,0.25);
+  font-size: 18px;
   box-shadow: 0 4px 16px rgba(0,122,255,0.12);
   color: var(--ios-blue);
 }
@@ -2674,6 +2698,11 @@ body {
   text-align: center;
   padding: 60px 24px;
   animation: cardIn 0.5s var(--ease-spring);
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 .no-more-emoji { font-size: 64px; margin-bottom: 16px; }
 .no-more-title {
