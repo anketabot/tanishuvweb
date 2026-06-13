@@ -749,9 +749,9 @@ async function fetchSearchResultsModal(telegramId, filters) {
       tinderUsers = data.users;
       tinderIndex = 0;
       tinderHistory = [];
-      // Render tinder cards inside modal panel
+      // Render tinder cards inside modal panel - FULL WIDTH
       if (panelBody) {
-        panelBody.innerHTML = '<div id="swipe-container-modal" class="swipe-container"></div>';
+        panelBody.innerHTML = '<div id="swipe-container-modal" class="swipe-container" style="padding:0;width:100%;"></div>';
         renderTinderCardInModal();
       }
     } else {
