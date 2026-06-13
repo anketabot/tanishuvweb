@@ -27,8 +27,21 @@ if (tg?.initDataUnsafe?.user?.id) {
   }
 }
 
-if (!userId && localStorage.getItem('dating_profile')) {
-  userId = 123456789;
+const PROFILE_STORAGE_PREFIX = 'dating_profile_';
+
+function getProfileStorageKey(targetId = userId) {
+  if (targetId && Number.isFinite(Number(targetId))) {
+    return `${PROFILE_STORAGE_PREFIX}${Number(targetId)}`;
+  }
+  return `${PROFILE_STORAGE_PREFIX}guest`;
+}
+
+function removeLegacyProfileStorage() {
+  try {
+    localStorage.removeItem('dating_profile');
+  } catch (e) {
+    console.warn('Legacy profile storage cleanup failed', e);
+  }
 }
 
 const API_BASE_URL = 'https://tanishuvbot-production.up.railway.app';
@@ -1818,16 +1831,42 @@ function isRegistered() {
 
 function getProfile() {
   if (savedProfile) return savedProfile;
-  const data = localStorage.getItem('dating_profile');
-  return data ? JSON.parse(data) : null;
+
+  const storageKey = getProfileStorageKey();
+  const data = localStorage.getItem(storageKey);
+  if (data) {
+    try {
+      return JSON.parse(data);
+    } catch (e) {
+      console.warn('Profile cache parse failed', e);
+    }
+  }
+
+  // Legacy fallback for older browsers/devices.
+  const legacyData = localStorage.getItem('dating_profile');
+  if (legacyData) {
+    try {
+      const parsed = JSON.parse(legacyData);
+      return parsed;
+    } catch (e) {
+      console.warn('Legacy profile cache parse failed', e);
+    }
+  }
+
+  return null;
 }
 
 function setSavedProfile(profile) {
   savedProfile = profile;
+
   if (profile) {
-    localStorage.setItem('dating_profile', JSON.stringify(profile));
+    const storageKey = getProfileStorageKey(profile.telegram_id || userId);
+    localStorage.setItem(storageKey, JSON.stringify(profile));
+    removeLegacyProfileStorage();
   } else {
-    localStorage.removeItem('dating_profile');
+    const storageKey = getProfileStorageKey();
+    localStorage.removeItem(storageKey);
+    removeLegacyProfileStorage();
   }
 }
 
@@ -2165,6 +2204,7 @@ function closePhotoViewer(e) {
 
 // === INIT ===
 document.addEventListener('DOMContentLoaded', () => {
+  removeLegacyProfileStorage();
   restoreExistingPhotoState();
 
   // Check if user has profile
