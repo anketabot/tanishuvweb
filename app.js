@@ -488,6 +488,9 @@ function syncZodiacPicker() {
   if (!select || !button) return;
 
   const value = select.value?.trim();
+  document.querySelectorAll('.zodiac-option').forEach(option => {
+    option.classList.toggle('selected', option.dataset.zodiac === value);
+  });
   button.classList.toggle('selected', !!value);
   const labelMap = {
     "Qo'y (Aries)": '♈ Qo\'y (Aries)',
@@ -519,6 +522,9 @@ function selectZodiac(value, label) {
     button.textContent = label || 'Burj tanlang...';
     button.classList.toggle('selected', !!value);
   }
+  document.querySelectorAll('.zodiac-option').forEach(option => {
+    option.classList.toggle('selected', option.dataset.zodiac === value);
+  });
   if (menu) {
     menu.style.display = 'none';
   }
@@ -576,10 +582,57 @@ const ZODIAC_COMPATIBILITY = {
   }
 };
 
-// Foydalanuvchining burjini olish
+// Burj nomlari mapping - turli formatlarni ZODIAC_COMPATIBILITY kalitlariga aylantirish
+const ZODIAC_NAME_MAP = {
+  "Qo'y": "Qo'y (Aries)", "Aries": "Qo'y (Aries)", "♈": "Qo'y (Aries)",
+  "Buqa": "Buqa (Taurus)", "Buzoq": "Buqa (Taurus)", "Taurus": "Buqa (Taurus)", "♉": "Buqa (Taurus)",
+  "Egizak": "Egizaklar (Gemini)", "Egizaklar": "Egizaklar (Gemini)", "Gemini": "Egizaklar (Gemini)", "♊": "Egizaklar (Gemini)",
+  "Qisqichbaqa": "Qisqichbaqa (Cancer)", "Cancer": "Qisqichbaqa (Cancer)", "♋": "Qisqichbaqa (Cancer)",
+  "Arslon": "Sher (Leo)", "Sher": "Sher (Leo)", "Leo": "Sher (Leo)", "♌": "Sher (Leo)",
+  "Sunbula": "Qiz (Virgo)", "Qiz": "Qiz (Virgo)", "Virgo": "Qiz (Virgo)", "♍": "Qiz (Virgo)",
+  "Tarozi": "Tarozi (Libra)", "Libra": "Tarozi (Libra)", "♎": "Tarozi (Libra)",
+  "Chayon": "Chayonlar (Scorpio)", "Chayonlar": "Chayonlar (Scorpio)", "Scorpio": "Chayonlar (Scorpio)", "♏": "Chayonlar (Scorpio)",
+  "O'qotar": "Yoy (Sagittarius)", "Yoy": "Yoy (Sagittarius)", "Sagittarius": "Yoy (Sagittarius)", "♐": "Yoy (Sagittarius)",
+  "Tog' echkisi": "Tog' echkisi (Capricorn)", "Capricorn": "Tog' echkisi (Capricorn)", "♑": "Tog' echkisi (Capricorn)",
+  "Qovg'a": "Qovunchi (Aquarius)", "Qovunchi": "Qovunchi (Aquarius)", "Aquarius": "Qovunchi (Aquarius)", "♒": "Qovunchi (Aquarius)",
+  "Baliq": "Baliq (Pisces)", "Pisces": "Baliq (Pisces)", "♓": "Baliq (Pisces)",
+};
+
+// Foydalanuvchining burjini olish (ZODIAC_COMPATIBILITY kalitlariga mos formatda)
 function getMyZodiac() {
-  const profile = getSavedProfile();
-  return profile?.zodiac || null;
+  const profile = getProfile();
+  if (!profile?.zodiac) return null;
+
+  const zodiac = profile.zodiac.trim();
+
+  // Agar to'g'ridan-to'g'ri ZODIAC_COMPATIBILITY kaliti bo'lsa
+  if (ZODIAC_COMPATIBILITY[zodiac]) {
+    return zodiac;
+  }
+
+  // Agar ZODIAC_NAME_MAP da bo'lsa
+  const mapped = ZODIAC_NAME_MAP[zodiac];
+  if (mapped && ZODIAC_COMPATIBILITY[mapped]) {
+    return mapped;
+  }
+
+  // Emoji va qavs ichidagi qismini olib tashlash
+  const cleaned = zodiac.replace(/[♈♉♊♋♌♍♎♏♐♑♒♓]/g, '').trim();
+  if (ZODIAC_COMPATIBILITY[cleaned]) {
+    return cleaned;
+  }
+  if (ZODIAC_NAME_MAP[cleaned]) {
+    return ZODIAC_NAME_MAP[cleaned];
+  }
+
+  // Kalitlarni qisman tekshirish
+  for (const [key, value] of Object.entries(ZODIAC_NAME_MAP)) {
+    if (zodiac.includes(key) || key.includes(zodiac)) {
+      return value;
+    }
+  }
+
+  return null;
 }
 
 // Burjga mos kelish statusini tekshirish
@@ -799,6 +852,13 @@ function doSearch() {
     const myZodiac = getMyZodiac();
     if (myZodiac && ZODIAC_COMPATIBILITY[myZodiac]) {
       filters.zodiac_compat_list = ZODIAC_COMPATIBILITY[myZodiac].mos;
+    } else {
+      // Burj aniqlanmadi - foydalanuvchiga xabar berish va qidirishni to'xtatish
+      if (panelBody) {
+        panelBody.innerHTML = `<div class="empty-state"><div class="empty-icon">⭐</div><h3>Burjingiz aniqlanmadi</h3><p>"Faqat burjimga mos odamlarni ko'rsat" funksiyasi ishlamasi uchun avval anketangizda burjingizni to'g'ri tanlang.</p><button class="btn-primary" style="margin-top:16px;padding:12px 24px;border-radius:999rem;" onclick="closeSearchResultsModal();showPage('profile')">Anketani to'ldirish</button></div>`;
+      }
+      if (modal) modal.style.display = 'flex';
+      return;
     }
   }
 
@@ -808,7 +868,11 @@ function doSearch() {
   if (panelBody) panelBody.innerHTML = '<div class="loading"><div class="spinner"></div> Qidirilmoqda...</div>';
   if (modal) modal.style.display = 'flex';
 
-  fetchSearchResultsModal(userId || 0, filters);
+  if (!userId) {
+    if (panelBody) panelBody.innerHTML = `<div class="empty-state"><div class="empty-icon"></div><h3>Telegram orqali kiring</h3><p>Qidirish uchun botni Telegram ilovasida oching.</p></div>`;
+    return;
+  }
+  fetchSearchResultsModal(userId, filters);
 }
 
 // === TINDER CARD STATE ===
@@ -844,10 +908,11 @@ async function fetchSearchResultsModal(telegramId, filters) {
       }
     }
   } catch (error) {
-    showToast('Server bilan aloqa yo\'q');
+    console.error('Search error:', error);
     if (panelBody) {
-      panelBody.innerHTML = `<div class="empty-state"><div class="empty-icon">${ICONS.alert}</div><h3>Ulana olmadi</h3><p>Internet aloqasini tekshiring.</p></div>`;
+      panelBody.innerHTML = `<div class="empty-state"><div class="empty-icon">${ICONS.alert}</div><h3>Server bilan aloqa yo'q</h3><p>Internet aloqasini tekshiring yoki keyinroq urinib ko'ring.</p><button class="btn-primary" style="margin-top:16px;padding:12px 24px;border-radius:999rem;" onclick="closeSearchResultsModal();setTimeout(doSearch,300)">🔄 Qayta urinish</button></div>`;
     }
+    showToast('Server bilan aloqa yo\'q');
   }
 }
 
