@@ -797,7 +797,7 @@ function renderTinderCardInModal(direction) {
       <div class="swipe-dots">${tinderUsers.map((_,i)=>`<div class="swipe-dot${i===tinderIndex?' active':''}"></div>`).join('')}</div>
       <span>${tinderIndex+1} / ${total}</span>
     </div>
-    <div class="tinder-card ${animClass}" id="tinder-card-el">
+    <div class="tinder-card ${animClass}" id="tinder-card-el" style="height:calc(100vh - 80px);">
       <div class="stamp like">❤️ LIKE</div>
       <div class="stamp nope">✕ NOPE</div>
       <div class="stamp superlike">⭐ SUPER</div>
@@ -973,7 +973,7 @@ function renderTinderCard(direction) {
       <div class="swipe-dots">${dots}</div>
       <span style="margin-left:6px;">${tinderIndex+1} / ${total}</span>
     </div>
-    <div class="tinder-card animate-in" id="tinder-card" data-user="${escapeHtmlAttr(JSON.stringify(u))}">
+    <div class="tinder-card animate-in" id="tinder-card" data-user="${escapeHtmlAttr(JSON.stringify(u))}" style="height:calc(100vh - 80px);">
       <span class="stamp like" id="stamp-like">LIKE 💚</span>
       <span class="stamp nope" id="stamp-nope">NOPE ✗</span>
       <span class="stamp superlike" id="stamp-super">SUPER ⭐</span>
