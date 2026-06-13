@@ -87,6 +87,8 @@ let selectedGoals = [];
 let selectedSearchGoals = [];
 let selectedSearchInterests = [];
 let photoBase64 = '';
+let photoReady = false;
+let photoUploading = false;
 let savedProfile = null;
 
 const uzbekCities = [
@@ -780,16 +782,65 @@ async function detectPersonCocoSsd(file) {
   }
 }
 
+function updatePhotoUploadState(message, ready = false, uploading = photoUploading) {
+  const status = document.getElementById('upload-status');
+  const area = document.getElementById('photo-upload-area');
+  const saveBtn = document.getElementById('save-profile-btn');
+  if (status) status.textContent = message;
+  if (area) {
+    area.classList.toggle('photo-ready', ready);
+    area.classList.toggle('photo-uploading', uploading);
+  }
+  if (saveBtn) {
+    const canSave = Boolean(photoReady && photoBase64 && !uploading);
+    saveBtn.disabled = !canSave;
+  }
+}
+
+function restoreExistingPhotoState() {
+  const existing = getProfile();
+  if (existing?.photo_base64 || existing?.photo_file_id) {
+    photoBase64 = existing.photo_base64 || existing.photo_file_id || '';
+    photoReady = true;
+    photoUploading = false;
+    const preview = document.getElementById('photo-preview');
+    if (preview) {
+      preview.src = photoBase64;
+      preview.style.display = 'block';
+    }
+    document.getElementById('upload-icon')?.style.setProperty('display', 'none');
+    document.getElementById('upload-text')?.style.setProperty('display', 'none');
+    document.getElementById('upload-sub')?.style.setProperty('display', 'none');
+    updatePhotoUploadState('✅ Rasm yuklangan. Anketa saqlash mumkin.', true, false);
+  }
+}
+
 function proceedWithPhotoPreview(file) {
+  photoUploading = true;
+  updatePhotoUploadState('📸 Rasm yuklanmoqda…', false, true);
   const reader = new FileReader();
   reader.onload = (e) => {
     photoBase64 = e.target.result;
     const preview = document.getElementById('photo-preview');
-    preview.src = photoBase64;
-    preview.style.display = 'block';
-    document.getElementById('upload-icon').style.display = 'none';
-    document.getElementById('upload-text').style.display = 'none';
-    document.getElementById('upload-sub').style.display = 'none';
+    const uploadText = document.getElementById('upload-text');
+    const uploadSub = document.getElementById('upload-sub');
+    const uploadIcon = document.getElementById('upload-icon');
+    if (preview) {
+      preview.src = photoBase64;
+      preview.style.display = 'block';
+    }
+    if (uploadIcon) uploadIcon.style.display = 'none';
+    if (uploadText) uploadText.style.display = 'none';
+    if (uploadSub) uploadSub.style.display = 'none';
+    photoReady = true;
+    photoUploading = false;
+    updatePhotoUploadState('✅ Rasm yuklandi. Endi anketa saqlashingiz mumkin.', true, false);
+  };
+  reader.onerror = () => {
+    photoReady = false;
+    photoUploading = false;
+    updatePhotoUploadState('❌ Rasm o‘qilishda xatolik yuz berdi.', false, false);
+    showToast('Rasm o‘qilishda xatolik yuz berdi.');
   };
   reader.readAsDataURL(file);
 }
@@ -798,14 +849,26 @@ function proceedWithPhotoPreview(file) {
 async function previewPhoto(input) {
   const file = input.files[0];
   if (!file) return;
+  photoBase64 = '';
+  photoReady = false;
+  photoUploading = true;
+  updatePhotoUploadState('📸 Rasm tekshirilmoqda, iltimos kuting…', false, true);
   if (!file.type.startsWith('image/')) {
     showToast('Faqat rasm fayllari qabul qilinadi.');
     input.value = '';
+    photoBase64 = '';
+    photoReady = false;
+    photoUploading = false;
+    updatePhotoUploadState('❌ Faqat rasm fayllari qabul qilinadi.', false, false);
     return;
   }
   if (file.size > 5 * 1024 * 1024) {
     showToast('Rasm 5MB dan katta!');
     input.value = '';
+    photoBase64 = '';
+    photoReady = false;
+    photoUploading = false;
+    updatePhotoUploadState('❌ Rasm 5MB dan katta.', false, false);
     return;
   }
 
@@ -822,6 +885,7 @@ async function previewPhoto(input) {
   }
 
   if (faceDetected) {
+    updatePhotoUploadState('🧠 Yuz aniqlangan. Rasm yuklanmoqda…', false);
     proceedWithPhotoPreview(file);
     return;
   }
@@ -830,20 +894,34 @@ async function previewPhoto(input) {
   try {
     const personDetected = await detectPersonCocoSsd(file);
     if (personDetected) {
+      updatePhotoUploadState('🧍 Rasmda inson borligi tasdiqlandi. Yuklanmoqda…', false);
       proceedWithPhotoPreview(file);
     } else {
       showToast('Rasmda inson topilmadi. Iltimos, o\'zingizni ko\'rsatadigan rasm tanlang.');
       input.value = '';
+      photoBase64 = '';
+      photoReady = false;
+      photoUploading = false;
+      updatePhotoUploadState('❌ Rasmda inson topilmadi. Yana urining.', false, false);
     }
   } catch (err) {
     console.error('COCO-SSD tekshiruvi xatolik:', err);
     showToast('Rasm tekshirishda xatolik. Internet aloqasini tekshiring va qayta urinib ko\'ring.');
     input.value = '';
+    photoBase64 = '';
+    photoReady = false;
+    photoUploading = false;
+    updatePhotoUploadState('❌ Tekshiruvda xatolik. Internet aloqasini tekshiring.', false, false);
   }
 }
 
 // === SAVE PROFILE ===
 async function saveProfile() {
+  if (!photoReady || !photoBase64) {
+    showToast('Avval to\'g\'ri rasm yuklang va tekshirilgan bo\'lsin.');
+    return;
+  }
+
   const name = document.getElementById('inp-name').value.trim();
   const age = parseInt(document.getElementById('inp-age').value);
   const city = document.getElementById('inp-city').value.trim();
@@ -2087,6 +2165,8 @@ function closePhotoViewer(e) {
 
 // === INIT ===
 document.addEventListener('DOMContentLoaded', () => {
+  restoreExistingPhotoState();
+
   // Check if user has profile
   if (userId) {
     fetchUserProfile(userId).then(user => {
