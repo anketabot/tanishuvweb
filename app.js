@@ -413,6 +413,7 @@ function showPage(name) {
 
   if (name === 'search') {
     setDefaultSearchGender();
+    syncSearchZodiacPicker();
     loadPendingLikesIndicator();
     loadLimitStatus();
   }
@@ -501,9 +502,9 @@ function syncZodiacPicker() {
     'Sunbula': '♍ Sunbula',
     'Tarozi': '♎ Tarozi',
     'Chayon': '♏ Chayon',
-    "O'qotar": '♐ O\'qotar',
-    "Tog' echkisi": '♑ Tog\' echkisi',
-    "Qovg'a": '♒ Qovg\'a',
+    'O\'qotar': '♐ O\'qotar',
+    'Tog\' echkisi': '♑ Tog\' echkisi',
+    'Qovg\'a': '♒ Qovg\'a',
     'Baliq': '♓ Baliq'
   };
 
@@ -528,6 +529,60 @@ function selectZodiac(value, label) {
   if (menu) {
     menu.style.display = 'none';
   }
+}
+
+function toggleSearchZodiacMenu() {
+  const menu = document.getElementById('sf-zodiac-options');
+  if (!menu) return;
+  menu.style.display = menu.style.display === 'none' ? 'grid' : 'none';
+}
+
+function syncSearchZodiacPicker() {
+  const select = document.getElementById('sf-zodiac');
+  const button = document.getElementById('sf-zodiac-toggle');
+  if (!select || !button) return;
+
+  const value = select.value?.trim() || '';
+  document.querySelectorAll('#sf-zodiac-options .zodiac-option').forEach(option => {
+    option.classList.toggle('selected', option.dataset.zodiac === value);
+  });
+
+  const labelMap = {
+    '': 'Barcha burjlar',
+    "Qo'y": '♈ Qo\'y',
+    'Buzoq': '♉ Buzoq',
+    'Egizak': '♊ Egizak',
+    'Qisqichbaqa': '♋ Qisqichbaqa',
+    'Arslon': '♌ Arslon',
+    'Sunbula': '♍ Sunbula',
+    'Tarozi': '♎ Tarozi',
+    'Chayon': '♏ Chayon',
+    'O\'qotar': '♐ O\'qotar',
+    'Tog\' echkisi': '♑ Tog\' echkisi',
+    'Qovg\'a': '♒ Qovg\'a',
+    'Baliq': '♓ Baliq'
+  };
+
+  button.textContent = labelMap[value] || (value ? value : 'Barcha burjlar');
+  button.classList.toggle('selected', !!value);
+}
+
+function selectSearchZodiac(value, label) {
+  const select = document.getElementById('sf-zodiac');
+  const button = document.getElementById('sf-zodiac-toggle');
+  const menu = document.getElementById('sf-zodiac-options');
+
+  if (select) select.value = value;
+  if (button) {
+    button.textContent = label || 'Barcha burjlar';
+    button.classList.toggle('selected', !!value);
+  }
+
+  document.querySelectorAll('#sf-zodiac-options .zodiac-option').forEach(option => {
+    option.classList.toggle('selected', option.dataset.zodiac === value);
+  });
+
+  if (menu) menu.style.display = 'none';
 }
 
 // ========== BURJ NOMLARI VA MOSLIK MA'LUMOTLARI ==========
@@ -780,11 +835,10 @@ async function previewPhoto(input) {
 
 // === SAVE PROFILE ===
 async function saveProfile() {
-  const name = document.getElementById('inp-name')?.value?.trim() || '';
-  const age = parseInt(document.getElementById('inp-age')?.value || '0', 10);
-  const city = document.getElementById('inp-city')?.value?.trim() || '';
-  const zodiacEl = document.getElementById('sel-zodiac');
-  const zodiac = zodiacEl ? zodiacEl.value : '';
+  const name = document.getElementById('inp-name').value.trim();
+  const age = parseInt(document.getElementById('inp-age').value);
+  const city = document.getElementById('inp-city').value.trim();
+  const zodiac = document.getElementById('sel-zodiac').value;
 
   if (!selectedGender) { showToast('Jinsni tanlang!'); return; }
   if (!name) { showToast('Ismingizni kiriting!'); return; }
