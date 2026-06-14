@@ -6,7 +6,7 @@ if (tg) {
   try { tg.setBackgroundColor('#F8FAFF'); } catch(e) {}
 }
 
-let userId = null;
+let userId = null;fsefsdfsef
 let userName = '';
 let userFirstName = '';
 let __sessionId = null; // UNIQUE per page load for guest isolation
@@ -24,7 +24,7 @@ if (tg?.initDataUnsafe?.user?.id) {
   userFirstName = tg.initDataUnsafe.user.first_name || '';
 } else if (tg?.initData) {
   const params = new URLSearchParams(tg.initData);
-  const userJson = params.get('user');
+  const userJson = params.get('user');fesfsefsef
   if (userJson) {
     try {
       const user = JSON.parse(userJson);
