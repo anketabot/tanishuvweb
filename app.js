@@ -6,45 +6,6 @@ if (tg) {
   try { tg.setBackgroundColor('#F8FAFF'); } catch(e) {}
 }
 
-/* ===== HAPTIC FEEDBACK ===== */
-const Haptic = {
-  light()   { tg?.HapticFeedback?.impactOccurred('light'); },
-  medium()  { tg?.HapticFeedback?.impactOccurred('medium'); },
-  heavy()   { tg?.HapticFeedback?.impactOccurred('heavy'); },
-  success() { tg?.HapticFeedback?.notificationOccurred('success'); },
-  error()   { tg?.HapticFeedback?.notificationOccurred('error'); },
-  warning() { tg?.HapticFeedback?.notificationOccurred('warning'); }
-};
-
-/* ===== RIPPLE EFFECT ===== */
-function addRipple(btn, e) {
-  btn.style.position = 'relative';
-  btn.style.overflow = 'hidden';
-  const rect = btn.getBoundingClientRect();
-  const size = Math.max(rect.width, rect.height) * 2;
-  const x = (e?.clientX ?? rect.left + rect.width/2) - rect.left - size/2;
-  const y = (e?.clientY ?? rect.top + rect.height/2) - rect.top - size/2;
-  const ripple = document.createElement('span');
-  ripple.className = 'ripple';
-  ripple.style.cssText = `width:${size}px;height:${size}px;left:${x}px;top:${y}px;`;
-  btn.appendChild(ripple);
-  setTimeout(() => ripple.remove(), 650);
-}
-
-/* ===== SWIPE FLASH EFFECT ===== */
-function showSwipeFlash(type) {
-  let flash = document.getElementById('swipe-flash-el');
-  if (!flash) {
-    flash = document.createElement('div');
-    flash.id = 'swipe-flash-el';
-    flash.className = 'swipe-flash';
-    document.body.appendChild(flash);
-  }
-  flash.className = 'swipe-flash ' + (type === 'like' ? 'like-flash' : 'nope-flash');
-  setTimeout(() => { flash.className = 'swipe-flash'; }, 500);
-}
-
-
 let userId = null;
 let userName = '';
 let userFirstName = '';
@@ -1505,19 +1466,19 @@ function renderTinderCard(direction) {
         <div class="tinder-tags-wrap">${goals}${interests}</div>
       </div>
       <div class="tinder-actions" onclick="event.stopPropagation()">
-        <button class="tinder-btn tinder-btn-back" onclick="Haptic.light(); tinderBack()" data-label="Orqaga" title="Orqaga">
+        <button class="tinder-btn tinder-btn-back" onclick="tinderBack()" title="Orqaga">
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h18M3 12l6-6M3 12l6 6"/></svg>
         </button>
-        <button class="tinder-btn tinder-btn-nope" onclick="Haptic.medium(); showSwipeFlash('nope'); tinderDislike()" data-label="Nope" title="Yoqmadi">
+        <button class="tinder-btn tinder-btn-nope" onclick="tinderDislike()" title="Yoqmadi">
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
         </button>
-        <button class="tinder-btn tinder-btn-superlike" id="superlike-btn" onclick="Haptic.heavy(); openStickerModal(${u.telegram_id})" data-label="Super" title="Super Like">
+        <button class="tinder-btn tinder-btn-superlike" id="superlike-btn" onclick="openStickerModal(${u.telegram_id})" title="Super Like">
           <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" stroke="none"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
         </button>
-        <button class="tinder-btn tinder-btn-like" onclick="Haptic.medium(); showSwipeFlash('like'); tinderLike()" data-label="Like" title="Like">
+        <button class="tinder-btn tinder-btn-like" onclick="tinderLike()" title="Like">
           <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
         </button>
-        <button class="tinder-btn tinder-btn-msg" onclick="Haptic.light(); event.stopPropagation(); openMessageModal(${u.telegram_id},'${escapeJs(u.full_name)}','${escapeJs(photo||'')}', ${u.can_write});" data-label="Xabar" title="Xabar yuborish">
+        <button class="tinder-btn tinder-btn-msg" onclick="event.stopPropagation(); openMessageModal(${u.telegram_id},'${escapeJs(u.full_name)}','${escapeJs(photo||'')}', ${u.can_write});" title="Xabar yuborish">
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
         </button>
       </div>
@@ -1849,37 +1810,6 @@ async function sendBlock(blockedId) {
 
 function showMatchOverlay() {
   document.getElementById('match-overlay').style.display = 'flex';
-  Haptic.success();
-  // Confetti
-  launchConfetti();
-}
-
-function launchConfetti() {
-  const wrap = document.createElement('div');
-  wrap.className = 'confetti-wrap';
-  document.body.appendChild(wrap);
-  const colors = ['#007AFF','#5AC8FA','#FF2D55','#4CD964','#FFCC00','#AF52DE','#FF9500'];
-  for (let i = 0; i < 60; i++) {
-    const piece = document.createElement('div');
-    piece.className = 'confetti-piece';
-    const color = colors[Math.floor(Math.random() * colors.length)];
-    const left = Math.random() * 100;
-    const delay = Math.random() * 2;
-    const dur = 2 + Math.random() * 2;
-    const size = 6 + Math.random() * 8;
-    piece.style.cssText = `
-      left:${left}%;
-      top:-20px;
-      width:${size}px;
-      height:${size}px;
-      background:${color};
-      border-radius:${Math.random() > 0.5 ? '50%' : '2px'};
-      animation-delay:${delay}s;
-      animation-duration:${dur}s;
-    `;
-    wrap.appendChild(piece);
-  }
-  setTimeout(() => wrap.remove(), 5000);
 }
 function closeMatchOverlay() {
   document.getElementById('match-overlay').style.display = 'none';
@@ -1999,43 +1929,14 @@ function escapeJs(str) {
     .replace(/"/g, '\\"');
 }
 
-function showToast(message, duration = 3000, icon = '') {
+function showToast(message, duration = 3000) {
   const toast = document.getElementById('toast');
-  // Clear previous content
-  toast.innerHTML = '';
-
-  // Icon
-  if (icon) {
-    const iconEl = document.createElement('span');
-    iconEl.textContent = icon;
-    iconEl.style.cssText = 'font-size:18px;flex-shrink:0;';
-    toast.appendChild(iconEl);
-  }
-
-  // Message
-  const msgEl = document.createElement('span');
-  msgEl.textContent = message;
-  toast.appendChild(msgEl);
-
-  // Progress bar
-  const progress = document.createElement('div');
-  progress.className = 'toast-progress-bar';
-  progress.style.animationDuration = duration + 'ms';
-  toast.appendChild(progress);
-
-  toast.style.display = 'flex';
-  toast.classList.remove('show');
-  void toast.offsetHeight;
-  toast.classList.add('show');
-
-  // Haptic feedback (light)
-  Haptic.light();
-
-  clearTimeout(toast._hideTimer);
-  toast._hideTimer = setTimeout(() => {
-    toast.classList.remove('show');
-    setTimeout(() => { toast.style.display = 'none'; }, 400);
-  }, duration);
+  toast.textContent = message;
+  toast.style.display = 'block';
+  toast.style.animation = 'none';
+  toast.offsetHeight;
+  toast.style.animation = '';
+  setTimeout(() => { toast.style.display = 'none'; }, duration);
 }
 
 function getCityRegion(city = '') {
