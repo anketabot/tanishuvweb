@@ -3315,3 +3315,146 @@ body {
   background: #fff;
   color: var(--text-primary);
 }
+
+/* ========== LANGUAGE SELECTOR ========== */
+.language-selector {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin: 16px 0;
+}
+
+.lang-btn {
+    padding: 16px 12px;
+    border: 1.5px solid var(--glass-border);
+    border-radius: 20px;
+    background: var(--glass-bg);
+    backdrop-filter: blur(16px);
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.35s var(--ease-spring);
+    color: var(--text-primary);
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    box-shadow: 0 8px 20px rgba(0, 122, 255, 0.06);
+    font-family: inherit;
+}
+
+.lang-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 28px rgba(0, 122, 255, 0.12);
+    border-color: rgba(0, 122, 255, 0.35);
+}
+
+.lang-btn:active {
+    transform: scale(0.96);
+}
+
+.lang-btn.selected {
+    border-color: var(--ios-blue);
+    background: rgba(0, 122, 255, 0.08);
+    box-shadow: 0 8px 24px rgba(0, 122, 255, 0.15);
+}
+
+.lang-btn .lang-flag {
+    font-size: 32px;
+    line-height: 1;
+}
+
+.lang-btn .lang-name {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--text-primary);
+}
+
+.lang-btn.selected .lang-name {
+    color: var(--ios-blue);
+}
+
+/* Language change button in header */
+.header-lang-btn {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    border: 1px solid var(--glass-border);
+    background: var(--glass-bg-light);
+    backdrop-filter: blur(12px);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 18px;
+    transition: all 0.3s var(--ease-spring);
+    color: var(--ios-blue);
+}
+
+.header-lang-btn:hover {
+    background: rgba(0, 122, 255, 0.08);
+    transform: scale(1.05);
+}
+
+.header-lang-btn:active {
+    transform: scale(0.92);
+}
+
+/* Language modal */
+.lang-modal-overlay {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(12px);
+    z-index: 500;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.lang-modal-overlay.show {
+    display: flex;
+}
+
+.lang-modal-content {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(40px) saturate(180%);
+    border-radius: 28px;
+    padding: 24px;
+    width: min(100%, 400px);
+    max-height: 80vh;
+    overflow-y: auto;
+    border: 1px solid var(--glass-border);
+    box-shadow: 0 20px 60px rgba(0, 122, 255, 0.15);
+    animation: slideUpModal 0.4s var(--ease-spring);
+}
+
+.lang-modal-title {
+    font-size: 20px;
+    font-weight: 800;
+    text-align: center;
+    margin-bottom: 20px;
+    color: var(--text-primary);
+}
+
+.lang-modal-close {
+    width: 100%;
+    margin-top: 16px;
+    padding: 14px;
+    border: none;
+    border-radius: var(--ios-radius);
+    background: rgba(0, 0, 0, 0.06);
+    color: var(--text-secondary);
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    font-family: inherit;
+    transition: all 0.2s;
+}
+
+.lang-modal-close:active {
+    background: rgba(0, 0, 0, 0.12);
+}
