@@ -6,10 +6,20 @@ if (tg) {
   try { tg.setBackgroundColor('#F8FAFF'); } catch(e) {}
 }
 
+const SUPPORTED_LANGUAGES = {
+    'uz': { name: "O'zbekcha", flag: '🇺🇿' },
+    'ru': { name: 'Русский', flag: '🇷🇺' },
+    'kk': { name: 'Қазақша', flag: '🇰🇿' },
+    'ky': { name: 'Кыргызча', flag: '🇰🇬' },
+    'kaa': { name: 'Qaraqalpaqsha', flag: '🇺🇿' },
+    'tg': { name: 'Тоҷикӣ', flag: '🇹🇯' },
+};
+
 let userId = null;
 let userName = '';
 let userFirstName = '';
 let __sessionId = null; // UNIQUE per page load for guest isolation
+let currentLang = 'uz';
 
 function getSessionId() {
   if (!__sessionId) {
@@ -34,6 +44,552 @@ if (tg?.initDataUnsafe?.user?.id) {
     } catch (e) {}
   }
 }
+
+// Web App tarjimalari
+const WEBAPP_T = {
+    'uz': {
+        'select_language': '🌍 Tilni tanlang',
+        'language_changed': '✅ Til o\'zgartirildi: {lang}',
+        'close': 'Yopish',
+        'fill_profile': 'Anketa to\'ldirish',
+        'about_yourself': 'O\'zingiz haqingizda ma\'lumot bering',
+        'gender': 'Jins',
+        'male': 'Erkak',
+        'female': 'Ayol',
+        'select_gender': 'Jinsni tanlang',
+        'main_info': 'Asosiy ma\'lumotlar',
+        'your_name': 'Ismingiz',
+        'your_age': 'Yoshingiz',
+        'city_district': 'Shahar / Tuman',
+        'about_short': 'O\'zingiz haqingizda qisqacha',
+        'your_zodiac': 'Burjingiz',
+        'select_zodiac': 'Burjni tanlang',
+        'zodiac_hint': 'Yaxshi moslik uchun burjingizni belgilang.',
+        'interests': 'Qiziqishlar',
+        'your_goal': 'Maqsadingiz',
+        'photo': 'Fotosurat',
+        'upload_photo': 'Rasm yuklash',
+        'photo_format': 'PNG, JPG • max 5MB',
+        'photo_hint': 'Rasm yuklangandan so\'ng saqlash mumkin.',
+        'save_profile': 'Anketani saqlash',
+        'search': 'Qidirish',
+        'find_friends': 'Yangi do\'stlar toping',
+        'search_by_name': 'Ism bo\'yicha',
+        'advanced_filters': '🔍 Kengaytirilgan filtrlar',
+        'close_filters': '❌ Filtrni yopish',
+        'age_from': 'Dan',
+        'age_to': 'Gacha',
+        'zodiac_search': '⭐ Burj bo\'yicha qidirish',
+        'select_zodiac_search': 'Burj tanlang',
+        'zodiac_filter_hint': 'Qidiruvda burj bo\'yicha filtr qo\'llang.',
+        'all_zodiacs': 'Barcha burjlar',
+        'only_my_zodiac': 'Faqat burjimga mos odamlarni ko\'rsat',
+        'chats': 'Muloqot',
+        'likes_and_chats': 'Like lar va suhbatingiz',
+        'liked_you': '💖 Sizga Like bosganlar',
+        'conversations': '💬 Muloqotlar',
+        'no_chats': 'Hali suhbatingiz yo\'q',
+        'no_chats_hint': 'Qidirish bo\'limidan yangi do\'stlar toping va like bosing!',
+        'my_profile': 'Mening anketam',
+        'profile_info': 'Profilingiz ma\'lumotlari',
+        'loading': 'Yuklanmoqda...',
+        'edit_profile': 'Anketani tahrirlash',
+        'send_message': '💬 Xabar yuborish',
+        'write_first_message': 'Foydalanuvchiga birinchi xabaringizni yozing.',
+        'send': '📨 Xabar yuborish',
+        'daily_limits': '📊 Kunlik limitlar:',
+        'likes_limit': '• Like: 25 ta',
+        'messages_limit': '• Xabar yuborish: 10 ta',
+        'super_likes_limit': '• Super Like: 10 ta',
+        'increase_limits': '🎁 Limitni oshirish:',
+        'invite_5': '• Guruhga 5 ta odam qo\'shing → 1 hafta limitsiz',
+        'invite_10': '• Guruhga 10 ta odam qo\'shing → 1 oy limitsiz',
+        'join_group': '👥 Guruhga qo\'shilish',
+        'tomorrow': 'Ertaga davom etish',
+        'join_group_title': 'Guruhga qo\'shiling',
+        'join_group_desc': 'Do\'stlaringizni guruhga taklif qiling va limitsiz foydalanish imkoniyatiga ega bo\'ling!',
+        'rewards': '🎁 Mukofotlar:',
+        'reward_5': '• 5 ta do\'st → 1 hafta limitsiz',
+        'reward_10': '• 10 ta do\'st → 1 oy limitsiz',
+        'copy': 'Nusxa',
+        'share_telegram': 'Telegramda ulashish',
+        'super_like_sticker': '⭐ Super Like — Sticker yuborish',
+        'cancel': 'Bekor qilish',
+        'no_one_found': 'Hech kim topilmadi',
+        'no_one_hint': 'Hozircha sizga mos foydalanuvchilar yo\'q. Keyinroq qayta urinib ko\'ring.',
+        'all_viewed': 'Hammasi ko\'rildi!',
+        'all_viewed_hint': 'Siz barcha nomzodlarni ko\'rib chiqdingiz. Qayta qidiring.',
+        'search_again': '🔍 Qayta qidirish',
+    },
+    'ru': {
+        'select_language': '🌍 Выберите язык',
+        'language_changed': '✅ Язык изменён: {lang}',
+        'close': 'Закрыть',
+        'fill_profile': 'Заполнить анкету',
+        'about_yourself': 'Расскажите о себе',
+        'gender': 'Пол',
+        'male': 'Мужчина',
+        'female': 'Женщина',
+        'select_gender': 'Выберите пол',
+        'main_info': 'Основная информация',
+        'your_name': 'Ваше имя',
+        'your_age': 'Ваш возраст',
+        'city_district': 'Город / Район',
+        'about_short': 'Кратко о себе',
+        'your_zodiac': 'Ваш знак зодиака',
+        'select_zodiac': 'Выберите знак',
+        'zodiac_hint': 'Укажите знак для лучшего подбора.',
+        'interests': 'Интересы',
+        'your_goal': 'Ваша цель',
+        'photo': 'Фото',
+        'upload_photo': 'Загрузить фото',
+        'photo_format': 'PNG, JPG • макс 5МБ',
+        'photo_hint': 'После загрузки фото можно сохранить.',
+        'save_profile': 'Сохранить анкету',
+        'search': 'Поиск',
+        'find_friends': 'Найти новых друзей',
+        'search_by_name': 'По имени',
+        'advanced_filters': '🔍 Расширенные фильтры',
+        'close_filters': '❌ Закрыть фильтры',
+        'age_from': 'От',
+        'age_to': 'До',
+        'zodiac_search': '⭐ Поиск по знаку зодиака',
+        'select_zodiac_search': 'Выберите знак',
+        'zodiac_filter_hint': 'Применить фильтр по знаку зодиака.',
+        'all_zodiacs': 'Все знаки',
+        'only_my_zodiac': 'Показывать только совместимые знаки',
+        'chats': 'Чаты',
+        'likes_and_chats': 'Лайки и чаты',
+        'liked_you': '💖 Вам поставили лайк',
+        'conversations': '💬 Переписки',
+        'no_chats': 'Пока нет переписок',
+        'no_chats_hint': 'Найдите новых друзей в поиске и поставьте лайк!',
+        'my_profile': 'Мой профиль',
+        'profile_info': 'Информация профиля',
+        'loading': 'Загрузка...',
+        'edit_profile': 'Редактировать анкету',
+        'send_message': '💬 Отправить сообщение',
+        'write_first_message': 'Напишите первое сообщение пользователю.',
+        'send': '📨 Отправить',
+        'daily_limits': '📊 Ежедневные лимиты:',
+        'likes_limit': '• Лайк: 25',
+        'messages_limit': '• Сообщения: 10',
+        'super_likes_limit': '• Супер Лайк: 10',
+        'increase_limits': '🎁 Увеличить лимиты:',
+        'invite_5': '• Пригласите 5 человек → 1 неделя без лимитов',
+        'invite_10': '• Пригласите 10 человек → 1 месяц без лимитов',
+        'join_group': '👥 Присоединиться к группе',
+        'tomorrow': 'Продолжить завтра',
+        'join_group_title': 'Присоединяйтесь к группе',
+        'join_group_desc': 'Пригласите друзей в группу и получите безлимитный доступ!',
+        'rewards': '🎁 Награды:',
+        'reward_5': '• 5 друзей → 1 неделя без лимитов',
+        'reward_10': '• 10 друзей → 1 месяц без лимитов',
+        'copy': 'Копировать',
+        'share_telegram': 'Поделиться в Telegram',
+        'super_like_sticker': '⭐ Супер Лайк — Отправить стикер',
+        'cancel': 'Отмена',
+        'no_one_found': 'Никого не найдено',
+        'no_one_hint': 'Пока нет подходящих пользователей. Попробуйте позже.',
+        'all_viewed': 'Все просмотрены!',
+        'all_viewed_hint': 'Вы просмотрели всех кандидатов. Поищите снова.',
+        'search_again': '🔍 Искать снова',
+    },
+    'kk': {
+        'select_language': '🌍 Тілді таңдаңыз',
+        'language_changed': '✅ Тіл өзгертілді: {lang}',
+        'close': 'Жабу',
+        'fill_profile': 'Анкета толтыру',
+        'about_yourself': 'Өзіңіз туралы айтыңыз',
+        'gender': 'Жыныс',
+        'male': 'Ер адам',
+        'female': 'Әйел',
+        'select_gender': 'Жынысты таңдаңыз',
+        'main_info': 'Негізгі ақпарат',
+        'your_name': 'Атыңыз',
+        'your_age': 'Жасыңыз',
+        'city_district': 'Қала / Аудан',
+        'about_short': 'Өзіңіз туралы қысқаша',
+        'your_zodiac': 'Жұлдызнамаңыз',
+        'select_zodiac': 'Жұлдызнама таңдаңыз',
+        'zodiac_hint': 'Жақсы сәйкестік үшін жұлдызнамаңызды белгілеңіз.',
+        'interests': 'Қызығушылықтар',
+        'your_goal': 'Мақсатыңыз',
+        'photo': 'Фото',
+        'upload_photo': 'Фото жүктеу',
+        'photo_format': 'PNG, JPG • макс 5МБ',
+        'photo_hint': 'Фото жүктегеннен кейін сақтауға болады.',
+        'save_profile': 'Анкетаны сақтау',
+        'search': 'Іздеу',
+        'find_friends': 'Жаңа достар табыңыз',
+        'search_by_name': 'Аты бойынша',
+        'advanced_filters': '🔍 Кеңейтілген сүзгілер',
+        'close_filters': '❌ Сүзгілерді жабу',
+        'age_from': 'Бастап',
+        'age_to': 'Дейін',
+        'zodiac_search': '⭐ Жұлдызнама бойынша іздеу',
+        'select_zodiac_search': 'Жұлдызнама таңдаңыз',
+        'zodiac_filter_hint': 'Жұлдызнама бойынша сүзгі қолданыңыз.',
+        'all_zodiacs': 'Барлық жұлдызнамалар',
+        'only_my_zodiac': 'Тек жұлдызнамама сәйкес адамдарды көрсет',
+        'chats': 'Чаттар',
+        'likes_and_chats': 'Лайктар мен чаттар',
+        'liked_you': '💖 Сізге лайк басқандар',
+        'conversations': '💬 Әңгімелер',
+        'no_chats': 'Әзірше чаттар жоқ',
+        'no_chats_hint': 'Іздеу бөлімінен жаңа достар табыңыз және лайк басыңыз!',
+        'my_profile': 'Менің профилім',
+        'profile_info': 'Профиль ақпараты',
+        'loading': 'Жүктелуде...',
+        'edit_profile': 'Анкетаны өңдеу',
+        'send_message': '💬 Хабар жіберу',
+        'write_first_message': 'Пайдаланушыға алғашқы хабарыңызды жазыңыз.',
+        'send': '📨 Жіберу',
+        'daily_limits': '📊 Күнделікті лимиттер:',
+        'likes_limit': '• Лайк: 25',
+        'messages_limit': '• Хабар: 10',
+        'super_likes_limit': '• Супер Лайк: 10',
+        'increase_limits': '🎁 Лимитті арттыру:',
+        'invite_5': '• 5 адам қосыңыз → 1 апта лимитсіз',
+        'invite_10': '• 10 адам қосыңыз → 1 ай лимитсіз',
+        'join_group': '👥 Топқа қосылу',
+        'tomorrow': 'Ертең жалғастыру',
+        'join_group_title': 'Топқа қосылыңыз',
+        'join_group_desc': 'Достарыңызды топқа шақырыңыз және лимитсіз қолданыңыз!',
+        'rewards': '🎁 Марапаттар:',
+        'reward_5': '• 5 дос → 1 апта лимитсіз',
+        'reward_10': '• 10 дос → 1 ай лимитсіз',
+        'copy': 'Көшіру',
+        'share_telegram': 'Telegram-да бөлісу',
+        'super_like_sticker': '⭐ Супер Лайк — Стикер жіберу',
+        'cancel': 'Болдырмау',
+        'no_one_found': 'Ешкім табылмады',
+        'no_one_hint': 'Әзірше сәйкес пайдаланушылар жоқ. Кейінірек қайталаңыз.',
+        'all_viewed': 'Барлығы қаралды!',
+        'all_viewed_hint': 'Сіз барлық кандидаттарды қарадыңыз. Қайта іздеңіз.',
+        'search_again': '🔍 Қайта іздеу',
+    },
+    'ky': {
+        'select_language': '🌍 Тилди тандаңыз',
+        'language_changed': '✅ Тил өзгөртүлдү: {lang}',
+        'close': 'Жабуу',
+        'fill_profile': 'Анкета толтуруу',
+        'about_yourself': 'Өзүңүз жөнүндө айтыңыз',
+        'gender': 'Жыныс',
+        'male': 'Эркек',
+        'female': 'Аял',
+        'select_gender': 'Жынысты тандаңыз',
+        'main_info': 'Негизги маалымат',
+        'your_name': 'Атыңыз',
+        'your_age': 'Жашыңыз',
+        'city_district': 'Шаар / Район',
+        'about_short': 'Өзүңүз жөнүндө кыскача',
+        'your_zodiac': 'Жылдызнамаңыз',
+        'select_zodiac': 'Жылдызнама тандаңыз',
+        'zodiac_hint': 'Жакшы шайкештик үчүн жылдызнамаңызды белгилеңиз.',
+        'interests': 'Кызыгуулар',
+        'your_goal': 'Максатыңыз',
+        'photo': 'Сүрөт',
+        'upload_photo': 'Сүрөт жүктөө',
+        'photo_format': 'PNG, JPG • макс 5МБ',
+        'photo_hint': 'Сүрөт жүктөгөндөн кийин сактоого болот.',
+        'save_profile': 'Анкетаны сактоо',
+        'search': 'Издөө',
+        'find_friends': 'Жаңы досторду табыңыз',
+        'search_by_name': 'Аты боюнча',
+        'advanced_filters': '🔍 Кеңейтилген чыпкалар',
+        'close_filters': '❌ Чыпкаларды жабуу',
+        'age_from': 'Баштап',
+        'age_to': 'Чейин',
+        'zodiac_search': '⭐ Жылдызнама боюнча издөө',
+        'select_zodiac_search': 'Жылдызнама тандаңыз',
+        'zodiac_filter_hint': 'Жылдызнама боюнча чыпка колдонуңуз.',
+        'all_zodiacs': 'Бардык жылдызнамалар',
+        'only_my_zodiac': 'Жылдызнамама шайкес адамдарды көрсөт',
+        'chats': 'Чаттар',
+        'likes_and_chats': 'Лайктар жана чаттар',
+        'liked_you': '💖 Сизге лайк баскандар',
+        'conversations': '💬 Маектер',
+        'no_chats': 'Азырынча чаттар жок',
+        'no_chats_hint': 'Издөө бөлүмүнөн жаңы досторду табыңыз жана лайк басыңыз!',
+        'my_profile': 'Менин профилим',
+        'profile_info': 'Профиль маалыматы',
+        'loading': 'Жүктөлүүдө...',
+        'edit_profile': 'Анкетаны түзөтүү',
+        'send_message': '💬 Билдирүү жөнөтүү',
+        'write_first_message': 'Колдонуучуга биринчи билдирүүңүздү жазыңыз.',
+        'send': '📨 Жөнөтүү',
+        'daily_limits': '📊 Күндөлүк лимиттер:',
+        'likes_limit': '• Лайк: 25',
+        'messages_limit': '• Билдирүү: 10',
+        'super_likes_limit': '• Супер Лайк: 10',
+        'increase_limits': '🎁 Лимитти көбөйтүү:',
+        'invite_5': '• 5 адам кошуңуз → 1 апта лимитсиз',
+        'invite_10': '• 10 адам кошуңуз → 1 ай лимитсиз',
+        'join_group': '👥 Топко кошулуу',
+        'tomorrow': 'Эртең улантуу',
+        'join_group_title': 'Топко кошулуңуз',
+        'join_group_desc': 'Досторуңузду топко чакырыңыз жана лимитсиз колдонуңуз!',
+        'rewards': '🎁 Сыйлыктар:',
+        'reward_5': '• 5 дос → 1 апта лимитсиз',
+        'reward_10': '• 10 дос → 1 ай лимитсиз',
+        'copy': 'Көчүрүү',
+        'share_telegram': 'Telegram-да бөлүшүү',
+        'super_like_sticker': '⭐ Супер Лайк — Стикер жөнөтүү',
+        'cancel': 'Жокко чыгаруу',
+        'no_one_found': 'Эч ким табылбады',
+        'no_one_hint': 'Азырынча шайкес колдонуучулар жок. Кийинчерээк кайталаңыз.',
+        'all_viewed': 'Баары каралды!',
+        'all_viewed_hint': 'Сиз бардык талапкерлерди карадыңыз. Кайта издеңиз.',
+        'search_again': '🔍 Кайта издөө',
+    },
+    'kaa': {
+        'select_language': '🌍 Tildi tańlań',
+        'language_changed': '✅ Til ózgeritildi: {lang}',
+        'close': 'Jabıw',
+        'fill_profile': 'Anketa toldırıw',
+        'about_yourself': 'Ózińiz haqqında aytıń',
+        'gender': 'Jınıs',
+        'male': 'Er adam',
+        'female': 'Hayal',
+        'select_gender': 'Jınısty tańlań',
+        'main_info': 'Tiykarǵı maǵlıwmat',
+        'your_name': 'Atıńız',
+        'your_age': 'Jasıńız',
+        'city_district': 'Qala / Rayon',
+        'about_short': 'Ózińiz haqqında qısqasha',
+        'your_zodiac': 'Juldıznamańız',
+        'select_zodiac': 'Juldıznama tańlań',
+        'zodiac_hint': 'Jaqsı sáykeslik ushın juldıznamańızdı belgileń.',
+        'interests': 'Qızıǵıwshılıqlar',
+        'your_goal': 'Maqsetińiz',
+        'photo': 'Fotosúwret',
+        'upload_photo': 'Súwret júklew',
+        'photo_format': 'PNG, JPG • maks 5MB',
+        'photo_hint': 'Súwret júklep bolǵannan keyin saqlawǵa boladı.',
+        'save_profile': 'Anketani saqlaw',
+        'search': 'Izlew',
+        'find_friends': 'Jaña dostlar tabıń',
+        'search_by_name': 'Atı boyınsha',
+        'advanced_filters': '🔍 Keńeytilgen filtrler',
+        'close_filters': '❌ Filtrlerdi jabıw',
+        'age_from': 'Baslap',
+        'age_to': 'Shekem',
+        'zodiac_search': '⭐ Juldıznama boyınsha izlew',
+        'select_zodiac_search': 'Juldıznama tańlań',
+        'zodiac_filter_hint': 'Juldıznama boyınsha filtr qollanıń.',
+        'all_zodiacs': 'Barlıq juldıznamalar',
+        'only_my_zodiac': 'Tek juldıznamama sáykes adamlardı kórset',
+        'chats': 'Chatlar',
+        'likes_and_chats': 'Layklar hám chatlar',
+        'liked_you': '💖 Sizge layk basqanlar',
+        'conversations': '💬 Áńgimeler',
+        'no_chats': 'Házirshe chatlar joq',
+        'no_chats_hint': 'Izlew bóliminen jańa dostlar tabıń hám layk basıń!',
+        'my_profile': 'Meniń profilim',
+        'profile_info': 'Profil maǵlıwmatı',
+        'loading': 'Júklenbekte...',
+        'edit_profile': 'Anketani ózgertiw',
+        'send_message': '💬 Xabar jiberiw',
+        'write_first_message': 'Paydalanıwshıǵa birinshi xabarın jazıń.',
+        'send': '📨 Jiberiw',
+        'daily_limits': '📊 Kúndelik limitler:',
+        'likes_limit': '• Layk: 25',
+        'messages_limit': '• Xabar: 10',
+        'super_likes_limit': '• Super Layk: 10',
+        'increase_limits': '🎁 Limitti arttırıw:',
+        'invite_5': '• 5 adam qosıń → 1 hápte limitsiz',
+        'invite_10': '• 10 adam qosıń → 1 ay limitsiz',
+        'join_group': '👥 Topqa qosılıw',
+        'tomorrow': 'Erteń dawam etiw',
+        'join_group_title': 'Topqa qosılıń',
+        'join_group_desc': 'Dostlarıńızdı topqa shaqırıń hám limitsiz paydalanıń!',
+        'rewards': '🎁 Sıylıqlar:',
+        'reward_5': '• 5 dos → 1 hápte limitsiz',
+        'reward_10': '• 10 dos → 1 ay limitsiz',
+        'copy': 'Nusqa',
+        'share_telegram': 'Telegramda bólisıw',
+        'super_like_sticker': '⭐ Super Layk — Stiker jiberiw',
+        'cancel': 'Biykar etiw',
+        'no_one_found': 'Eshkim tabılmadı',
+        'no_one_hint': 'Házirshe sáykes paydalanıwshılar joq. Keyinirek qaytalań.',
+        'all_viewed': 'Barlıǵı qaraldı!',
+        'all_viewed_hint': 'Siz barlıq kandidatlarǵa qarádıńız. Qayta izleni.',
+        'search_again': '🔍 Qayta izlew',
+    },
+    'tg': {
+        'select_language': '🌍 Забонро интихоб кунед',
+        'language_changed': '✅ Забон иваз шуд: {lang}',
+        'close': 'Пӯшидан',
+        'fill_profile': 'Анкетаро пур кунед',
+        'about_yourself': 'Дар бораи худатон нақл кунед',
+        'gender': 'Ҷинс',
+        'male': 'Мард',
+        'female': 'Зан',
+        'select_gender': 'Ҷинсро интихоб кунед',
+        'main_info': 'Маълумоти асосӣ',
+        'your_name': 'Номи шумо',
+        'your_age': 'Синни шумо',
+        'city_district': 'Шаҳр / Ноҳия',
+        'about_short': 'Дар бораи худатон кӯтоҳ',
+        'your_zodiac': 'Бурҷи шумо',
+        'select_zodiac': 'Бурҷро интихоб кунед',
+        'zodiac_hint': 'Барои мувофиқати хуб бурҷатонро нишон диҳед.',
+        'interests': 'Шавқҳо',
+        'your_goal': 'Мақсади шумо',
+        'photo': 'Сурат',
+        'upload_photo': 'Сурат бор кардан',
+        'photo_format': 'PNG, JPG • ҳадди аксар 5МБ',
+        'photo_hint': 'Пас аз бор кардани сурат нигоҳ доштан мумкин аст.',
+        'save_profile': 'Анкетаро нигоҳ доред',
+        'search': 'Ҷустуҷӯ',
+        'find_friends': 'Дӯстони нав пайдо кунед',
+        'search_by_name': 'Аз рӯи ном',
+        'advanced_filters': '🔍 Филтрҳои васеъ',
+        'close_filters': '❌ Филтрҳоро пӯшонед',
+        'age_from': 'Аз',
+        'age_to': 'То',
+        'zodiac_search': '⭐ Ҷустуҷӯ аз рӯи бурҷ',
+        'select_zodiac_search': 'Бурҷро интихоб кунед',
+        'zodiac_filter_hint': 'Филтр аз рӯи бурҷ татбиқ кунед.',
+        'all_zodiacs': 'Ҳамаи бурҷҳо',
+        'only_my_zodiac': 'Танҳо одамони мувофиқи бурҷамро нишон диҳед',
+        'chats': 'Чатҳо',
+        'likes_and_chats': 'Лайкҳо ва чатҳо',
+        'liked_you': '💖 Ба шумо лайк задаанд',
+        'conversations': '💬 Мукотибот',
+        'no_chats': 'Ҳанӯз чат нест',
+        'no_chats_hint': 'Аз бахши ҷустуҷӯ дӯстони нав пайдо кунед ва лайк занед!',
+        'my_profile': 'Профили ман',
+        'profile_info': 'Маълумоти профил',
+        'loading': 'Бор шуда истодааст...',
+        'edit_profile': 'Анкетаро таҳрир кунед',
+        'send_message': '💬 Паём фиристодан',
+        'write_first_message': 'Ба истифодабаранда паёми аввалинатонро нависед.',
+        'send': '📨 Фиристодан',
+        'daily_limits': '📊 Лимитҳои ҳаррӯза:',
+        'likes_limit': '• Лайк: 25',
+        'messages_limit': '• Паём: 10',
+        'super_likes_limit': '• Супер Лайк: 10',
+        'increase_limits': '🎁 Лимитро зиёд кардан:',
+        'invite_5': '• 5 нафар даъват кунед → 1 ҳафта бе лимит',
+        'invite_10': '• 10 нафар даъват кунед → 1 моҳ бе лимит',
+        'join_group': '👥 Ба гурӯҳ ҳамроҳ шудан',
+        'tomorrow': 'Фардо давом додан',
+        'join_group_title': 'Ба гурӯҳ ҳамроҳ шавед',
+        'join_group_desc': 'Дӯстонатонро ба гурӯҳ даъват кунед ва бе лимит истифода баред!',
+        'rewards': '🎁 Мукофотҳо:',
+        'reward_5': '• 5 дӯст → 1 ҳафта бе лимит',
+        'reward_10': '• 10 дӯст → 1 моҳ бе лимит',
+        'copy': 'Нусха',
+        'share_telegram': 'Дар Telegram мубодила кардан',
+        'super_like_sticker': '⭐ Супер Лайк — Стикер фиристодан',
+        'cancel': 'Бекор кардан',
+        'no_one_found': 'Ҳеҷ кас ёфт нашуд',
+        'no_one_hint': 'Ҳанӯз истифодабарандагони мувофиқ нестанд. Баъдтар боз кӯшиш кунед.',
+        'all_viewed': 'Ҳама дида шуд!',
+        'all_viewed_hint': 'Шумо ҳамаи номзадҳоро дидед. Боз ҷустуҷӯ кунед.',
+        'search_again': '🔍 Боз ҷустуҷӯ',
+    },
+};
+
+function tr(key) {
+    const lang = currentLang || 'uz';
+    const text = (WEBAPP_T[lang] && WEBAPP_T[lang][key]) || (WEBAPP_T['uz'] && WEBAPP_T['uz'][key]) || key;
+    return text;
+}
+
+function applyTranslations() {
+    document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        const text = tr(key);
+        if (text) {
+            el.textContent = text;
+        }
+    });
+}
+
+function openLangModal() {
+    const modal = document.getElementById('lang-modal');
+    if (modal) {
+        modal.classList.add('show');
+        // Highlight current language
+        document.querySelectorAll('.lang-btn').forEach(btn => {
+            btn.classList.toggle('selected', btn.dataset.lang === currentLang);
+        });
+    }
+}
+
+function closeLangModal() {
+    const modal = document.getElementById('lang-modal');
+    if (modal) {
+        modal.classList.remove('show');
+    }
+}
+
+
+async function selectLanguage(langCode) {
+    if (!SUPPORTED_LANGUAGES[langCode]) return;
+
+    currentLang = langCode;
+    localStorage.setItem('app_language', langCode);
+
+    // Update UI
+    document.querySelectorAll('.lang-btn').forEach(btn => {
+        btn.classList.toggle('selected', btn.dataset.lang === langCode);
+    });
+
+    applyTranslations();
+
+    // Save to backend
+    if (userId) {
+        try {
+            await apiPost('/api/language', {
+                telegram_id: userId,
+                language: langCode
+            });
+        } catch (e) {
+            console.warn('Failed to save language to backend:', e);
+        }
+    }
+
+    const langName = SUPPORTED_LANGUAGES[langCode].name;
+    showToast(tr('language_changed').replace('{lang}', langName));
+
+    // Close modal after short delay
+    setTimeout(() => {
+        closeLangModal();
+    }, 800);
+}
+
+async function loadUserLanguage() {
+    if (!userId) return;
+    try {
+        const data = await apiPost('/api/language', { telegram_id: userId });
+        if (data.success && data.language) {
+            currentLang = data.language;
+            localStorage.setItem('app_language', currentLang);
+            applyTranslations();
+        }
+    } catch (e) {
+        console.warn('Failed to load language:', e);
+    }
+}
+
+function initLanguage() {
+    // Try to load from backend first
+    if (userId) {
+        loadUserLanguage();
+    } else {
+        // Load from localStorage
+        const savedLang = localStorage.getItem('app_language');
+        if (savedLang && SUPPORTED_LANGUAGES[savedLang]) {
+            currentLang = savedLang;
+            applyTranslations();
+        }
+    }
+}
+
 
 const PROFILE_STORAGE_PREFIX = 'dating_profile_';
 
@@ -2375,4 +2931,6 @@ document.addEventListener('DOMContentLoaded', () => {
     resetProfileFormState();
     showPage('profile');
   }
+
+  initLanguage();
 });
