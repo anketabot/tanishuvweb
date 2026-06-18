@@ -493,18 +493,42 @@ const WEBAPP_T = {
     },
 };
 
+// app.js da - tr funksiyasini yangilang:
 function tr(key) {
     const lang = currentLang || 'uz';
-    const text = (WEBAPP_T[lang] && WEBAPP_T[lang][key]) || (WEBAPP_T['uz'] && WEBAPP_T['uz'][key]) || key;
-    return text;
+    
+    // Avval joriy til dan qidirish
+    if (WEBAPP_T[lang] && WEBAPP_T[lang][key]) {
+        return WEBAPP_T[lang][key];
+    }
+    
+    // Keyin o'zbek tilidan qidirish (fallback)
+    if (WEBAPP_T['uz'] && WEBAPP_T['uz'][key]) {
+        return WEBAPP_T['uz'][key];
+    }
+    
+    // Agar topilmasa, key ni qaytarish
+    return key;
 }
 
+// app.js da - applyTranslations funksiyasi to'g'ri ishlayotganini tekshiring:
 function applyTranslations() {
+    console.log('Applying translations for:', currentLang); // Debug
+    
     document.querySelectorAll('[data-i18n]').forEach(el => {
         const key = el.getAttribute('data-i18n');
         const text = tr(key);
         if (text) {
             el.textContent = text;
+        }
+    });
+    
+    // Placeholder larni ham yangilash
+    document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+        const key = el.getAttribute('data-i18n-placeholder');
+        const text = tr(key);
+        if (text) {
+            el.placeholder = text;
         }
     });
 }
@@ -562,6 +586,7 @@ async function selectLanguage(langCode) {
     }, 800);
 }
 
+// app.js da - loadUserLanguage funksiyasini almashtiring:
 async function loadUserLanguage() {
     if (!userId) return;
     try {
@@ -570,26 +595,27 @@ async function loadUserLanguage() {
             currentLang = data.language;
             localStorage.setItem('app_language', currentLang);
             applyTranslations();
+            console.log('Language loaded from backend:', currentLang); // Debug
         }
     } catch (e) {
         console.warn('Failed to load language:', e);
     }
 }
 
+// app.js da - initLanguage funksiyasini almashtiring:
 function initLanguage() {
-    // Try to load from backend first
+    // Avval localStorage dan tekshirish
+    const savedLang = localStorage.getItem('app_language');
+    if (savedLang && SUPPORTED_LANGUAGES[savedLang]) {
+        currentLang = savedLang;
+        applyTranslations();
+    }
+    
+    // Keyin backend dan yuklash (backend muhimroq)
     if (userId) {
         loadUserLanguage();
-    } else {
-        // Load from localStorage
-        const savedLang = localStorage.getItem('app_language');
-        if (savedLang && SUPPORTED_LANGUAGES[savedLang]) {
-            currentLang = savedLang;
-            applyTranslations();
-        }
     }
 }
-
 
 const PROFILE_STORAGE_PREFIX = 'dating_profile_';
 
@@ -1102,6 +1128,7 @@ function resetProfileFormState() {
 }
 
 function showPage(name) {
+    console.log('Showing page:', name, 'Current language:', currentLang);
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
 
@@ -2906,7 +2933,10 @@ function closePhotoViewer(e) {
 
 // === INIT ===
 document.addEventListener('DOMContentLoaded', () => {
-  removeLegacyProfileStorage();
+    removeLegacyProfileStorage();
+    
+    // Tilni boshlash - BU MUHIM
+    initLanguage();
 
   // CRITICAL: Don't restore photo state until we know who the user is
   // This prevents cross-user photo leakage
@@ -2932,5 +2962,5 @@ document.addEventListener('DOMContentLoaded', () => {
     showPage('profile');
   }
 
-  initLanguage();
+  
 });
