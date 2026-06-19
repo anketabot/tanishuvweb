@@ -3458,3 +3458,10 @@ body {
 .lang-modal-close:active {
     background: rgba(0, 0, 0, 0.12);
 }
+/* Hide content until translations are applied (prevents FOUC) */
+body.pre-init {
+  visibility: hidden;
+}
+body.pre-init .lang-modal-overlay.show {
+  visibility: visible;
+}
