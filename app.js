@@ -32,6 +32,26 @@ const tg = window.Telegram?.WebApp;
     userId = tg.initDataUnsafe.user.id;
     userName = tg.initDataUnsafe.user.username || '';
     userFirstName = tg.initDataUnsafe.user.first_name || '';
+    // Detect language from Telegram user settings
+    const tgLang = tg.initDataUnsafe.user.language_code;
+    if (tgLang) {
+      // Map Telegram language codes to our supported languages
+      const langMap = {
+        'uz': 'uz', 'ru': 'ru', 'kk': 'kk', 'ky': 'ky',
+        'kaa': 'kaa', 'tg': 'tg', 'en': 'uz'
+      };
+      // Check for exact match first
+      if (langMap[tgLang]) {
+        currentLang = langMap[tgLang];
+      } else {
+        // Check prefix (e.g., 'ru-RU' -> 'ru')
+        const prefix = tgLang.split('-')[0];
+        if (langMap[prefix]) {
+          currentLang = langMap[prefix];
+        }
+      }
+      localStorage.setItem('app_language', currentLang);
+    }
   } else if (tg?.initData) {
     const params = new URLSearchParams(tg.initData);
     const userJson = params.get('user');
@@ -41,6 +61,23 @@ const tg = window.Telegram?.WebApp;
         userId = user.id;
         userName = user.username || '';
         userFirstName = user.first_name || '';
+        // Detect language from initData user object
+        const tgLang = user.language_code;
+        if (tgLang) {
+          const langMap = {
+            'uz': 'uz', 'ru': 'ru', 'kk': 'kk', 'ky': 'ky',
+            'kaa': 'kaa', 'tg': 'tg', 'en': 'uz'
+          };
+          if (langMap[tgLang]) {
+            currentLang = langMap[tgLang];
+          } else {
+            const prefix = tgLang.split('-')[0];
+            if (langMap[prefix]) {
+              currentLang = langMap[prefix];
+            }
+          }
+          localStorage.setItem('app_language', currentLang);
+        }
       } catch (e) {}
     }
   }
@@ -133,15 +170,17 @@ const tg = window.Telegram?.WebApp;
           'city_placeholder': 'Yashash joyingiz',
           'about_placeholder': 'Kim bo\'lishni xohlaysiz...',
           'zodiac_select_btn': 'Burj tanlang...',
-          'app_title': 'Do\'stlik & Tanishuv',
-          'app_subtitle': 'Yangi do\'stlar toping',
-          'goal_friendship': 'Do\'stlik',
-          'goal_dating': 'Tanishuv',
-          'goal_family': 'Oila',
-          'goal_love': 'Sevgi',
-          'goal_romance': 'Romantika',
-          'goal_meeting': 'Uchrashuv',
-          'match_title': 'Match!',
+          'age': 'Yoshi',
+          'goal': 'Maqsad',
+          'city_label': 'Shahar',
+          'city_search_placeholder': 'Shahar yoki tuman',
+          'gender_filter_hint': "Jins bo'yicha filtr",
+          'name_search_placeholder': 'Ism kiriting...',
+          'nav_chat': 'Chat',
+          'nav_profile': 'Profil',
+          'message_placeholder': 'Salom! Qalaysiz?...',
+          'app_title': "Do'stlik & Tanishuv",
+          'close_filters': '❌ Filtrni yopish',
       },
       'ru': {
           'select_language': '🌍 Выберите язык',
@@ -229,15 +268,17 @@ const tg = window.Telegram?.WebApp;
           'city_placeholder': 'Ваше место жительства',
           'about_placeholder': 'Кем вы хотите быть...',
           'zodiac_select_btn': 'Выберите знак...',
+          'age': 'Возраст',
+          'goal': 'Цель',
+          'city_label': 'Город',
+          'city_search_placeholder': 'Город или район',
+          'gender_filter_hint': 'Фильтр по полу',
+          'name_search_placeholder': 'Введите имя...',
+          'nav_chat': 'Чат',
+          'nav_profile': 'Профиль',
+          'message_placeholder': 'Привет! Как дела?...',
           'app_title': 'Дружба & Знакомства',
-          'app_subtitle': 'Найди новых друзей',
-          'goal_friendship': 'Дружба',
-          'goal_dating': 'Знакомства',
-          'goal_family': 'Семья',
-          'goal_love': 'Любовь',
-          'goal_romance': 'Романтика',
-          'goal_meeting': 'Встреча',
-          'match_title': 'Совпадение!',
+          'close_filters': '❌ Закрыть фильтры',
       },
       'kk': {
           'select_language': '🌍 Тілді таңдаңыз',
@@ -325,15 +366,17 @@ const tg = window.Telegram?.WebApp;
           'city_placeholder': 'Өмір сүру орныңыз',
           'about_placeholder': 'Сіз кім болғысы келесіз...',
           'zodiac_select_btn': 'Жұлдызнама таңдаңыз...',
+          'age': 'Жасы',
+          'goal': 'Мақсат',
+          'city_label': 'Қала',
+          'city_search_placeholder': 'Қала немесе аудан',
+          'gender_filter_hint': 'Жыныс бойынша сүзгі',
+          'name_search_placeholder': 'Атыңызды енгізіңіз...',
+          'nav_chat': 'Чат',
+          'nav_profile': 'Профиль',
+          'message_placeholder': 'Сәлем! Қалайсыз?...',
           'app_title': 'Достық & Танысу',
-          'app_subtitle': 'Жаңа достар табыңыз',
-          'goal_friendship': 'Достық',
-          'goal_dating': 'Танысу',
-          'goal_family': 'Отбасы',
-          'goal_love': 'Махаббат',
-          'goal_romance': 'Романтика',
-          'goal_meeting': 'Кездесу',
-          'match_title': 'Сәйкестік!',
+          'close_filters': '❌ Сүзгілерді жабу',
       },
       'ky': {
           'select_language': '🌍 Тилди тандаңыз',
@@ -421,15 +464,17 @@ const tg = window.Telegram?.WebApp;
           'city_placeholder': 'Жашаган жериңиз',
           'about_placeholder': 'Сиз кимдер болгусу келсеңиз...',
           'zodiac_select_btn': 'Жылдызнама тандаңыз...',
+          'age': 'Жашы',
+          'goal': 'Максат',
+          'city_label': 'Шаар',
+          'city_search_placeholder': 'Шаар же район',
+          'gender_filter_hint': 'Жыныс боюнча чыпка',
+          'name_search_placeholder': 'Ат жөнүңүздү киргизиңиз...',
+          'nav_chat': 'Чат',
+          'nav_profile': 'Профиль',
+          'message_placeholder': 'Салам! Кандайсыз?...',
           'app_title': 'Достук & Таанышуу',
-          'app_subtitle': 'Жаңы досторду табыңыз',
-          'goal_friendship': 'Достук',
-          'goal_dating': 'Таанышуу',
-          'goal_family': 'Үй-бүлө',
-          'goal_love': 'Сүйүү',
-          'goal_romance': 'Романтика',
-          'goal_meeting': 'Жолугушуу',
-          'match_title': 'Дал келди!',
+          'close_filters': '❌ Чыпкаларды жабуу',
       },
       'kaa': {
           'select_language': '🌍 Tildi tańlań',
@@ -517,15 +562,17 @@ const tg = window.Telegram?.WebApp;
           'city_placeholder': 'Ornıńız',
           'about_placeholder': 'Siz kim bolagı kelesiz...',
           'zodiac_select_btn': 'Juldıznama tańlań...',
-          'app_title': 'Dostlıq & Tanısıw',
-          'app_subtitle': 'Jaña dostlar tabıń',
-          'goal_friendship': 'Dostlıq',
-          'goal_dating': 'Tanısıw',
-          'goal_family': 'Shańaraq',
-          'goal_love': 'Muhabbat',
-          'goal_romance': 'Romantika',
-          'goal_meeting': 'Usırasıw',
-          'match_title': 'Sáykeslik!',
+          'age': 'Jası',
+          'goal': 'Maqset',
+          'city_label': 'Qala',
+          'city_search_placeholder': 'Qala yaki rayon',
+          'gender_filter_hint': 'Jınıs boyınsha filtr',
+          'name_search_placeholder': 'Atıńızdı kiritiń...',
+          'nav_chat': 'Chat',
+          'nav_profile': 'Profil',
+          'message_placeholder': 'Salam! Qalay sızg?...',
+          'app_title': 'Doslıq & Tánisuv',
+          'close_filters': '❌ Filtrlerdi jabıw',
       },
       'tg': {
           'select_language': '🌍 Забонро интихоб кунед',
@@ -613,15 +660,17 @@ const tg = window.Telegram?.WebApp;
           'city_placeholder': 'Ҷойи сукунатан',
           'about_placeholder': 'Шумо ба чи одам мехоҳед...',
           'zodiac_select_btn': 'Бурҷ интихоб кунед...',
-          'app_title': 'Дӯстӣ & Шиносоӣ',
-          'app_subtitle': 'Дӯстони нав пайдо кунед',
-          'goal_friendship': 'Дӯстӣ',
-          'goal_dating': 'Шиносоӣ',
-          'goal_family': 'Оила',
-          'goal_love': 'Муҳаббат',
-          'goal_romance': 'Романтика',
-          'goal_meeting': 'Вохӯрӣ',
-          'match_title': 'Мувофиқат!',
+          'age': 'Синн',
+          'goal': 'Мақсад',
+          'city_label': 'Шаҳр',
+          'city_search_placeholder': 'Шаҳр ё ноҳия',
+          'gender_filter_hint': 'Филтр аз рӯи ҷинс',
+          'name_search_placeholder': 'Номро ворид кунед...',
+          'nav_chat': 'Чат',
+          'nav_profile': 'Профил',
+          'message_placeholder': 'Салом! Хубед?...',
+          'app_title': 'Дӯстӣ & Ошноӣ',
+          'close_filters': '❌ Филтрҳоро пӯшонед',
       },
   };
 
@@ -772,20 +821,74 @@ const tg = window.Telegram?.WebApp;
       }
   }
 
-  // initLanguage - Promise qaytaradi, DOMContentLoaded await qilishi uchun
+  
+// Telegram WebApp dan tilni aniqlash (initDataUnsafe.user.language_code)
+function detectTelegramLanguage() {
+  if (!tg) return;
+
+  let tgLang = null;
+
+  // Try initDataUnsafe first
+  if (tg.initDataUnsafe?.user?.language_code) {
+    tgLang = tg.initDataUnsafe.user.language_code;
+  }
+  // Fallback to initData parsing
+  else if (tg.initData) {
+    try {
+      const params = new URLSearchParams(tg.initData);
+      const userJson = params.get('user');
+      if (userJson) {
+        const user = JSON.parse(userJson);
+        tgLang = user.language_code;
+      }
+    } catch (e) {}
+  }
+
+  if (tgLang) {
+    const langMap = {
+      'uz': 'uz', 'ru': 'ru', 'kk': 'kk', 'ky': 'ky',
+      'kaa': 'kaa', 'tg': 'tg', 'en': 'uz'
+    };
+
+    let detectedLang = null;
+
+    // Exact match
+    if (langMap[tgLang]) {
+      detectedLang = langMap[tgLang];
+    } else {
+      // Prefix match (e.g., 'ru-RU' -> 'ru')
+      const prefix = tgLang.split('-')[0];
+      if (langMap[prefix]) {
+        detectedLang = langMap[prefix];
+      }
+    }
+
+    if (detectedLang && SUPPORTED_LANGUAGES[detectedLang]) {
+      currentLang = detectedLang;
+      localStorage.setItem('app_language', currentLang);
+      console.log('Language detected from Telegram:', tgLang, '->', detectedLang);
+    }
+  }
+}
+
+// initLanguage - Promise qaytaradi, DOMContentLoaded await qilishi uchun
   async function initLanguage() {
-      // Avval localStorage dan tezda yuklab qo'yamiz (UI tez ko'rinishi uchun)
+      // If Telegram already detected a language, trust it
+      // Otherwise fall back to localStorage
       const savedLang = localStorage.getItem('app_language');
       if (savedLang && SUPPORTED_LANGUAGES[savedLang]) {
-          currentLang = savedLang;
-          applyTranslations();
+          // Only use savedLang if Telegram didn't already set currentLang
+          if (!currentLang || currentLang === 'uz') {
+              currentLang = savedLang;
+          }
       }
+      applyTranslations();
 
-      // Agar userId bo'lsa, backend'dan tilni olamiz (backend MUHIMROQ)
+      // If userId exists, also sync with backend (backend is source of truth)
       if (userId) {
-          await loadUserLanguage(); // await - backend qaytargunicha kutamiz
+          await loadUserLanguage();
       }
-      // Til yuklangandan keyin qayta apply qilamiz
+      // Final apply after all sources checked
       applyTranslations();
   }
 
@@ -1339,7 +1442,7 @@ const tg = window.Telegram?.WebApp;
     if (el) {
       const showing = el.style.display !== 'none';
       el.style.display = showing ? 'none' : 'block';
-      if (btnText) btnText.textContent = showing ? '🔍 Kengaytirilgan filtrlar' : '❌ Filtrni yopish';
+      if (btnText) btnText.textContent = showing ? tr('advanced_filters') : tr('close_filters');
     }
   }
 
