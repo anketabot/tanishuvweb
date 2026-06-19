@@ -511,6 +511,7 @@ const tg = window.Telegram?.WebApp;
       return key;
   }
 
+  // app.js da - applyTranslations funksiyasi to'g'ri ishlayotganini tekshiring:
   function applyTranslations() {
       console.log('Applying translations for:', currentLang); // Debug
       
@@ -530,30 +531,6 @@ const tg = window.Telegram?.WebApp;
               el.placeholder = text;
           }
       });
-  }
-
-  // Joriy faol sahifadagi dinamik matnlarni til o'zgarganda yangilash
-  function refreshCurrentPageTranslations() {
-      // Hozirgi ko'rinayotgan sahifani aniqlab, qayta yuklash
-      const activePage = document.querySelector('.page.active');
-      if (!activePage) return;
-      const pageId = activePage.id;
-
-      if (pageId === 'page-search') {
-          // Qidiruv sahifasidagi statik matnlar
-          applyTranslations();
-      } else if (pageId === 'page-profile') {
-          applyTranslations();
-      } else if (pageId === 'page-chats') {
-          // Chat sahifasidagi matnlar - qayta yuklanishi kerak
-          applyTranslations();
-          if (typeof loadChats === 'function') loadChats();
-      } else if (pageId === 'page-my-profile') {
-          applyTranslations();
-          if (typeof loadMyProfile === 'function') loadMyProfile();
-      } else {
-          applyTranslations();
-      }
   }
 
   function openLangModal() {
@@ -581,28 +558,42 @@ const tg = window.Telegram?.WebApp;
       currentLang = langCode;
       localStorage.setItem('app_language', langCode);
 
-      // UI ni yangilash
+      // Update UI
       document.querySelectorAll('.lang-btn').forEach(btn => {
           btn.classList.toggle('selected', btn.dataset.lang === langCode);
       });
 
       applyTranslations();
-      // Dinamik render qilingan sahifadagi matnlarni ham yangilash
-      refreshCurrentPageTranslations();
 
-      // Backend ga saqlash
-      await saveLanguageToBackend(langCode);
+      // Joriy faol sahifani qayta ko'rsatish (dinamik matnlar uchun)
+      const activePage = document.querySelector('.page.active');
+      if (activePage) {
+          const pageName = activePage.id.replace('page-', '');
+          showPage(pageName);
+      }
+
+      // Save to backend
+      if (userId) {
+          try {
+              await apiPost('/api/language', {
+                  telegram_id: userId,
+                  language: langCode
+              });
+          } catch (e) {
+              console.warn('Failed to save language to backend:', e);
+          }
+      }
 
       const langName = SUPPORTED_LANGUAGES[langCode].name;
       showToast(tr('language_changed').replace('{lang}', langName));
 
-      // Modalni yopish
+      // Close modal after short delay
       setTimeout(() => {
           closeLangModal();
       }, 800);
   }
 
-  // Backend'dan foydalanuvchi tilini yuklash (Promise qaytaradi)
+  // app.js da - loadUserLanguage funksiyasini almashtiring:
   async function loadUserLanguage() {
       if (!userId) return;
       try {
@@ -614,38 +605,23 @@ const tg = window.Telegram?.WebApp;
               console.log('Language loaded from backend:', currentLang);
           }
       } catch (e) {
-          console.warn('Failed to load language from backend:', e);
+          console.warn('Failed to load language:', e);
       }
   }
 
-  // Tilni saqlash (web app'dan backend'ga)
-  async function saveLanguageToBackend(langCode) {
-      if (!userId) return;
-      try {
-          await apiPost('/api/language', {
-              telegram_id: userId,
-              language: langCode
-          });
-      } catch (e) {
-          console.warn('Failed to save language to backend:', e);
-      }
-  }
-
-  // initLanguage - Promise qaytaradi, DOMContentLoaded await qilishi uchun
+  // app.js da - initLanguage funksiyasini almashtiring:
   async function initLanguage() {
-      // Avval localStorage dan tezda yuklab qo'yamiz (UI tez ko'rinishi uchun)
+      // Avval localStorage dan tekshirish (tezkor)
       const savedLang = localStorage.getItem('app_language');
       if (savedLang && SUPPORTED_LANGUAGES[savedLang]) {
           currentLang = savedLang;
           applyTranslations();
       }
 
-      // Agar userId bo'lsa, backend'dan tilni olamiz (backend MUHIMROQ)
+      // Backend dan KUTIB yuklash (backend MUHIMROQ, await!)
       if (userId) {
-          await loadUserLanguage(); // await - backend qaytargunicha kutamiz
+          await loadUserLanguage();
       }
-      // Til yuklangandan keyin qayta apply qilamiz
-      applyTranslations();
   }
 
   const PROFILE_STORAGE_PREFIX = 'dating_profile_';
@@ -1189,6 +1165,8 @@ const tg = window.Telegram?.WebApp;
     }
 
     syncZodiacPicker();
+    // Sahifa ko'rsatilgandan so'ng tarjimalarni qo'llash
+    applyTranslations();
   }
 
   // ===== ADVANCED FILTERS TOGGLE =====
@@ -2966,7 +2944,7 @@ const tg = window.Telegram?.WebApp;
   document.addEventListener('DOMContentLoaded', async () => {
       removeLegacyProfileStorage();
 
-      // Tilni AVVAL yuklash - sahifa ko'rsatilishidan oldin (await!)
+      // Avval tilni backend'dan KUTIB olamiz, keyin sahifani ko'rsatamiz
       await initLanguage();
 
     // CRITICAL: Don't restore photo state until we know who the user is
@@ -2980,13 +2958,10 @@ const tg = window.Telegram?.WebApp;
           document.querySelector('.bottom-nav').style.display = 'flex';
           showPage('search');
           loadLimitStatus();
-          // Sahifa yuklangandan so'ng tarjimalarni qayta qo'llash
-          setTimeout(() => applyTranslations(), 100);
         } else {
           // No profile on server — clear any local data that might be from another user
           resetProfileFormState();
           showPage('profile');
-          setTimeout(() => applyTranslations(), 100);
         }
       });
     } else {
