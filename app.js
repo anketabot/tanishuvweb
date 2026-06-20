@@ -88,6 +88,7 @@ const tg = window.Telegram?.WebApp;
           'select_language': '🌍 Tilni tanlang',
           'language_changed': '✅ Til o\'zgartirildi: {lang}',
           'close': 'Yopish',
+          'change_language': 'Tilni o\'zgartirish',
           'fill_profile': 'Anketa to\'ldirish',
           'about_yourself': 'O\'zingiz haqingizda ma\'lumot bering',
           'gender': 'Jins',
@@ -222,11 +223,117 @@ const tg = window.Telegram?.WebApp;
           'int_shaxmat': '♟️ Shaxmat',
           'int_rasm': '🎨 Rasm chizish',
           'int_tillar': "🗣️ Tillar o'rganish",
+          'limit_likes_exceeded': 'Sizning kunlik like limitingiz tugadi. Guruhga odam qo\'shib, limitni oshiring!',
+          'limit_messages_exceeded': 'Sizning kunlik xabar yuborish limitingiz tugadi. Guruhga odam qo\'shib, limitni oshiring!',
+          'limit_super_likes_exceeded': 'Sizning kunlik Super Like limitingiz tugadi. Guruhga odam qo\'shib, limitni oshiring!',
+          'limit_exceeded_default': 'Kunlik limitingiz tugadi. Guruhga odam qo\'shib, limitni oshiring!',
+          'referral_invite_text': 'Tanishuv guruhiga qo\'shiling! Yangi do\'stlarни toping.',
+          'referral_invited_count': 'Guruhga taklif qilinganlar',
+          'referral_unlimited_until': 'Limitsiz davr',
+          'referral_recent_invitees': 'So\'nggi taklif qilinganlar', 'referral_recent_invited': 'So\'ngi taklif qilinganlar',
+          'count_pcs': 'ta',
+          'until_date': 'gacha',
+          'no_name': 'Ismsiz',
+          'write_message_to': '{name} ga birinchi xabaringizni yozing.',
+          'enter_message_text': 'Xabar matnini kiriting!',
+          'error_user_id_not_found': 'Xatolik: sizning foydalanuvchi identifikatoringiz topilmadi.',
+          'error_recipient_not_found': 'Xatolik: qabul qiluvchi topilmadi. Iltimos, qayta urinib ko\'ring.',
+          'message_sent': '💬 Xabar yuborildi!',
+          'like_sent_with_hint': '💙 Like yuborildi! Agar u ham sizni yoqtirsa, match bo\'lib suhbat ochiladi.',
+          'like_not_sent': 'Like yuborilmadi',
+          'max_interests_hint': 'Maksimal 5 ta qiziqish tanlash mumkin.',
+          'zodiac_not_set': 'Burjingiz aniqlanmadi',
+          'zodiac_not_set_hint': '"Faqat burjimga mos odamlarni ko\'rsat" funksiyasi ishlamasi uchun avval anketangizda burjingizni to\'g\'ri tanlang.',
+          'searching': 'Qidirilmoqda...',
+          'login_via_telegram': 'Telegram orqali kiring',
+          'open_in_telegram': 'Qidirish uchun botni Telegram ilovasida oching.',
+          'server_error': 'Server bilan aloqa yo\'q',
+          'check_internet': 'Internet aloqasini tekshiring yoki keyinroq urinib ko\'ring.',
+          'retry_btn': 'Qayta urinish',
+          'cannot_connect': 'Ulana olmadi',
+          'compat_good': 'Mos burj',
+          'compat_difficult': 'Murakkab',
+          'btn_back': 'Orqaga',
+          'btn_skip': 'O\'tkazib yuborish',
+          'btn_dislike': 'Yoqmadi',
+          'send_message_btn': 'Xabar yuborish',
+          'cannot_go_back': 'Orqaga qaytish mumkin emas',
+          'previous_candidate': '⬅️ Oldingi nomzod',
+          'user_id_not_found': 'Foydalanuvchi ID topilmadi',
+          'generic_error': 'Xatolik',
+          'match_super_like': '🎉 Match! {sticker} Super Like yuborildi!',
+          'super_like_sent': '⭐ {sticker} Super Like yuborildi!',
+          'user_not_identified': 'Foydalanuvchi aniqlanmadi',
+          'telegram_id_not_found': 'Telegram ID topilmadi. Web Appni Telegram ichida oching yoki qayta kirib ko\'ring.',
+          'no_likes_yet': 'Hozircha like yo\'q',
+          'no_likes_hint': 'Sizga hali hech kim like yubormagan.',
+          'people_who_liked_you': 'Sizga like yuborganlar',
+          'years_old': 'yosh',
+          'accept': 'Qabul',
+          'reject': 'Rad etish',
+          'you_rejected': 'Siz {name} ni rad qildingiz.',
+          'error_retry': 'Xatolik yuz berdi. Iltimos qayta urinib ko\'ring.',
+          'age_label': 'Yosh',
+          'no_city': 'Shahar ko\'rsatilmagan',
+          'message': 'Xabar',
+          'block': 'Blok',
+          'match_with': '{name} bilan match bo\'ldingiz!',
+          'fill_profile_first': 'Avval profilingizni to\'ldiring',
+          'like_sent': '💙 Like yuborildi!',
+          'unknown_error': 'Noma\'lum',
+          'blocked': '🚫 Bloklandi',
+          'default_about': 'Bu foydalanuvchi o\'z maqsadi va qiziqishlarini ko\'rsatib ketgan.',
+          'about_me': 'Men haqimda',
+          'goals_label': 'Maqsadlar',
+          'not_specified': 'Ko\'rsatilmagan',
+          'interests_label': 'Qiziqishlar',
+          'max_interests_display': 'Maksimal 5 ta qiziqish ko\'rsatiladi.',
+          'open_chat': 'Suhbatni ochish...',
+          'your_photo': 'Siz yuborgan rasm',
+          'partner_photo': 'Suhbatdosh rasmi',
+          'click_to_view': 'To\'liq ko\'rinishda ochish',
+          'profile_not_loaded': 'Profilingiz yuklanmadi',
+          'profile_not_found': 'Anketa topilmadi',
+          'please_fill_profile': 'Iltimos, avval anketa to\'ldiring.',
+          'upload_valid_photo': 'Avval to\'g\'ri rasm yuklang va tekshirilgan bo\'lsin.',
+          'select_gender_prompt': 'Jinsni tanlang!',
+          'enter_name_prompt': 'Ismingizni kiriting!',
+          'enter_age_prompt': 'Yoshingizni to\'g\'ri kiriting! (16-80)',
+          'enter_city_prompt': 'Shahar/tuman kiriting!',
+          'select_goal_prompt': 'Kamida 1 ta maqsad tanlang!',
+          'profile_saved_success': 'Anketa muvaffaqiyatli saqlandi!',
+          'profile_saved_local': 'Anketa mahalliy saqlandi.',
+          'images_only': 'Faqat rasm fayllari qabul qilinadi.',
+          'image_too_large': 'Rasm 5MB dan katta!',
+          'checking_image': '📸 Rasm tekshirilmoqda, iltimos kuting…',
+          'face_detected': '🧠 Yuz aniqlangan. Rasm yuklanmoqda…',
+          'checking_image_short': 'Rasm tekshirilmoqda, biroz kuting...',
+          'no_person_in_image': 'Rasmda inson topilmadi. Iltimos, o\'zingizni ko\'rsatadigan rasm tanlang.',
+          'image_check_error': 'Rasm tekshirishda xatolik. Internet aloqasini tekshiring va qayta urinib ko\'ring.',
+          'uploading_image': '📸 Rasm yuklanmoqda…',
+          'image_uploaded_success': '✅ Rasm yuklandi. Endi anketa saqlashingiz mumkin.',
+          'image_read_error': '❌ Rasm o\'qilishda xatolik yuz berdi.',
+          'image_load_failed': 'Rasm yuklanmadi',
+          'image_ready': '✅ Rasm yuklangan. Anketa saqlash mumkin.',
+          'person_confirmed_uploading': '🧍 Rasmda inson borligi tasdiqlandi. Yuklanmoqda…',
+          'photo_not_sent_but_saved': 'Rasm telegramga yuborilmadi, lekin anketangiz saqlandi.',
+          'data_too_long': 'Xatolik: ma\'lumot juda uzun.',
+          'script_load_failed': 'Yuklanmadi: {src}',
+          'wait_timeout': '{name} kutish vaqti tugadi',
+          'link_copied': 'Link nusxalandi!',
+          'error_occurred': 'Xatolik yuz berdi.',
+          'please_retry': 'Qayta urinib ko\'ring.',
+          'error_prefix': 'Xatolik: ',
+          'images_only_error': '❌ Faqat rasm fayllari qabul qilinadi.',
+          'image_size_error': '❌ Rasm 5MB dan katta.',
+          'no_person_error': '❌ Rasmda inson topilmadi. Yana urining.',
+          'check_error_inet': '❌ Tekshiruvda xatolik. Internet aloqasini tekshiring.'
       },
       'ru': {
           'select_language': '🌍 Выберите язык',
           'language_changed': '✅ Язык изменён: {lang}',
           'close': 'Закрыть',
+          'change_language': 'Сменить язык',
           'fill_profile': 'Заполнить анкету',
           'about_yourself': 'Расскажите о себе',
           'gender': 'Пол',
@@ -361,11 +468,117 @@ const tg = window.Telegram?.WebApp;
           'int_shaxmat': '♟️ Шахматы',
           'int_rasm': '🎨 Рисование',
           'int_tillar': '🗣️ Изучение языков',
+          'limit_likes_exceeded': 'Ваш суточный лимит лайков исчерпан. Пригласите людей в группу, чтобы увеличить лимит!',
+          'limit_messages_exceeded': 'Ваш суточный лимит сообщений исчерпан. Пригласите людей в группу, чтобы увеличить лимит!',
+          'limit_super_likes_exceeded': 'Ваш суточный лимит супер-лайков исчерпан. Пригласите людей в группу, чтобы увеличить лимит!',
+          'limit_exceeded_default': 'Ваш суточный лимит исчерпан. Пригласите людей в группу, чтобы увеличить лимит!',
+          'referral_invite_text': 'Присоединяйтесь к группе знакомств! Находите новых друзей.',
+          'referral_invited_count': 'Приглашено в группу',
+          'referral_unlimited_until': 'Безлимитный период',
+          'referral_recent_invitees': 'Недавно приглашенные',
+          'count_pcs': '',
+          'until_date': 'до',
+          'no_name': 'Без имени',
+          'write_message_to': 'Напишите первое сообщение {name}.',
+          'enter_message_text': 'Введите текст сообщения!',
+          'error_user_id_not_found': 'Ошибка: ваш идентификатор пользователя не найден.',
+          'error_recipient_not_found': 'Ошибка: получатель не найден. Пожалуйста, попробуйте снова.',
+          'message_sent': '💬 Сообщение отправлено!',
+          'like_sent_with_hint': '💙 Лайк отправлен! Если он/она тоже вас лайкнет, откроется чат.',
+          'like_not_sent': 'Лайк не отправлен',
+          'max_interests_hint': 'Можно выбрать максимум 5 интересов.',
+          'zodiac_not_set': 'Ваш знак зодиака не определен',
+          'zodiac_not_set_hint': 'Для работы функции "Показывать только совместимые знаки" сначала выберите свой знак в анкете.',
+          'searching': 'Поиск...',
+          'login_via_telegram': 'Войдите через Telegram',
+          'open_in_telegram': 'Для поиска откройте бот в приложении Telegram.',
+          'server_error': 'Нет связи с сервером',
+          'check_internet': 'Проверьте интернет-соединение или попробуйте позже.',
+          'retry_btn': 'Повторить',
+          'cannot_connect': 'Не удалось подключиться',
+          'compat_good': 'Совместимый знак',
+          'compat_difficult': 'Сложный',
+          'btn_back': 'Назад',
+          'btn_skip': 'Пропустить',
+          'btn_dislike': 'Не нравится',
+          'send_message_btn': 'Отправить сообщение',
+          'cannot_go_back': 'Нельзя вернуться назад',
+          'previous_candidate': '⬅️ Предыдущий кандидат',
+          'user_id_not_found': 'ID пользователя не найден',
+          'generic_error': 'Ошибка',
+          'match_super_like': '🎉 Матч! {sticker} Супер Лайк отправлен!',
+          'super_like_sent': '⭐ {sticker} Супер Лайк отправлен!',
+          'user_not_identified': 'Пользователь не определен',
+          'telegram_id_not_found': 'Telegram ID не найден. Откройте Web App внутри Telegram или попробуйте снова.',
+          'no_likes_yet': 'Пока нет лайков',
+          'no_likes_hint': 'Вам еще никто не отправил лайк.',
+          'people_who_liked_you': 'Вам поставили лайк',
+          'years_old': 'лет',
+          'accept': 'Принять',
+          'reject': 'Отклонить',
+          'you_rejected': 'Вы отклонили {name}.',
+          'error_retry': 'Произошла ошибка. Пожалуйста, попробуйте снова.',
+          'age_label': 'Возраст',
+          'no_city': 'Город не указан',
+          'message': 'Сообщение',
+          'block': 'Блок',
+          'match_with': 'У вас матч с {name}!',
+          'fill_profile_first': 'Сначала заполните профиль',
+          'like_sent': '💙 Лайк отправлен!',
+          'unknown_error': 'Неизвестно',
+          'blocked': '🚫 Заблокировано',
+          'default_about': 'Этот пользователь не указал свои цели и интересы.',
+          'about_me': 'Обо мне',
+          'goals_label': 'Цели',
+          'not_specified': 'Не указано',
+          'interests_label': 'Интересы',
+          'max_interests_display': 'Показано максимум 5 интересов.',
+          'open_chat': 'Открыть чат...',
+          'your_photo': 'Ваше фото',
+          'partner_photo': 'Фото собеседника',
+          'click_to_view': 'Нажмите для просмотра',
+          'profile_not_loaded': 'Ваш профиль не загружен',
+          'profile_not_found': 'Анкета не найдена',
+          'please_fill_profile': 'Пожалуйста, сначала заполните анкету.',
+          'upload_valid_photo': 'Сначала загрузите правильное фото и дождитесь проверки.',
+          'select_gender_prompt': 'Выберите пол!',
+          'enter_name_prompt': 'Введите ваше имя!',
+          'enter_age_prompt': 'Введите правильный возраст! (16-80)',
+          'enter_city_prompt': 'Введите город/район!',
+          'select_goal_prompt': 'Выберите хотя бы 1 цель!',
+          'profile_saved_success': 'Анкета успешно сохранена!',
+          'profile_saved_local': 'Анкета сохранена локально.',
+          'images_only': 'Принимаются только файлы изображений.',
+          'image_too_large': 'Изображение больше 5МБ!',
+          'checking_image': '📸 Проверка изображения, пожалуйста подождите…',
+          'face_detected': '🧠 Лицо обнаружено. Загрузка…',
+          'checking_image_short': 'Проверка изображения, подождите...',
+          'no_person_in_image': 'Человек на фото не найден. Пожалуйста, выберите фото, где видно вас.',
+          'image_check_error': 'Ошибка проверки изображения. Проверьте интернет и попробуйте снова.',
+          'uploading_image': '📸 Загрузка изображения…',
+          'image_uploaded_success': '✅ Изображение загружено. Теперь можно сохранить анкету.',
+          'image_read_error': '❌ Ошибка чтения изображения.',
+          'image_load_failed': 'Не удалось загрузить изображение',
+          'image_ready': '✅ Изображение загружено. Можно сохранить анкету.',
+          'person_confirmed_uploading': '🧍 Человек подтвержден. Загрузка…',
+          'photo_not_sent_but_saved': 'Фото не отправлено в Telegram, но анкета сохранена.',
+          'data_too_long': 'Ошибка: данные слишком длинные.',
+          'script_load_failed': 'Не удалось загрузить: {src}',
+          'wait_timeout': 'Время ожидания {name} истекло',
+          'link_copied': 'Ссылка скопирована!',
+          'error_occurred': 'Произошла ошибка.',
+          'please_retry': 'Попробуйте снова.',
+          'error_prefix': 'Ошибка: ',
+          'images_only_error': '❌ Принимаются только файлы изображений.',
+          'image_size_error': '❌ Изображение больше 5МБ.',
+          'no_person_error': '❌ Человек на фото не найден. Попробуйте снова.',
+          'check_error_inet': '❌ Ошибка проверки. Проверьте интернет-соединение.'
       },
       'kk': {
           'select_language': '🌍 Тілді таңдаңыз',
           'language_changed': '✅ Тіл өзгертілді: {lang}',
           'close': 'Жабу',
+          'change_language': 'Тілді ауыстыру',
           'fill_profile': 'Анкета толтыру',
           'about_yourself': 'Өзіңіз туралы айтыңыз',
           'gender': 'Жыныс',
@@ -500,11 +713,117 @@ const tg = window.Telegram?.WebApp;
           'int_shaxmat': '♟️ Шахмат',
           'int_rasm': '🎨 Сурет салу',
           'int_tillar': '🗣️ Тіл үйрену',
+          'limit_likes_exceeded': 'Күнделікті лайк лимитіңіз бітті. Топқа адам қосып, лимитті арттырыңыз!',
+          'limit_messages_exceeded': 'Күнделікті хабар жіберу лимитіңіз бітті. Топқа адам қосып, лимитті арттырыңыз!',
+          'limit_super_likes_exceeded': 'Күнделікті Супер Лайк лимитіңіз бітті. Топқа адам қосып, лимитті арттырыңыз!',
+          'limit_exceeded_default': 'Күнделікті лимитіңіз бітті. Топқа адам қосып, лимитті арттырыңыз!',
+          'referral_invite_text': 'Танысу тобына қосылыңыз! Жаңа достар табыңыз.',
+          'referral_invited_count': 'Топқа шақырылғандар',
+          'referral_unlimited_until': 'Лимитсіз мерзім',
+          'referral_recent_invitees': 'Соңғы шақырылғандар',
+          'count_pcs': '',
+          'until_date': 'дейін',
+          'no_name': 'Атысыз',
+          'write_message_to': '{name}қа алғашқы хабарыңызды жазыңыз.',
+          'enter_message_text': 'Хабар мәтінін енгізіңіз!',
+          'error_user_id_not_found': 'Қате: сіздің пайдаланушы идентификаторыңыз табылмады.',
+          'error_recipient_not_found': 'Қате: алушы табылмады. Өтінеміз, қайта байқап көріңіз.',
+          'message_sent': '💬 Хабар жіберілді!',
+          'like_sent_with_hint': '💙 Лайк жіберілді! Егер ол/ол сізді де лайк етсе, чат ашылады.',
+          'like_not_sent': 'Лайк жіберілмеді',
+          'max_interests_hint': 'Ең көбі 5 қызығушылықты таңдауға болады.',
+          'zodiac_not_set': 'Жұлдызнамаңыз анықталмады',
+          'zodiac_not_set_hint': '"Тек менің жұлдызнамама сәйкес адамдарды көрсет" функциясы жұмыс істеуі үшін алдымен анкетаңызда жұлдызнамаңызды дұрыс таңдаңыз.',
+          'searching': 'Ізделуде...',
+          'login_via_telegram': 'Telegram арқылы кіріңіз',
+          'open_in_telegram': 'Іздеу үшін ботты Telegram қолданбасында ашыңыз.',
+          'server_error': 'Сервермен байланыс жоқ',
+          'check_internet': 'Интернет байланысын тексеріңіз немесе кейінірек байқап көріңіз.',
+          'retry_btn': 'Қайта байқау',
+          'cannot_connect': 'Қосылу мүмкін емес',
+          'compat_good': 'Сәйкес жұлдызнама',
+          'compat_difficult': 'Қиын',
+          'btn_back': 'Артқа',
+          'btn_skip': 'Өткізіп жіберу',
+          'btn_dislike': 'Ұнамады',
+          'send_message_btn': 'Хабар жіберу',
+          'cannot_go_back': 'Артқа қайту мүмкін емес',
+          'previous_candidate': '⬅️ Алдыңғы кандидат',
+          'user_id_not_found': 'Пайдаланушы ID табылмады',
+          'generic_error': 'Қате',
+          'match_super_like': '🎉 Мэтч! {sticker} Супер Лайк жіберілді!',
+          'super_like_sent': '⭐ {sticker} Супер Лайк жіберілді!',
+          'user_not_identified': 'Пайдаланушы анықталмады',
+          'telegram_id_not_found': 'Telegram ID табылмады. Web App-ті Telegram ішінде ашыңыз немесе қайта кіріңіз.',
+          'no_likes_yet': 'Әзірше лайк жоқ',
+          'no_likes_hint': 'Сізге әлі ешкім лайк жібермеген.',
+          'people_who_liked_you': 'Сізге лайк басқандар',
+          'years_old': 'жас',
+          'accept': 'Қабылдау',
+          'reject': 'Бас тарту',
+          'you_rejected': 'Сіз {name} бас тарттыңыз.',
+          'error_retry': 'Қате орын алды. Өтінеміз, қайта байқап көріңіз.',
+          'age_label': 'Жасы',
+          'no_city': 'Қала көрсетілмеген',
+          'message': 'Хабар',
+          'block': 'Блок',
+          'match_with': '{name} менен мэтч түздіңіз!',
+          'fill_profile_first': 'Алдымен профиліңізді толтырыңыз',
+          'like_sent': '💙 Лайк жіберілді!',
+          'unknown_error': 'Белгісіз',
+          'blocked': '🚫 Блокталды',
+          'default_about': 'Бұл пайдаланушы өз мақсаттары мен қызығушылықтарын көрсетпеген.',
+          'about_me': 'Мен туралы',
+          'goals_label': 'Мақсаттар',
+          'not_specified': 'Көрсетілмеген',
+          'interests_label': 'Қызығушылықтар',
+          'max_interests_display': 'Ең көбі 5 қызығушылық көрсетіледі.',
+          'open_chat': 'Чатты ашу...',
+          'your_photo': 'Сіздің фотоңыз',
+          'partner_photo': 'Сөйеседнің фотосы',
+          'click_to_view': 'Көру үшін басыңыз',
+          'profile_not_loaded': 'Профиліңіз жүктелмеді',
+          'profile_not_found': 'Анкета табылмады',
+          'please_fill_profile': 'Өтінеміз, алдымен анкетаны толтырыңыз.',
+          'upload_valid_photo': 'Алдымен дұрыс фото жүктеп, тексеруден өткізіңіз.',
+          'select_gender_prompt': 'Жынысты таңдаңыз!',
+          'enter_name_prompt': 'Атыңызды енгізіңіз!',
+          'enter_age_prompt': 'Жасыңызды дұрыс енгізіңіз! (16-80)',
+          'enter_city_prompt': 'Қала/ауданды енгізіңіз!',
+          'select_goal_prompt': 'Кемінде 1 мақсат таңдаңыз!',
+          'profile_saved_success': 'Анкета сәтті сақталды!',
+          'profile_saved_local': 'Анкета жергілікті сақталды.',
+          'images_only': 'Тек сурет файлдары қабылданады.',
+          'image_too_large': 'Сурет 5МБ-тен үлкен!',
+          'checking_image': '📸 Сурет тексерілуде, өтінеміз күтіңіз…',
+          'face_detected': '🧠 Бет анықталды. Жүктеу…',
+          'checking_image_short': 'Сурет тексерілуде, аз күтіңіз...',
+          'no_person_in_image': 'Суретте адам табылмады. Өтінеміз, өзіңізді көрсететін сурет таңдаңыз.',
+          'image_check_error': 'Суретті тексеруде қате. Интернетті тексеріңіз және қайта байқап көріңіз.',
+          'uploading_image': '📸 Сурет жүктелуде…',
+          'image_uploaded_success': '✅ Сурет жүктелді. Енді анкетаны сақтауға болады.',
+          'image_read_error': '❌ Суретті оқуда қате орын алды.',
+          'image_load_failed': 'Сурет жүктелмеді',
+          'image_ready': '✅ Сурет жүктелді. Анкетаны сақтауға болады.',
+          'person_confirmed_uploading': '🧍 Адам расталды. Жүктеу…',
+          'photo_not_sent_but_saved': 'Фото Telegram-ға жіберілмеді, бірақ анкета сақталды.',
+          'data_too_long': 'Қате: деректер тым ұзын.',
+          'script_load_failed': 'Жүктелмеді: {src}',
+          'wait_timeout': '{name} күту уақыты бітті',
+          'link_copied': 'Сілтеме көшірілді!',
+          'error_occurred': 'Қате орын алды.',
+          'please_retry': 'Қайта байқап көріңіз.',
+          'error_prefix': 'Қате: ',
+          'images_only_error': '❌ Тек сурет файлдары қабылданады.',
+          'image_size_error': '❌ Сурет 5МБ-тен үлкен.',
+          'no_person_error': '❌ Суретте адам табылмады. Қайта байқап көріңіз.',
+          'check_error_inet': '❌ Тексеруде қате. Интернет байланысын тексеріңіз.'
       },
       'ky': {
           'select_language': '🌍 Тилди тандаңыз',
           'language_changed': '✅ Тил өзгөртүлдү: {lang}',
           'close': 'Жабуу',
+          'change_language': 'Тилди алмаштыруу',
           'fill_profile': 'Анкета толтуруу',
           'about_yourself': 'Өзүңүз жөнүндө айтыңыз',
           'gender': 'Жыныс',
@@ -639,11 +958,117 @@ const tg = window.Telegram?.WebApp;
           'int_shaxmat': '♟️ Шахмат',
           'int_rasm': '🎨 Сүрөт тартуу',
           'int_tillar': '🗣️ Тил үйрөнүү',
+          'limit_likes_exceeded': 'Күндөлүк лайк лимитиңиз бүттү. Топко адам кошуп, лимитти көбөйтүңүз!',
+          'limit_messages_exceeded': 'Күндөлүк билдирүү жөнөтүү лимитиңиз бүттү. Топко адам кошуп, лимитти көбөйтүңүз!',
+          'limit_super_likes_exceeded': 'Күндөлүк Супер Лайк лимитиңиз бүттү. Топко адам кошуп, лимитти көбөйтүңүз!',
+          'limit_exceeded_default': 'Күндөлүк лимитиңиз бүттү. Топко адам кошуп, лимитти көбөйтүңүз!',
+          'referral_invite_text': 'Таанышуу тобына кошулуңуз! Жаңы достор табыңыз.',
+          'referral_invited_count': 'Топко чакырылгандар',
+          'referral_unlimited_until': 'Лимитсиз мөөнөт',
+          'referral_recent_invitees': 'Акыркы чакырылгандар',
+          'count_pcs': '',
+          'until_date': 'чейин',
+          'no_name': 'Атысыз',
+          'write_message_to': '{name}га биринчи билдирүүңүздү жазыңыз.',
+          'enter_message_text': 'Билдирүү текстин киргизиңиз!',
+          'error_user_id_not_found': 'Ката: сиздин колдонуучу идентификаторуңуз табылган жок.',
+          'error_recipient_not_found': 'Ката: алуучу табылган жок. Сураныч, кайра аракет кылыңыз.',
+          'message_sent': '💬 Билдирүү жиберилди!',
+          'like_sent_with_hint': '💙 Лайк жиберилди! Эгер ал/ал сизди да лайк кылса, чат ачылат.',
+          'like_not_sent': 'Лайк жиберилген жок',
+          'max_interests_hint': 'Эң көбү 5 кызыгуу тандаса болот.',
+          'zodiac_not_set': 'Жылдызнамаңыз аныкталган жок',
+          'zodiac_not_set_hint': '"Тек жылдызнамама шайкеш адамдарды көрсөт" функциясы иштөөсү үчүн алдын ала анкетаңызда жылдызнамаңызды туура тандаңыз.',
+          'searching': 'Изделүүдө...',
+          'login_via_telegram': 'Telegram аркылуу киргиле',
+          'open_in_telegram': 'Издөө үчүн ботту Telegram тиркемесинде ачыңыз.',
+          'server_error': 'Сервер менен байланыш жок',
+          'check_internet': 'Интернет байланышын текшериңиз же кийинчерээк аракет кылыңыз.',
+          'retry_btn': 'Кайта аракет',
+          'cannot_connect': 'Туташуу мүмкүн эмес',
+          'compat_good': 'Шайкеш жылдызнама',
+          'compat_difficult': 'Кыйын',
+          'btn_back': 'Артка',
+          'btn_skip': 'Өткөрүп жиберүү',
+          'btn_dislike': 'Жаккан жок',
+          'send_message_btn': 'Билдирүү жөнөтүү',
+          'cannot_go_back': 'Артка кайтуу мүмкүн эмес',
+          'previous_candidate': '⬅️ Мурдагы талапкер',
+          'user_id_not_found': 'Колдонуучу ID табылган жок',
+          'generic_error': 'Ката',
+          'match_super_like': '🎉 Мэтч! {sticker} Супер Лайк жиберилди!',
+          'super_like_sent': '⭐ {sticker} Супер Лайк жиберилди!',
+          'user_not_identified': 'Колдонуучу аныкталган жок',
+          'telegram_id_not_found': 'Telegram ID табылган жок. Web Appти Telegram ичинде ачыңыз же кайра киргиле.',
+          'no_likes_yet': 'Азырынча лайк жок',
+          'no_likes_hint': 'Сизге азырынча эч ким лайк жиберген эмес.',
+          'people_who_liked_you': 'Сизге лайк баскандар',
+          'years_old': 'жашта',
+          'accept': 'Кабыл алуу',
+          'reject': 'Баш тартуу',
+          'you_rejected': 'Сиз {name} баш тарттыңыз.',
+          'error_retry': 'Ката кетти. Сураныч, кайра аракет кылыңыз.',
+          'age_label': 'Жашы',
+          'no_city': 'Шаар көрсөтүлгөн эмес',
+          'message': 'Билдирүү',
+          'block': 'Блок',
+          'match_with': '{name} менен мэтч түздүңүз!',
+          'fill_profile_first': 'Алдын ала профилиңизди толтуруңуз',
+          'like_sent': '💙 Лайк жиберилди!',
+          'unknown_error': 'Белгисиз',
+          'blocked': '🚫 Блокталды',
+          'default_about': 'Бул колдонуучу өз максаттарын жана кызыгууларын көрсөтпөй кеткен.',
+          'about_me': 'Мен жөнүндө',
+          'goals_label': 'Максаттар',
+          'not_specified': 'Көрсөтүлгөн эмес',
+          'interests_label': 'Кызыгуулар',
+          'max_interests_display': 'Эң көбү 5 кызыгуу көрсөтүлөт.',
+          'open_chat': 'Чатты ачуу...',
+          'your_photo': 'Сиздин сүрөтүңүз',
+          'partner_photo': 'Сүйлөшүүчүнүн сүрөтү',
+          'click_to_view': 'Көрүү үчүн басыңыз',
+          'profile_not_loaded': 'Профилиңиз жүктөлгөн жок',
+          'profile_not_found': 'Анкета табылган жок',
+          'please_fill_profile': 'Сураныч, алдын ала анкетаны толтуруңуз.',
+          'upload_valid_photo': 'Алдын ала туура сүрөт жүктөп, текшерилген болсун.',
+          'select_gender_prompt': 'Жынысты тандаңыз!',
+          'enter_name_prompt': 'Атыңызды киргизиңиз!',
+          'enter_age_prompt': 'Жашыңызды туура киргизиңиз! (16-80)',
+          'enter_city_prompt': 'Шаар/район киргизиңиз!',
+          'select_goal_prompt': 'Эң аз 1 максат тандаңыз!',
+          'profile_saved_success': 'Анкета ийгиликтүү сакталды!',
+          'profile_saved_local': 'Анкета жергиликтүү сакталды.',
+          'images_only': 'Тек гана сүрөт файлдары кабыл алынат.',
+          'image_too_large': 'Сүрөт 5МБдан чоң!',
+          'checking_image': '📸 Сүрөт текшерилүүдө, сураныч күтө туруңуз…',
+          'face_detected': '🧠 Жүз аныкталды. Жүктөө…',
+          'checking_image_short': 'Сүрөт текшерилүүдө, бир аз күтө туруңуз...',
+          'no_person_in_image': 'Сүрөттө адам табылган жок. Сураныч, өзүңүздү көрсөтүүчү сүрөт тандаңыз.',
+          'image_check_error': 'Сүрөттү текшерүүдө ката. Интернет байланышын текшериңиз жана кайра аракет кылыңыз.',
+          'uploading_image': '📸 Сүрөт жүктөлүүдө…',
+          'image_uploaded_success': '✅ Сүрөт жүктөдү. Эми анкетаны сактоого болот.',
+          'image_read_error': '❌ Сүрөттү окууда ката кетти.',
+          'image_load_failed': 'Сүрөт жүктөлгөн жок',
+          'image_ready': '✅ Сүрөт жүктөлдү. Анкетаны сактоого болот.',
+          'person_confirmed_uploading': '🧍 Адам ырасталды. Жүктөө…',
+          'photo_not_sent_but_saved': 'Сүрөт Telegramга жиберилген жок, бирок анкета сакталды.',
+          'data_too_long': 'Ката: маалымат өтө узун.',
+          'script_load_failed': 'Жүктөлгөн жок: {src}',
+          'wait_timeout': '{name} күтүү убактысы бүттү',
+          'link_copied': 'Шилтеме көчүрүлдү!',
+          'error_occurred': 'Ката кетти.',
+          'please_retry': 'Кайра аракет кылыңыз.',
+          'error_prefix': 'Ката: ',
+          'images_only_error': '❌ Тек гана сүрөт файлдары кабыл алынат.',
+          'image_size_error': '❌ Сүрөт 5МБдан чоң.',
+          'no_person_error': '❌ Сүрөттө адам табылган жок. Кайра аракет кылыңыз.',
+          'check_error_inet': '❌ Текшерүүдө ката. Интернет байланышын текшериңиз.'
       },
       'kaa': {
           'select_language': '🌍 Tildi tańlań',
           'language_changed': '✅ Til ózgeritildi: {lang}',
           'close': 'Jabıw',
+          'change_language': 'Til almastırıw',
           'fill_profile': 'Anketa toldırıw',
           'about_yourself': 'Ózińiz haqqında aytıń',
           'gender': 'Jınıs',
@@ -778,11 +1203,117 @@ const tg = window.Telegram?.WebApp;
           'int_shaxmat': '♟️ Shaxmat',
           'int_rasm': '🎨 Súwret sızıw',
           'int_tillar': '🗣️ Til úyreniw',
+          'limit_likes_exceeded': 'Kúndelik layk limittińiz tugadı. Topqa adam qosıp, limitti arttırıń!',
+          'limit_messages_exceeded': 'Kúndelik xabar jiberiw limittińiz tugadı. Topqa adam qosıp, limitti arttırıń!',
+          'limit_super_likes_exceeded': 'Kúndelik Super Layk limittińiz tugadı. Topqa adam qosıp, limitti arttırıń!',
+          'limit_exceeded_default': 'Kúndelik limittińiz tugadı. Topqa adam qosıp, limitti arttırıń!',
+          'referral_invite_text': 'Tánisuv topına qosılıń! Jaña dostlar tabıń.',
+          'referral_invited_count': 'Topqa shaqırılgandar',
+          'referral_unlimited_until': 'Limitsiz dáwir',
+          'referral_recent_invitees': 'Aqırǵı shaqırılgandar',
+          'count_pcs': 'ta',
+          'until_date': 'shekem',
+          'no_name': 'Atısız',
+          'write_message_to': '{name}ǵa birinshi xabarıńızdı jazıń.',
+          'enter_message_text': 'Xabar matının kiritiń!',
+          'error_user_id_not_found': 'Qátelik: siziń paydalanıwshı identifikatorińız tabılmadı.',
+          'error_recipient_not_found': 'Qátelik: qabıllawshı tabılmadı. Ótinem, qayta urınıp kóriń.',
+          'message_sent': '💬 Xabar jiberildi!',
+          'like_sent_with_hint': '💙 Layk jiberildi! Eger ol hám sizdi layk etse, chat ashıladı.',
+          'like_not_sent': 'Layk jiberilmegen',
+          'max_interests_hint': 'Eń kópi menen 5 qızıǵıwshılıq saylawǵa boladı.',
+          'zodiac_not_set': 'Juldıznamańız anıqlanbadı',
+          'zodiac_not_set_hint': '"Tek juldıznamaǵa saykes adamlardı kórset" funkciyası islewshi ushın aldın anketanıńızda juldıznamanıńızdı tuwrı saylań.',
+          'searching': 'Izlenbekte...',
+          'login_via_telegram': 'Telegram arqalı kiriw',
+          'open_in_telegram': 'Izlew ushın bottı Telegram baǵdarlamasında ashıń.',
+          'server_error': 'Server menen baylanıs joq',
+          'check_internet': 'Internet baylanısın tekseriń yamasa keyinirek urınıp kóriń.',
+          'retry_btn': 'Qayta urınıw',
+          'cannot_connect': 'Baylanıs ornatılmadı',
+          'compat_good': 'Saykes juldıznama',
+          'compat_difficult': 'Qıyın',
+          'btn_back': 'Artqa',
+          'btn_skip': 'Ótkerip jiberiw',
+          'btn_dislike': 'Yaqmadı',
+          'send_message_btn': 'Xabar jiberiw',
+          'cannot_go_back': 'Artqa qaytıw múmkin emes',
+          'previous_candidate': '⬅️ Aldınǵı kandidat',
+          'user_id_not_found': 'Paydalanıwshı ID tabılmadı',
+          'generic_error': 'Qátelik',
+          'match_super_like': '🎉 Match! {sticker} Super Layk jiberildi!',
+          'super_like_sent': '⭐ {sticker} Super Layk jiberildi!',
+          'user_not_identified': 'Paydalanıwshı anıqlanbadı',
+          'telegram_id_not_found': 'Telegram ID tabılmadı. Web Appdi Telegram ishinde ashiń yamasa qayta kiriń.',
+          'no_likes_yet': 'Házirshe layk joq',
+          'no_likes_hint': 'Sizge házirshe heshkim layk jibermegen.',
+          'people_who_liked_you': 'Sizge layk basqanlar',
+          'years_old': 'jas',
+          'accept': 'Qabıl etiw',
+          'reject': 'Biykar etiw',
+          'you_rejected': 'Siz {name} biykar ettińiz.',
+          'error_retry': 'Qátelik júz berdi. Ótinem, qayta urınıp kóriń.',
+          'age_label': 'Jası',
+          'no_city': 'Qala kórsetilmegen',
+          'message': 'Xabar',
+          'block': 'Blok',
+          'match_with': '{name} menen match boldıńız!',
+          'fill_profile_first': 'Aldın profilińizdi toltırıń',
+          'like_sent': '💙 Layk jiberildi!',
+          'unknown_error': 'Belgisiz',
+          'blocked': '🚫 Bloklandı',
+          'default_about': 'Bul paydalanıwshı óz maqseti hám qızıǵıwshılıqların kórsetken.',
+          'about_me': 'Men haqqımda',
+          'goals_label': 'Maqsetler',
+          'not_specified': 'Kórsetilmegen',
+          'interests_label': 'Qızıǵıwshılıqlar',
+          'max_interests_display': 'Eń kópi menen 5 qızıǵıwshılıq kórsetiledi.',
+          'open_chat': 'Súwbatti ashıw...',
+          'your_photo': 'Siziń súwretińiz',
+          'partner_photo': 'Sóylesiwshiniń súwreti',
+          'click_to_view': 'Tolıq kóriw ushın basıń',
+          'profile_not_loaded': 'Profilińiz júklenmedi',
+          'profile_not_found': 'Anketa tabılmadı',
+          'please_fill_profile': 'Ótinem, aldın anketa toltırıń.',
+          'upload_valid_photo': 'Aldın tuwrı súwret júklep, tekseriliwge daǵızlantırıń.',
+          'select_gender_prompt': 'Jınıstı saylań!',
+          'enter_name_prompt': 'Atıńızdı kiritiń!',
+          'enter_age_prompt': 'Jasıńızdı tuwrı kiritiń! (16-80)',
+          'enter_city_prompt': 'Qala/rayon kiritiń!',
+          'select_goal_prompt': 'Keminde 1 maqset saylań!',
+          'profile_saved_success': 'Anketa tabıslı saqlandı!',
+          'profile_saved_local': 'Anketa máhally saqlandı.',
+          'images_only': 'Tek súwret faylları qabıl etiledi.',
+          'image_too_large': 'Súwret 5MB dan úlken!',
+          'checking_image': '📸 Súwret tekserilmekte, ótinem kutıń…',
+          'face_detected': '🧠 Yuz anıqlandı. Júklew…',
+          'checking_image_short': 'Súwret tekserilmekte, az kutıń...',
+          'no_person_in_image': 'Súwrette insan tabılmadı. Ótinem, ózińizdi kórsetediǵen súwret saylań.',
+          'image_check_error': 'Súwretti tekseriwde qátelik. Internet baylanısın tekseriń hám qayta urınıp kóriń.',
+          'uploading_image': '📸 Súwret júklenmekte…',
+          'image_uploaded_success': '✅ Súwret júklendi. Endi anketa saqlawǵa boladı.',
+          'image_read_error': '❌ Súwretti oqıwda qátelik júz berdi.',
+          'image_load_failed': 'Súwret júklenmedi',
+          'image_ready': '✅ Súwret júklenedi. Anketa saqlaw múmkin.',
+          'person_confirmed_uploading': '🧍 Inswan tastıqlandı. Júklew…',
+          'photo_not_sent_but_saved': 'Súwret Telegramǵa jiberilmedi, biraq anketa saqlandı.',
+          'data_too_long': 'Qátelik: maǵlıwmat júdá uzın.',
+          'script_load_failed': 'Júklenmedi: {src}',
+          'wait_timeout': '{name} kutıw waqtı tawdı',
+          'link_copied': 'Silteme nusqalandı!',
+          'error_occurred': 'Qátelik júz berdi.',
+          'please_retry': 'Qayta urınıp kóriń.',
+          'error_prefix': 'Qátelik: ',
+          'images_only_error': '❌ Tek súwret faylları qabıl etiledi.',
+          'image_size_error': '❌ Súwret 5MB dan úlken.',
+          'no_person_error': '❌ Súwrette insan tabılmadı. Qayta urınıp kóriń.',
+          'check_error_inet': '❌ Tekseriwde qátelik. Internet baylanısın tekseriń.'
       },
       'tg': {
           'select_language': '🌍 Забонро интихоб кунед',
           'language_changed': '✅ Забон иваз шуд: {lang}',
           'close': 'Пӯшидан',
+          'change_language': 'Ивази забон',
           'fill_profile': 'Анкетаро пур кунед',
           'about_yourself': 'Дар бораи худатон нақл кунед',
           'gender': 'Ҷинс',
@@ -917,6 +1448,111 @@ const tg = window.Telegram?.WebApp;
           'int_shaxmat': '♟️ Шатранҷ',
           'int_rasm': '🎨 Наққошӣ',
           'int_tillar': '🗣️ Омӯзиши забонҳо',
+          'limit_likes_exceeded': 'Ҳадди лимити лайкҳои рӯзаи шумо тамом шуд. Одамонро ба гурӯҳ даъват кунед, то лимитро зиёд кунед!',
+          'limit_messages_exceeded': 'Ҳадди лимити паёмҳои рӯзаи шумо тамом шуд. Одамонро ба гурӯҳ даъват кунед, то лимитро зиёд кунед!',
+          'limit_super_likes_exceeded': 'Ҳадди лимити супер-лайкҳои рӯзаи шумо тамом шуд. Одамонро ба гурӯҳ даъват кунед, то лимитро зиёд кунед!',
+          'limit_exceeded_default': 'Ҳадди лимити рӯзаи шумо тамом шуд. Одамонро ба гурӯҳ даъват кунед, то лимитро зиёд кунед!',
+          'referral_invite_text': 'Ба гурӯҳи ошноӣ ҳамроҳ шавед! Дӯстони нав пайдо кунед.',
+          'referral_invited_count': 'Ба гурӯҳ даъват шудаанд',
+          'referral_unlimited_until': 'Давраи бе лимит',
+          'referral_recent_invitees': 'Даъватҳои охирин',
+          'count_pcs': 'та',
+          'until_date': 'то',
+          'no_name': 'Беном',
+          'write_message_to': 'Паёми аввалинатонро ба {name} нависед.',
+          'enter_message_text': 'Матни паёмро ворид кунед!',
+          'error_user_id_not_found': 'Хатогӣ: идентификатори корбари шумо ёфт нашуд.',
+          'error_recipient_not_found': 'Хатогӣ: гиранда ёфт нашуд. Лутфан, боз кӯшиш кунед.',
+          'message_sent': '💬 Паём фиристода шуд!',
+          'like_sent_with_hint': '💙 Лайк фиристода шуд! Агар ӯ/вай шуморо ҳам лайк кунад, чат кушода мешавад.',
+          'like_not_sent': 'Лайк фиристода нашуд',
+          'max_interests_hint': 'Ҳадди аксар 5 манфиат интихоб кардан мумкин аст.',
+          'zodiac_not_set': 'Бурҷи шумо муайян нашуд',
+          'zodiac_not_set_hint': 'Барои коркарди функсияи "Танҳо одамони мувофиқи бурҷамро нишон диҳед" аввал дар анкетаи худ бурҷи дуруст интихоб кунед.',
+          'searching': 'Ҷустуҷӯ...',
+          'login_via_telegram': 'Тавассути Telegram ворид шавед',
+          'open_in_telegram': 'Барои ҷустуҷӯ ботро дар барномаи Telegram кушоед.',
+          'server_error': 'Алоқа бо сервер нест',
+          'check_internet': 'Пайвасти интернетро санҷед ё баъдтар кӯшиш кунед.',
+          'retry_btn': 'Боз кӯшиш',
+          'cannot_connect': 'Пайваст нашуд',
+          'compat_good': 'Бурҷи мувофиқ',
+          'compat_difficult': 'Мушкил',
+          'btn_back': 'Ба қафо',
+          'btn_skip': 'Гузарондан',
+          'btn_dislike': 'Написандид',
+          'send_message_btn': 'Фиристодани паём',
+          'cannot_go_back': 'Бозгашт ба ақиб имконнок нест',
+          'previous_candidate': '⬅️ Номзади қаблӣ',
+          'user_id_not_found': 'ID-и корбар ёфт нашуд',
+          'generic_error': 'Хатогӣ',
+          'match_super_like': '🎉 Мос! {sticker} Супер Лайк фиристода шуд!',
+          'super_like_sent': '⭐ {sticker} Супер Лайк фиристода шуд!',
+          'user_not_identified': 'Корбар муайян нашуд',
+          'telegram_id_not_found': 'ID-и Telegram ёфт нашуд. Web App-ро дар дохили Telegram кушоед ё боз ворид шавед.',
+          'no_likes_yet': 'Ҳоло лайк нест',
+          'no_likes_hint': 'Ба шумо ҳанӯз ҳеҷ кас лайк нафиристодааст.',
+          'people_who_liked_you': 'Ба шумо лайк задаанд',
+          'years_old': 'сол',
+          'accept': 'Қабул',
+          'reject': 'Рад кардан',
+          'you_rejected': 'Шумо {name} рад кардед.',
+          'error_retry': 'Хатогӣ рӯй дод. Лутфан, боз кӯшиш кунед.',
+          'age_label': 'Синн',
+          'no_city': 'Шаҳр нишон дода нашудааст',
+          'message': 'Паём',
+          'block': 'Блок',
+          'match_with': 'Шумо бо {name} мос шудед!',
+          'fill_profile_first': 'Аввал профили худро пур кунед',
+          'like_sent': '💙 Лайк фиристода шуд!',
+          'unknown_error': 'Номаълум',
+          'blocked': '🚫 Блок шуд',
+          'default_about': 'Ин корбар мақсад ва шавқҳои худро нишон надодааст.',
+          'about_me': 'Дар бораи ман',
+          'goals_label': 'Мақсадҳо',
+          'not_specified': 'Нишон дода нашудааст',
+          'interests_label': 'Шавқҳо',
+          'max_interests_display': 'Ҳадди аксар 5 шавқ нишон дода мешавад.',
+          'open_chat': 'Кушодани чат...',
+          'your_photo': 'Акси шумо',
+          'partner_photo': 'Акси ҳамсуҳбат',
+          'click_to_view': 'Барои кушодан пахш кунед',
+          'profile_not_loaded': 'Профили шумо бор нашуд',
+          'profile_not_found': 'Анкета ёфт нашуд',
+          'please_fill_profile': 'Лутфан, аввал анкетаро пур кунед.',
+          'upload_valid_photo': 'Аввал акси дуруст бор кунед ва аз санҷиш гузаред.',
+          'select_gender_prompt': 'Ҷинсро интихоб кунед!',
+          'enter_name_prompt': 'Номи худро ворид кунед!',
+          'enter_age_prompt': 'Синни дурусти худро ворид кунед! (16-80)',
+          'enter_city_prompt': 'Шаҳр/ноҳияро ворид кунед!',
+          'select_goal_prompt': 'Камаш 1 мақсад интихоб кунед!',
+          'profile_saved_success': 'Анкета бомуваффақият нигоҳ дошта шуд!',
+          'profile_saved_local': 'Анкета ба таври маҳаллӣ нигоҳ дошта шуд.',
+          'images_only': 'Танҳо файлҳои акс қабул карда мешаванд.',
+          'image_too_large': 'Акс аз 5МБ калон аст!',
+          'checking_image': '📸 Акс дар ҳоли санҷиш, лутфан интизор шавед…',
+          'face_detected': '🧠 Юр аниқ шуд. Боркунӣ…',
+          'checking_image_short': 'Акс дар ҳоли санҷиш, каме интизор шавед...',
+          'no_person_in_image': 'Дар акс касе ёфт нашуд. Лутфан, аксе интихоб кунед, ки шумо дар он намоён бошед.',
+          'image_check_error': 'Хатогӣ дар санҷиши акс. Интернетро санҷед ва боз кӯшиш кунед.',
+          'uploading_image': '📸 Акс дар ҳоли боркунӣ…',
+          'image_uploaded_success': '✅ Акс бор карда шуд. Акнун анкетаро нигоҳ доштан мумкин аст.',
+          'image_read_error': '❌ Хатогӣ дар хондани акс.',
+          'image_load_failed': 'Акс бор карда нашуд',
+          'image_ready': '✅ Акс бор карда шуд. Анкетаро нигоҳ доштан мумкин.',
+          'person_confirmed_uploading': '🧍 Шахс тасдиқ шуд. Боркунӣ…',
+          'photo_not_sent_but_saved': 'Акс ба Telegram фиристода нашуд, аммо анкета нигоҳ дошта шуд.',
+          'data_too_long': 'Хатогӣ: маълумот хеле дароз.',
+          'script_load_failed': 'Бор карда нашуд: {src}',
+          'wait_timeout': 'Муҳлати интизории {name} ба охир расид',
+          'link_copied': 'Пайванд нусха бардошта шуд!',
+          'error_occurred': 'Хатогӣ рӯй дод.',
+          'please_retry': 'Боз кӯшиш кунед.',
+          'error_prefix': 'Хатогӣ: ',
+          'images_only_error': '❌ Танҳо файлҳои акс қабул карда мешаванд.',
+          'image_size_error': '❌ Акс аз 5МБ калон.',
+          'no_person_error': '❌ Дар акс касе ёфт нашуд. Боз кӯшиш кунед.',
+          'check_error_inet': '❌ Хатогӣ дар санҷиш. Пайвасти интернетро санҷед.'
       },
   };
 
@@ -1197,7 +1833,7 @@ function detectTelegramLanguage() {
       const safeJson = JSON.stringify(safePayload);
       if (safeJson.length <= MAX_WEBAPP_DATA_SIZE) {
         tg.sendData(safeJson);
-        showToast('Rasm telegramga yuborilmadi, lekin anketangiz saqlandi.');
+        showToast(tr('photo_not_sent_but_saved'));
         return;
       }
     }
@@ -1408,14 +2044,14 @@ function detectTelegramLanguage() {
           const unlimited = data.referral.unlimited_until;
           const invitees = data.referral.group_invitees || [];
 
-          let html = `👥 Guruhga taklif qilinganlar: <strong>${count}</strong> ta`;
+          let html = `👥 ${tr('referral_invited_count')}: <strong>${count}</strong> ${tr('count_pcs')}`;
           if (unlimited) {
-            html += `<br>✅ Limitsiz davr: <strong>${new Date(unlimited).toLocaleDateString('uz-UZ')}</strong> gacha`;
+            html += `<br>✅ ${tr('referral_unlimited_until')}: <strong>${new Date(unlimited).toLocaleDateString('uz-UZ')}</strong> ${tr('until_date')}`;
           }
           if (invitees.length > 0) {
-            html += `<br><br>📝 So'ngi taklif qilinganlar:<br>`;
+            html += `<br><br>📝 ${tr('referral_recent_invitees')}:<br>`;
             invitees.slice(0, 5).forEach(inv => {
-              html += `• ${inv.full_name || 'Ismsiz'}<br>`;
+              html += `• ${inv.full_name || tr('no_name')}<br>`;
             });
           }
           if (stats) stats.innerHTML = html;
@@ -1443,7 +2079,7 @@ function detectTelegramLanguage() {
     if (input) {
       input.select();
       navigator.clipboard.writeText(input.value).then(() => {
-        showToast('Link nusxalandi!');
+        showToast(tr('link_copied'));
       });
     }
   }
@@ -1453,7 +2089,7 @@ function detectTelegramLanguage() {
     messageTargetUserId = toUserId;
     messageTargetName = name;
     messageTargetPhoto = photo;
-    document.getElementById('message-modal-sub').textContent = name + ' ga birinchi xabaringizni yozing.';
+    document.getElementById('message-modal-sub').textContent = tr('write_message_to').replace('{name}', name);
     document.getElementById('first-message-input').value = '';
     document.getElementById('message-modal').style.display = 'flex';
   }
@@ -1470,15 +2106,15 @@ function detectTelegramLanguage() {
     const toUserId = Number(messageTargetUserId);
 
     if (!message) {
-      showToast('Xabar matnini kiriting!');
+      showToast(tr('enter_message_text'));
       return;
     }
     if (!Number.isFinite(fromUserId) || fromUserId <= 0) {
-      showToast('Xatolik: sizning foydalanuvchi identifikatoringiz topilmadi.');
+      showToast(tr('error_user_id_not_found'));
       return;
     }
     if (!Number.isFinite(toUserId) || toUserId <= 0) {
-      showToast('Xatolik: qabul qiluvchi topilmadi. Iltimos, qayta urinib ko‘ring.');
+      showToast(tr('error_recipient_not_found'));
       return;
     }
 
@@ -1511,7 +2147,7 @@ function detectTelegramLanguage() {
           message: message
         });
         await loadLimitStatus();
-        showToast('💬 Xabar yuborildi!');
+        showToast(tr('message_sent'));
         openChatRoom(likeData.match_id, messageTargetName, messageTargetPhoto);
         return;
       }
@@ -1521,7 +2157,7 @@ function detectTelegramLanguage() {
       if (likeData.error === 'limit_exceeded') {
         showLimitExceeded('likes');
       } else {
-        showToast('Xatolik: ' + (likeData.error || 'Like yuborilmadi'));
+        showToast(tr('error_prefix') + (likeData.error || tr('like_not_sent')));
       }
     }
   }
@@ -1617,7 +2253,7 @@ function detectTelegramLanguage() {
       if (uploadIcon) uploadIcon.style.display = 'none';
       if (uploadText) uploadText.style.display = 'none';
       if (uploadSub) uploadSub.style.display = 'none';
-      updatePhotoUploadState('✅ Rasm yuklangan. Anketa saqlash mumkin.', true, false);
+      updatePhotoUploadState(tr('image_ready'), true, false);
     }
   }
 
@@ -1746,7 +2382,7 @@ function detectTelegramLanguage() {
       if (el.classList.contains('selected')) {
         if (selectedInterests.length >= MAX_INTERESTS_ALLOWED) {
           el.classList.remove('selected');
-          showToast('Maksimal 5 ta qiziqish tanlash mumkin.');
+          showToast(tr('max_interests_hint'));
           return;
         }
         selectedInterests = Array.from(new Set([...selectedInterests, value]));
@@ -1796,7 +2432,7 @@ function detectTelegramLanguage() {
       'Baliq': '♓ Baliq'
     };
 
-    button.textContent = value ? (labelMap[value] || value) : 'Burj tanlang...';
+    button.textContent = value ? (labelMap[value] || value) : tr('zodiac_select_btn');
   }
 
   function selectZodiac(value, label) {
@@ -1808,7 +2444,7 @@ function detectTelegramLanguage() {
       select.value = value;
     }
     if (button) {
-      button.textContent = label || 'Burj tanlang...';
+      button.textContent = label || tr('zodiac_select_btn');
       button.classList.toggle('selected', !!value);
     }
     document.querySelectorAll('.zodiac-option').forEach(option => {
@@ -1851,7 +2487,7 @@ function detectTelegramLanguage() {
       'Baliq': '♓ Baliq'
     };
 
-    button.textContent = labelMap[value] || (value ? value : 'Barcha burjlar');
+    button.textContent = labelMap[value] || (value ? value : tr('all_zodiacs'));
     button.classList.toggle('selected', !!value);
   }
 
@@ -1862,7 +2498,7 @@ function detectTelegramLanguage() {
 
     if (select) select.value = value;
     if (button) {
-      button.textContent = label || 'Barcha burjlar';
+      button.textContent = label || tr('all_zodiacs');
       button.classList.toggle('selected', !!value);
     }
 
@@ -2002,7 +2638,7 @@ function detectTelegramLanguage() {
       script.src = src;
       script.crossOrigin = 'anonymous';
       script.onload = resolve;
-      script.onerror = () => reject(new Error(`Yuklanmadi: ${src}`));
+      script.onerror = () => reject(new Error(tr('script_load_failed').replace('{src}', src)));
       document.head.appendChild(script);
     });
   }
@@ -2014,7 +2650,7 @@ function detectTelegramLanguage() {
         if (typeof window[name] !== 'undefined' && window[name]) {
           resolve();
         } else if (Date.now() - start > timeoutMs) {
-          reject(new Error(`${name} kutish vaqti tugadi`));
+          reject(new Error(tr('wait_timeout').replace('{name}', name)));
         } else {
           setTimeout(check, 100);
         }
@@ -2048,7 +2684,7 @@ function detectTelegramLanguage() {
     const img = await new Promise((resolve, reject) => {
       const image = new Image();
       image.onload = () => resolve(image);
-      image.onerror = () => reject(new Error('Rasm yuklanmadi'));
+      image.onerror = () => reject(new Error(tr('image_load_failed')));
       image.src = url;
     });
     try {
@@ -2097,13 +2733,13 @@ function detectTelegramLanguage() {
       document.getElementById('upload-icon')?.style.setProperty('display', 'none');
       document.getElementById('upload-text')?.style.setProperty('display', 'none');
       document.getElementById('upload-sub')?.style.setProperty('display', 'none');
-      updatePhotoUploadState('✅ Rasm yuklangan. Anketa saqlash mumkin.', true, false);
+      updatePhotoUploadState(tr('image_ready'), true, false);
     }
   }
 
   function proceedWithPhotoPreview(file) {
     photoUploading = true;
-    updatePhotoUploadState('📸 Rasm yuklanmoqda…', false, true);
+    updatePhotoUploadState(tr('uploading_image'), false, true);
     const reader = new FileReader();
     reader.onload = (e) => {
       photoBase64 = e.target.result;
@@ -2120,13 +2756,13 @@ function detectTelegramLanguage() {
       if (uploadSub) uploadSub.style.display = 'none';
       photoReady = true;
       photoUploading = false;
-      updatePhotoUploadState('✅ Rasm yuklandi. Endi anketa saqlashingiz mumkin.', true, false);
+      updatePhotoUploadState(tr('image_uploaded_success'), true, false);
     };
     reader.onerror = () => {
       photoReady = false;
       photoUploading = false;
-      updatePhotoUploadState('❌ Rasm o‘qilishda xatolik yuz berdi.', false, false);
-      showToast('Rasm o‘qilishda xatolik yuz berdi.');
+      updatePhotoUploadState(tr('image_read_error'), false, false);
+      showToast(tr('image_read_error'));
     };
     reader.readAsDataURL(file);
   }
@@ -2138,23 +2774,23 @@ function detectTelegramLanguage() {
     photoBase64 = '';
     photoReady = false;
     photoUploading = true;
-    updatePhotoUploadState('📸 Rasm tekshirilmoqda, iltimos kuting…', false, true);
+    updatePhotoUploadState(tr('checking_image'), false, true);
     if (!file.type.startsWith('image/')) {
-      showToast('Faqat rasm fayllari qabul qilinadi.');
+      showToast(tr('images_only'));
       input.value = '';
       photoBase64 = '';
       photoReady = false;
       photoUploading = false;
-      updatePhotoUploadState('❌ Faqat rasm fayllari qabul qilinadi.', false, false);
+      updatePhotoUploadState(tr('images_only_error'), false, false);
       return;
     }
     if (file.size > 5 * 1024 * 1024) {
-      showToast('Rasm 5MB dan katta!');
+      showToast(tr('image_too_large'));
       input.value = '';
       photoBase64 = '';
       photoReady = false;
       photoUploading = false;
-      updatePhotoUploadState('❌ Rasm 5MB dan katta.', false, false);
+      updatePhotoUploadState(tr('image_size_error'), false, false);
       return;
     }
 
@@ -2171,16 +2807,16 @@ function detectTelegramLanguage() {
     }
 
     if (faceDetected) {
-      updatePhotoUploadState('🧠 Yuz aniqlangan. Rasm yuklanmoqda…', false);
+      updatePhotoUploadState(tr('face_detected'), false);
       proceedWithPhotoPreview(file);
       return;
     }
 
-    showToast('Rasm tekshirilmoqda, biroz kuting...', 12000);
+    showToast(tr('checking_image_short'), 12000);
     try {
       const personDetected = await detectPersonCocoSsd(file);
       if (personDetected) {
-        updatePhotoUploadState('🧍 Rasmda inson borligi tasdiqlandi. Yuklanmoqda…', false);
+        updatePhotoUploadState(tr('person_confirmed_uploading'), false);
         proceedWithPhotoPreview(file);
       } else {
         showToast('Rasmda inson topilmadi. Iltimos, o\'zingizni ko\'rsatadigan rasm tanlang.');
@@ -2188,7 +2824,7 @@ function detectTelegramLanguage() {
         photoBase64 = '';
         photoReady = false;
         photoUploading = false;
-        updatePhotoUploadState('❌ Rasmda inson topilmadi. Yana urining.', false, false);
+        updatePhotoUploadState(tr('no_person_error'), false, false);
       }
     } catch (err) {
       console.error('COCO-SSD tekshiruvi xatolik:', err);
@@ -2197,7 +2833,7 @@ function detectTelegramLanguage() {
       photoBase64 = '';
       photoReady = false;
       photoUploading = false;
-      updatePhotoUploadState('❌ Tekshiruvda xatolik. Internet aloqasini tekshiring.', false, false);
+      updatePhotoUploadState(tr('check_error_inet'), false, false);
     }
   }
 
@@ -2214,15 +2850,15 @@ function detectTelegramLanguage() {
     const about = document.getElementById('inp-about')?.value?.trim() || '';
     const zodiac = document.getElementById('sel-zodiac').value;
 
-    if (!selectedGender) { showToast('Jinsni tanlang!'); return; }
-    if (!name) { showToast('Ismingizni kiriting!'); return; }
+    if (!selectedGender) { showToast(tr('select_gender_prompt')); return; }
+    if (!name) { showToast(tr('enter_name_prompt')); return; }
     if (!age || age < 16 || age > 80) { showToast('Yoshingizni to\'g\'ri kiriting! (16-80)'); return; }
-    if (!city) { showToast('Shahar/tuman kiriting!'); return; }
-    if (selectedGoals.length === 0) { showToast('Kamida 1 ta maqsad tanlang!'); return; }
+    if (!city) { showToast(tr('enter_city_prompt')); return; }
+    if (selectedGoals.length === 0) { showToast(tr('select_goal_prompt')); return; }
 
     const trimmedInterests = Array.from(new Set((selectedInterests || []).filter(Boolean))).slice(0, MAX_INTERESTS_ALLOWED);
     if ((selectedInterests || []).length > MAX_INTERESTS_ALLOWED) {
-      showToast('Maksimal 5 ta qiziqish tanlash mumkin.');
+      showToast(tr('max_interests_hint'));
     }
 
     const profile = {
@@ -2295,7 +2931,7 @@ function detectTelegramLanguage() {
       } else {
         // Burj aniqlanmadi - foydalanuvchiga xabar berish va qidirishni to'xtatish
         if (panelBody) {
-          panelBody.innerHTML = `<div class="empty-state"><div class="empty-icon">⭐</div><h3>Burjingiz aniqlanmadi</h3><p>"Faqat burjimga mos odamlarni ko'rsat" funksiyasi ishlamasi uchun avval anketangizda burjingizni to'g'ri tanlang.</p><button class="btn-primary" style="margin-top:16px;padding:12px 24px;border-radius:999rem;" onclick="closeSearchResultsModal();showPage('profile')">Anketani to'ldirish</button></div>`;
+          panelBody.innerHTML = `<div class="empty-state"><div class="empty-icon">⭐</div><h3>${tr('zodiac_not_set')}</h3><p>${tr('zodiac_not_set_hint')}</p><button class="btn-primary" style="margin-top:16px;padding:12px 24px;border-radius:999rem;" onclick="closeSearchResultsModal();showPage('profile')">${tr('fill_profile')}</button></div>`;
         }
         if (modal) modal.style.display = 'flex';
         return;
@@ -2305,11 +2941,11 @@ function detectTelegramLanguage() {
     // Open modal immediately with loading
     const modal = document.getElementById('search-results-modal');
     const panelBody = document.getElementById('search-results-panel-body');
-    if (panelBody) panelBody.innerHTML = '<div class="loading"><div class="spinner"></div> Qidirilmoqda...</div>';
+    if (panelBody) panelBody.innerHTML = `<div class="loading"><div class="spinner"></div> ${tr('searching')}</div>`;
     if (modal) modal.style.display = 'flex';
 
     if (!userId) {
-      if (panelBody) panelBody.innerHTML = `<div class="empty-state"><div class="empty-icon"></div><h3>Telegram orqali kiring</h3><p>Qidirish uchun botni Telegram ilovasida oching.</p></div>`;
+      if (panelBody) panelBody.innerHTML = `<div class="empty-state"><div class="empty-icon"></div><h3>${tr('login_via_telegram')}</h3><p>${tr('open_in_telegram')}</p></div>`;
       return;
     }
     fetchSearchResultsModal(userId, filters);
@@ -2336,7 +2972,7 @@ function detectTelegramLanguage() {
         tinderHistory = [];
         // Render tinder cards inside modal panel - FULL WIDTH
         if (panelBody) {
-          panelBody.innerHTML = '<div id="swipe-container-modal" class="swipe-container" style="padding:0;width:100%;"></div>';
+          panelBody.innerHTML = `<div id="swipe-container-modal" class="swipe-container" style="padding:0;width:100%;"></div>`;
           renderTinderCardInModal();
         }
       } else {
@@ -2344,13 +2980,13 @@ function detectTelegramLanguage() {
         tinderIndex = 0;
         tinderHistory = [];
         if (panelBody) {
-          panelBody.innerHTML = `<div class="empty-state"><div class="empty-icon">${ICONS.info}</div><h3>Hech kim topilmadi</h3><p>Hozircha sizga mos foydalanuvchilar yo'q. Keyinroq qayta urinib ko'ring.</p></div>`;
+          panelBody.innerHTML = `<div class="empty-state"><div class="empty-icon">${ICONS.info}</div><h3>${tr('no_one_found')}</h3><p>${tr('no_one_hint')}</p></div>`;
         }
       }
     } catch (error) {
       console.error('Search error:', error);
       if (panelBody) {
-        panelBody.innerHTML = `<div class="empty-state"><div class="empty-icon">${ICONS.alert}</div><h3>Server bilan aloqa yo'q</h3><p>Internet aloqasini tekshiring yoki keyinroq urinib ko'ring.</p><button class="btn-primary" style="margin-top:16px;padding:12px 24px;border-radius:999rem;" onclick="closeSearchResultsModal();setTimeout(doSearch,300)">🔄 Qayta urinish</button></div>`;
+        panelBody.innerHTML = `<div class="empty-state"><div class="empty-icon">${ICONS.alert}</div><h3>${tr('server_error')}</h3><p>${tr('check_internet')}</p><button class="btn-primary" style="margin-top:16px;padding:12px 24px;border-radius:999rem;" onclick="closeSearchResultsModal();setTimeout(doSearch,300)">🔄 ${tr('retry_btn')}</button></div>`;
       }
       showToast('Server bilan aloqa yo\'q');
     }
@@ -2364,9 +3000,9 @@ function detectTelegramLanguage() {
       container.innerHTML = `
         <div class="no-more-wrap">
           <div class="no-more-emoji">✨</div>
-          <div class="no-more-title">Hammasi ko'rildi!</div>
-          <div class="no-more-sub">Siz barcha nomzodlarni ko'rib chiqdingiz.<br>Qayta qidiring.</div>
-          <button class="no-more-btn" onclick="closeSearchResultsModal();doSearch()">🔍 Qayta qidirish</button>
+          <div class="no-more-title">${tr('all_viewed')}</div>
+          <div class="no-more-sub">${tr('all_viewed_hint')}</div>
+          <button class="no-more-btn" onclick="closeSearchResultsModal();doSearch()">🔍 ${tr('search_again')}</button>
         </div>`;
       return;
     }
@@ -2378,9 +3014,9 @@ function detectTelegramLanguage() {
     const myZodiac = getMyZodiac();
     const compatStatus = u.zodiac ? getZodiacCompatStatus(myZodiac, u.zodiac) : null;
     const compatBadge = compatStatus === 'mos'
-      ? `<span style="background:#27ae60;color:#fff;border-radius:12px;padding:2px 10px;font-size:12px;font-weight:600;margin-left:6px;">💚 Mos burj</span>`
+      ? `<span style="background:#27ae60;color:#fff;border-radius:12px;padding:2px 10px;font-size:12px;font-weight:600;margin-left:6px;">💚 ${tr('compat_good')}</span>`
       : compatStatus === 'qiyin'
-      ? `<span style="background:#e74c3c;color:#fff;border-radius:12px;padding:2px 10px;font-size:12px;font-weight:600;margin-left:6px;">⚡ Murakkab</span>`
+      ? `<span style="background:#e74c3c;color:#fff;border-radius:12px;padding:2px 10px;font-size:12px;font-weight:600;margin-left:6px;">⚡ ${tr('compat_difficult')}</span>`
       : '';
 
     const animClass = direction === 'left' ? 'animate-left' : direction === 'right' ? 'animate-right' : direction === 'up' ? 'animate-up' : 'animate-in';
@@ -2403,16 +3039,16 @@ function detectTelegramLanguage() {
           </div>
         </div>
         <div class="tinder-actions">
-          <button class="tinder-btn tinder-btn-back" onclick="tinderBackModal()" title="Orqaga">
+          <button class="tinder-btn tinder-btn-back" onclick="tinderBackModal()" title="${tr('btn_back')}">
             <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h18M3 12l6-6M3 12l6 6"/></svg>
           </button>
           <button class="tinder-btn tinder-btn-nope" onclick="tinderSwipeModal('left')" title="O'tkazib yuborish">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
           </button>
-          <button class="tinder-btn tinder-btn-superlike" onclick="tinderSuperLikeModal()" title="Super Like">
+          <button class="tinder-btn tinder-btn-superlike" onclick="tinderSuperLikeModal()" title="${tr('super_like')}">
             <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" stroke="none"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
           </button>
-          <button class="tinder-btn tinder-btn-like" onclick="tinderSwipeModal('right')" title="Like">
+          <button class="tinder-btn tinder-btn-like" onclick="tinderSwipeModal('right')" title="${tr('like')}">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
           </button>
           <button class="tinder-btn tinder-btn-msg" onclick="openMessageModalFromTinder(${u.telegram_id},'${escapeJs(u.full_name)}')" title="Xabar">
@@ -2508,7 +3144,7 @@ function detectTelegramLanguage() {
     tinderHistory = [];
 
     if (swipeContainer) {
-      swipeContainer.innerHTML = '<div class="loading"><div class="spinner"></div> Qidirilmoqda...</div>';
+      swipeContainer.innerHTML = `<div class="loading"><div class="spinner"></div> ${tr('searching')}</div>`;
     }
 
     try {
@@ -2525,14 +3161,14 @@ function detectTelegramLanguage() {
         tinderIndex = 0;
         tinderHistory = [];
         if (swipeContainer) {
-          swipeContainer.innerHTML = `<div class="empty-state"><div class="empty-icon">${ICONS.info}</div><h3>Hech kim topilmadi</h3><p>Hozircha sizga mos foydalanuvchilar yo'q. Keyinroq qayta urinib ko'ring.</p></div>`;
+          swipeContainer.innerHTML = `<div class="empty-state"><div class="empty-icon">${ICONS.info}</div><h3>${tr('no_one_found')}</h3><p>${tr('no_one_hint')}</p></div>`;
         }
         if (resultsEl) resultsEl.style.display = 'block';
       }
     } catch (error) {
       showToast('Server bilan aloqa yo\'q');
       if (swipeContainer) {
-        swipeContainer.innerHTML = `<div class="empty-state"><div class="empty-icon">${ICONS.alert}</div><h3>Ulana olmadi</h3><p>Internet aloqasini tekshiring.</p></div>`;
+        swipeContainer.innerHTML = `<div class="empty-state"><div class="empty-icon">${ICONS.alert}</div><h3>${tr('cannot_connect')}</h3><p>${tr('check_internet')}</p></div>`;
       }
       if (resultsEl) resultsEl.style.display = 'block';
     }
@@ -2546,9 +3182,9 @@ function detectTelegramLanguage() {
       container.innerHTML = `
         <div class="no-more-wrap">
           <div class="no-more-emoji">✨</div>
-          <div class="no-more-title">Hammasi ko'rildi!</div>
-          <div class="no-more-sub">Siz barcha nomzodlarni ko'rib chiqdingiz.<br>Qayta qidiring.</div>
-          <button class="no-more-btn" onclick="doSearch()">🔍 Qayta qidirish</button>
+          <div class="no-more-title">${tr('all_viewed')}</div>
+          <div class="no-more-sub">${tr('all_viewed_hint')}</div>
+          <button class="no-more-btn" onclick="doSearch()">🔍 ${tr('search_again')}</button>
         </div>`;
       return;
     }
@@ -2592,19 +3228,19 @@ function detectTelegramLanguage() {
           <div class="tinder-tags-wrap">${goals}${interests}</div>
         </div>
         <div class="tinder-actions" onclick="event.stopPropagation()">
-          <button class="tinder-btn tinder-btn-back" onclick="tinderBack()" title="Orqaga">
+          <button class="tinder-btn tinder-btn-back" onclick="tinderBack()" title="${tr('btn_back')}">
             <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h18M3 12l6-6M3 12l6 6"/></svg>
           </button>
-          <button class="tinder-btn tinder-btn-nope" onclick="tinderDislike()" title="Yoqmadi">
+          <button class="tinder-btn tinder-btn-nope" onclick="tinderDislike()" title="${tr('btn_dislike')}">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
           </button>
-          <button class="tinder-btn tinder-btn-superlike" id="superlike-btn" onclick="openStickerModal(${u.telegram_id})" title="Super Like">
+          <button class="tinder-btn tinder-btn-superlike" id="superlike-btn" onclick="openStickerModal(${u.telegram_id})" title="${tr('super_like')}">
             <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" stroke="none"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
           </button>
-          <button class="tinder-btn tinder-btn-like" onclick="tinderLike()" title="Like">
+          <button class="tinder-btn tinder-btn-like" onclick="tinderLike()" title="${tr('like')}">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
           </button>
-          <button class="tinder-btn tinder-btn-msg" onclick="event.stopPropagation(); openMessageModal(${u.telegram_id},'${escapeJs(u.full_name)}','${escapeJs(photo||'')}', ${u.can_write});" title="Xabar yuborish">
+          <button class="tinder-btn tinder-btn-msg" onclick="event.stopPropagation(); openMessageModal(${u.telegram_id},'${escapeJs(u.full_name)}','${escapeJs(photo||'')}', ${u.can_write});" title="${tr('send_message_btn')}">
             <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
           </button>
         </div>
@@ -2667,10 +3303,10 @@ function detectTelegramLanguage() {
   }
 
   function tinderBack() {
-    if (!tinderHistory.length) { showToast('Orqaga qaytish mumkin emas'); return; }
+    if (!tinderHistory.length) { showToast(tr('cannot_go_back')); return; }
     tinderIndex = tinderHistory.pop();
     renderTinderCard();
-    showToast('⬅️ Oldingi nomzod');
+    showToast(tr('previous_candidate'));
   }
 
   // === STICKERS ===
@@ -2679,7 +3315,7 @@ function detectTelegramLanguage() {
 
   async function openStickerModal(toUserId) {
     if (!userId) {
-      showToast('Foydalanuvchi ID topilmadi');
+      showToast(tr('user_id_not_found'));
       return;
     }
 
@@ -2708,7 +3344,7 @@ function detectTelegramLanguage() {
 
   async function sendSticker(sticker) {
     document.getElementById('sticker-overlay').style.display = 'none';
-    if (!stickerTargetId || !userId) { showToast('Xatolik'); return; }
+    if (!stickerTargetId || !userId) { showToast(tr('generic_error')); return; }
 
     showStamp('super');
     const card = document.getElementById('tinder-card');
@@ -2732,9 +3368,9 @@ function detectTelegramLanguage() {
         sender_id: userId,
         message: `${sticker} ⭐ Super Like!`
       });
-      showToast('🎉 Match! ' + sticker + ' Super Like yuborildi!');
+      showToast(tr('match_super_like').replace('{sticker}', sticker));
     } else {
-      showToast('⭐ ' + sticker + ' Super Like yuborildi!');
+      showToast(tr('super_like_sent').replace('{sticker}', sticker));
     }
 
     const renderNextCard = document.getElementById('swipe-container-modal')
@@ -2771,25 +3407,25 @@ function detectTelegramLanguage() {
     if (!modal || !body) return;
     modal.style.display = 'flex';
     if (!userId) {
-      body.innerHTML = `<div class="empty-state"><div class="empty-icon">${ICONS.alert}</div><h3>Foydalanuvchi aniqlanmadi</h3><p>Telegram ID topilmadi. Web Appni Telegram ichida oching yoki qayta kirib ko'ring.</p></div>`;
+      body.innerHTML = `<div class="empty-state"><div class="empty-icon">${ICONS.alert}</div><h3>${tr('user_not_identified')}</h3><p>${tr('telegram_id_not_found')}</p></div>`;
       return;
     }
-    body.innerHTML = '<div class="loading"><div class="spinner"></div> Yuklanmoqda...</div>';
+    body.innerHTML = `<div class="loading"><div class="spinner"></div> ${tr('loading')}</div>`;
 
     const data = await apiPost('/api/likes/received', { telegram_id: userId });
     if (!data.success) {
-      body.innerHTML = `<div class="empty-state"><div class="empty-icon">${ICONS.alert}</div><h3>Xatolik yuz berdi</h3><p>Qayta urinib ko'ring.</p></div>`;
+      body.innerHTML = `<div class="empty-state"><div class="empty-icon">${ICONS.alert}</div><h3>${tr('error_occurred')}</h3><p>${tr('please_retry')}</p></div>`;
       return;
     }
 
     const likes = data.likes || [];
     if (!likes.length) {
-      body.innerHTML = `<div class="empty-state"><div class="empty-icon">${ICONS.info}</div><h3>Hozircha like yo'q</h3><p>Sizga hali hech kim like yubormagan.</p></div>`;
+      body.innerHTML = `<div class="empty-state"><div class="empty-icon">${ICONS.info}</div><h3>${tr('no_likes_yet')}</h3><p>${tr('no_likes_hint')}</p></div>`;
       return;
     }
 
     body.innerHTML = `
-      <div class="section-title" style="margin-top:0;">Sizga like yuborganlar</div>
+      <div class="section-title" style="margin-top:0;">${tr('people_who_liked_you')}</div>
       <div class="likes-modal-body">
         ${likes.map(u => {
           const photo = u.photo_base64 || u.photo_file_id || '';
@@ -2801,11 +3437,11 @@ function detectTelegramLanguage() {
               <div class="like-notification-info">
                 <div>
                   <strong>${u.full_name}</strong>
-                  <div class="like-notification-meta">${u.age} yosh • ${u.city}</div>
+                  <div class="like-notification-meta">${u.age} ${tr('years_old')} • ${u.city}</div>
                 </div>
                 <div class="like-notification-actions">
-                  <button class="like-btn" onclick="event.stopPropagation(); acceptLike(${u.telegram_id}, '${escapeJs(u.full_name)}', '${escapeJs(photo)}'); closeLikesModal();">Qabul</button>
-                  <button class="reject-btn" onclick="event.stopPropagation(); rejectLike(${u.telegram_id}, '${escapeJs(u.full_name)}');">Rad etish</button>
+                  <button class="like-btn" onclick="event.stopPropagation(); acceptLike(${u.telegram_id}, '${escapeJs(u.full_name)}', '${escapeJs(photo)}'); closeLikesModal();">${tr('accept')}</button>
+                  <button class="reject-btn" onclick="event.stopPropagation(); rejectLike(${u.telegram_id}, '${escapeJs(u.full_name)}');">${tr('reject')}</button>
                 </div>
               </div>
             </div>`;
@@ -2835,7 +3471,7 @@ function detectTelegramLanguage() {
     if (!userId) return;
     const data = await apiPost('/api/likes/reject', { telegram_id: userId, from_user: fromUserId });
     if (data.success) {
-      showToast(`Siz ${name} ni rad qildingiz.`);
+      showToast(tr('you_rejected').replace('{name}', name));
       loadPendingLikesIndicator();
       openIncomingLikesModal();
     } else {
@@ -2864,13 +3500,13 @@ function detectTelegramLanguage() {
       </div>
       <div class="profile-actions">
         <button class="action-btn btn-like" onclick="event.stopPropagation(); sendLike(${u.telegram_id})">
-          <span class="btn-icon">${ICONS.heart}</span> Like
+          <span class="btn-icon">${ICONS.heart}</span> ${tr('like')}
         </button>
         <button class="action-btn btn-write" onclick="event.stopPropagation(); openMessageModal(${u.telegram_id}, '${escapeJs(u.full_name)}', '${escapeJs(photo || '')}')">
-          <span class="btn-icon">${ICONS.message}</span> Xabar
+          <span class="btn-icon">${ICONS.message}</span> ${tr('message')}
         </button>
         <button class="action-btn btn-block" onclick="event.stopPropagation(); sendBlock(${u.telegram_id})">
-          <span class="btn-icon">${ICONS.ban}</span> Blok
+          <span class="btn-icon">${ICONS.ban}</span> ${tr('block')}
         </button>
       </div>
     </div>`;
@@ -2880,11 +3516,11 @@ function detectTelegramLanguage() {
     if (!userId) return;
     const data = await apiPost('/api/likes/accept', { telegram_id: userId, from_user: fromUserId });
     if (data.success) {
-      showToast(`${name} bilan match bo'ldingiz!`);
+      showToast(tr('match_with').replace('{name}', name));
       loadPendingLikesIndicator();
       loadChats();
     } else {
-      showToast('Xatolik yuz berdi.');
+      showToast(tr('error_occurred'));
     }
   }
 
@@ -2897,7 +3533,7 @@ function detectTelegramLanguage() {
       return;
     }
     if (!Number.isFinite(toUser) || toUser <= 0) {
-      showToast('Xatolik: qabul qiluvchi topilmadi.');
+      showToast(tr('error_recipient_not_found'));
       return;
     }
 
@@ -2921,7 +3557,7 @@ function detectTelegramLanguage() {
         showMatchOverlay();
         loadChats();
       } else {
-        showToast('💙 Like yuborildi!');
+        showToast(tr('like_sent'));
       }
     } else {
       showToast('Xatolik: ' + (data.error || 'Noma\'lum'));
@@ -2931,7 +3567,7 @@ function detectTelegramLanguage() {
   async function sendBlock(blockedId) {
     if (!userId) return;
     await apiPost('/api/block', { blocker: userId, blocked: blockedId });
-    showToast('🚫 Bloklandi');
+    showToast(tr('blocked'));
   }
 
   function showMatchOverlay() {
@@ -2956,7 +3592,7 @@ function detectTelegramLanguage() {
           ${photo ? `<div class="minimal-photo-wrap"><img src="${photo}" alt="${u.full_name}" onclick="openPhotoViewer('${escapeJs(photo)}', '${escapeJs(u.full_name)}')" /></div>` : ''}
           <div class="minimal-info">
             <h2 class="minimal-name">${u.full_name}</h2>
-            <div class="minimal-badge">${u.age} yosh • ${u.gender === 'erkak' ? 'Erkak' : 'Ayol'}</div>
+            <div class="minimal-badge">${u.age} ${tr('years_old')} • ${u.gender === 'erkak' ? tr('male') : tr('female')}</div>
             ${u.city ? `
             <div class="minimal-location">
               <div class="minimal-loc-card">
@@ -2995,20 +3631,20 @@ function detectTelegramLanguage() {
           <div class="profile-detail-title">${icon} ${u.full_name}</div>
           <div class="profile-detail-meta">📍 ${profileLocation}${u.zodiac ? ' • ' + u.zodiac : ''}</div>
           <div class="profile-detail-section">
-            <div class="profile-detail-label">Men haqimda</div>
+            <div class="profile-detail-label">${tr('about_me')}</div>
             <p class="profile-detail-summary">${escapeHtml(aboutText)}</p>
           </div>
-          ${showTags ? `<div class="profile-detail-section"><div class="profile-detail-label">Maqsadlar</div><div class="chip-row">${goals || '<span class="muted-chip">Ko\'rsatilmagan</span>'}</div></div>` : ''}
-          ${showTags ? `<div class="profile-detail-section"><div class="profile-detail-label">Qiziqishlar</div><div class="chip-row">${interests || '<span class="muted-chip">Ko\'rsatilmagan</span>'}</div><div class="muted-chip" style="margin-top:6px;">Maksimal 5 ta qiziqish ko\'rsatiladi.</div></div>` : ''}
+          ${showTags ? `<div class="profile-detail-section"><div class="profile-detail-label">${tr('goals_label')}</div><div class="chip-row">${goals || '<span class="muted-chip">Ko\'rsatilmagan</span>'}</div></div>` : ''}
+          ${showTags ? `<div class="profile-detail-section"><div class="profile-detail-label">${tr('interests_label')}</div><div class="chip-row">${interests || '<span class="muted-chip">Ko\'rsatilmagan</span>'}</div><div class="muted-chip" style="margin-top:6px;">Maksimal 5 ta qiziqish ko\'rsatiladi.</div></div>` : ''}
         </section>
         <div class="profile-action-grid">
           <button class="action-btn btn-like" onclick="sendLike(${u.telegram_id}); closeProfileModal();">
             <span class="btn-icon">${ICONS.heart}</span>
-            <span>Like</span>
+            <span>${tr('like')}</span>
           </button>
           <button class="action-btn btn-write" onclick="openMessageModal(${u.telegram_id}, '${escapeJs(u.full_name)}', '${escapeJs(photo || '')}'); closeProfileModal();">
             <span class="btn-icon">${ICONS.message}</span>
-            <span>Xabar</span>
+            <span>${tr('message')}</span>
           </button>
         </div>
       </article>
@@ -3023,7 +3659,7 @@ function detectTelegramLanguage() {
     if (!modal || !img) return;
 
     img.src = src || '';
-    if (label) label.textContent = caption || 'Rasm';
+    if (label) label.textContent = caption || tr('photo');
     modal.style.display = 'flex';
   }
 
@@ -3247,7 +3883,7 @@ function detectTelegramLanguage() {
       return;
     }
 
-    chatList.innerHTML = '<div class="loading"><div class="spinner"></div> Yuklanmoqda...</div>';
+    chatList.innerHTML = `<div class="loading"><div class="spinner"></div> ${tr('loading')}</div>`;
 
     const data = await apiPost('/api/matches', { telegram_id: telegramId });
     if (!data.success || !data.matches || data.matches.length === 0) {
@@ -3274,7 +3910,7 @@ function detectTelegramLanguage() {
           </div>
           <div class="chat-item-info">
             <div class="chat-item-name">${m.full_name}</div>
-            <div class="chat-item-preview">Suhbatni ochish...</div>
+            <div class="chat-item-preview">${tr('open_chat')}</div>
           </div>
         </div>
       `;
@@ -3349,8 +3985,8 @@ function detectTelegramLanguage() {
       const isMe = m.sender_id == userId;
       if (typeof m.message === 'string' && m.message.startsWith('[RASM]')) {
         const imageSrc = m.message.replace(/^\[RASM\]\s*/, '').trim();
-        const caption = isMe ? 'Siz yuborgan rasm' : 'Suhbatdosh rasmi';
-        return `<div class="chat-msg ${isMe ? 'chat-msg-me' : 'chat-msg-them'}"><img src="${escapeHtml(imageSrc)}" alt="${caption}" title="To'liq ko'rinishda ochish" onclick="openPhotoViewer('${escapeJs(imageSrc)}', '${escapeJs(caption)}')" style="max-width:100%;border-radius:16px;display:block;cursor:zoom-in;" /></div>`;
+        const caption = isMe ? tr('your_photo') : tr('partner_photo');
+        return `<div class="chat-msg ${isMe ? 'chat-msg-me' : 'chat-msg-them'}"><img src="${escapeHtml(imageSrc)}" alt="${caption}" title="${tr('click_to_view')}" onclick="openPhotoViewer('${escapeJs(imageSrc)}', '${escapeJs(caption)}')" style="max-width:100%;border-radius:16px;display:block;cursor:zoom-in;" /></div>`;
       }
       return `<div class="chat-msg ${isMe ? 'chat-msg-me' : 'chat-msg-them'}">${escapeHtml(m.message)}</div>`;
     }).join('');
@@ -3436,7 +4072,7 @@ function detectTelegramLanguage() {
     if (!container) return;
 
     if (!userId) {
-      container.innerHTML = '<div class="empty-state"><h3>Profilingiz yuklanmadi</h3></div>';
+      container.innerHTML = `<div class="empty-state"><h3>${tr('profile_not_loaded')}</h3></div>`;
       return;
     }
 
@@ -3460,11 +4096,11 @@ function detectTelegramLanguage() {
         ${user.about ? `<p style="color:var(--text-secondary);font-size:14px;line-height:1.4;margin-top:8px;">${escapeHtml(user.about)}</p>` : ''}
       </div>
       <div class="card">
-        <div class="section-title">Maqsad</div>
+        <div class="section-title">${tr('goal')}</div>
         <div class="chips-wrap">${goals || '<span style="color:var(--text-tertiary);font-size:14px;">Ko\'rsatilmagan</span>'}</div>
       </div>
       <div class="card">
-        <div class="section-title">Qiziqishlar</div>
+        <div class="section-title">${tr('interests')}</div>
         <div class="chips-wrap">${interests || '<span style="color:var(--text-tertiary);font-size:14px;">Ko\'rsatilmagan</span>'}</div>
       </div>
     `;
