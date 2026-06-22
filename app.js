@@ -4602,10 +4602,11 @@ function detectTelegramLanguage() {
       attributionControl: true
     });
 
-    // OpenStreetMap — bepul va litsenziyasiz
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    // CartoDB Voyager — zamonaviy, chiroyli, bepul xarita
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
       maxZoom: 19,
-      attribution: '© <a href="https://openstreetmap.org/copyright">OpenStreetMap</a>'
+      subdomains: 'abcd',
+      attribution: '© <a href="https://carto.com/">CARTO</a> © <a href="https://openstreetmap.org/copyright">OSM</a>'
     }).addTo(mapInstance);
 
     // Xaritaga bosish orqali joy tanlash
@@ -4648,39 +4649,103 @@ function detectTelegramLanguage() {
 
   async function reverseGeocode(lat, lng) {
     try {
-      // Nominatim — OpenStreetMap ning tekin geocoding xizmati
-      const url = `https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lng}&format=json&accept-language=uz,ru&zoom=10`;
+      const url = `https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lng}&format=json&zoom=14&addressdetails=1`;
       const res = await fetch(url, {
         headers: { 'Accept-Language': 'uz,ru;q=0.9,en;q=0.8' }
       });
       const data = await res.json();
-
-      let locationName = '';
       const addr = data.address || {};
 
-      // Eng yaxshi nom: shahar/tuman darajasida
-      locationName =
-        addr.city ||
-        addr.town ||
-        addr.municipality ||
-        addr.county ||
-        addr.district ||
-        addr.village ||
-        addr.suburb ||
-        addr.state ||
-        data.display_name?.split(',')[0] ||
-        tr('map_unknown');
+      /*
+        Nominatim O'zbekiston uchun qaytaradigan maydonlar:
+          addr.city         → yirik shahar ("Toshkent", "Samarqand"...)
+          addr.town         → kichik shahar ("Chirchiq", "Angren"...)
+          addr.city_district→ shahar tumani (Yunusobod, Mirzo Ulugbek...)
+          addr.county       → tuman ("Qibray tumani", "Bekobod tumani"...)
+          addr.suburb       → mahalla
+          addr.village      → qishloq
+          addr.state        → viloyat ("Toshkent viloyati", "Samarqand viloyati"...)
 
-      // Viloyat qo'shish
-      const region = addr.state || addr.region || '';
-      if (region && !locationName.includes(region)) {
-        locationName = `${locationName}`;
+        QOIDALAR:
+          1. Toshkent shahri ichida (addr.state === "Toshkent shahri") →
+                faqat "Toshkent shahri"
+          2. Toshkent viloyatida (addr.state === "Toshkent viloyati") →
+                "Qibray tumani, Toshkent viloyati"
+          3. Boshqa viloyat markazlarida (addr.city === viloyat nomi) →
+                "Samarqand shahri, Samarqand viloyati"
+          4. Boshqa shahar/tuman →
+                "Marg'ilon shahri, Farg'ona viloyati"
+      */
+
+      const state    = addr.state || addr.region || '';
+      const city     = addr.city || '';
+      const town     = addr.town || '';
+      const county   = addr.county || '';
+      const village  = addr.village || '';
+      const suburb   = addr.suburb || '';
+
+      let locationName = '';
+
+      // 1) Toshkent SHAHRI (shahar sifatida alohida viloyat)
+      if (state.toLowerCase().includes('toshkent shahar') ||
+          state.toLowerCase().includes('tashkent city') ||
+          state.toLowerCase().includes('город ташкент') ||
+          (city.toLowerCase().includes('toshkent') || city.toLowerCase().includes('tashkent'))) {
+        // Faqat bitta: "Toshkent shahri"
+        locationName = 'Toshkent shahri';
       }
+
+      // 2) Toshkent VILOYATI (shahardan tashqari)
+      else if (state.toLowerCase().includes('toshkent viloyati') ||
+               state.toLowerCase().includes('tashkent region') ||
+               state.toLowerCase().includes('ташкентская область')) {
+        // Tuman + viloyat
+        const district = county || town || suburb || village || '';
+        if (district) {
+          locationName = `${district}, Toshkent viloyati`;
+        } else {
+          locationName = 'Toshkent viloyati';
+        }
+      }
+
+      // 3) Boshqa viloyatlardagi yirik shahar (viloyat markazi)
+      //    Agar city nomi state nomi bilan mos kelsa — shahar + viloyat
+      else if (city && state) {
+        const cityClean  = city.replace(/(shahar[i]?|city|город)/gi, '').trim().toLowerCase();
+        const stateClean = state.replace(/(viloyat[i]?|oblast|область|region)/gi, '').trim().toLowerCase();
+        const isCapital  = cityClean === stateClean || state.toLowerCase().startsWith(cityClean);
+
+        if (isCapital) {
+          // Viloyat markazi: "Samarqand shahri, Samarqand viloyati"
+          locationName = `${city} shahri, ${state}`;
+        } else {
+          // Oddiy shahar: "Marg'ilon shahri, Farg'ona viloyati"
+          locationName = `${city} shahri, ${state}`;
+        }
+      }
+
+      // 4) Kichik shahar (town)
+      else if (town && state) {
+        locationName = `${town} shahri, ${state}`;
+      }
+
+      // 5) Tuman / qishloq
+      else if ((county || village) && state) {
+        const place = county || village || suburb || '';
+        locationName = `${place}, ${state}`;
+      }
+
+      // 6) Fallback
+      else {
+        locationName = state || data.display_name?.split(',').slice(0, 2).join(', ').trim() || tr('map_unknown');
+      }
+
+      // Tozalash: ketma-ket bir xil so'zlar ("Samarqand, Samarqand")
+      locationName = locationName.replace(/^([^,]+),\s*\1$/i, '$1');
 
       selectedLocationName = locationName;
       showMapResult(locationName);
 
-      // Tasdiqlash tugmasini faollashtirish
       const confirmBtn = document.getElementById('map-confirm-btn');
       if (confirmBtn) confirmBtn.disabled = false;
 
@@ -4777,4 +4842,3 @@ function detectTelegramLanguage() {
     const modal = document.getElementById('map-picker-modal');
     if (modal) modal.style.display = 'none';
   }
-
