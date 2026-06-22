@@ -265,8 +265,14 @@
     </div>
     <div class="form-group">
       <label class="form-label" data-i18n="city_district">Shahar / Tuman</label>
-      <input class="form-input" id="inp-city" type="text" data-i18n-placeholder="city_placeholder" placeholder="Yashash joyingiz" maxlength="80" oninput="suggestCity(this.value)" autocomplete="off" />
+      <div class="city-input-wrap">
+        <input class="form-input city-input-field" id="inp-city" type="text" data-i18n-placeholder="city_placeholder" placeholder="Yashash joyingiz" maxlength="80" oninput="suggestCity(this.value)" autocomplete="off" />
+        <button type="button" class="geo-btn" id="geo-btn" onclick="openMapPicker()" title="Xaritadan tanlash">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+        </button>
+      </div>
       <div id="city-suggestions" class="suggestions-box" style="display:none;"></div>
+      <div id="geo-status" class="geo-status" style="display:none;"></div>
     </div>
     <div class="form-group">
       <label class="form-label" data-i18n="about_short">O'zingiz haqingizda qisqacha</label>
@@ -686,6 +692,38 @@
     <button class="btn-primary" onclick="sendFirstMessage()" style="width:100%; padding:16px; border-radius:999rem;">
       <span data-i18n="send">📨 Xabar yuborish</span>
     </button>
+  </div>
+</div>
+
+
+<!-- ======= XARITA MODAL (Leaflet.js - Tekin) ======= -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+<div id="map-picker-modal" class="modal-overlay" style="display:none;" onclick="closeMapPicker(event)">
+  <div class="map-picker-sheet" onclick="event.stopPropagation()">
+    <div class="map-picker-header">
+      <div class="map-picker-title">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+        <span data-i18n="map_pick_location">Joylashuvni belgilang</span>
+      </div>
+      <button class="modal-close" onclick="closeMapPicker()">✕</button>
+    </div>
+    <div class="map-picker-hint" id="map-hint" data-i18n="map_hint_text">📍 Xaritaga bosing yoki GPS orqali aniqlang</div>
+    <div id="map-container" style="width:100%; height:340px; border-radius:16px; overflow:hidden; position:relative;"></div>
+    <div class="map-picker-result" id="map-result" style="display:none;">
+      <div class="map-result-icon">📍</div>
+      <div class="map-result-text" id="map-result-text">Aniqlanmoqda...</div>
+    </div>
+    <div class="map-picker-actions">
+      <button class="map-gps-btn" id="map-gps-btn" onclick="useMyLocation()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M1 12h4M19 12h4"/></svg>
+        <span data-i18n="use_my_location">GPS joylashuv</span>
+      </button>
+      <button class="map-confirm-btn" id="map-confirm-btn" onclick="confirmMapLocation()" disabled>
+        <span data-i18n="confirm_location">Tasdiqlash</span>
+      </button>
+    </div>
   </div>
 </div>
 
