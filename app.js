@@ -4777,3 +4777,4 @@ function detectTelegramLanguage() {
     const modal = document.getElementById('map-picker-modal');
     if (modal) modal.style.display = 'none';
   }
+
