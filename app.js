@@ -2601,6 +2601,19 @@ function detectTelegramLanguage() {
     updatePhotoUploadState('Rasm yuklangandan so\'ng saqlash mumkin.', false, false);
   }
 
+  // Profil to'liq to'ldirilganligini tekshirish
+  function isProfileComplete(user) {
+    if (!user) return false;
+    return !!(
+      user.gender &&
+      user.full_name &&
+      user.age &&
+      user.city &&
+      (user.photo_base64 || user.photo_file_id) &&
+      user.goals && Array.isArray(user.goals) && user.goals.length > 0
+    );
+  }
+
   function showPage(name) {
       console.log('Showing page:', name, 'Current language:', currentLang);
     document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
@@ -4376,8 +4389,8 @@ function detectTelegramLanguage() {
     }
 
     const user = await fetchUserProfile(userId);
-    if (!user) {
-      container.innerHTML = '<div class="empty-state"><h3>Anketa topilmadi</h3><p>Iltimos, avval anketa to\'ldiring.</p></div>';
+    if (!user || !isProfileComplete(user)) {
+      container.innerHTML = `<div class="empty-state"><h3>${tr('profile_not_found')}</h3><p>${tr('please_fill_profile')}</p><button class="btn-primary" style="margin-top:16px;padding:12px 24px;border-radius:999rem;" onclick="showPage('profile')">${tr('fill_profile')}</button></div>`;
       return;
     }
 
@@ -4429,7 +4442,7 @@ function detectTelegramLanguage() {
     // Check if user has profile
     if (userId) {
       fetchUserProfile(userId).then(user => {
-        if (user) {
+        if (user && isProfileComplete(user)) {
           setSavedProfile(user);
           document.querySelector('.bottom-nav').style.display = 'flex';
           showPage('search');
@@ -4437,8 +4450,12 @@ function detectTelegramLanguage() {
           // Sahifa yuklangandan so'ng tarjimalarni qayta qo'llash
           setTimeout(() => applyTranslations(), 100);
         } else {
-          // No profile on server — clear any local data that might be from another user
+          // No profile on server OR profile is incomplete — clear localStorage too (e.g. DB was wiped)
+          setSavedProfile(null);
           resetProfileFormState();
+          // If server returned incomplete profile data, pre-fill what we have
+          if (user) populateProfileForm(user);
+          document.querySelector('.bottom-nav').style.display = 'none';
           showPage('profile');
           setTimeout(() => applyTranslations(), 100);
         }
@@ -4447,6 +4464,7 @@ function detectTelegramLanguage() {
       // No userId detected — this is a fresh/guest session
       // Clear any stale data and show profile page
       resetProfileFormState();
+      document.querySelector('.bottom-nav').style.display = 'none';
       showPage('profile');
     }
 
