@@ -3840,3 +3840,16 @@ body.pre-init .lang-modal-overlay.show {
   0%, 100% { box-shadow: 0 0 0 4px rgba(0,122,255,0.25); }
   50% { box-shadow: 0 0 0 10px rgba(0,122,255,0.08); }
 }
+
+/* Format hint */
+.map-format-hint {
+  font-size: 11px;
+  color: var(--text-tertiary);
+  text-align: center;
+  padding: 0 20px 10px;
+  line-height: 1.5;
+}
+.map-format-hint b {
+  color: var(--ios-blue);
+  font-weight: 600;
+}
