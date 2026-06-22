@@ -335,7 +335,18 @@ const tg = window.Telegram?.WebApp;
           'zod_sunbula': 'Sunbula', 'zod_tarozi': 'Tarozi',
           'zod_chayon': 'Chayon', 'zod_oqotar': "O'qotar",
           'zod_tog_echkisi': "Tog' echkisi", 'zod_qovga': "Qovg'a",
-          'zod_baliq': 'Baliq'
+          'zod_baliq': 'Baliq',
+          'map_pick_location': 'Joylashuvni belgilang',
+          'map_hint_text': '📍 Xaritaga bosing yoki GPS orqali aniqlang',
+          'use_my_location': 'GPS joylashuv',
+          'confirm_location': 'Tasdiqlash',
+          'geo_detecting': '📡 Joylashuv aniqlanmoqda...',
+          'geo_success': '✅ Joylashuv aniqlandi',
+          'geo_error': '❌ Joylashuv aniqlanmadi',
+          'geo_not_supported': '❌ GPS qo\'llab-quvvatlanmaydi',
+          'map_searching': 'Qidirilmoqda...',
+          'map_unknown': 'Noma\'lum joy',
+          'map_tap_hint': '📍 Xaritaga bosing — joy belgilanadi'
       },
       'ru': {
           'select_language': '🌍 Выберите язык',
@@ -587,7 +598,18 @@ const tg = window.Telegram?.WebApp;
           'zod_sunbula': 'Дева', 'zod_tarozi': 'Весы',
           'zod_chayon': 'Скорпион', 'zod_oqotar': 'Стрелец',
           'zod_tog_echkisi': 'Козерог', 'zod_qovga': 'Водолей',
-          'zod_baliq': 'Рыбы'
+          'zod_baliq': 'Рыбы',
+          'map_pick_location': 'Выберите местоположение',
+          'map_hint_text': '📍 Нажмите на карту или используйте GPS',
+          'use_my_location': 'GPS локация',
+          'confirm_location': 'Подтвердить',
+          'geo_detecting': '📡 Определение местоположения...',
+          'geo_success': '✅ Местоположение определено',
+          'geo_error': '❌ Не удалось определить местоположение',
+          'geo_not_supported': '❌ GPS не поддерживается',
+          'map_searching': 'Поиск...',
+          'map_unknown': 'Неизвестное место',
+          'map_tap_hint': '📍 Нажмите на карту — место будет отмечено'
       },
       'kk': {
           'select_language': '🌍 Тілді таңдаңыз',
@@ -839,7 +861,18 @@ const tg = window.Telegram?.WebApp;
           'zod_sunbula': 'Бикеш', 'zod_tarozi': 'Таразы',
           'zod_chayon': 'Сарышаян', 'zod_oqotar': 'Мерген',
           'zod_tog_echkisi': 'Таутеке', 'zod_qovga': 'Құман',
-          'zod_baliq': 'Балық'
+          'zod_baliq': 'Балық',
+          'map_pick_location': 'Орынды таңдаңыз',
+          'map_hint_text': '📍 Картаға басыңыз немесе GPS пайдаланыңыз',
+          'use_my_location': 'GPS орны',
+          'confirm_location': 'Растау',
+          'geo_detecting': '📡 Орын анықталуда...',
+          'geo_success': '✅ Орын анықталды',
+          'geo_error': '❌ Орынды анықтау мүмкін болмады',
+          'geo_not_supported': '❌ GPS қолданылмайды',
+          'map_searching': 'Іздеу...',
+          'map_unknown': 'Белгісіз жер',
+          'map_tap_hint': '📍 Картаға басыңыз — жер белгіленеді'
       },
       'ky': {
           'select_language': '🌍 Тилди тандаңыз',
@@ -1091,7 +1124,18 @@ const tg = window.Telegram?.WebApp;
           'zod_sunbula': 'Бикеш', 'zod_tarozi': 'Тараза',
           'zod_chayon': 'Чаян', 'zod_oqotar': 'Жаачы',
           'zod_tog_echkisi': 'Теке', 'zod_qovga': 'Куман',
-          'zod_baliq': 'Балык'
+          'zod_baliq': 'Балык',
+          'map_pick_location': 'Жайгашкан жерди тандаңыз',
+          'map_hint_text': '📍 Картага басыңыз же GPS колдонуңуз',
+          'use_my_location': 'GPS жери',
+          'confirm_location': 'Тастыктоо',
+          'geo_detecting': '📡 Жер аныкталууда...',
+          'geo_success': '✅ Жер аныкталды',
+          'geo_error': '❌ Жерди аныктоо мүмкүн болгон жок',
+          'geo_not_supported': '❌ GPS колдоого алынбайт',
+          'map_searching': 'Издөө...',
+          'map_unknown': 'Белгисиз жер',
+          'map_tap_hint': '📍 Картага басыңыз — жер белгиленет'
       },
       'kaa': {
           'select_language': '🌍 Tildi tańlań',
@@ -1343,7 +1387,18 @@ const tg = window.Telegram?.WebApp;
           'zod_sunbula': 'Bikes', 'zod_tarozi': 'Tаразы',
           'zod_chayon': 'Sarıshayan', 'zod_oqotar': 'Jaǵı',
           'zod_tog_echkisi': 'Tawteke', 'zod_qovga': 'Quman',
-          'zod_baliq': 'Balıq'
+          'zod_baliq': 'Balıq',
+          'map_pick_location': 'Ornı tańlaw',
+          'map_hint_text': '📍 Xaritaǵa basıń yaki GPS isletiń',
+          'use_my_location': 'GPS orny',
+          'confirm_location': 'Tastıyıqlaw',
+          'geo_detecting': '📡 Orın anıqlanıwda...',
+          'geo_success': '✅ Orın anıqlandi',
+          'geo_error': '❌ Ornı anıqlaw múmkin bolmadı',
+          'geo_not_supported': '❌ GPS qollap-quwatlanbaydı',
+          'map_searching': 'Izlenıwde...',
+          'map_unknown': 'Belgisiz jer',
+          'map_tap_hint': '📍 Xaritaǵa basıń — jer belgilenedi'
       },
       'tg': {
           'select_language': '🌍 Забонро интихоб кунед',
@@ -1595,7 +1650,18 @@ const tg = window.Telegram?.WebApp;
           'zod_sunbula': 'Сунбула', 'zod_tarozi': 'Мизон',
           'zod_chayon': 'Ақраб', 'zod_oqotar': 'Қавс',
           'zod_tog_echkisi': 'Ҷадӣ', 'zod_qovga': 'Далв',
-          'zod_baliq': 'Ҳут'
+          'zod_baliq': 'Ҳут',
+          'map_pick_location': 'Маконро интихоб кунед',
+          'map_hint_text': '📍 Ба харита зер кунед ё GPS истифода баред',
+          'use_my_location': 'GPS макон',
+          'confirm_location': 'Тасдиқ',
+          'geo_detecting': '📡 Макон муайян мешавад...',
+          'geo_success': '✅ Макон муайян шуд',
+          'geo_error': '❌ Муайян кардани макон имкон напазируфт',
+          'geo_not_supported': '❌ GPS дастгирӣ намешавад',
+          'map_searching': 'Ҷустуҷӯ...',
+          'map_unknown': 'Макони номаълум',
+          'map_tap_hint': '📍 Ба харита зер кунед — макон қайд мешавад'
       },
       'en': {
           'select_language': '🌍 Select language',
@@ -1847,7 +1913,18 @@ const tg = window.Telegram?.WebApp;
           'zod_sunbula': 'Virgo', 'zod_tarozi': 'Libra',
           'zod_chayon': 'Scorpio', 'zod_oqotar': 'Sagittarius',
           'zod_tog_echkisi': 'Capricorn', 'zod_qovga': 'Aquarius',
-          'zod_baliq': 'Pisces'
+          'zod_baliq': 'Pisces',
+          'map_pick_location': 'Pick your location',
+          'map_hint_text': '📍 Tap the map or use GPS',
+          'use_my_location': 'Use GPS',
+          'confirm_location': 'Confirm',
+          'geo_detecting': '📡 Detecting location...',
+          'geo_success': '✅ Location detected',
+          'geo_error': '❌ Could not detect location',
+          'geo_not_supported': '❌ GPS not supported',
+          'map_searching': 'Searching...',
+          'map_unknown': 'Unknown location',
+          'map_tap_hint': '📍 Tap the map — location will be pinned'
       },
   };
 
@@ -4482,3 +4559,221 @@ function detectTelegramLanguage() {
 
     
   });
+  // ========== XARITA (LEAFLET) GEOLOKATSIYA ==========
+  let mapInstance = null;
+  let mapMarker = null;
+  let selectedLatLng = null;
+  let selectedLocationName = '';
+
+  function openMapPicker() {
+    const modal = document.getElementById('map-picker-modal');
+    if (!modal) return;
+    modal.style.display = 'flex';
+
+    // Leaflet yuklanganmi?
+    if (typeof L === 'undefined') {
+      setTimeout(openMapPicker, 300);
+      return;
+    }
+
+    // Xaritani bir marta yaratish
+    if (!mapInstance) {
+      initLeafletMap();
+    } else {
+      mapInstance.invalidateSize();
+    }
+
+    // Agar oldin tanlangan joy bo'lsa, markerni ko'rsat
+    if (selectedLatLng) {
+      mapInstance.setView(selectedLatLng, 13);
+      showMapResult(selectedLocationName || tr('map_searching'));
+    }
+  }
+
+  function initLeafletMap() {
+    // Default: O'zbekiston markaziga
+    const defaultCenter = [41.2995, 69.2401];
+    const defaultZoom = 6;
+
+    mapInstance = L.map('map-container', {
+      center: defaultCenter,
+      zoom: defaultZoom,
+      zoomControl: true,
+      attributionControl: true
+    });
+
+    // OpenStreetMap — bepul va litsenziyasiz
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 19,
+      attribution: '© <a href="https://openstreetmap.org/copyright">OpenStreetMap</a>'
+    }).addTo(mapInstance);
+
+    // Xaritaga bosish orqali joy tanlash
+    mapInstance.on('click', function(e) {
+      const { lat, lng } = e.latlng;
+      placeMapMarker(lat, lng);
+      reverseGeocode(lat, lng);
+    });
+
+    // Hint yangilash
+    const hint = document.getElementById('map-hint');
+    if (hint) hint.textContent = tr('map_tap_hint');
+  }
+
+  function placeMapMarker(lat, lng) {
+    selectedLatLng = [lat, lng];
+
+    // Eski markerni o'chirish
+    if (mapMarker) {
+      mapInstance.removeLayer(mapMarker);
+    }
+
+    // Custom pulse marker
+    const icon = L.divIcon({
+      className: '',
+      html: '<div class="map-pin-pulse"></div>',
+      iconSize: [20, 20],
+      iconAnchor: [10, 10]
+    });
+
+    mapMarker = L.marker([lat, lng], { icon }).addTo(mapInstance);
+    mapInstance.panTo([lat, lng]);
+
+    // Tasdiqlash tugmasini faollashtirish
+    const confirmBtn = document.getElementById('map-confirm-btn');
+    if (confirmBtn) confirmBtn.disabled = true; // geocoding tugamaguncha
+
+    showMapResult(tr('map_searching'));
+  }
+
+  async function reverseGeocode(lat, lng) {
+    try {
+      // Nominatim — OpenStreetMap ning tekin geocoding xizmati
+      const url = `https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lng}&format=json&accept-language=uz,ru&zoom=10`;
+      const res = await fetch(url, {
+        headers: { 'Accept-Language': 'uz,ru;q=0.9,en;q=0.8' }
+      });
+      const data = await res.json();
+
+      let locationName = '';
+      const addr = data.address || {};
+
+      // Eng yaxshi nom: shahar/tuman darajasida
+      locationName =
+        addr.city ||
+        addr.town ||
+        addr.municipality ||
+        addr.county ||
+        addr.district ||
+        addr.village ||
+        addr.suburb ||
+        addr.state ||
+        data.display_name?.split(',')[0] ||
+        tr('map_unknown');
+
+      // Viloyat qo'shish
+      const region = addr.state || addr.region || '';
+      if (region && !locationName.includes(region)) {
+        locationName = `${locationName}`;
+      }
+
+      selectedLocationName = locationName;
+      showMapResult(locationName);
+
+      // Tasdiqlash tugmasini faollashtirish
+      const confirmBtn = document.getElementById('map-confirm-btn');
+      if (confirmBtn) confirmBtn.disabled = false;
+
+    } catch (e) {
+      selectedLocationName = `${lat.toFixed(4)}, ${lng.toFixed(4)}`;
+      showMapResult(selectedLocationName);
+      const confirmBtn = document.getElementById('map-confirm-btn');
+      if (confirmBtn) confirmBtn.disabled = false;
+    }
+  }
+
+  function showMapResult(text) {
+    const resultEl = document.getElementById('map-result');
+    const resultText = document.getElementById('map-result-text');
+    if (resultEl) resultEl.style.display = 'flex';
+    if (resultText) resultText.textContent = text;
+  }
+
+  function useMyLocation() {
+    const btn = document.getElementById('map-gps-btn');
+    const geoStatus = document.getElementById('geo-status');
+
+    if (!navigator.geolocation) {
+      showToast(tr('geo_not_supported'));
+      return;
+    }
+
+    if (btn) btn.style.opacity = '0.6';
+    showMapResult(tr('geo_detecting'));
+
+    // Modal tashqaridagi status
+    if (geoStatus) {
+      geoStatus.style.display = 'flex';
+      geoStatus.textContent = tr('geo_detecting');
+    }
+
+    navigator.geolocation.getCurrentPosition(
+      async (pos) => {
+        const { latitude: lat, longitude: lng } = pos.coords;
+
+        // Xarita ochiq bo'lsa markerni qo'y
+        if (mapInstance) {
+          mapInstance.setView([lat, lng], 13);
+          placeMapMarker(lat, lng);
+        }
+
+        // Reverse geocoding
+        await reverseGeocode(lat, lng);
+
+        if (btn) btn.style.opacity = '1';
+        if (geoStatus) {
+          geoStatus.style.display = 'flex';
+          geoStatus.textContent = tr('geo_success') + ': ' + selectedLocationName;
+        }
+      },
+      (err) => {
+        if (btn) btn.style.opacity = '1';
+        const msg = tr('geo_error');
+        showToast(msg);
+        showMapResult(msg);
+        if (geoStatus) {
+          geoStatus.style.display = 'flex';
+          geoStatus.textContent = msg;
+        }
+      },
+      { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
+    );
+  }
+
+  function confirmMapLocation() {
+    if (!selectedLocationName) return;
+
+    const cityInput = document.getElementById('inp-city');
+    if (cityInput) {
+      cityInput.value = selectedLocationName;
+      // Suggestion boxni yashirish
+      const suggestions = document.getElementById('city-suggestions');
+      if (suggestions) suggestions.style.display = 'none';
+    }
+
+    // Status ko'rsatish
+    const geoStatus = document.getElementById('geo-status');
+    if (geoStatus) {
+      geoStatus.style.display = 'flex';
+      geoStatus.textContent = '📍 ' + selectedLocationName;
+    }
+
+    closeMapPicker();
+    showToast('📍 ' + selectedLocationName);
+  }
+
+  function closeMapPicker(e) {
+    if (e && e.target !== document.getElementById('map-picker-modal')) return;
+    const modal = document.getElementById('map-picker-modal');
+    if (modal) modal.style.display = 'none';
+  }
