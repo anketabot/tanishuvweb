@@ -329,7 +329,13 @@ const tg = window.Telegram?.WebApp;
           'images_only_error': '❌ Faqat rasm fayllari qabul qilinadi.',
           'image_size_error': '❌ Rasm 5MB dan katta.',
           'no_person_error': '❌ Rasmda inson topilmadi. Yana urining.',
-          'check_error_inet': '❌ Tekshiruvda xatolik. Internet aloqasini tekshiring.'
+          'check_error_inet': '❌ Tekshiruvda xatolik. Internet aloqasini tekshiring.',
+          'zod_qoy': "Qo'y", 'zod_buzoq': 'Buzoq', 'zod_egizak': 'Egizak',
+          'zod_qisqichbaqa': 'Qisqichbaqa', 'zod_arslon': 'Arslon',
+          'zod_sunbula': 'Sunbula', 'zod_tarozi': 'Tarozi',
+          'zod_chayon': 'Chayon', 'zod_oqotar': "O'qotar",
+          'zod_tog_echkisi': "Tog' echkisi", 'zod_qovga': "Qovg'a",
+          'zod_baliq': 'Baliq'
       },
       'ru': {
           'select_language': '🌍 Выберите язык',
@@ -575,7 +581,13 @@ const tg = window.Telegram?.WebApp;
           'images_only_error': '❌ Принимаются только файлы изображений.',
           'image_size_error': '❌ Изображение больше 5МБ.',
           'no_person_error': '❌ Человек на фото не найден. Попробуйте снова.',
-          'check_error_inet': '❌ Ошибка проверки. Проверьте интернет-соединение.'
+          'check_error_inet': '❌ Ошибка проверки. Проверьте интернет-соединение.',
+          'zod_qoy': 'Овен', 'zod_buzoq': 'Телец', 'zod_egizak': 'Близнецы',
+          'zod_qisqichbaqa': 'Рак', 'zod_arslon': 'Лев',
+          'zod_sunbula': 'Дева', 'zod_tarozi': 'Весы',
+          'zod_chayon': 'Скорпион', 'zod_oqotar': 'Стрелец',
+          'zod_tog_echkisi': 'Козерог', 'zod_qovga': 'Водолей',
+          'zod_baliq': 'Рыбы'
       },
       'kk': {
           'select_language': '🌍 Тілді таңдаңыз',
@@ -821,7 +833,13 @@ const tg = window.Telegram?.WebApp;
           'images_only_error': '❌ Тек сурет файлдары қабылданады.',
           'image_size_error': '❌ Сурет 5МБ-тен үлкен.',
           'no_person_error': '❌ Суретте адам табылмады. Қайта байқап көріңіз.',
-          'check_error_inet': '❌ Тексеруде қате. Интернет байланысын тексеріңіз.'
+          'check_error_inet': '❌ Тексеруде қате. Интернет байланысын тексеріңіз.',
+          'zod_qoy': 'Қой', 'zod_buzoq': 'Бұқа', 'zod_egizak': 'Егіздер',
+          'zod_qisqichbaqa': 'Шаян', 'zod_arslon': 'Арыстан',
+          'zod_sunbula': 'Бикеш', 'zod_tarozi': 'Таразы',
+          'zod_chayon': 'Сарышаян', 'zod_oqotar': 'Мерген',
+          'zod_tog_echkisi': 'Таутеке', 'zod_qovga': 'Құман',
+          'zod_baliq': 'Балық'
       },
       'ky': {
           'select_language': '🌍 Тилди тандаңыз',
@@ -1067,7 +1085,13 @@ const tg = window.Telegram?.WebApp;
           'images_only_error': '❌ Тек гана сүрөт файлдары кабыл алынат.',
           'image_size_error': '❌ Сүрөт 5МБдан чоң.',
           'no_person_error': '❌ Сүрөттө адам табылган жок. Кайра аракет кылыңыз.',
-          'check_error_inet': '❌ Текшерүүдө ката. Интернет байланышын текшериңиз.'
+          'check_error_inet': '❌ Текшерүүдө ката. Интернет байланышын текшериңиз.',
+          'zod_qoy': 'Кой', 'zod_buzoq': 'Бука', 'zod_egizak': 'Эгиздер',
+          'zod_qisqichbaqa': 'Чаян', 'zod_arslon': 'Арстан',
+          'zod_sunbula': 'Бикеш', 'zod_tarozi': 'Тараза',
+          'zod_chayon': 'Чаян', 'zod_oqotar': 'Жаачы',
+          'zod_tog_echkisi': 'Теке', 'zod_qovga': 'Куман',
+          'zod_baliq': 'Балык'
       },
       'kaa': {
           'select_language': '🌍 Tildi tańlań',
@@ -1313,7 +1337,13 @@ const tg = window.Telegram?.WebApp;
           'images_only_error': '❌ Tek súwret faylları qabıl etiledi.',
           'image_size_error': '❌ Súwret 5MB dan úlken.',
           'no_person_error': '❌ Súwrette insan tabılmadı. Qayta urınıp kóriń.',
-          'check_error_inet': '❌ Tekseriwde qátelik. Internet baylanısın tekseriń.'
+          'check_error_inet': '❌ Tekseriwde qátelik. Internet baylanısın tekseriń.',
+          'zod_qoy': 'Qoy', 'zod_buzoq': 'Buqa', 'zod_egizak': 'Egizler',
+          'zod_qisqichbaqa': 'Shayan', 'zod_arslon': 'Arıslan',
+          'zod_sunbula': 'Bikes', 'zod_tarozi': 'Tаразы',
+          'zod_chayon': 'Sarıshayan', 'zod_oqotar': 'Jaǵı',
+          'zod_tog_echkisi': 'Tawteke', 'zod_qovga': 'Quman',
+          'zod_baliq': 'Balıq'
       },
       'tg': {
           'select_language': '🌍 Забонро интихоб кунед',
@@ -1559,7 +1589,13 @@ const tg = window.Telegram?.WebApp;
           'images_only_error': '❌ Танҳо файлҳои акс қабул карда мешаванд.',
           'image_size_error': '❌ Акс аз 5МБ калон.',
           'no_person_error': '❌ Дар акс касе ёфт нашуд. Боз кӯшиш кунед.',
-          'check_error_inet': '❌ Хатогӣ дар санҷиш. Пайвасти интернетро санҷед.'
+          'check_error_inet': '❌ Хатогӣ дар санҷиш. Пайвасти интернетро санҷед.',
+          'zod_qoy': 'Ҳамал', 'zod_buzoq': 'Савр', 'zod_egizak': 'Ҷавзо',
+          'zod_qisqichbaqa': 'Саратон', 'zod_arslon': 'Асад',
+          'zod_sunbula': 'Сунбула', 'zod_tarozi': 'Мизон',
+          'zod_chayon': 'Ақраб', 'zod_oqotar': 'Қавс',
+          'zod_tog_echkisi': 'Ҷадӣ', 'zod_qovga': 'Далв',
+          'zod_baliq': 'Ҳут'
       },
       'en': {
           'select_language': '🌍 Select language',
@@ -1805,7 +1841,13 @@ const tg = window.Telegram?.WebApp;
           'images_only_error': '❌ Only image files are accepted.',
           'image_size_error': '❌ Photo is larger than 5MB.',
           'no_person_error': '❌ No person found in the photo. Try again.',
-          'check_error_inet': '❌ Error during check. Check your internet connection.'
+          'check_error_inet': '❌ Error during check. Check your internet connection.',
+          'zod_qoy': 'Aries', 'zod_buzoq': 'Taurus', 'zod_egizak': 'Gemini',
+          'zod_qisqichbaqa': 'Cancer', 'zod_arslon': 'Leo',
+          'zod_sunbula': 'Virgo', 'zod_tarozi': 'Libra',
+          'zod_chayon': 'Scorpio', 'zod_oqotar': 'Sagittarius',
+          'zod_tog_echkisi': 'Capricorn', 'zod_qovga': 'Aquarius',
+          'zod_baliq': 'Pisces'
       },
   };
 
@@ -1829,7 +1871,7 @@ const tg = window.Telegram?.WebApp;
 
   function applyTranslations() {
       console.log('Applying translations for:', currentLang); // Debug
-      
+
       document.querySelectorAll('[data-i18n]').forEach(el => {
           const key = el.getAttribute('data-i18n');
           const text = tr(key);
@@ -1837,7 +1879,7 @@ const tg = window.Telegram?.WebApp;
               el.textContent = text;
           }
       });
-      
+
       // Placeholder larni ham yangilash
       document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
           const key = el.getAttribute('data-i18n-placeholder');
@@ -1846,7 +1888,7 @@ const tg = window.Telegram?.WebApp;
               el.placeholder = text;
           }
       });
-      
+
       // Title atributlarni yangilash
       document.querySelectorAll('[data-i18n-title]').forEach(el => {
           const key = el.getAttribute('data-i18n-title');
@@ -1856,7 +1898,7 @@ const tg = window.Telegram?.WebApp;
           }
       });
 
-      // Chip matnlarini tarjima qilish (data-i18n-chip atributi orqali)
+      // Chip va Zodiac option matnlarini tarjima qilish (data-i18n-chip atributi orqali)
       document.querySelectorAll('[data-i18n-chip]').forEach(el => {
           const key = el.getAttribute('data-i18n-chip');
           const text = tr(key);
@@ -2471,8 +2513,8 @@ function detectTelegramLanguage() {
     if (profile.interests && Array.isArray(profile.interests)) {
       selectedInterests = [...profile.interests];
       document.querySelectorAll('#interests-chips .chip').forEach(chip => {
-        const text = chip.textContent.trim();
-        if (selectedInterests.includes(text)) {
+        const chipKey = chip.getAttribute('data-i18n-chip');
+        if (selectedInterests.includes(chipKey)) {
           chip.classList.add('selected');
         }
       });
@@ -2482,8 +2524,8 @@ function detectTelegramLanguage() {
     if (profile.goals && Array.isArray(profile.goals)) {
       selectedGoals = [...profile.goals];
       document.querySelectorAll('#goals-chips .chip').forEach(chip => {
-        const text = chip.textContent.trim();
-        if (selectedGoals.includes(text)) {
+        const chipKey = chip.getAttribute('data-i18n-chip');
+        if (selectedGoals.includes(chipKey)) {
           chip.classList.add('selected');
         }
       });
@@ -2628,8 +2670,8 @@ function detectTelegramLanguage() {
 
   // ===== CHIP TOGGLE =====
   function toggleChip(el, group) {
-    el.classList.toggle('selected');
-    const value = el.textContent.trim();
+      el.classList.toggle('selected');
+      const value = el.getAttribute('data-i18n-chip') || el.textContent.trim();
 
     if (group === 'interests') {
       if (el.classList.contains('selected')) {
@@ -2670,22 +2712,12 @@ function detectTelegramLanguage() {
       option.classList.toggle('selected', option.dataset.zodiac === value);
     });
     button.classList.toggle('selected', !!value);
-    const labelMap = {
-      "Qo'y": '♈ Qo\'y',
-      'Buzoq': '♉ Buzoq',
-      'Egizak': '♊ Egizak',
-      'Qisqichbaqa': '♋ Qisqichbaqa',
-      'Arslon': '♌ Arslon',
-      'Sunbula': '♍ Sunbula',
-      'Tarozi': '♎ Tarozi',
-      'Chayon': '♏ Chayon',
-      'O\'qotar': '♐ O\'qotar',
-      'Tog\' echkisi': '♑ Tog\' echkisi',
-      'Qovg\'a': '♒ Qovg\'a',
-      'Baliq': '♓ Baliq'
-    };
-
-    button.textContent = value ? (labelMap[value] || value) : tr('zodiac_select_btn');
+    
+    if (value) {
+      button.textContent = getZodiacDisplay(value);
+    } else {
+      button.textContent = tr('zodiac_select_btn');
+    }
   }
 
   function selectZodiac(value, label) {
@@ -2697,7 +2729,7 @@ function detectTelegramLanguage() {
       select.value = value;
     }
     if (button) {
-      button.textContent = label || tr('zodiac_select_btn');
+      button.textContent = value ? getZodiacDisplay(value) : tr('zodiac_select_btn');
       button.classList.toggle('selected', !!value);
     }
     document.querySelectorAll('.zodiac-option').forEach(option => {
@@ -2724,23 +2756,11 @@ function detectTelegramLanguage() {
       option.classList.toggle('selected', option.dataset.zodiac === value);
     });
 
-    const labelMap = {
-      '': 'Barcha burjlar',
-      "Qo'y": '♈ Qo\'y',
-      'Buzoq': '♉ Buzoq',
-      'Egizak': '♊ Egizak',
-      'Qisqichbaqa': '♋ Qisqichbaqa',
-      'Arslon': '♌ Arslon',
-      'Sunbula': '♍ Sunbula',
-      'Tarozi': '♎ Tarozi',
-      'Chayon': '♏ Chayon',
-      'O\'qotar': '♐ O\'qotar',
-      'Tog\' echkisi': '♑ Tog\' echkisi',
-      'Qovg\'a': '♒ Qovg\'a',
-      'Baliq': '♓ Baliq'
-    };
-
-    button.textContent = labelMap[value] || (value ? value : tr('all_zodiacs'));
+    if (value) {
+      button.textContent = getZodiacDisplay(value);
+    } else {
+      button.textContent = tr('all_zodiacs');
+    }
     button.classList.toggle('selected', !!value);
   }
 
@@ -2751,7 +2771,7 @@ function detectTelegramLanguage() {
 
     if (select) select.value = value;
     if (button) {
-      button.textContent = label || tr('all_zodiacs');
+      button.textContent = value ? getZodiacDisplay(value) : tr('all_zodiacs');
       button.classList.toggle('selected', !!value);
     }
 
@@ -2856,6 +2876,27 @@ function detectTelegramLanguage() {
     };
 
     return aliases[text] || text.replace(/\s*\([^)]*\)\s*$/, '');
+  }
+
+  function getZodiacDisplay(zodiacValue) {
+    if (!zodiacValue) return '';
+    const normalized = normalizeZodiacKey(zodiacValue);
+    const keyMap = {
+      'qoy': 'zod_qoy', 'buzoq': 'zod_buzoq', 'egizak': 'zod_egizak',
+      'qisqichbaqa': 'zod_qisqichbaqa', 'arslon': 'zod_arslon',
+      'sunbula': 'zod_sunbula', 'tarozi': 'zod_tarozi',
+      'chayon': 'zod_chayon', 'oqotar': 'zod_oqotar',
+      'tog_echkisi': 'zod_tog_echkisi', 'qovga': 'zod_qovga',
+      'baliq': 'zod_baliq'
+    };
+    const emojiMap = {
+      'qoy': '♈', 'buzoq': '♉', 'egizak': '♊', 'qisqichbaqa': '♋',
+      'arslon': '♌', 'sunbula': '♍', 'tarozi': '♎', 'chayon': '♏',
+      'oqotar': '♐', 'tog_echkisi': '♑', 'qovga': '♒', 'baliq': '♓'
+    };
+    const key = keyMap[normalized];
+    if (!key) return zodiacValue;
+    return emojiMap[normalized] + ' ' + tr(key);
   }
 
   // Foydalanuvchining burjini olish
@@ -3093,7 +3134,7 @@ function detectTelegramLanguage() {
   // === SAVE PROFILE ===
   async function saveProfile() {
     if (!photoReady || !photoBase64) {
-      showToast('Avval to\'g\'ri rasm yuklang va tekshirilgan bo\'lsin.');
+      showToast(tr('upload_valid_photo'));
       return;
     }
 
@@ -3105,7 +3146,7 @@ function detectTelegramLanguage() {
 
     if (!selectedGender) { showToast(tr('select_gender_prompt')); return; }
     if (!name) { showToast(tr('enter_name_prompt')); return; }
-    if (!age || age < 16 || age > 80) { showToast('Yoshingizni to\'g\'ri kiriting! (16-80)'); return; }
+    if (!age || age < 16 || age > 80) { showToast(tr('enter_age_prompt')); return; }
     if (!city) { showToast(tr('enter_city_prompt')); return; }
     if (selectedGoals.length === 0) { showToast(tr('select_goal_prompt')); return; }
 
@@ -3114,6 +3155,7 @@ function detectTelegramLanguage() {
       showToast(tr('max_interests_hint'));
     }
 
+    // Backendga tarjima qilingan matn yuborish
     const profile = {
       gender: selectedGender,
       full_name: name,
@@ -3121,8 +3163,8 @@ function detectTelegramLanguage() {
       city: city,
       about: about,
       zodiac: zodiac,
-      interests: trimmedInterests,
-      goals: selectedGoals,
+      interests: trimmedInterests.map(key => tr(key) || key),
+      goals: selectedGoals.map(key => tr(key) || key),
       photo_base64: photoBase64 || null
     };
 
@@ -3138,13 +3180,12 @@ function detectTelegramLanguage() {
     }
 
     setDefaultSearchGender();
-    showToast(serverSaved ? 'Anketa muvaffaqiyatli saqlandi!' : 'Anketa mahalliy saqlandi.');
+    showToast(serverSaved ? tr('profile_saved_success') : tr('profile_saved_local'));
 
     document.querySelector('.bottom-nav').style.display = 'flex';
     showPage('search');
   }
 
-  // === SEARCH ===
   function doSearch() {
     tinderUsers = [];
     tinderIndex = 0;
@@ -3166,8 +3207,14 @@ function detectTelegramLanguage() {
     if (ageTo) filters.age_to = parseInt(ageTo);
     const city = document.getElementById('sf-city')?.value?.trim();
     if (city) filters.city = city;
-    if (selectedSearchGoals.length > 0) filters.goals = selectedSearchGoals;
-    if (selectedSearchInterests.length > 0) filters.interests = selectedSearchInterests;
+
+    // Backendga tarjima qilingan matn yuborish
+    if (selectedSearchGoals.length > 0) {
+      filters.goals = selectedSearchGoals.map(key => tr(key) || key);
+    }
+    if (selectedSearchInterests.length > 0) {
+      filters.interests = selectedSearchInterests.map(key => tr(key) || key);
+    }
 
     // Burj bo'yicha qidirish
     const zodiacFilterEl = document.getElementById('sf-zodiac');
@@ -3182,7 +3229,6 @@ function detectTelegramLanguage() {
       if (myZodiac && ZODIAC_COMPATIBILITY[myZodiac]) {
         filters.zodiac_compat_list = ZODIAC_COMPATIBILITY[myZodiac].mos;
       } else {
-        // Burj aniqlanmadi - foydalanuvchiga xabar berish va qidirishni to'xtatish
         if (panelBody) {
           panelBody.innerHTML = `<div class="empty-state"><div class="empty-icon">⭐</div><h3>${tr('zodiac_not_set')}</h3><p>${tr('zodiac_not_set_hint')}</p><button class="btn-primary" style="margin-top:16px;padding:12px 24px;border-radius:999rem;" onclick="closeSearchResultsModal();showPage('profile')">${tr('fill_profile')}</button></div>`;
         }
@@ -3288,7 +3334,7 @@ function detectTelegramLanguage() {
           <div class="tinder-photo-gradient"></div>
           <div class="tinder-photo-info">
             <div class="tinder-photo-name">${u.full_name}, ${u.age}</div>
-            <div class="tinder-photo-meta">📍 ${locationLabel}${u.zodiac ? ' • ' + u.zodiac : ''}${compatBadge}</div>
+            <div class="tinder-photo-meta">📍 ${locationLabel}${u.zodiac ? ' • ' + getZodiacDisplay(u.zodiac) : ''}${compatBadge}</div>
           </div>
         </div>
         <div class="tinder-actions">
@@ -3474,7 +3520,7 @@ function detectTelegramLanguage() {
           <div class="tinder-photo-gradient"></div>
           <div class="tinder-photo-info">
             <div class="tinder-photo-name">${u.full_name}, ${u.age}</div>
-            <div class="tinder-photo-meta">📍 ${locationLabel}${u.zodiac ? ' &nbsp;•&nbsp; ' + u.zodiac : ''}</div>
+            <div class="tinder-photo-meta">📍 ${locationLabel}${u.zodiac ? ' &nbsp;•&nbsp; ' + getZodiacDisplay(u.zodiac) : ''}</div>
           </div>
         </div>
         <div class="tinder-body">
@@ -3734,8 +3780,8 @@ function detectTelegramLanguage() {
 
   function renderProfileCard(u) {
     const icon = u.gender === 'erkak' ? ICONS.male : ICONS.female;
-    const goals = (u.goals || []).map(g => `<span class="tag">${g}</span>`).join('');
-    const interests = (u.interests || []).slice(0, MAX_INTERESTS_ALLOWED).map(i => `<span class="tag" style="background:var(--accent-soft);color:var(--accent);">${i}</span>`).join('');
+    const goals = (u.goals || []).map(g => `<span class="tinder-tag">${tr(g) || g}</span>`).join('');
+    const interests = (u.interests || []).map(i => `<span class="tinder-tag tinder-tag-alt">${tr(i) || i}</span>`).join('');
     const photo = u.photo || u.photo_file_id || u.photo_base64;
     const photoHtml = photo
       ? `<img src="${photo}" alt="${u.full_name}" loading="lazy" />`
@@ -3747,7 +3793,7 @@ function detectTelegramLanguage() {
       <div class="profile-photo">${photoHtml}</div>
       <div class="profile-info">
         <div class="profile-name"><span style="display:inline-flex;vertical-align:middle;margin-right:6px;">${icon}</span> ${u.full_name}</div>
-        <div class="profile-age-city">Yosh: ${u.age} &nbsp;•&nbsp; ${locationLabel || 'Shahar ko\'rsatilmagan'}${u.zodiac ? ' • ' + u.zodiac : ''}</div>
+        <div class="profile-age-city">Yosh: ${u.age} &nbsp;•&nbsp; ${locationLabel || 'Shahar ko\'rsatilmagan'}${u.zodiac ? ' • ' + getZodiacDisplay(u.zodiac) : ''}</div>
         ${u.about ? `<div class="profile-bio" style="margin-top:6px;color:var(--text-secondary);font-size:13px;line-height:1.4;">${escapeHtml(u.about)}</div>` : ''}
         <div class="profile-tags" style="margin-top:8px;">${goals}${interests}</div>
       </div>
@@ -3868,9 +3914,9 @@ function detectTelegramLanguage() {
     const photo = u.photo || u.photo_file_id || u.photo_base64;
     const locationLabel = formatLocationLabel(u.city || '');
     const profileLocation = locationLabel || (u.city || 'Joy ko\'rsatilmagan');
-    const goals = (u.goals || []).map(g => `<span class="tag">${g}</span>`).join('');
+    const goals = (u.goals || []).map(g => `<span class="tag">${tr(g) || g}</span>`).join('');
     const visibleInterests = (u.interests || []).slice(0, MAX_INTERESTS_ALLOWED);
-    const interests = visibleInterests.map(i => `<span class="tag" style="background:rgba(0,122,255,0.10);color:var(--ios-blue);">${i}</span>`).join('');
+    const interests = (u.interests || []).slice(0, MAX_INTERESTS_ALLOWED).map(i => `<span class="tag" style="background:rgba(0,122,255,0.10);color:var(--ios-blue);">${tr(i) || i}</span>`).join('');
     const aboutText = (u.about || '').trim() || 'Bu foydalanuvchi o\'z maqsadi va qiziqishlarini ko\'rsatib ketgan.';
     const photoHtml = photo
       ? `<div class="profile-detail-photo-wrap"><img src="${photo}" alt="${u.full_name}" onclick="openPhotoViewer('${escapeJs(photo)}','${escapeJs(u.full_name)}')" /></div>`
@@ -3882,7 +3928,7 @@ function detectTelegramLanguage() {
         <section class="profile-detail-card">
           <div class="profile-detail-badge">${u.gender === 'erkak' ? 'Erkak' : 'Ayol'} • ${u.age} yosh</div>
           <div class="profile-detail-title">${icon} ${u.full_name}</div>
-          <div class="profile-detail-meta">📍 ${profileLocation}${u.zodiac ? ' • ' + u.zodiac : ''}</div>
+          <div class="profile-detail-meta">📍 ${profileLocation}${u.zodiac ? ' • ' + getZodiacDisplay(u.zodiac) : ''}</div>
           <div class="profile-detail-section">
             <div class="profile-detail-label">${tr('about_me')}</div>
             <p class="profile-detail-summary">${escapeHtml(aboutText)}</p>
@@ -4336,8 +4382,8 @@ function detectTelegramLanguage() {
     }
 
     const genderIcon = user.gender === 'erkak' ? ICONS.male : ICONS.female;
-    const goals = (user.goals || []).map(g => `<span class="chip selected" style="pointer-events:none;">${g}</span>`).join('');
-    const interests = (user.interests || []).slice(0, MAX_INTERESTS_ALLOWED).map(i => `<span class="chip selected" style="pointer-events:none;background:rgba(255,45,85,0.10);color:#FF2D55;border-color:rgba(255,45,85,0.25);">${i}</span>`).join('');
+    const goals = (user.goals || []).map(g => `<span class="chip selected" style="pointer-events:none;">${tr(g) || g}</span>`).join('');
+    const interests = (user.interests || []).slice(0, MAX_INTERESTS_ALLOWED).map(i => `<span class="chip selected" style="pointer-events:none;background:rgba(255,45,85,0.10);color:#FF2D55;border-color:rgba(255,45,85,0.25);">${tr(i) || i}</span>`).join('');
     const locationLabel = formatLocationLabel(user.city || '');
     const photo = user.photo_base64 || user.photo_file_id;
 
@@ -4345,7 +4391,7 @@ function detectTelegramLanguage() {
       <div style="text-align:center; padding:20px;">
         ${photo ? `<img src="${photo}" style="width:120px;height:120px;object-fit:cover;border-radius:50%;margin-bottom:16px;" />` : `<div style="font-size:64px;">${genderIcon}</div>`}
         <h2 style="font-size:22px; font-weight:800;">${user.full_name}, ${user.age}</h2>
-        <p style="color:var(--text-secondary);">📍 ${locationLabel || user.city || 'Joy ko\'rsatilmagan'}${user.zodiac ? ' • ' + user.zodiac : ''}</p>
+        <p style="color:var(--text-secondary);">📍 ${locationLabel || user.city || 'Joy ko\'rsatilmagan'}${user.zodiac ? ' • ' + getZodiacDisplay(user.zodiac) : ''}</p>
         ${user.about ? `<p style="color:var(--text-secondary);font-size:14px;line-height:1.4;margin-top:8px;">${escapeHtml(user.about)}</p>` : ''}
       </div>
       <div class="card">
