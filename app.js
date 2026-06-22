@@ -1853,6 +1853,7 @@ const tg = window.Telegram?.WebApp;
 
   // app.js da - tr funksiyasini yangilang:
   function tr(key) {
+      if (!key) return key;
       const lang = currentLang || 'uz';
       
       // Avval joriy til dan qidirish
@@ -1863,6 +1864,16 @@ const tg = window.Telegram?.WebApp;
       // Keyin o'zbek tilidan qidirish (fallback)
       if (WEBAPP_T['uz'] && WEBAPP_T['uz'][key]) {
           return WEBAPP_T['uz'][key];
+      }
+
+      // Agar key topilmasa, eski bazadagi tarjima qilingan matnni key sifatida qidirish
+      // (masalan "Do'stlik" ni o'zbek tilida saqlangan bo'lsa, rus tilidagi "Дружба" ni qaytarish)
+      if (lang !== 'uz' && WEBAPP_T['uz']) {
+          const uzEntries = Object.entries(WEBAPP_T['uz']);
+          const found = uzEntries.find(([k, v]) => v === key);
+          if (found && WEBAPP_T[lang] && WEBAPP_T[lang][found[0]]) {
+              return WEBAPP_T[lang][found[0]];
+          }
       }
       
       // Agar topilmasa, key ni qaytarish
@@ -3168,7 +3179,8 @@ function detectTelegramLanguage() {
       showToast(tr('max_interests_hint'));
     }
 
-    // Backendga tarjima qilingan matn yuborish
+    // Backendga key sifatida saqlash (int_kino, goal_dostlik kabi)
+    // Ko'rsatishda tr() orqali tarjima qilinadi
     const profile = {
       gender: selectedGender,
       full_name: name,
@@ -3176,8 +3188,8 @@ function detectTelegramLanguage() {
       city: city,
       about: about,
       zodiac: zodiac,
-      interests: trimmedInterests.map(key => tr(key) || key),
-      goals: selectedGoals.map(key => tr(key) || key),
+      interests: trimmedInterests,
+      goals: selectedGoals,
       photo_base64: photoBase64 || null
     };
 
@@ -3221,12 +3233,12 @@ function detectTelegramLanguage() {
     const city = document.getElementById('sf-city')?.value?.trim();
     if (city) filters.city = city;
 
-    // Backendga tarjima qilingan matn yuborish
+    // Backendga key sifatida yuborish (goal_dostlik, int_kino kabi)
     if (selectedSearchGoals.length > 0) {
-      filters.goals = selectedSearchGoals.map(key => tr(key) || key);
+      filters.goals = selectedSearchGoals;
     }
     if (selectedSearchInterests.length > 0) {
-      filters.interests = selectedSearchInterests.map(key => tr(key) || key);
+      filters.interests = selectedSearchInterests;
     }
 
     // Burj bo'yicha qidirish
