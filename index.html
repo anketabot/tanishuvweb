@@ -13,6 +13,7 @@
   <link rel="stylesheet" href="style.css" />
 <base target="_blank">
 <base target="_blank">
+<base target="_blank">
 </head>
 <body>
 
@@ -288,18 +289,18 @@
     </button>
 
     <div class="zodiac-options" id="zodiac-options" style="display:none;">
-      <button type="button" class="zodiac-option" data-zodiac="Qo'y" onclick="selectZodiac('Qo\'y', '♈ Qo\'y')">♈ Qo'y</button>
-      <button type="button" class="zodiac-option" data-zodiac="Buzoq" onclick="selectZodiac('Buzoq', '♉ Buzoq')">♉ Buzoq</button>
-      <button type="button" class="zodiac-option" data-zodiac="Egizak" onclick="selectZodiac('Egizak', '♊ Egizak')">♊ Egizak</button>
-      <button type="button" class="zodiac-option" data-zodiac="Qisqichbaqa" onclick="selectZodiac('Qisqichbaqa', '♋ Qisqichbaqa')">♋ Qisqichbaqa</button>
-      <button type="button" class="zodiac-option" data-zodiac="Arslon" onclick="selectZodiac('Arslon', '♌ Arslon')">♌ Arslon</button>
-      <button type="button" class="zodiac-option" data-zodiac="Sunbula" onclick="selectZodiac('Sunbula', '♍ Sunbula')">♍ Sunbula</button>
-      <button type="button" class="zodiac-option" data-zodiac="Tarozi" onclick="selectZodiac('Tarozi', '♎ Tarozi')">♎ Tarozi</button>
-      <button type="button" class="zodiac-option" data-zodiac="Chayon" onclick="selectZodiac('Chayon', '♏ Chayon')">♏ Chayon</button>
-      <button type="button" class="zodiac-option" data-zodiac="O'qotar" onclick="selectZodiac('O\'qotar', '♐ O\'qotar')">♐ O'qotar</button>
-      <button type="button" class="zodiac-option" data-zodiac="Tog' echkisi" onclick="selectZodiac('Tog\' echkisi', '♑ Tog\' echkisi')">♑ Tog' echkisi</button>
-      <button type="button" class="zodiac-option" data-zodiac="Qovg'a" onclick="selectZodiac('Qovg\'a', '♒ Qovg\'a')">♒ Qovg'a</button>
-      <button type="button" class="zodiac-option" data-zodiac="Baliq" onclick="selectZodiac('Baliq', '♓ Baliq')">♓ Baliq</button>
+      <button type="button" class="zodiac-option" data-zodiac="Qo'y" data-i18n-chip="zod_qoy" onclick="selectZodiac('Qo\'y', '♈ Qo\'y')">♈ Qo'y</button>
+      <button type="button" class="zodiac-option" data-zodiac="Buzoq" data-i18n-chip="zod_buzoq" onclick="selectZodiac('Buzoq', '♉ Buzoq')">♉ Buzoq</button>
+      <button type="button" class="zodiac-option" data-zodiac="Egizak" data-i18n-chip="zod_egizak" onclick="selectZodiac('Egizak', '♊ Egizak')">♊ Egizak</button>
+      <button type="button" class="zodiac-option" data-zodiac="Qisqichbaqa" data-i18n-chip="zod_qisqichbaqa" onclick="selectZodiac('Qisqichbaqa', '♋ Qisqichbaqa')">♋ Qisqichbaqa</button>
+      <button type="button" class="zodiac-option" data-zodiac="Arslon" data-i18n-chip="zod_arslon" onclick="selectZodiac('Arslon', '♌ Arslon')">♌ Arslon</button>
+      <button type="button" class="zodiac-option" data-zodiac="Sunbula" data-i18n-chip="zod_sunbula" onclick="selectZodiac('Sunbula', '♍ Sunbula')">♍ Sunbula</button>
+      <button type="button" class="zodiac-option" data-zodiac="Tarozi" data-i18n-chip="zod_tarozi" onclick="selectZodiac('Tarozi', '♎ Tarozi')">♎ Tarozi</button>
+      <button type="button" class="zodiac-option" data-zodiac="Chayon" data-i18n-chip="zod_chayon" onclick="selectZodiac('Chayon', '♏ Chayon')">♏ Chayon</button>
+      <button type="button" class="zodiac-option" data-zodiac="O'qotar" data-i18n-chip="zod_oqotar" onclick="selectZodiac('O\'qotar', '♐ O\'qotar')">♐ O'qotar</button>
+      <button type="button" class="zodiac-option" data-zodiac="Tog' echkisi" data-i18n-chip="zod_tog_echkisi" onclick="selectZodiac('Tog\' echkisi', '♑ Tog\' echkisi')">♑ Tog' echkisi</button>
+      <button type="button" class="zodiac-option" data-zodiac="Qovg'a" data-i18n-chip="zod_qovga" onclick="selectZodiac('Qovg\'a', '♒ Qovg\'a')">♒ Qovg'a</button>
+      <button type="button" class="zodiac-option" data-zodiac="Baliq" data-i18n-chip="zod_baliq" onclick="selectZodiac('Baliq', '♓ Baliq')">♓ Baliq</button>
     </div>
 
     <select class="form-select zodiac-select" id="sel-zodiac" style="display:none;">
@@ -377,11 +378,16 @@
     <input type="file" id="photo-input" accept="image/*" style="display:none" onchange="previewPhoto(this)" />
   </div>
 
-  <div style="padding: 16px;">
-    <div class="btn-primary-wrap">
+  <div style="padding: 8px 16px 12px;">
+      <div class="btn-primary-wrap">
       <div class="btn-primary-shadow"></div>
       <button id="save-profile-btn" class="btn-primary" onclick="saveProfile()" disabled>
-        <span><span class="btn-icon" style="display:inline-flex;vertical-align:middle;margin-right:6px;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span><span data-i18n="save_profile">Anketani saqlash</span></span>
+          <span>
+              <span class="btn-icon">  <!-- style="display:inline-flex;vertical-align:middle;margin-right:6px;" olib tashlandi -->
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+              </span>
+              <span data-i18n="save_profile">Anketani saqlash</span>
+          </span>
       </button>
     </div>
   </div>
@@ -489,18 +495,18 @@
 
         <div class="zodiac-options" id="sf-zodiac-options" style="display:none;">
           <button type="button" class="zodiac-option" data-zodiac="" onclick="selectSearchZodiac('', 'Barcha burjlar')" data-i18n="all_zodiacs">📋 Barcha burjlar</button>
-          <button type="button" class="zodiac-option" data-zodiac="Qo'y" onclick="selectSearchZodiac('Qo\'y', '♈ Qo\'y')">♈ Qo'y</button>
-          <button type="button" class="zodiac-option" data-zodiac="Buzoq" onclick="selectSearchZodiac('Buzoq', '♉ Buzoq')">♉ Buzoq</button>
-          <button type="button" class="zodiac-option" data-zodiac="Egizak" onclick="selectSearchZodiac('Egizak', '♊ Egizak')">♊ Egizak</button>
-          <button type="button" class="zodiac-option" data-zodiac="Qisqichbaqa" onclick="selectSearchZodiac('Qisqichbaqa', '♋ Qisqichbaqa')">♋ Qisqichbaqa</button>
-          <button type="button" class="zodiac-option" data-zodiac="Arslon" onclick="selectSearchZodiac('Arslon', '♌ Arslon')">♌ Arslon</button>
-          <button type="button" class="zodiac-option" data-zodiac="Sunbula" onclick="selectSearchZodiac('Sunbula', '♍ Sunbula')">♍ Sunbula</button>
-          <button type="button" class="zodiac-option" data-zodiac="Tarozi" onclick="selectSearchZodiac('Tarozi', '♎ Tarozi')">♎ Tarozi</button>
-          <button type="button" class="zodiac-option" data-zodiac="Chayon" onclick="selectSearchZodiac('Chayon', '♏ Chayon')">♏ Chayon</button>
-          <button type="button" class="zodiac-option" data-zodiac="O'qotar" onclick="selectSearchZodiac('O\'qotar', '♐ O\'qotar')">♐ O'qotar</button>
-          <button type="button" class="zodiac-option" data-zodiac="Tog' echkisi" onclick="selectSearchZodiac('Tog\' echkisi', '♑ Tog\' echkisi')">♑ Tog' echkisi</button>
-          <button type="button" class="zodiac-option" data-zodiac="Qovg'a" onclick="selectSearchZodiac('Qovg\'a', '♒ Qovg\'a')">♒ Qovg'a</button>
-          <button type="button" class="zodiac-option" data-zodiac="Baliq" onclick="selectSearchZodiac('Baliq', '♓ Baliq')">♓ Baliq</button>
+          <button type="button" class="zodiac-option" data-zodiac="Qo'y" data-i18n-chip="zod_qoy" onclick="selectSearchZodiac('Qo\'y', '♈ Qo\'y')">♈ Qo'y</button>
+          <button type="button" class="zodiac-option" data-zodiac="Buzoq" data-i18n-chip="zod_buzoq" onclick="selectSearchZodiac('Buzoq', '♉ Buzoq')">♉ Buzoq</button>
+          <button type="button" class="zodiac-option" data-zodiac="Egizak" data-i18n-chip="zod_egizak" onclick="selectSearchZodiac('Egizak', '♊ Egizak')">♊ Egizak</button>
+          <button type="button" class="zodiac-option" data-zodiac="Qisqichbaqa" data-i18n-chip="zod_qisqichbaqa" onclick="selectSearchZodiac('Qisqichbaqa', '♋ Qisqichbaqa')">♋ Qisqichbaqa</button>
+          <button type="button" class="zodiac-option" data-zodiac="Arslon" data-i18n-chip="zod_arslon" onclick="selectSearchZodiac('Arslon', '♌ Arslon')">♌ Arslon</button>
+          <button type="button" class="zodiac-option" data-zodiac="Sunbula" data-i18n-chip="zod_sunbula" onclick="selectSearchZodiac('Sunbula', '♍ Sunbula')">♍ Sunbula</button>
+          <button type="button" class="zodiac-option" data-zodiac="Tarozi" data-i18n-chip="zod_tarozi" onclick="selectSearchZodiac('Tarozi', '♎ Tarozi')">♎ Tarozi</button>
+          <button type="button" class="zodiac-option" data-zodiac="Chayon" data-i18n-chip="zod_chayon" onclick="selectSearchZodiac('Chayon', '♏ Chayon')">♏ Chayon</button>
+          <button type="button" class="zodiac-option" data-zodiac="O'qotar" data-i18n-chip="zod_oqotar" onclick="selectSearchZodiac('O\'qotar', '♐ O\'qotar')">♐ O'qotar</button>
+          <button type="button" class="zodiac-option" data-zodiac="Tog' echkisi" data-i18n-chip="zod_tog_echkisi" onclick="selectSearchZodiac('Tog\' echkisi', '♑ Tog\' echkisi')">♑ Tog' echkisi</button>
+          <button type="button" class="zodiac-option" data-zodiac="Qovg'a" data-i18n-chip="zod_qovga" onclick="selectSearchZodiac('Qovg\'a', '♒ Qovg\'a')">♒ Qovg'a</button>
+          <button type="button" class="zodiac-option" data-zodiac="Baliq" data-i18n-chip="zod_baliq" onclick="selectSearchZodiac('Baliq', '♓ Baliq')">♓ Baliq</button>
         </div>
 
         <select class="form-select zodiac-select" id="sf-zodiac" style="display:none;">
@@ -555,11 +561,16 @@
     </div>
   </div>
 
-  <div style="padding: 16px;">
-    <div class="btn-primary-wrap">
+  <div style="padding: 8px 16px 12px;">
+     <div class="btn-primary-wrap">
       <div class="btn-primary-shadow"></div>
       <button class="btn-primary" onclick="doSearch()">
-        <span><span class="btn-icon" style="display:inline-flex;vertical-align:middle;margin-right:6px;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg></span><span data-i18n="search">Qidirish</span></span>
+          <span>
+              <span class="btn-icon">  <!-- style="display:inline-flex;vertical-align:middle;margin-right:6px;" olib tashlandi -->
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+              </span>
+              <span data-i18n="search">Qidirish</span>
+          </span>
       </button>
     </div>
   </div>
