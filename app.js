@@ -360,7 +360,13 @@ const tg = window.Telegram?.WebApp;
           'no_viewed_liked_hint': 'Qidirish bo\'limidan anketalar toping va like bosing',
           'no_viewed_messaged': 'Hali xabar yozgan anketalar yo\'q',
           'no_viewed_messaged_hint': 'Qidirish bo\'limidan anketalar toping va xabar yozing',
-          'profile_loading': 'Anketa yuklanmoqda...'
+          'profile_loading': 'Anketa yuklanmoqda...',
+          'my_goals_section': 'Mening maqsadlarim',
+          'mp_anketa_sub': 'Shaxsiy ma\'lumotlar va fotosurat',
+          'mp_goals_title': 'Maqsadlar & Ko\'rganlarim',
+          'mp_goals_sub': 'Mening maqsadlarim va ko\'rgan odamlarim',
+          'mp_liked_tab': 'Like bergan',
+          'mp_messaged_tab': 'Yozgan'
       },
       'ru': {
           'select_language': '🌍 Выберите язык',
@@ -637,7 +643,13 @@ const tg = window.Telegram?.WebApp;
           'no_viewed_liked_hint': 'Найдите анкеты в поиске и поставьте лайк',
           'no_viewed_messaged': 'Пока нет анкет с сообщениями',
           'no_viewed_messaged_hint': 'Найдите анкеты в поиске и напишите сообщение',
-          'profile_loading': 'Загрузка анкеты...'
+          'profile_loading': 'Загрузка анкеты...',
+          'my_goals_section': 'Мои цели',
+          'mp_anketa_sub': 'Личные данные и фото',
+          'mp_goals_title': 'Цели & Просмотренные',
+          'mp_goals_sub': 'Мои цели и просмотренные люди',
+          'mp_liked_tab': 'Лайкнул',
+          'mp_messaged_tab': 'Написал'
       },
       'kk': {
           'select_language': '🌍 Тілді таңдаңыз',
@@ -914,7 +926,13 @@ const tg = window.Telegram?.WebApp;
           'no_viewed_liked_hint': 'Іздеу бөлімінен анкеталар тапыңыз және лайк басыңыз',
           'no_viewed_messaged': 'Әлі хабар жазған анкеталар жоқ',
           'no_viewed_messaged_hint': 'Іздеу бөлімінен анкеталар тапыңыз және хабар жазыңыз',
-          'profile_loading': 'Анкета жүктелуде...'
+          'profile_loading': 'Анкета жүктелуде...',
+          'my_goals_section': 'Менің мақсаттарым',
+          'mp_anketa_sub': 'Жеке деректер мен фото',
+          'mp_goals_title': 'Мақсаттар & Көргендерім',
+          'mp_goals_sub': 'Менің мақсаттарым және көрген адамдарым',
+          'mp_liked_tab': 'Лайк басқан',
+          'mp_messaged_tab': 'Жазған'
       },
       'ky': {
           'select_language': '🌍 Тилди тандаңыз',
@@ -1191,7 +1209,13 @@ const tg = window.Telegram?.WebApp;
           'no_viewed_liked_hint': 'Издөө бөлүмүнөн анкеталар табыңыз жана лайк баскыңыз',
           'no_viewed_messaged': 'Азырынча билдирүү жазган анкеталар жок',
           'no_viewed_messaged_hint': 'Издөө бөлүмүнөн анкеталар табыңыз жана билдирүү жазыңыз',
-          'profile_loading': 'Анкета жүктөлүүдө...'
+          'profile_loading': 'Анкета жүктөлүүдө...',
+          'my_goals_section': 'Менин максаттарым',
+          'mp_anketa_sub': 'Жеке маалымат жана фото',
+          'mp_goals_title': 'Максаттар & Көргөндөрүм',
+          'mp_goals_sub': 'Менин максаттарым жана көргөн адамдарым',
+          'mp_liked_tab': 'Лайк баскан',
+          'mp_messaged_tab': 'Жазган'
       },
       'kaa': {
           'select_language': '🌍 Tildi tańlań',
@@ -1468,7 +1492,13 @@ const tg = window.Telegram?.WebApp;
           'no_viewed_liked_hint': 'Izlew bólimesinen anketalar tabıń hám like basıń',
           'no_viewed_messaged': 'Háli xabar jazqan anketalar joq',
           'no_viewed_messaged_hint': 'Izlew bólimesinen anketalar tabıń hám xabar jazıń',
-          'profile_loading': 'Anketa júklenbekte...'
+          'profile_loading': 'Anketa júklenbekte...',
+          'my_goals_section': 'Meniń maqsetlerim',
+          'mp_anketa_sub': 'Shaxsiy maǵlıwmatlar hám súwret',
+          'mp_goals_title': 'Maqsetler & Kórgenlerim',
+          'mp_goals_sub': 'Meniń maqsetlerim hám kórgen adamlarım',
+          'mp_liked_tab': 'Layk basqan',
+          'mp_messaged_tab': 'Jazǵan'
       },
       'tg': {
           'select_language': '🌍 Забонро интихоб кунед',
@@ -1745,7 +1775,13 @@ const tg = window.Telegram?.WebApp;
           'no_viewed_liked_hint': 'Аз бахши ҷустуҷӯ анкета ёбед ва лайк занед',
           'no_viewed_messaged': 'Ҳанӯз паём навиштаан анкета нест',
           'no_viewed_messaged_hint': 'Аз бахши ҷустуҷӯ анкета ёбед ва паём нависед',
-          'profile_loading': 'Анкета бор шуда истодааст...'
+          'profile_loading': 'Анкета бор шуда истодааст...',
+          'my_goals_section': 'Мақсадҳои ман',
+          'mp_anketa_sub': 'Маълумоти шахсӣ ва акс',
+          'mp_goals_title': 'Мақсадҳо & Дидаҳои ман',
+          'mp_goals_sub': 'Мақсадҳои ман ва одамоне, ки дидам',
+          'mp_liked_tab': 'Лайк задам',
+          'mp_messaged_tab': 'Навиштам'
       },
       'en': {
           'select_language': '🌍 Select language',
@@ -2022,7 +2058,13 @@ const tg = window.Telegram?.WebApp;
           'no_viewed_liked_hint': 'Find profiles in search and like them',
           'no_viewed_messaged': 'No messaged profiles yet',
           'no_viewed_messaged_hint': 'Find profiles in search and send a message',
-          'profile_loading': 'Loading profile...'
+          'profile_loading': 'Loading profile...',
+          'my_goals_section': 'My Goals',
+          'mp_anketa_sub': 'Personal info and photo',
+          'mp_goals_title': 'Goals & Viewed',
+          'mp_goals_sub': 'My goals and people I\'ve viewed',
+          'mp_liked_tab': 'Liked',
+          'mp_messaged_tab': 'Messaged'
       },
   };
 
