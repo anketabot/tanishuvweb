@@ -422,11 +422,11 @@
   <!-- ======= STATISTIKA MINI-PANEL ======= -->
   <div class="stats-mini-panel" id="stats-mini-panel">
     <div class="stats-mini-header">
-      <span class="stats-mini-title" data-i18n="leaderboard_title">🏆 Reyting</span>
+      <span class="stats-mini-title" id="smtitle">🏆 Reyting</span>
       <div class="stats-mini-tabs">
-        <button class="stats-mini-tab active" id="smtab-active" onclick="switchMiniStatsTab('active')" data-i18n="stats_active">🔥 Faollar</button>
-        <button class="stats-mini-tab" id="smtab-likes" onclick="switchMiniStatsTab('likes')" data-i18n="stats_likes">💙 Like</button>
-        <button class="stats-mini-tab" id="smtab-superlikes" onclick="switchMiniStatsTab('superlikes')" data-i18n="stats_superlikes">⭐ Super</button>
+        <button class="stats-mini-tab active" id="smtab-active" onclick="switchMiniStatsTab('active')">🔥 Faollar</button>
+        <button class="stats-mini-tab" id="smtab-likes" onclick="switchMiniStatsTab('likes')">💙 Like</button>
+        <button class="stats-mini-tab" id="smtab-superlikes" onclick="switchMiniStatsTab('superlikes')">⭐ Super</button>
       </div>
     </div>
     <div class="stats-mini-body" id="stats-mini-body">
@@ -665,7 +665,6 @@
 
   <!-- Til tanlash bo'limi -->
   <div class="profile-lang-section">
-    <div class="profile-lang-label" data-i18n="interface_language">Interfeys tili</div>
     <button class="profile-lang-row" onclick="openLangModal()">
       <div class="profile-lang-left">
         <div class="profile-lang-icon">
