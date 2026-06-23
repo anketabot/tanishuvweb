@@ -365,6 +365,7 @@ const tg = window.Telegram?.WebApp;
           'mp_anketa_sub': 'Shaxsiy ma\'lumotlar va fotosurat',
           'mp_goals_title': 'Maqsadlar & Ko\'rganlarim',
           'mp_goals_sub': 'Mening maqsadlarim va ko\'rgan odamlarim',
+          'mp_viewed_sub': 'Like bergan va xabar yozgan anketalar',
           'mp_liked_tab': 'Like bergan',
           'mp_messaged_tab': 'Yozgan'
       },
@@ -4385,7 +4386,10 @@ function detectTelegramLanguage() {
 
       return data;
     } catch (e) {
-      console.error('API error:', e);
+      // CORS yoki tarmoq xatolarini jimroq ko'rsatish
+      if (!(e instanceof TypeError && e.message === 'Failed to fetch')) {
+        console.warn('API error:', e);
+      }
       return { success: false, error: e.message };
     }
   }
@@ -5354,7 +5358,8 @@ document.addEventListener('DOMContentLoaded', function() {
       window.showPage = function(page) {
         _orig(page);
         if (page === 'search') {
-          if (!_miniStatsData) loadMiniStats();
+          // Faqat panel ochiq bo'lsa yuklaymiz (keraksiz CORS so'rovlarini kamaytirish)
+          if (!_miniStatsData && _miniStatsOpen) loadMiniStats();
         }
         if (page === 'myprofile') {
           updateProfileLangDisplay();
