@@ -9,11 +9,11 @@ const tg = window.Telegram?.WebApp;
   const SUPPORTED_LANGUAGES = {
       'uz': { name: "O'zbekcha", flag: '🇺🇿' },
       'ru': { name: 'Русский', flag: '🇷🇺' },
-      'en': { name: 'English', flag: '🇬🇧' },
       'kk': { name: 'Қазақша', flag: '🇰🇿' },
       'ky': { name: 'Кыргызча', flag: '🇰🇬' },
       'kaa': { name: 'Qaraqalpaqsha', flag: '🇺🇿' },
-      'tg': { name: 'Тоҷикӣ', flag: '🇹🇯' },     
+      'tg': { name: 'Тоҷикӣ', flag: '🇹🇯' },
+      'en': { name: 'English', flag: '🇬🇧' },
   };
 
   let userId = null;
@@ -346,7 +346,12 @@ const tg = window.Telegram?.WebApp;
           'geo_not_supported': '❌ GPS qo\'llab-quvvatlanmaydi',
           'map_searching': 'Qidirilmoqda...',
           'map_unknown': 'Noma\'lum joy',
-          'map_tap_hint': '📍 Xaritaga bosing — joy belgilanadi'
+          'map_tap_hint': '📍 Xaritaga bosing — joy belgilanadi',
+          'leaderboard_title': '🏆 Reyting',
+          'stats_active': '🔥 Faollar',
+          'stats_likes': '💙 Like',
+          'stats_superlikes': '⭐ Super',
+          'interface_language': 'Interfeys tili'
       },
       'ru': {
           'select_language': '🌍 Выберите язык',
@@ -609,7 +614,12 @@ const tg = window.Telegram?.WebApp;
           'geo_not_supported': '❌ GPS не поддерживается',
           'map_searching': 'Поиск...',
           'map_unknown': 'Неизвестное место',
-          'map_tap_hint': '📍 Нажмите на карту — место будет отмечено'
+          'map_tap_hint': '📍 Нажмите на карту — место будет отмечено',
+          'leaderboard_title': '🏆 Рейтинг',
+          'stats_active': '🔥 Активные',
+          'stats_likes': '💙 Лайки',
+          'stats_superlikes': '⭐ Супер',
+          'interface_language': 'Язык интерфейса'
       },
       'kk': {
           'select_language': '🌍 Тілді таңдаңыз',
@@ -872,7 +882,12 @@ const tg = window.Telegram?.WebApp;
           'geo_not_supported': '❌ GPS қолданылмайды',
           'map_searching': 'Іздеу...',
           'map_unknown': 'Белгісіз жер',
-          'map_tap_hint': '📍 Картаға басыңыз — жер белгіленеді'
+          'map_tap_hint': '📍 Картаға басыңыз — жер белгіленеді',
+          'leaderboard_title': '🏆 Рейтинг',
+          'stats_active': '🔥 Белсенділер',
+          'stats_likes': '💙 Лайк',
+          'stats_superlikes': '⭐ Супер',
+          'interface_language': 'Интерфейс тілі'
       },
       'ky': {
           'select_language': '🌍 Тилди тандаңыз',
@@ -1135,7 +1150,12 @@ const tg = window.Telegram?.WebApp;
           'geo_not_supported': '❌ GPS колдоого алынбайт',
           'map_searching': 'Издөө...',
           'map_unknown': 'Белгисиз жер',
-          'map_tap_hint': '📍 Картага басыңыз — жер белгиленет'
+          'map_tap_hint': '📍 Картага басыңыз — жер белгиленет',
+          'leaderboard_title': '🏆 Рейтинг',
+          'stats_active': '🔥 Активдүүлөр',
+          'stats_likes': '💙 Лайк',
+          'stats_superlikes': '⭐ Супер',
+          'interface_language': 'Интерфейс тили'
       },
       'kaa': {
           'select_language': '🌍 Tildi tańlań',
@@ -1398,7 +1418,12 @@ const tg = window.Telegram?.WebApp;
           'geo_not_supported': '❌ GPS qollap-quwatlanbaydı',
           'map_searching': 'Izlenıwde...',
           'map_unknown': 'Belgisiz jer',
-          'map_tap_hint': '📍 Xaritaǵa basıń — jer belgilenedi'
+          'map_tap_hint': '📍 Xaritaǵa basıń — jer belgilenedi',
+          'leaderboard_title': '🏆 Reytіng',
+          'stats_active': '🔥 Belgіlіler',
+          'stats_likes': '💙 Like',
+          'stats_superlikes': '⭐ Super',
+          'interface_language': 'Interfeys tіlі'
       },
       'tg': {
           'select_language': '🌍 Забонро интихоб кунед',
@@ -1661,7 +1686,12 @@ const tg = window.Telegram?.WebApp;
           'geo_not_supported': '❌ GPS дастгирӣ намешавад',
           'map_searching': 'Ҷустуҷӯ...',
           'map_unknown': 'Макони номаълум',
-          'map_tap_hint': '📍 Ба харита зер кунед — макон қайд мешавад'
+          'map_tap_hint': '📍 Ба харита зер кунед — макон қайд мешавад',
+          'leaderboard_title': '🏆 Рейтинг',
+          'stats_active': '🔥 Фаъолон',
+          'stats_likes': '💙 Лайк',
+          'stats_superlikes': '⭐ Супер',
+          'interface_language': 'Забони интерфейс'
       },
       'en': {
           'select_language': '🌍 Select language',
@@ -1924,7 +1954,12 @@ const tg = window.Telegram?.WebApp;
           'geo_not_supported': '❌ GPS not supported',
           'map_searching': 'Searching...',
           'map_unknown': 'Unknown location',
-          'map_tap_hint': '📍 Tap the map — location will be pinned'
+          'map_tap_hint': '📍 Tap the map — location will be pinned',
+          'leaderboard_title': '🏆 Leaderboard',
+          'stats_active': '🔥 Active',
+          'stats_likes': '💙 Likes',
+          'stats_superlikes': '⭐ Super',
+          'interface_language': 'Interface language'
       },
   };
 
