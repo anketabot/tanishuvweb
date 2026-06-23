@@ -4971,14 +4971,30 @@ let _miniStatsData = null;
 let _miniStatsCurrentTab = 'active';
 
 function updateMiniStatsLabels() {
-  const title = document.getElementById('smtitle');
-  if (title) title.textContent = tr('leaderboard_title') || '🏆 Reyting';
   const tabActive = document.getElementById('smtab-active');
   if (tabActive) tabActive.textContent = tr('stats_active') || '🔥 Faollar';
   const tabLikes = document.getElementById('smtab-likes');
   if (tabLikes) tabLikes.textContent = tr('stats_likes') || '💙 Like';
   const tabSuper = document.getElementById('smtab-superlikes');
   if (tabSuper) tabSuper.textContent = tr('stats_superlikes') || '⭐ Super';
+}
+
+let _miniStatsOpen = false;
+
+function toggleMiniStats() {
+  const panel = document.getElementById('stats-mini-panel');
+  const btn = document.getElementById('stats-toggle-btn');
+  if (!panel) return;
+  _miniStatsOpen = !_miniStatsOpen;
+  if (_miniStatsOpen) {
+    panel.style.display = 'block';
+    btn && btn.classList.add('is-open');
+    if (!_miniStatsData) loadMiniStats();
+    else updateMiniStatsLabels();
+  } else {
+    panel.style.display = 'none';
+    btn && btn.classList.remove('is-open');
+  }
 }
 
 async function loadMiniStats() {
@@ -5059,8 +5075,6 @@ function updateProfileLangDisplay() {
 // Load mini stats when search page is shown
 const _origShowPage = typeof showPage === 'function' ? showPage : null;
 document.addEventListener('DOMContentLoaded', function() {
-  // Load mini stats on init
-  setTimeout(loadMiniStats, 800);
   // Update profile lang display on init
   updateProfileLangDisplay();
 });
