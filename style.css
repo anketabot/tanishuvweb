@@ -4194,3 +4194,184 @@ body.pre-init .lang-modal-overlay.show {
   display: flex;
   align-items: center;
 }
+
+/* ========== KOMPAKT HEADER (search page) ========== */
+.header--compact {
+  padding: calc(10px + var(--safe-top)) 16px 10px !important;
+  align-items: center !important;
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+  flex: 1;
+  min-width: 0;
+}
+
+.header-title-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.header-title-text {
+  font-size: 20px;
+  font-weight: 800;
+  letter-spacing: -0.4px;
+  color: var(--text-primary);
+}
+
+.header--compact .header-icon {
+  width: 22px;
+  height: 22px;
+}
+
+.header--compact .header-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+/* Kichik icon-btn varianti */
+.icon-btn--sm {
+  width: 38px !important;
+  height: 38px !important;
+  border-radius: 12px !important;
+}
+
+.icon-btn--sm svg {
+  width: 18px !important;
+  height: 18px !important;
+}
+
+/* TOP toggle tugmasi */
+.stats-toggle-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 0 13px;
+  height: 38px;
+  border-radius: 12px;
+  border: 1.5px solid var(--glass-border);
+  background: var(--glass-bg-light);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  color: var(--ios-blue);
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s var(--ease-smooth);
+  box-shadow: var(--elevation-1);
+  letter-spacing: -0.1px;
+  white-space: nowrap;
+}
+
+.stats-toggle-btn svg {
+  stroke: var(--ios-blue);
+  filter: drop-shadow(0 0 3px var(--ios-blue-glow));
+  flex-shrink: 0;
+}
+
+.stats-toggle-btn:active {
+  transform: scale(0.94);
+  box-shadow: var(--elevation-press);
+}
+
+.stats-toggle-btn.is-open {
+  background: var(--ios-blue);
+  border-color: var(--ios-blue);
+  color: #fff;
+  box-shadow: 0 3px 12px rgba(0,122,255,0.3);
+}
+
+.stats-toggle-btn.is-open svg {
+  stroke: #fff;
+  filter: none;
+}
+
+/* ========== STATISTIKA PANEL — YANGI DIZAYN ========== */
+.stats-mini-panel {
+  margin: 0 0 0 0 !important;
+  background: var(--glass-bg-strong);
+  border: none !important;
+  border-bottom: 1px solid var(--glass-border) !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  overflow: hidden;
+  animation: statsSlideDown 0.22s var(--ease-smooth);
+}
+
+@keyframes statsSlideDown {
+  from { opacity: 0; transform: translateY(-8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.stats-mini-tabs-row {
+  display: flex;
+  gap: 6px;
+  padding: 10px 14px 0;
+}
+
+.stats-mini-tab {
+  font-size: 12px !important;
+  font-weight: 600 !important;
+  padding: 5px 12px !important;
+  border-radius: 999rem !important;
+  border: 1.5px solid var(--glass-border) !important;
+  background: transparent !important;
+  color: var(--text-secondary) !important;
+  cursor: pointer !important;
+  transition: all 0.18s !important;
+  white-space: nowrap !important;
+}
+
+.stats-mini-tab.active {
+  background: var(--ios-blue) !important;
+  border-color: var(--ios-blue) !important;
+  color: #fff !important;
+  box-shadow: 0 2px 8px rgba(0,122,255,0.22) !important;
+}
+
+.stats-mini-body {
+  padding: 6px 10px 10px !important;
+  max-height: 320px;
+  overflow-y: auto;
+}
+
+/* Compact rows */
+.stats-mini-row {
+  padding: 6px 6px !important;
+  border-radius: 10px !important;
+}
+
+.stats-mini-row:not(:last-child) {
+  border-bottom: 1px solid rgba(0,0,0,0.04) !important;
+}
+
+.stats-mini-ava,
+.stats-mini-ava-letter {
+  width: 32px !important;
+  height: 32px !important;
+  font-size: 13px !important;
+}
+
+.stats-mini-name {
+  font-size: 13px !important;
+}
+
+.stats-mini-meta {
+  font-size: 11px !important;
+}
+
+.stats-mini-badge {
+  font-size: 11px !important;
+  padding: 3px 8px !important;
+}
+
+.stats-mini-rank {
+  font-size: 15px !important;
+  min-width: 24px !important;
+}
