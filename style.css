@@ -3953,3 +3953,244 @@ body.pre-init .lang-modal-overlay.show {
 .stats-spin    { display: flex; justify-content: center; padding: 32px 0; }
 .stats-empty   { text-align: center; padding: 32px; color: var(--text-secondary,#999); font-size: 14px; }
 .stats-error   { text-align: center; padding: 28px; color: #e53935; font-size: 14px; }
+/* ========== STATISTIKA MINI-PANEL ========== */
+.stats-mini-panel {
+  margin: 0 16px 16px;
+  background: var(--glass-bg-strong);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--ios-radius);
+  box-shadow: var(--elevation-2);
+  overflow: hidden;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
+
+.stats-mini-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 16px 10px;
+  gap: 10px;
+}
+
+.stats-mini-title {
+  font-size: 15px;
+  font-weight: 800;
+  color: var(--text-primary);
+  white-space: nowrap;
+  letter-spacing: -0.2px;
+}
+
+.stats-mini-tabs {
+  display: flex;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+.stats-mini-tab {
+  font-size: 11px;
+  font-weight: 600;
+  padding: 5px 11px;
+  border-radius: 999rem;
+  border: 1.5px solid var(--glass-border);
+  background: transparent;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all 0.2s var(--ease-smooth);
+  white-space: nowrap;
+  letter-spacing: -0.1px;
+}
+
+.stats-mini-tab.active {
+  background: var(--ios-blue);
+  border-color: var(--ios-blue);
+  color: #fff;
+  box-shadow: 0 2px 10px rgba(0,122,255,0.25);
+}
+
+.stats-mini-body {
+  padding: 4px 12px 12px;
+}
+
+.stats-mini-loading {
+  display: flex;
+  justify-content: center;
+  padding: 18px 0;
+}
+
+.stats-mini-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 6px;
+  border-radius: 14px;
+  transition: background 0.15s;
+}
+
+.stats-mini-row:not(:last-child) {
+  border-bottom: 1px solid rgba(0,122,255,0.07);
+}
+
+.stats-mini-rank {
+  font-size: 17px;
+  min-width: 28px;
+  text-align: center;
+  flex-shrink: 0;
+}
+
+.stats-mini-rank-num {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: rgba(0,122,255,0.10);
+  color: var(--ios-blue);
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.stats-mini-ava {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+  border: 1.5px solid rgba(0,122,255,0.12);
+}
+
+.stats-mini-ava-letter {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--ios-blue-light), var(--ios-blue));
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 15px;
+  font-weight: 800;
+  flex-shrink: 0;
+}
+
+.stats-mini-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.stats-mini-name {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.stats-mini-meta {
+  font-size: 11px;
+  color: var(--text-secondary);
+  margin-top: 1px;
+}
+
+.stats-mini-badge {
+  font-size: 12px;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 999rem;
+  background: rgba(0,122,255,0.08);
+  color: var(--ios-blue);
+  white-space: nowrap;
+  flex-shrink: 0;
+  border: 1px solid rgba(0,122,255,0.12);
+}
+
+.stats-mini-empty {
+  text-align: center;
+  padding: 18px;
+  color: var(--text-secondary);
+  font-size: 13px;
+}
+
+/* ========== PROFIL — TIL TANLASH ========== */
+.profile-lang-section {
+  margin: 0 16px 24px;
+}
+
+.profile-lang-label {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  margin-bottom: 8px;
+  padding-left: 4px;
+}
+
+.profile-lang-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 14px 16px;
+  background: var(--glass-bg-strong);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--ios-radius);
+  box-shadow: var(--elevation-1);
+  cursor: pointer;
+  transition: all 0.18s var(--ease-smooth);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  text-align: left;
+}
+
+.profile-lang-row:active {
+  transform: scale(0.98);
+  box-shadow: var(--elevation-press);
+  background: rgba(0,122,255,0.04);
+}
+
+.profile-lang-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.profile-lang-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, rgba(0,122,255,0.12), rgba(90,200,250,0.15));
+  border: 1px solid rgba(0,122,255,0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--ios-blue);
+  flex-shrink: 0;
+}
+
+.profile-lang-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.profile-lang-name {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text-primary);
+  letter-spacing: -0.2px;
+}
+
+.profile-lang-current {
+  font-size: 13px;
+  color: var(--ios-blue);
+  font-weight: 500;
+}
+
+.profile-lang-arrow {
+  color: var(--text-tertiary);
+  display: flex;
+  align-items: center;
+}
