@@ -2165,9 +2165,15 @@ const tg = window.Telegram?.WebApp;
           // Chat sahifasidagi matnlar - qayta yuklanishi kerak
           applyTranslations();
           if (typeof loadChats === 'function') loadChats();
-      } else if (pageId === 'page-my-profile') {
+      } else if (pageId === 'page-myprofile') {
           applyTranslations();
           if (typeof loadMyProfile === 'function') loadMyProfile();
+          // Goals bo'limi ochiq bo'lsa, uni ham qayta render qilish
+          const goalsBody = document.getElementById('mp-body-goals');
+          if (goalsBody && goalsBody.style.display !== 'none') {
+              if (typeof loadMpGoals === 'function') loadMpGoals();
+              if (typeof loadMpViewed === 'function') loadMpViewed(_currentMpViewedTab || 'liked');
+          }
       } else {
           applyTranslations();
       }
@@ -4658,16 +4664,16 @@ function detectTelegramLanguage() {
       <div style="text-align:center; padding:20px;">
         ${photo ? `<img src="${photo}" style="width:120px;height:120px;object-fit:cover;border-radius:50%;margin-bottom:16px;" />` : `<div style="font-size:64px;">${genderIcon}</div>`}
         <h2 style="font-size:22px; font-weight:800;">${user.full_name}, ${user.age}</h2>
-        <p style="color:var(--text-secondary);">📍 ${locationLabel || user.city || 'Joy ko\'rsatilmagan'}${user.zodiac ? ' • ' + getZodiacDisplay(user.zodiac) : ''}</p>
+        <p style="color:var(--text-secondary);">📍 ${locationLabel || user.city || tr('no_city')}${user.zodiac ? ' • ' + getZodiacDisplay(user.zodiac) : ''}</p>
         ${user.about ? `<p style="color:var(--text-secondary);font-size:14px;line-height:1.4;margin-top:8px;">${escapeHtml(user.about)}</p>` : ''}
       </div>
       <div class="card">
         <div class="section-title">${tr('goal')}</div>
-        <div class="chips-wrap">${goals || '<span style="color:var(--text-tertiary);font-size:14px;">Ko\'rsatilmagan</span>'}</div>
+        <div class="chips-wrap">${goals || `<span style="color:var(--text-tertiary);font-size:14px;">${tr('not_specified')}</span>`}</div>
       </div>
       <div class="card">
         <div class="section-title">${tr('interests')}</div>
-        <div class="chips-wrap">${interests || '<span style="color:var(--text-tertiary);font-size:14px;">Ko\'rsatilmagan</span>'}</div>
+        <div class="chips-wrap">${interests || `<span style="color:var(--text-tertiary);font-size:14px;">${tr('not_specified')}</span>`}</div>
       </div>
     `;
   }
@@ -5376,7 +5382,8 @@ function toggleMpSection(key) {
     chevron?.classList.add('open');
     // Load data when opening goals section
     if (key === 'goals') {
-      if (typeof loadMpViewed === 'function') loadMpViewed();
+      if (typeof loadMpGoals === 'function') loadMpGoals();
+      if (typeof loadMpViewed === 'function') loadMpViewed(_currentMpViewedTab || 'liked');
     }
   }
 }
@@ -5386,3 +5393,83 @@ document.addEventListener('DOMContentLoaded', function() {
   const anketaChevron = document.getElementById('mp-chevron-anketa');
   if (anketaChevron) anketaChevron.classList.add('open');
 });
+
+// ========== MY PROFILE — GOALS CONTENT ==========
+async function loadMpGoals() {
+  const container = document.getElementById('my-goals-content');
+  if (!container) return;
+
+  if (!userId) {
+    container.innerHTML = `<p style="color:var(--text-tertiary);font-size:14px;padding:8px 0;">${tr('not_specified')}</p>`;
+    return;
+  }
+
+  const user = await fetchUserProfile(userId);
+  if (!user) {
+    container.innerHTML = `<p style="color:var(--text-tertiary);font-size:14px;padding:8px 0;">${tr('not_specified')}</p>`;
+    return;
+  }
+
+  const goals = (user.goals || []).map(g => `<span class="chip selected" style="pointer-events:none;">${tr(g) || g}</span>`).join('');
+  const interests = (user.interests || []).slice(0, MAX_INTERESTS_ALLOWED).map(i => `<span class="chip selected" style="pointer-events:none;background:rgba(255,45,85,0.10);color:#FF2D55;border-color:rgba(255,45,85,0.25);">${tr(i) || i}</span>`).join('');
+
+  container.innerHTML = `
+    <div style="margin-bottom:12px;">
+      <div class="section-title" style="font-size:13px;margin-bottom:6px;">${tr('goals_label')}</div>
+      <div class="chips-wrap">${goals || `<span style="color:var(--text-tertiary);font-size:14px;">${tr('not_specified')}</span>`}</div>
+    </div>
+    <div>
+      <div class="section-title" style="font-size:13px;margin-bottom:6px;">${tr('interests_label')}</div>
+      <div class="chips-wrap">${interests || `<span style="color:var(--text-tertiary);font-size:14px;">${tr('not_specified')}</span>`}</div>
+    </div>
+  `;
+}
+
+// ========== MY PROFILE — VIEWED TABS ==========
+let _currentMpViewedTab = 'liked';
+
+function switchMpViewedTab(tab) {
+  _currentMpViewedTab = tab;
+  document.querySelectorAll('.mp-tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('mp-viewed-tab-' + tab)?.classList.add('active');
+  loadMpViewed(tab);
+}
+
+function loadMpViewed(tab) {
+  tab = tab || _currentMpViewedTab || 'liked';
+  _currentMpViewedTab = tab;
+  const body = document.getElementById('mp-viewed-body');
+  if (!body) return;
+
+  const key = tab === 'liked' ? 'viewed_liked' : 'viewed_messaged';
+  let items = [];
+  try {
+    const raw = localStorage.getItem(key);
+    if (raw) items = JSON.parse(raw);
+  } catch (e) {}
+
+  if (!items || items.length === 0) {
+    body.innerHTML = `
+      <div style="padding:20px 8px;text-align:center;">
+        <div style="font-size:32px;margin-bottom:8px;">👁️</div>
+        <p style="font-size:14px;color:var(--text-secondary);">${tab === 'liked' ? tr('no_viewed_liked') : tr('no_viewed_messaged')}</p>
+        <p style="font-size:12px;color:var(--text-tertiary);margin-top:4px;">${tab === 'liked' ? tr('no_viewed_liked_hint') : tr('no_viewed_messaged_hint')}</p>
+      </div>`;
+    return;
+  }
+
+  let html = '<div class="viewed-list">';
+  items.forEach((u, i) => {
+    html += `
+      <div class="viewed-item" onclick="openProfileModalById(${u.id || 0})" style="display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:12px;cursor:pointer;">
+        <div style="width:24px;height:24px;border-radius:50%;background:var(--bg-secondary);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:var(--text-secondary);">${i + 1}</div>
+        <img style="width:40px;height:40px;border-radius:50%;object-fit:cover;" src="${u.photo || 'https://api.dicebear.com/7.x/avataaars/svg?seed=' + encodeURIComponent(u.name || 'user')}" alt="${u.name || ''}" />
+        <div style="flex:1;">
+          <div style="font-weight:700;font-size:14px;">${u.name || tr('no_name')}</div>
+          <div style="font-size:12px;color:var(--text-secondary);">${u.age ? u.age + ' ' + tr('years_old') : ''}${u.city ? ' • ' + u.city : ''}</div>
+        </div>
+      </div>`;
+  });
+  html += '</div>';
+  body.innerHTML = html;
+}
