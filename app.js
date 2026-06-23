@@ -5318,3 +5318,29 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   }, 200);
 })();
+// ========== MY PROFILE — SECTION TOGGLE ==========
+function toggleMpSection(key) {
+  const body = document.getElementById('mp-body-' + key);
+  const chevron = document.getElementById('mp-chevron-' + key);
+  if (!body) return;
+
+  const isOpen = body.style.display !== 'none';
+
+  if (isOpen) {
+    body.style.display = 'none';
+    chevron?.classList.remove('open');
+  } else {
+    body.style.display = 'block';
+    chevron?.classList.add('open');
+    // Load data when opening goals section
+    if (key === 'goals') {
+      if (typeof loadMpViewed === 'function') loadMpViewed();
+    }
+  }
+}
+
+// Auto-open anketa section on page load
+document.addEventListener('DOMContentLoaded', function() {
+  const anketaChevron = document.getElementById('mp-chevron-anketa');
+  if (anketaChevron) anketaChevron.classList.add('open');
+});
