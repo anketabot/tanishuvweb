@@ -9,11 +9,11 @@ const tg = window.Telegram?.WebApp;
   const SUPPORTED_LANGUAGES = {
       'uz': { name: "O'zbekcha", flag: '🇺🇿' },
       'ru': { name: 'Русский', flag: '🇷🇺' },
+      'en': { name: 'English', flag: '🇬🇧' },
       'kk': { name: 'Қазақша', flag: '🇰🇿' },
       'ky': { name: 'Кыргызча', flag: '🇰🇬' },
       'kaa': { name: 'Qaraqalpaqsha', flag: '🇺🇿' },
-      'tg': { name: 'Тоҷикӣ', flag: '🇹🇯' },
-      'en': { name: 'English', flag: '🇬🇧' },
+      'tg': { name: 'Тоҷикӣ', flag: '🇹🇯' },     
   };
 
   let userId = null;
