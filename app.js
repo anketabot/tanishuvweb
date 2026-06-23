@@ -2103,6 +2103,7 @@ const tg = window.Telegram?.WebApp;
       refreshCurrentPageTranslations();
       // Profil sahifasidagi til ko'rinishini yangilash
       if (typeof updateProfileLangDisplay === 'function') updateProfileLangDisplay();
+      if (typeof updateMiniStatsLabels === 'function') updateMiniStatsLabels();
 
       // Backend ga saqlash
       await saveLanguageToBackend(langCode);
@@ -4969,7 +4970,19 @@ function closeStatsModal(e) {
 let _miniStatsData = null;
 let _miniStatsCurrentTab = 'active';
 
+function updateMiniStatsLabels() {
+  const title = document.getElementById('smtitle');
+  if (title) title.textContent = tr('leaderboard_title') || '🏆 Reyting';
+  const tabActive = document.getElementById('smtab-active');
+  if (tabActive) tabActive.textContent = tr('stats_active') || '🔥 Faollar';
+  const tabLikes = document.getElementById('smtab-likes');
+  if (tabLikes) tabLikes.textContent = tr('stats_likes') || '💙 Like';
+  const tabSuper = document.getElementById('smtab-superlikes');
+  if (tabSuper) tabSuper.textContent = tr('stats_superlikes') || '⭐ Super';
+}
+
 async function loadMiniStats() {
+  updateMiniStatsLabels();
   const body = document.getElementById('stats-mini-body');
   if (!body) return;
   body.innerHTML = '<div class="stats-mini-loading"><div class="spinner"></div></div>';
