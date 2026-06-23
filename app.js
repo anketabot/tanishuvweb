@@ -351,7 +351,16 @@ const tg = window.Telegram?.WebApp;
           'stats_active': '🔥 Faollar',
           'stats_likes': '💙 Like',
           'stats_superlikes': '⭐ Super',
-          'interface_language': 'Interfeys tili'
+          'interface_language': 'Interfeys tili',
+          'champions_title': '🏆 Mutloq chempion',
+          'nav_champions': 'Chemp.',
+          'viewed_title': '👁 Mening ko\'zdim',
+          'nav_viewed': 'Ko\'zdim',
+          'no_viewed_liked': 'Hali like bergan anketalar yo\'q',
+          'no_viewed_liked_hint': 'Qidirish bo\'limidan anketalar toping va like bosing',
+          'no_viewed_messaged': 'Hali xabar yozgan anketalar yo\'q',
+          'no_viewed_messaged_hint': 'Qidirish bo\'limidan anketalar toping va xabar yozing',
+          'profile_loading': 'Anketa yuklanmoqda...'
       },
       'ru': {
           'select_language': '🌍 Выберите язык',
@@ -619,7 +628,16 @@ const tg = window.Telegram?.WebApp;
           'stats_active': '🔥 Активные',
           'stats_likes': '💙 Лайки',
           'stats_superlikes': '⭐ Супер',
-          'interface_language': 'Язык интерфейса'
+          'interface_language': 'Язык интерфейса',
+          'champions_title': '🏆 Абсолютный чемпион',
+          'nav_champions': 'Чемп.',
+          'viewed_title': '👁 Мои просмотры',
+          'nav_viewed': 'Смотрел',
+          'no_viewed_liked': 'Пока нет понравившихся анкет',
+          'no_viewed_liked_hint': 'Найдите анкеты в поиске и поставьте лайк',
+          'no_viewed_messaged': 'Пока нет анкет с сообщениями',
+          'no_viewed_messaged_hint': 'Найдите анкеты в поиске и напишите сообщение',
+          'profile_loading': 'Загрузка анкеты...'
       },
       'kk': {
           'select_language': '🌍 Тілді таңдаңыз',
@@ -887,7 +905,16 @@ const tg = window.Telegram?.WebApp;
           'stats_active': '🔥 Белсенділер',
           'stats_likes': '💙 Лайк',
           'stats_superlikes': '⭐ Супер',
-          'interface_language': 'Интерфейс тілі'
+          'interface_language': 'Интерфейс тілі',
+          'champions_title': '🏆 Мұтлық чемпион',
+          'nav_champions': 'Чемп.',
+          'viewed_title': '👁 Мен көргендерім',
+          'nav_viewed': 'Көрдім',
+          'no_viewed_liked': 'Әлі лайк басқан анкеталар жоқ',
+          'no_viewed_liked_hint': 'Іздеу бөлімінен анкеталар тапыңыз және лайк басыңыз',
+          'no_viewed_messaged': 'Әлі хабар жазған анкеталар жоқ',
+          'no_viewed_messaged_hint': 'Іздеу бөлімінен анкеталар тапыңыз және хабар жазыңыз',
+          'profile_loading': 'Анкета жүктелуде...'
       },
       'ky': {
           'select_language': '🌍 Тилди тандаңыз',
@@ -1155,7 +1182,16 @@ const tg = window.Telegram?.WebApp;
           'stats_active': '🔥 Активдүүлөр',
           'stats_likes': '💙 Лайк',
           'stats_superlikes': '⭐ Супер',
-          'interface_language': 'Интерфейс тили'
+          'interface_language': 'Интерфейс тили',
+          'champions_title': '🏆 Муттук чемпион',
+          'nav_champions': 'Чемп.',
+          'viewed_title': '👁 Мен көргөндөрүм',
+          'nav_viewed': 'Көрдүм',
+          'no_viewed_liked': 'Азырынча лайк баскан анкеталар жок',
+          'no_viewed_liked_hint': 'Издөө бөлүмүнөн анкеталар табыңыз жана лайк баскыңыз',
+          'no_viewed_messaged': 'Азырынча билдирүү жазган анкеталар жок',
+          'no_viewed_messaged_hint': 'Издөө бөлүмүнөн анкеталар табыңыз жана билдирүү жазыңыз',
+          'profile_loading': 'Анкета жүктөлүүдө...'
       },
       'kaa': {
           'select_language': '🌍 Tildi tańlań',
@@ -1423,7 +1459,16 @@ const tg = window.Telegram?.WebApp;
           'stats_active': '🔥 Belgіlіler',
           'stats_likes': '💙 Like',
           'stats_superlikes': '⭐ Super',
-          'interface_language': 'Interfeys tіlі'
+          'interface_language': 'Interfeys tіlі',
+          'champions_title': '🏆 Mutloq chempion',
+          'nav_champions': 'Chemp.',
+          'viewed_title': '👁 Men kórgеnim',
+          'nav_viewed': 'Kórdim',
+          'no_viewed_liked': 'Háli like basqan anketalar joq',
+          'no_viewed_liked_hint': 'Izlew bólimesinen anketalar tabıń hám like basıń',
+          'no_viewed_messaged': 'Háli xabar jazqan anketalar joq',
+          'no_viewed_messaged_hint': 'Izlew bólimesinen anketalar tabıń hám xabar jazıń',
+          'profile_loading': 'Anketa júklenbekte...'
       },
       'tg': {
           'select_language': '🌍 Забонро интихоб кунед',
@@ -1691,7 +1736,16 @@ const tg = window.Telegram?.WebApp;
           'stats_active': '🔥 Фаъолон',
           'stats_likes': '💙 Лайк',
           'stats_superlikes': '⭐ Супер',
-          'interface_language': 'Забони интерфейс'
+          'interface_language': 'Забони интерфейс',
+          'champions_title': '🏆 Мутлоқ чемпион',
+          'nav_champions': 'Чемп.',
+          'viewed_title': '👁 Ман дидаам',
+          'nav_viewed': 'Дидам',
+          'no_viewed_liked': 'Ҳанӯз лайк задаан анкета нест',
+          'no_viewed_liked_hint': 'Аз бахши ҷустуҷӯ анкета ёбед ва лайк занед',
+          'no_viewed_messaged': 'Ҳанӯз паём навиштаан анкета нест',
+          'no_viewed_messaged_hint': 'Аз бахши ҷустуҷӯ анкета ёбед ва паём нависед',
+          'profile_loading': 'Анкета бор шуда истодааст...'
       },
       'en': {
           'select_language': '🌍 Select language',
@@ -1959,7 +2013,16 @@ const tg = window.Telegram?.WebApp;
           'stats_active': '🔥 Active',
           'stats_likes': '💙 Likes',
           'stats_superlikes': '⭐ Super',
-          'interface_language': 'Interface language'
+          'interface_language': 'Interface language',
+          'champions_title': '🏆 Absolute Champion',
+          'nav_champions': 'Champ.',
+          'viewed_title': '👁 My Viewed',
+          'nav_viewed': 'Viewed',
+          'no_viewed_liked': 'No liked profiles yet',
+          'no_viewed_liked_hint': 'Find profiles in search and like them',
+          'no_viewed_messaged': 'No messaged profiles yet',
+          'no_viewed_messaged_hint': 'Find profiles in search and send a message',
+          'profile_loading': 'Loading profile...'
       },
   };
 
@@ -2577,11 +2640,16 @@ function detectTelegramLanguage() {
           message: message
         });
         await loadLimitStatus();
+        // Add to viewed lists
+        try { addToViewed({ id: toUserId, name: messageTargetName, photo: messageTargetPhoto }, 'liked'); } catch(e) {}
+        try { addToViewed({ id: toUserId, name: messageTargetName, photo: messageTargetPhoto }, 'messaged'); } catch(e) {}
         showToast(tr('message_sent'));
         openChatRoom(likeData.match_id, messageTargetName, messageTargetPhoto);
         return;
       }
 
+      // Add to viewed liked list
+      try { addToViewed({ id: toUserId, name: messageTargetName, photo: messageTargetPhoto }, 'liked'); } catch(e) {}
       showToast('💙 Like yuborildi! Agar u ham sizni yoqtirsa, match bo\'lib suhbat ochiladi.');
     } else {
       if (likeData.error === 'limit_exceeded') {
@@ -2769,6 +2837,8 @@ function detectTelegramLanguage() {
     }
     if (name === 'myprofile') loadMyProfile();
     if (name === 'chats') loadChats();
+    if (name === 'champions') loadChampions();
+    if (name === 'viewed') loadViewed();
     if (name === 'profile') {
       // CRITICAL: Reset form state when entering profile page
       // so previous user's data doesn't appear
@@ -4002,6 +4072,11 @@ function detectTelegramLanguage() {
 
     if (data.success) {
       await loadLimitStatus();
+      // Add to viewed liked list
+      try {
+        const u = tinderUsers.find(x => Number(x.telegram_id) === toUser);
+        if (u) addToViewed(u, 'liked');
+      } catch(e) {}
       if (data.match) {
         showMatchOverlay();
         loadChats();
@@ -5078,6 +5153,151 @@ document.addEventListener('DOMContentLoaded', function() {
   // Update profile lang display on init
   updateProfileLangDisplay();
 });
+
+// ========== CHAMPIONS (Mutloq Chempion) ==========
+  let _championsTab = 'likes';
+  let _viewedTab = 'liked';
+
+  function switchChampionsTab(tab) {
+    _championsTab = tab;
+    document.querySelectorAll('.champions-tabs-row .stats-mini-tab').forEach(b => b.classList.remove('active'));
+    document.getElementById('champ-tab-' + tab)?.classList.add('active');
+    renderChampions(tab);
+  }
+
+  function switchViewedTab(tab) {
+    _viewedTab = tab;
+    document.querySelectorAll('.viewed-tabs-row .stats-mini-tab').forEach(b => b.classList.remove('active'));
+    document.getElementById('viewed-tab-' + tab)?.classList.add('active');
+    renderViewed(tab);
+  }
+
+  function loadChampions() {
+    renderChampions(_championsTab);
+  }
+
+  function loadViewed() {
+    renderViewed(_viewedTab);
+  }
+
+  function renderChampions(tab) {
+    const body = document.getElementById('champions-body');
+    if (!body) return;
+
+    // Mock champion data - in production this would come from backend
+    const mockChampions = [
+      { id: 1, name: 'Dilnoza', photo: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Dilnoza', likes: 142, messages: 89, superlikes: 56 },
+      { id: 2, name: 'Jasur', photo: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Jasur', likes: 128, messages: 67, superlikes: 43 },
+      { id: 3, name: 'Madina', photo: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Madina', likes: 115, messages: 94, superlikes: 38 },
+      { id: 4, name: 'Bekzod', photo: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Bekzod', likes: 98, messages: 55, superlikes: 29 },
+      { id: 5, name: 'Nilufar', photo: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Nilufar', likes: 87, messages: 72, superlikes: 25 },
+      { id: 6, name: 'Shaxzod', photo: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Shaxzod', likes: 76, messages: 48, superlikes: 21 },
+      { id: 7, name: 'Zarina', photo: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Zarina', likes: 65, messages: 61, superlikes: 18 },
+      { id: 8, name: 'Temur', photo: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Temur', likes: 54, messages: 42, superlikes: 15 },
+    ];
+
+    const sorted = [...mockChampions].sort((a, b) => b[tab] - a[tab]);
+
+    const rankClass = (i) => {
+      if (i === 0) return 'gold';
+      if (i === 1) return 'silver';
+      if (i === 2) return 'bronze';
+      return 'normal';
+    };
+
+    const labelMap = { likes: '💙 Like', messages: '💬 Xabar', superlikes: '⭐ Super Like' };
+
+    let html = '<div class="champion-list">';
+    sorted.forEach((u, i) => {
+      html += `
+        <div class="champion-item" onclick="openProfileModalById(${u.id})">
+          <div class="champion-rank ${rankClass(i)}">${i + 1}</div>
+          <img class="champion-photo" src="${u.photo}" alt="${u.name}" />
+          <div class="champion-info">
+            <div class="champion-name">${u.name}</div>
+            <div class="champion-count">${labelMap[tab]}: ${u[tab]}</div>
+          </div>
+          <div class="champion-score">${u[tab]}</div>
+        </div>`;
+    });
+    html += '</div>';
+    body.innerHTML = html;
+  }
+
+  function renderViewed(tab) {
+    const body = document.getElementById('viewed-body');
+    if (!body) return;
+
+    const key = tab === 'liked' ? 'viewed_liked' : 'viewed_messaged';
+    let items = [];
+    try {
+      const raw = localStorage.getItem(key);
+      if (raw) items = JSON.parse(raw);
+    } catch (e) {}
+
+    if (!items || items.length === 0) {
+      body.innerHTML = `
+        <div class="empty-state" style="padding:30px 16px;">
+          <div class="empty-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></div>
+          <h3 style="font-size:16px;font-weight:800;color:var(--text-primary);">${tab === 'liked' ? tr('no_viewed_liked') : tr('no_viewed_messaged')}</h3>
+          <p style="font-size:13px;color:var(--text-secondary);margin-top:6px;">${tab === 'liked' ? tr('no_viewed_liked_hint') : tr('no_viewed_messaged_hint')}</p>
+        </div>`;
+      return;
+    }
+
+    let html = '<div class="viewed-list">';
+    items.forEach((u, i) => {
+      html += `
+        <div class="viewed-item" onclick="openProfileModalById(${u.id || 0})">
+          <div class="viewed-rank normal" style="width:28px;height:28px;font-size:12px;">${i + 1}</div>
+          <img class="viewed-photo" src="${u.photo || 'https://api.dicebear.com/7.x/avataaars/svg?seed=' + encodeURIComponent(u.name || 'user')}" alt="${u.name || ''}" />
+          <div class="viewed-info">
+            <div class="viewed-name">${u.name || tr('no_name')}</div>
+            <div class="viewed-count">${u.age || ''} ${u.age ? tr('years_old') : ''} ${u.city ? '• ' + u.city : ''}</div>
+          </div>
+          <div class="viewed-actions">
+            <button class="viewed-btn ${tab === 'liked' ? 'liked-btn' : ''}" onclick="event.stopPropagation();${tab === 'liked' ? 'openMessageModal(' + (u.id||0) + ')' : 'openChatRoom(' + (u.id||0) + ')'}">
+              ${tab === 'liked'
+                ? '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>'
+                : '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>'
+              }
+            </button>
+          </div>
+        </div>`;
+    });
+    html += '</div>';
+    body.innerHTML = html;
+  }
+
+  function addToViewed(profile, type) {
+    try {
+      const key = type === 'liked' ? 'viewed_liked' : 'viewed_messaged';
+      let items = [];
+      const raw = localStorage.getItem(key);
+      if (raw) items = JSON.parse(raw);
+      if (!Array.isArray(items)) items = [];
+      // Remove existing entry with same id
+      items = items.filter(x => x.id !== profile.id);
+      // Add new entry at beginning
+      items.unshift({
+        id: profile.id,
+        name: profile.name || profile.first_name || '',
+        age: profile.age || '',
+        city: profile.city || '',
+        photo: profile.photo || '',
+        gender: profile.gender || '',
+        timestamp: Date.now()
+      });
+      // Keep max 50 items
+      if (items.length > 50) items = items.slice(0, 50);
+      localStorage.setItem(key, JSON.stringify(items));
+    } catch (e) {}
+  }
+
+  function openProfileModalById(id) {
+    // Try to find in search results or use a placeholder
+    showToast(tr('profile_loading'));
+  }
 
 // Patch showPage to reload mini-stats and update lang display
 (function() {
