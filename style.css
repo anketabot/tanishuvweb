@@ -4375,3 +4375,10 @@ body.pre-init .lang-modal-overlay.show {
   font-size: 15px !important;
   min-width: 24px !important;
 }
+
+.stats-toggle-btn--emoji {
+  padding: 0 !important;
+  width: 38px !important;
+  font-size: 20px !important;
+  justify-content: center !important;
+}
