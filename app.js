@@ -2364,6 +2364,12 @@ function detectTelegramLanguage() {
     const bar = document.getElementById('limit-status-bar');
     if (!bar) return;
 
+    // Ayol foydalanuvchilar uchun limit paneli yashiriladi
+    if (limits.is_female) {
+      bar.style.display = 'none';
+      return;
+    }
+
     if (limits.unlimited) {
       bar.style.display = 'flex';
       document.getElementById('limit-likes').textContent = '∞';
@@ -2379,6 +2385,9 @@ function detectTelegramLanguage() {
 
   // ===== LIMIT MODAL MATNI (YANGILANGAN) =====
   function showLimitExceeded(type) {
+    // Ayol foydalanuvchilar uchun limit modali ko'rsatilmaydi
+    if (currentLimitStatus && currentLimitStatus.is_female) return;
+
     const modal = document.getElementById('limit-modal');
     const text = document.getElementById('limit-modal-text');
     if (modal && text) {
@@ -2551,7 +2560,8 @@ function detectTelegramLanguage() {
     if (!currentLimitStatus) {
       await loadLimitStatus();
     }
-    if (currentLimitStatus && currentLimitStatus.unlimited) return true;
+    // Ayol foydalanuvchilar uchun hech qanday limit yo'q
+    if (currentLimitStatus && (currentLimitStatus.unlimited || currentLimitStatus.is_female)) return true;
 
     if (currentLimitStatus) {
       if (type === 'likes' && currentLimitStatus.likes_remaining <= 0) return false;
@@ -4842,3 +4852,79 @@ function detectTelegramLanguage() {
     const modal = document.getElementById('map-picker-modal');
     if (modal) modal.style.display = 'none';
   }
+// ============================================================
+//  STATISTIKA — Web App ichida (app.js oxiri)
+// ============================================================
+
+function switchStatsTab(tab) {
+  document.querySelectorAll('.stats-tab-btn').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.stats-panel-body').forEach(p => p.style.display = 'none');
+  const tabEl = document.getElementById('stab-' + tab);
+  const panelEl = document.getElementById('spanel-' + tab);
+  if (tabEl) tabEl.classList.add('active');
+  if (panelEl) panelEl.style.display = 'block';
+}
+
+function renderStatsRows(containerId, users, icon, label) {
+  const el = document.getElementById(containerId);
+  if (!el) return;
+  if (!users || !users.length) {
+    el.innerHTML = '<div class="stats-empty">Hozircha ma\'lumot yo\'q 🙈</div>';
+    return;
+  }
+  const medals = ['🥇','🥈','🥉'];
+  el.innerHTML = users.map((u, i) => {
+    const medalHtml = i < 3
+      ? `<span class="stats-medal">${medals[i]}</span>`
+      : `<span class="stats-medal"><span class="stats-rank-circle">${i+1}</span></span>`;
+    const photo = u.photo_base64 || u.photo_file_id || '';
+    const avaHtml = photo
+      ? `<img class="stats-ava" src="${photo}" alt="" />`
+      : `<div class="stats-ava-letter">${(u.full_name||'?')[0].toUpperCase()}</div>`;
+    const meta = [u.age ? u.age + ' yosh' : '', u.city || ''].filter(Boolean).join(' • ');
+    return `
+      <div class="stats-row">
+        ${medalHtml}
+        ${avaHtml}
+        <div class="stats-info">
+          <div class="stats-uname">${escapeHtml(u.full_name || 'Anonim')}</div>
+          ${meta ? `<div class="stats-umeta">${escapeHtml(meta)}</div>` : ''}
+        </div>
+        <div class="stats-count-badge">${icon} ${u.count} ${label}</div>
+      </div>`;
+  }).join('');
+}
+
+async function openStatsModal() {
+  const modal = document.getElementById('stats-modal');
+  if (!modal) return;
+  modal.style.display = 'flex';
+  switchStatsTab('active');
+
+  const spinHtml = '<div class="stats-spin"><div class="spinner"></div></div>';
+  ['stats-active-list','stats-likes-list','stats-superlikes-list']
+    .forEach(id => { const e = document.getElementById(id); if (e) e.innerHTML = spinHtml; });
+
+  try {
+    const data = await apiPost('/api/stats/leaderboard', {});
+    if (data.success) {
+      renderStatsRows('stats-active-list',     data.most_active,     '🔥', 'ta');
+      renderStatsRows('stats-likes-list',      data.top_liked,       '💙', 'like');
+      renderStatsRows('stats-superlikes-list', data.top_super_liked, '⭐', 'super like');
+    } else {
+      const errHtml = '<div class="stats-error">❌ Ma\'lumot yuklanmadi</div>';
+      ['stats-active-list','stats-likes-list','stats-superlikes-list']
+        .forEach(id => { const e = document.getElementById(id); if (e) e.innerHTML = errHtml; });
+    }
+  } catch(e) {
+    const errHtml = '<div class="stats-error">❌ Internet aloqasini tekshiring</div>';
+    ['stats-active-list','stats-likes-list','stats-superlikes-list']
+      .forEach(id => { const el = document.getElementById(id); if (el) el.innerHTML = errHtml; });
+  }
+}
+
+function closeStatsModal(e) {
+  if (e && e.target !== e.currentTarget) return;
+  const modal = document.getElementById('stats-modal');
+  if (modal) modal.style.display = 'none';
+}
