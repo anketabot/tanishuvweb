@@ -402,32 +402,31 @@
 
 <!-- ======= PAGE: SEARCH (YANGILANGAN) ======= -->
 <div class="page active" id="page-search">
-  <div class="header">
-    <div>
-      <div class="header-title">
-        <span class="header-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg></span>
-        <span data-i18n="search">Qidirish</span>
+  <div class="header header--compact">
+    <div class="header-left">
+      <div class="header-title-row">
+        <span class="header-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg></span>
+        <span class="header-title-text" data-i18n="search">Qidirish</span>
       </div>
-      <div class="header-sub" data-i18n="find_friends">Yangi do'stlar toping</div>
     </div>
     <div class="header-actions">
-
-      <button class="icon-btn" id="search-likes-btn" onclick="openIncomingLikesModal()" data-i18n-title="people_who_liked_you" title="Sizga like yuborganlar">
+      <button class="stats-toggle-btn" id="stats-toggle-btn" onclick="toggleMiniStats()" title="Reyting">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+        <span id="stats-toggle-label">TOP</span>
+      </button>
+      <button class="icon-btn icon-btn--sm" id="search-likes-btn" onclick="openIncomingLikesModal()" data-i18n-title="people_who_liked_you" title="Sizga like yuborganlar">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
         <span class="icon-badge" id="search-likes-badge" style="display:none;">0</span>
       </button>
     </div>
   </div>
 
-  <!-- ======= STATISTIKA MINI-PANEL ======= -->
-  <div class="stats-mini-panel" id="stats-mini-panel">
-    <div class="stats-mini-header">
-      <span class="stats-mini-title" id="smtitle">🏆 Reyting</span>
-      <div class="stats-mini-tabs">
-        <button class="stats-mini-tab active" id="smtab-active" onclick="switchMiniStatsTab('active')">🔥 Faollar</button>
-        <button class="stats-mini-tab" id="smtab-likes" onclick="switchMiniStatsTab('likes')">💙 Like</button>
-        <button class="stats-mini-tab" id="smtab-superlikes" onclick="switchMiniStatsTab('superlikes')">⭐ Super</button>
-      </div>
+  <!-- ======= STATISTIKA MINI-PANEL (collapsible) ======= -->
+  <div class="stats-mini-panel" id="stats-mini-panel" style="display:none;">
+    <div class="stats-mini-tabs-row">
+      <button class="stats-mini-tab active" id="smtab-active" onclick="switchMiniStatsTab('active')">🔥 Faollar</button>
+      <button class="stats-mini-tab" id="smtab-likes" onclick="switchMiniStatsTab('likes')">💙 Like</button>
+      <button class="stats-mini-tab" id="smtab-superlikes" onclick="switchMiniStatsTab('superlikes')">⭐ Super</button>
     </div>
     <div class="stats-mini-body" id="stats-mini-body">
       <div class="stats-mini-loading"><div class="spinner"></div></div>
