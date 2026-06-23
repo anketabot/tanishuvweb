@@ -2066,6 +2066,8 @@ const tg = window.Telegram?.WebApp;
       applyTranslations();
       // Dinamik render qilingan sahifadagi matnlarni ham yangilash
       refreshCurrentPageTranslations();
+      // Profil sahifasidagi til ko'rinishini yangilash
+      if (typeof updateProfileLangDisplay === 'function') updateProfileLangDisplay();
 
       // Backend ga saqlash
       await saveLanguageToBackend(langCode);
@@ -4928,3 +4930,109 @@ function closeStatsModal(e) {
   const modal = document.getElementById('stats-modal');
   if (modal) modal.style.display = 'none';
 }
+// ========== STATISTIKA MINI-PANEL ==========
+let _miniStatsData = null;
+let _miniStatsCurrentTab = 'active';
+
+async function loadMiniStats() {
+  const body = document.getElementById('stats-mini-body');
+  if (!body) return;
+  body.innerHTML = '<div class="stats-mini-loading"><div class="spinner"></div></div>';
+  try {
+    const data = await apiPost('/api/stats/leaderboard', {});
+    if (data.success) {
+      _miniStatsData = data;
+      renderMiniStatsTab(_miniStatsCurrentTab);
+    } else {
+      body.innerHTML = '<div class="stats-mini-empty">Ma\'lumot yuklanmadi</div>';
+    }
+  } catch(e) {
+    body.innerHTML = '<div class="stats-mini-empty">Internet aloqasini tekshiring</div>';
+  }
+}
+
+function switchMiniStatsTab(tab) {
+  _miniStatsCurrentTab = tab;
+  document.querySelectorAll('.stats-mini-tab').forEach(t => t.classList.remove('active'));
+  const tabEl = document.getElementById('smtab-' + tab);
+  if (tabEl) tabEl.classList.add('active');
+  if (_miniStatsData) {
+    renderMiniStatsTab(tab);
+  } else {
+    loadMiniStats();
+  }
+}
+
+function renderMiniStatsTab(tab) {
+  const body = document.getElementById('stats-mini-body');
+  if (!body || !_miniStatsData) return;
+  let users, icon, label;
+  if (tab === 'active') {
+    users = _miniStatsData.most_active; icon = '🔥'; label = 'ta';
+  } else if (tab === 'likes') {
+    users = _miniStatsData.top_liked; icon = '💙'; label = 'like';
+  } else {
+    users = _miniStatsData.top_super_liked; icon = '⭐'; label = 'super like';
+  }
+  if (!users || !users.length) {
+    body.innerHTML = '<div class="stats-mini-empty">Hozircha ma\'lumot yo\'q 🙈</div>';
+    return;
+  }
+  const medals = ['🥇','🥈','🥉'];
+  body.innerHTML = users.slice(0, 10).map((u, i) => {
+    const rankHtml = i < 3
+      ? `<span class="stats-mini-rank">${medals[i]}</span>`
+      : `<span class="stats-mini-rank"><span class="stats-mini-rank-num">${i+1}</span></span>`;
+    const photo = u.photo_base64 || u.photo_file_id || '';
+    const avaHtml = photo
+      ? `<img class="stats-mini-ava" src="${photo}" alt="" />`
+      : `<div class="stats-mini-ava-letter">${(u.full_name||'?')[0].toUpperCase()}</div>`;
+    const meta = [u.age ? u.age + ' yosh' : '', u.city || ''].filter(Boolean).join(' • ');
+    return `<div class="stats-mini-row">
+      ${rankHtml}
+      ${avaHtml}
+      <div class="stats-mini-info">
+        <div class="stats-mini-name">${escapeHtml(u.full_name || 'Anonim')}</div>
+        ${meta ? `<div class="stats-mini-meta">${escapeHtml(meta)}</div>` : ''}
+      </div>
+      <div class="stats-mini-badge">${icon} ${u.count} ${label}</div>
+    </div>`;
+  }).join('');
+}
+
+function updateProfileLangDisplay() {
+  const el = document.getElementById('profile-lang-current-text');
+  if (!el) return;
+  const lang = currentLang || localStorage.getItem('app_language') || 'uz';
+  const info = SUPPORTED_LANGUAGES[lang];
+  if (info) el.textContent = info.name;
+}
+
+// Load mini stats when search page is shown
+const _origShowPage = typeof showPage === 'function' ? showPage : null;
+document.addEventListener('DOMContentLoaded', function() {
+  // Load mini stats on init
+  setTimeout(loadMiniStats, 800);
+  // Update profile lang display on init
+  updateProfileLangDisplay();
+});
+
+// Patch showPage to reload mini-stats and update lang display
+(function() {
+  const _checkInterval = setInterval(function() {
+    if (typeof showPage === 'function' && !showPage._miniPatched) {
+      const _orig = showPage;
+      window.showPage = function(page) {
+        _orig(page);
+        if (page === 'search') {
+          if (!_miniStatsData) loadMiniStats();
+        }
+        if (page === 'myprofile') {
+          updateProfileLangDisplay();
+        }
+      };
+      window.showPage._miniPatched = true;
+      clearInterval(_checkInterval);
+    }
+  }, 200);
+})();
