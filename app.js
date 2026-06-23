@@ -647,7 +647,7 @@ const tg = window.Telegram?.WebApp;
           'my_goals_section': 'Мои цели',
           'mp_anketa_sub': 'Личные данные и фото',
           'mp_goals_title': 'Цели & Просмотренные',
-          'mp_goals_sub': 'Мои цели и просмотренные люди',
+          'mp_viewed_sub': 'Анкеты с лайком и сообщением',
           'mp_liked_tab': 'Лайкнул',
           'mp_messaged_tab': 'Написал'
       },
@@ -930,7 +930,7 @@ const tg = window.Telegram?.WebApp;
           'my_goals_section': 'Менің мақсаттарым',
           'mp_anketa_sub': 'Жеке деректер мен фото',
           'mp_goals_title': 'Мақсаттар & Көргендерім',
-          'mp_goals_sub': 'Менің мақсаттарым және көрген адамдарым',
+          'mp_viewed_sub': 'Лайк және хабар жазған анкеталар',
           'mp_liked_tab': 'Лайк басқан',
           'mp_messaged_tab': 'Жазған'
       },
@@ -1213,7 +1213,7 @@ const tg = window.Telegram?.WebApp;
           'my_goals_section': 'Менин максаттарым',
           'mp_anketa_sub': 'Жеке маалымат жана фото',
           'mp_goals_title': 'Максаттар & Көргөндөрүм',
-          'mp_goals_sub': 'Менин максаттарым жана көргөн адамдарым',
+          'mp_viewed_sub': 'Лайк жана билдирүү жазган анкеталар',
           'mp_liked_tab': 'Лайк баскан',
           'mp_messaged_tab': 'Жазган'
       },
@@ -1496,7 +1496,7 @@ const tg = window.Telegram?.WebApp;
           'my_goals_section': 'Meniń maqsetlerim',
           'mp_anketa_sub': 'Shaxsiy maǵlıwmatlar hám súwret',
           'mp_goals_title': 'Maqsetler & Kórgenlerim',
-          'mp_goals_sub': 'Meniń maqsetlerim hám kórgen adamlarım',
+          'mp_viewed_sub': 'Layk hám xabar jazǵan anketalar',
           'mp_liked_tab': 'Layk basqan',
           'mp_messaged_tab': 'Jazǵan'
       },
@@ -1779,7 +1779,7 @@ const tg = window.Telegram?.WebApp;
           'my_goals_section': 'Мақсадҳои ман',
           'mp_anketa_sub': 'Маълумоти шахсӣ ва акс',
           'mp_goals_title': 'Мақсадҳо & Дидаҳои ман',
-          'mp_goals_sub': 'Мақсадҳои ман ва одамоне, ки дидам',
+          'mp_viewed_sub': 'Анкетаҳое, ки лайк задам ва навиштам',
           'mp_liked_tab': 'Лайк задам',
           'mp_messaged_tab': 'Навиштам'
       },
@@ -2171,7 +2171,6 @@ const tg = window.Telegram?.WebApp;
           // Goals bo'limi ochiq bo'lsa, uni ham qayta render qilish
           const goalsBody = document.getElementById('mp-body-goals');
           if (goalsBody && goalsBody.style.display !== 'none') {
-              if (typeof loadMpGoals === 'function') loadMpGoals();
               if (typeof loadMpViewed === 'function') loadMpViewed(_currentMpViewedTab || 'liked');
           }
       } else {
@@ -5382,7 +5381,6 @@ function toggleMpSection(key) {
     chevron?.classList.add('open');
     // Load data when opening goals section
     if (key === 'goals') {
-      if (typeof loadMpGoals === 'function') loadMpGoals();
       if (typeof loadMpViewed === 'function') loadMpViewed(_currentMpViewedTab || 'liked');
     }
   }
