@@ -2645,6 +2645,8 @@ function detectTelegramLanguage() {
     const message = document.getElementById('first-message-input').value.trim();
     const fromUserId = Number(userId);
     const toUserId = Number(messageTargetUserId);
+    const savedName = messageTargetName;
+    const savedPhoto = messageTargetPhoto;
 
     if (!message) {
       showToast(tr('enter_message_text'));
@@ -2669,43 +2671,61 @@ function detectTelegramLanguage() {
 
     closeMessageModal();
 
-    // First send like
+    // 1. Avval like yuboramiz
     const likeData = await apiPost('/api/likes/send', {
       from_user: fromUserId,
       to_user: toUserId
     });
 
-    if (likeData.success) {
-      if (likeData.error === 'limit_exceeded') {
-        showLimitExceeded('likes');
-        return;
-      }
-
-      if (likeData.match && likeData.match_id) {
-        await apiPost('/api/chat/send', {
-          match_id: likeData.match_id,
-          sender_id: fromUserId,
-          message: message
-        });
-        await loadLimitStatus();
-        // Add to viewed lists
-        try { addToViewed({ id: toUserId, name: messageTargetName, photo: messageTargetPhoto }, 'liked'); } catch(e) {}
-        try { addToViewed({ id: toUserId, name: messageTargetName, photo: messageTargetPhoto }, 'messaged'); } catch(e) {}
-        showToast(tr('message_sent'));
-        openChatRoom(likeData.match_id, messageTargetName, messageTargetPhoto);
-        return;
-      }
-
-      // Add to viewed liked list
-      try { addToViewed({ id: toUserId, name: messageTargetName, photo: messageTargetPhoto }, 'liked'); } catch(e) {}
-      showToast('💙 Like yuborildi! Agar u ham sizni yoqtirsa, match bo\'lib suhbat ochiladi.');
-    } else {
-      if (likeData.error === 'limit_exceeded') {
-        showLimitExceeded('likes');
-      } else {
-        showToast(tr('error_prefix') + (likeData.error || tr('like_not_sent')));
-      }
+    if (likeData.error === 'limit_exceeded') {
+      showLimitExceeded('likes');
+      return;
     }
+
+    if (!likeData.success && !likeData.match) {
+      showToast(tr('error_prefix') + (likeData.error || tr('like_not_sent')));
+      return;
+    }
+
+    await loadLimitStatus();
+
+    // 2. Match bo'lsa — darhol xabar yuboramiz va chatni ochamiz
+    if (likeData.match && likeData.match_id) {
+      const chatData = await apiPost('/api/chat/send', {
+        match_id: likeData.match_id,
+        sender_id: fromUserId,
+        message: message
+      });
+
+      try { addToViewed({ id: toUserId, name: savedName, photo: savedPhoto }, 'liked'); } catch(e) {}
+      try { addToViewed({ id: toUserId, name: savedName, photo: savedPhoto }, 'messaged'); } catch(e) {}
+
+      if (chatData.success) {
+        showToast(tr('message_sent'));
+        loadChats();
+        openChatRoom(likeData.match_id, savedName, savedPhoto);
+      } else {
+        showToast('✅ Match! Chat bo\'limidan davom eting.');
+        loadChats();
+      }
+      return;
+    }
+
+    // 3. Match bo'lmasa — like yuborildi, pending xabarni localda saqlaymiz
+    try { addToViewed({ id: toUserId, name: savedName, photo: savedPhoto }, 'liked'); } catch(e) {}
+
+    try {
+      const pendingKey = 'pending_msg_' + fromUserId + '_' + toUserId;
+      localStorage.setItem(pendingKey, JSON.stringify({
+        message: message,
+        name: savedName,
+        photo: savedPhoto,
+        toUserId: toUserId,
+        timestamp: Date.now()
+      }));
+    } catch(e) {}
+
+    showToast('💙 Like va xabar yuborildi! U ham siz bilan match bo\'lganda xabringiz yetkaziladi.');
   }
 
   // ===== LIMIT CHECK HELPER =====
@@ -4474,6 +4494,31 @@ function detectTelegramLanguage() {
     }
 
     if (emptyState) emptyState.style.display = 'none';
+
+    // Pending xabarlarni tekshirib, match bo'lganlarga avtomatik yuboramiz
+    try {
+      for (const m of data.matches) {
+        const partnerId = m.partner_id || m.telegram_id;
+        if (!partnerId) continue;
+        const pendingKey = 'pending_msg_' + telegramId + '_' + partnerId;
+        const pendingRaw = localStorage.getItem(pendingKey);
+        if (!pendingRaw) continue;
+        const pending = JSON.parse(pendingRaw);
+        if (!pending || !pending.message) continue;
+        // Pending xabarni yuboramiz
+        const sendResult = await apiPost('/api/chat/send', {
+          match_id: m.match_id,
+          sender_id: telegramId,
+          message: pending.message
+        });
+        if (sendResult.success) {
+          localStorage.removeItem(pendingKey);
+          // Ko'rilganlarga messaged sifatida qo'shamiz
+          try { addToViewed({ id: partnerId, name: pending.name || m.full_name, photo: pending.photo || m.photo_base64 || m.photo_file_id }, 'messaged'); } catch(e2) {}
+          showToast('💬 ' + (pending.name || m.full_name) + ' ga xabringiz yetkazildi!');
+        }
+      }
+    } catch(pendingErr) {}
 
     chatList.innerHTML = data.matches.map(m => {
       const photo = m.photo_base64 || m.photo_file_id || '';
