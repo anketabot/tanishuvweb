@@ -722,7 +722,16 @@
 
     <div class="mp-section-body" id="mp-body-viewed" style="display:none;">
       <div class="mp-subsection">
-        <div id="mp-viewed-body">
+        <!-- Tab tugmalar -->
+        <div style="display:flex;gap:8px;padding:8px 12px 4px;">
+          <button class="mp-tab-btn active" id="mp-viewed-tab-liked" onclick="switchMpViewedTab('liked')" style="flex:1;">
+            💙 Like bergan
+          </button>
+          <button class="mp-tab-btn" id="mp-viewed-tab-messaged" onclick="switchMpViewedTab('messaged')" style="flex:1;">
+            💬 Xabar yozgan
+          </button>
+        </div>
+        <div id="mp-viewed-body" style="padding:8px 12px 12px;">
           <div class="loading"><div class="spinner"></div><span data-i18n="loading">Yuklanmoqda...</span></div>
         </div>
       </div>
