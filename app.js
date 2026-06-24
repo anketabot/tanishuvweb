@@ -3637,6 +3637,8 @@ function detectTelegramLanguage() {
     const card = document.getElementById('tinder-card-el');
     const u = tinderUsers[tinderIndex];
     if (direction === 'right') sendLike(u.telegram_id);
+    // Ko'rilgan barcha anketalarni saqlash
+    try { addToAllViewed(u); } catch(e) {}
     tinderHistory.push(tinderIndex);
     tinderIndex++;
     if (card) {
@@ -5313,9 +5315,7 @@ document.addEventListener('DOMContentLoaded', function() {
       const raw = localStorage.getItem(key);
       if (raw) items = JSON.parse(raw);
       if (!Array.isArray(items)) items = [];
-      // Remove existing entry with same id
       items = items.filter(x => x.id !== profile.id);
-      // Add new entry at beginning
       items.unshift({
         id: profile.id,
         name: profile.name || profile.first_name || '',
@@ -5325,15 +5325,76 @@ document.addEventListener('DOMContentLoaded', function() {
         gender: profile.gender || '',
         timestamp: Date.now()
       });
-      // Keep max 50 items
       if (items.length > 50) items = items.slice(0, 50);
       localStorage.setItem(key, JSON.stringify(items));
     } catch (e) {}
   }
 
+  // Barcha ko'rilgan anketalarni saqlash (like/o'tkazish farqi yo'q)
+  function addToAllViewed(u) {
+    try {
+      let items = [];
+      const raw = localStorage.getItem('viewed_all');
+      if (raw) items = JSON.parse(raw);
+      if (!Array.isArray(items)) items = [];
+      const id = u.telegram_id || u.id;
+      items = items.filter(x => x.id !== id);
+      items.unshift({
+        id:       id,
+        name:     u.full_name || u.name || '',
+        age:      u.age || '',
+        city:     u.city || '',
+        photo:    u.photo_base64 || u.photo_file_id || u.photo || '',
+        zodiac:   u.zodiac || '',
+        gender:   u.gender || '',
+        timestamp: Date.now()
+      });
+      if (items.length > 25) items = items.slice(0, 25);
+      localStorage.setItem('viewed_all', JSON.stringify(items));
+      // Profil sahifasi ochiq bo'lsa real-time yangilash
+      const body = document.getElementById('mp-viewed-body');
+      if (body && body.closest('.mp-section-body') && body.closest('.mp-section-body').style.display !== 'none') {
+        loadMpViewed();
+      }
+    } catch (e) {}
+  }
+
   function openProfileModalById(id) {
-    // Try to find in search results or use a placeholder
-    showToast(tr('profile_loading'));
+    if (!id) return;
+    try {
+      let items = [];
+      const raw = localStorage.getItem('viewed_all');
+      if (raw) items = JSON.parse(raw);
+      const u = items.find(x => x.id == id);
+      if (!u) { showToast(tr('profile_loading') || 'Yuklanmoqda...'); return; }
+
+      const modal = document.getElementById('profile-modal');
+      const body  = document.getElementById('profile-modal-body');
+      if (!modal || !body) return;
+
+      const zodiacEmojis = {
+        aries:'♈',taurus:'♉',gemini:'♊',cancer:'♋',leo:'♌',virgo:'♍',
+        libra:'♎',scorpio:'♏',sagittarius:'♐',capricorn:'♑',aquarius:'♒',pisces:'♓'
+      };
+      const zodiacDisplay = u.zodiac
+        ? `${zodiacEmojis[u.zodiac] || ''} ${tr(u.zodiac) || u.zodiac}`
+        : '';
+
+      const photoHtml = u.photo
+        ? `<img src="${u.photo}" alt="${escapeHtml(u.name)}" style="width:100%;max-height:320px;object-fit:cover;border-radius:16px 16px 0 0;" />`
+        : `<div style="width:100%;height:180px;border-radius:16px 16px 0 0;background:var(--bg-secondary);display:flex;align-items:center;justify-content:center;font-size:80px;">${u.gender==='ayol'?'👩':'👨'}</div>`;
+
+      body.innerHTML = `
+        ${photoHtml}
+        <div style="padding:20px 16px 16px;">
+          <div style="font-size:22px;font-weight:800;margin-bottom:6px;">
+            ${escapeHtml(u.name || tr('no_name'))}${u.age ? ', ' + u.age : ''}
+          </div>
+          ${u.city ? `<div style="font-size:14px;color:var(--text-secondary);margin-bottom:4px;">📍 ${escapeHtml(u.city)}</div>` : ''}
+          ${zodiacDisplay ? `<div style="font-size:14px;color:var(--text-secondary);">✨ ${escapeHtml(zodiacDisplay)}</div>` : ''}
+        </div>`;
+      modal.style.display = 'flex';
+    } catch(e) {}
   }
 
 // Patch showPage to reload mini-stats and update lang display
@@ -5370,9 +5431,9 @@ function toggleMpSection(key) {
   } else {
     body.style.display = 'block';
     chevron?.classList.add('open');
-    // Load data when opening goals section
-    if (key === 'goals') {
-      if (typeof loadMpViewed === 'function') loadMpViewed(_currentMpViewedTab || 'liked');
+    // Load data when opening viewed section
+    if (key === 'viewed' || key === 'goals') {
+      if (typeof loadMpViewed === 'function') loadMpViewed();
     }
   }
 }
@@ -5425,15 +5486,12 @@ function switchMpViewedTab(tab) {
 }
 
 function loadMpViewed(tab) {
-  tab = tab || _currentMpViewedTab || 'liked';
-  _currentMpViewedTab = tab;
   const body = document.getElementById('mp-viewed-body');
   if (!body) return;
 
-  const key = tab === 'liked' ? 'viewed_liked' : 'viewed_messaged';
   let items = [];
   try {
-    const raw = localStorage.getItem(key);
+    const raw = localStorage.getItem('viewed_all');
     if (raw) items = JSON.parse(raw);
   } catch (e) {}
 
@@ -5441,21 +5499,35 @@ function loadMpViewed(tab) {
     body.innerHTML = `
       <div style="padding:20px 8px;text-align:center;">
         <div style="font-size:32px;margin-bottom:8px;">👁️</div>
-        <p style="font-size:14px;color:var(--text-secondary);">${tab === 'liked' ? tr('no_viewed_liked') : tr('no_viewed_messaged')}</p>
-        <p style="font-size:12px;color:var(--text-tertiary);margin-top:4px;">${tab === 'liked' ? tr('no_viewed_liked_hint') : tr('no_viewed_messaged_hint')}</p>
+        <p style="font-size:14px;color:var(--text-secondary);">Hali hech qanday anketa ko'rilmagan</p>
+        <p style="font-size:12px;color:var(--text-tertiary);margin-top:4px;">Qidiruv bo'limida anketalarni ko'ring</p>
       </div>`;
     return;
   }
 
+  const zodiacEmojis = {
+    aries:'♈',taurus:'♉',gemini:'♊',cancer:'♋',leo:'♌',virgo:'♍',
+    libra:'♎',scorpio:'♏',sagittarius:'♐',capricorn:'♑',aquarius:'♒',pisces:'♓'
+  };
+
   let html = '<div class="viewed-list">';
-  items.forEach((u, i) => {
+  items.slice(0, 25).forEach((u, i) => {
+    const photoHtml = u.photo
+      ? `<img style="width:44px;height:44px;border-radius:50%;object-fit:cover;flex-shrink:0;" src="${u.photo}" alt="" />`
+      : `<div style="width:44px;height:44px;border-radius:50%;background:var(--bg-secondary);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;">${u.gender==='ayol'?'👩':'👨'}</div>`;
+    const zodiacDisplay = u.zodiac ? ` • ${zodiacEmojis[u.zodiac]||''}${tr(u.zodiac)||u.zodiac}` : '';
+    const meta = [
+      u.age ? u.age + ' yosh' : '',
+      u.city || ''
+    ].filter(Boolean).join(' • ') + zodiacDisplay;
+
     html += `
-      <div class="viewed-item" onclick="openProfileModalById(${u.id || 0})" style="display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:12px;cursor:pointer;">
-        <div style="width:24px;height:24px;border-radius:50%;background:var(--bg-secondary);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:var(--text-secondary);">${i + 1}</div>
-        <img style="width:40px;height:40px;border-radius:50%;object-fit:cover;" src="${u.photo || 'https://api.dicebear.com/7.x/avataaars/svg?seed=' + encodeURIComponent(u.name || 'user')}" alt="${u.name || ''}" />
-        <div style="flex:1;">
-          <div style="font-weight:700;font-size:14px;">${u.name || tr('no_name')}</div>
-          <div style="font-size:12px;color:var(--text-secondary);">${u.age ? u.age + ' ' + tr('years_old') : ''}${u.city ? ' • ' + u.city : ''}</div>
+      <div onclick="openProfileModalById(${u.id})" style="display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:12px;cursor:pointer;transition:background 0.15s;" onmouseenter="this.style.background='var(--bg-secondary)'" onmouseleave="this.style.background='transparent'">
+        <div style="width:24px;height:24px;border-radius:50%;background:var(--bg-secondary);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:var(--text-secondary);flex-shrink:0;">${i+1}</div>
+        ${photoHtml}
+        <div style="flex:1;min-width:0;">
+          <div style="font-weight:700;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${escapeHtml(u.name || tr('no_name'))}</div>
+          ${meta ? `<div style="font-size:12px;color:var(--text-secondary);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${escapeHtml(meta)}</div>` : ''}
         </div>
       </div>`;
   });
