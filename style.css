@@ -4224,6 +4224,19 @@ body.pre-init .lang-modal-overlay.show {
   font-size: 13px;
 }
 
+.stats-section-block {
+  margin-bottom: 8px;
+}
+
+.stats-section-title {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-primary);
+  padding: 10px 4px 6px;
+  border-bottom: 1px solid var(--border-color, rgba(255,255,255,0.08));
+  margin-bottom: 4px;
+}
+
 /* ========== PROFIL — TIL TANLASH ========== */
 .profile-lang-section {
   margin: 0 16px 24px;
