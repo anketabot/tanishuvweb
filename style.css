@@ -3225,50 +3225,6 @@ h1, h2, h3, h4, .header-title, .profile-name, .tinder-photo-name, .chat-list-nam
   animation: superFlash 0.5s ease;
 }
 
-/* ========== LIMIT STATUS BAR ========== */
-.limit-status-bar {
-  position: fixed;
-  bottom: calc(82px + var(--safe-bottom));
-  left: 50%;
-  transform: translateX(-50%);
-  display: flex;
-  gap: 12px;
-  background: rgba(255, 255, 255, 0.86);
-  backdrop-filter: blur(28px) saturate(180%);
-  -webkit-backdrop-filter: blur(28px) saturate(180%);
-  border: 1px solid var(--glass-border);
-  border-radius: 999rem;
-  padding: 9px 18px;
-  box-shadow: var(--inner-sheen), var(--elevation-2);
-  z-index: 90;
-}
-
-.limit-item {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  cursor: pointer;
-  transition: all 0.25s var(--ease-premium);
-  padding: 4px 8px;
-  border-radius: 999rem;
-}
-
-.limit-item:active {
-  background: rgba(0, 122, 255, 0.08);
-  transform: scale(0.95);
-}
-
-.limit-icon {
-  font-size: 16px;
-}
-
-.limit-text {
-  font-size: 13px;
-  font-weight: 700;
-  color: var(--ios-blue);
-  min-width: 18px;
-  text-align: center;
-}
 
 /* ========== CHAT ITEM (app.js da ishlatilgan) ========== */
 .chat-item {
