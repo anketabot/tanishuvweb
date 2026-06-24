@@ -2885,7 +2885,6 @@ function detectTelegramLanguage() {
     }
     if (name === 'myprofile') loadMyProfile();
     if (name === 'chats') loadChats();
-    if (name === 'champions') loadChampions();
     if (name === 'viewed') loadViewed();
     if (name === 'profile') {
       // CRITICAL: Reset form state when entering profile page
@@ -5206,15 +5205,7 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 // ========== CHAMPIONS (Mutloq Chempion) ==========
-  let _championsTab = 'likes';
   let _viewedTab = 'liked';
-
-  function switchChampionsTab(tab) {
-    _championsTab = tab;
-    document.querySelectorAll('.champions-tabs-row .stats-mini-tab').forEach(b => b.classList.remove('active'));
-    document.getElementById('champ-tab-' + tab)?.classList.add('active');
-    renderChampions(tab);
-  }
 
   function switchViewedTab(tab) {
     _viewedTab = tab;
@@ -5223,56 +5214,8 @@ document.addEventListener('DOMContentLoaded', function() {
     renderViewed(tab);
   }
 
-  function loadChampions() {
-    renderChampions(_championsTab);
-  }
-
   function loadViewed() {
     renderViewed(_viewedTab);
-  }
-
-  function renderChampions(tab) {
-    const body = document.getElementById('champions-body');
-    if (!body) return;
-
-    // Mock champion data - in production this would come from backend
-    const mockChampions = [
-      { id: 1, name: 'Dilnoza', photo: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Dilnoza', likes: 142, messages: 89, superlikes: 56 },
-      { id: 2, name: 'Jasur', photo: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Jasur', likes: 128, messages: 67, superlikes: 43 },
-      { id: 3, name: 'Madina', photo: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Madina', likes: 115, messages: 94, superlikes: 38 },
-      { id: 4, name: 'Bekzod', photo: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Bekzod', likes: 98, messages: 55, superlikes: 29 },
-      { id: 5, name: 'Nilufar', photo: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Nilufar', likes: 87, messages: 72, superlikes: 25 },
-      { id: 6, name: 'Shaxzod', photo: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Shaxzod', likes: 76, messages: 48, superlikes: 21 },
-      { id: 7, name: 'Zarina', photo: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Zarina', likes: 65, messages: 61, superlikes: 18 },
-      { id: 8, name: 'Temur', photo: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Temur', likes: 54, messages: 42, superlikes: 15 },
-    ];
-
-    const sorted = [...mockChampions].sort((a, b) => b[tab] - a[tab]);
-
-    const rankClass = (i) => {
-      if (i === 0) return 'gold';
-      if (i === 1) return 'silver';
-      if (i === 2) return 'bronze';
-      return 'normal';
-    };
-
-    const labelMap = { likes: '💙 Like', messages: '💬 Xabar', superlikes: '⭐ Super Like' };
-
-    let html = '<div class="champion-list">';
-    sorted.forEach((u, i) => {
-      html += `
-        <div class="champion-item" onclick="openProfileModalById(${u.id})">
-          <div class="champion-rank ${rankClass(i)}">${i + 1}</div>
-          <img class="champion-photo" src="${u.photo}" alt="${u.name}" />
-          <div class="champion-info">
-            <div class="champion-name">${u.name}</div>
-            <div class="champion-count">${labelMap[tab]}: ${u[tab]}</div>
-          </div>
-          <div class="champion-score">${u[tab]}</div>
-        </div>`;
-    });
-    html += '</div>';
-    body.innerHTML = html;
   }
 
   function renderViewed(tab) {
