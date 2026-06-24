@@ -22,6 +22,157 @@ const tg = window.Telegram?.WebApp;
   let __sessionId = null; // UNIQUE per page load for guest isolation
   let currentLang = 'uz';
 
+// ========== WEB LOGIN (saytdan kirish) ==========
+const IS_TELEGRAM = !!(window.Telegram?.WebApp?.initData);
+const WEB_LOGIN_KEY = 'web_user_id';
+const WEB_LOGIN_NAME = 'web_user_name';
+
+// Saytdan kirgan foydalanuvchini localStorage dan tiklash
+if (!userId) {
+  const savedId = localStorage.getItem(WEB_LOGIN_KEY);
+  const savedName = localStorage.getItem(WEB_LOGIN_NAME);
+  if (savedId && !isNaN(Number(savedId)) && Number(savedId) > 0) {
+    userId = Number(savedId);
+    userFirstName = savedName || '';
+    userName = savedName || '';
+  }
+}
+
+function showLoginPage() {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  const loginPage = document.getElementById('page-login');
+  if (loginPage) loginPage.classList.add('active');
+  document.querySelector('.bottom-nav') && (document.querySelector('.bottom-nav').style.display = 'none');
+  // Telegram Login Widget yuklash
+  loadTelegramLoginWidget();
+}
+
+function loadTelegramLoginWidget() {
+  const container = document.getElementById('telegram-widget-container');
+  if (!container || container.dataset.loaded) return;
+  container.dataset.loaded = '1';
+  // Bot username ni localStorage yoki config dan olish
+  const botUsername = window.TELEGRAM_BOT_USERNAME || localStorage.getItem('bot_username') || '';
+  if (!botUsername) {
+    container.innerHTML = '<p style="font-size:12px;color:var(--text-tertiary);">Telegram widget uchun bot username kerak.<br>Quyidagi manual kirish usulidan foydalaning.</p>';
+    return;
+  }
+  const script = document.createElement('script');
+  script.src = 'https://telegram.org/js/telegram-widget.js?22';
+  script.setAttribute('data-telegram-login', botUsername);
+  script.setAttribute('data-size', 'large');
+  script.setAttribute('data-radius', '14');
+  script.setAttribute('data-onauth', 'onTelegramAuth(user)');
+  script.setAttribute('data-request-access', 'write');
+  container.appendChild(script);
+}
+
+function onTelegramAuth(user) {
+  // Telegram Widget dan kelgan ma'lumotlar
+  if (!user || !user.id) {
+    showLoginError("Telegram orqali kirishda xatolik yuz berdi.");
+    return;
+  }
+  completeWebLogin(user.id, user.first_name || user.username || '');
+}
+
+async function loginWithManualId() {
+  const input = document.getElementById('manual-userid-input');
+  const errorEl = document.getElementById('login-error');
+  const loadingEl = document.getElementById('login-loading');
+  if (!input) return;
+
+  const inputId = input.value.trim();
+  const numId = Number(inputId);
+
+  errorEl.style.display = 'none';
+  errorEl.textContent = '';
+
+  if (!inputId || isNaN(numId) || numId <= 0 || inputId.length < 5) {
+    showLoginError("To'g'ri Telegram ID kiriting (kamida 5 ta raqam)");
+    return;
+  }
+
+  loadingEl.style.display = 'block';
+
+  // Serverda bu ID mavjudligini tekshiramiz
+  try {
+    const data = await apiPost('/api/profile', { telegram_id: numId });
+    loadingEl.style.display = 'none';
+
+    if (data.success && data.user) {
+      // Profil topildi — kiramiz
+      completeWebLogin(numId, data.user.full_name || data.user.first_name || '');
+    } else {
+      // Profil topilmadi — baribir kirishga ruxsat beramiz (yangi foydalanuvchi)
+      completeWebLogin(numId, '');
+    }
+  } catch(e) {
+    loadingEl.style.display = 'none';
+    showLoginError("Server bilan bog'lanishda xatolik. Qayta urinib ko'ring.");
+  }
+}
+
+function showLoginError(msg) {
+  const el = document.getElementById('login-error');
+  if (el) { el.textContent = msg; el.style.display = 'block'; }
+}
+
+function completeWebLogin(id, name) {
+  userId = Number(id);
+  userFirstName = name;
+  userName = name;
+
+  // localStorage ga saqlaymiz
+  localStorage.setItem(WEB_LOGIN_KEY, String(userId));
+  if (name) localStorage.setItem(WEB_LOGIN_NAME, name);
+
+  // Login sahifasini yashiramiz
+  const loginPage = document.getElementById('page-login');
+  if (loginPage) loginPage.classList.remove('active');
+
+  // Profilni tekshirib, kerakli sahifaga o'tamiz
+  fetchUserProfile(userId).then(user => {
+    if (user && isProfileComplete(user)) {
+      setSavedProfile(user);
+      document.querySelector('.bottom-nav').style.display = 'flex';
+      showPage('search');
+      loadLimitStatus();
+      showLogoutBtn(true);
+      setTimeout(() => applyTranslations(), 100);
+    } else {
+      if (user) populateProfileForm(user);
+      document.querySelector('.bottom-nav').style.display = 'none';
+      showPage('profile');
+      showLogoutBtn(true);
+      setTimeout(() => applyTranslations(), 100);
+    }
+  }).catch(() => {
+    document.querySelector('.bottom-nav').style.display = 'none';
+    showPage('profile');
+    showLogoutBtn(true);
+  });
+}
+
+function showLogoutBtn(show) {
+  // Faqat saytdan kirganlar uchun chiqish tugmasini ko'rsatamiz
+  if (IS_TELEGRAM) return; // Telegram WebApp da ko'rsatmaymiz
+  const btn = document.getElementById('logout-btn');
+  if (btn) btn.style.display = show ? 'flex' : 'none';
+}
+
+function logoutWebUser() {
+  localStorage.removeItem(WEB_LOGIN_KEY);
+  localStorage.removeItem(WEB_LOGIN_NAME);
+  userId = null;
+  userFirstName = '';
+  userName = '';
+  showLoginPage();
+}
+
+window.onTelegramAuth = onTelegramAuth;
+
+
   function getSessionId() {
     if (!__sessionId) {
       __sessionId = 'sess_' + Date.now() + '_' + Math.random().toString(36).slice(2, 8);
@@ -4761,6 +4912,8 @@ function detectTelegramLanguage() {
           document.querySelector('.bottom-nav').style.display = 'flex';
           showPage('search');
           loadLimitStatus();
+          // Saytdan kirgan bo'lsa chiqish tugmasini ko'rsatamiz
+          if (!IS_TELEGRAM) showLogoutBtn(true);
           // Sahifa yuklangandan so'ng tarjimalarni qayta qo'llash
           setTimeout(() => applyTranslations(), 100);
         } else {
@@ -4771,15 +4924,16 @@ function detectTelegramLanguage() {
           if (user) populateProfileForm(user);
           document.querySelector('.bottom-nav').style.display = 'none';
           showPage('profile');
+          if (!IS_TELEGRAM) showLogoutBtn(true);
           setTimeout(() => applyTranslations(), 100);
         }
       });
     } else {
-      // No userId detected — this is a fresh/guest session
-      // Clear any stale data and show profile page
+      // No userId detected — Telegram WebApp da emas, saytdan kirgan
+      // Agar web login bo'lmagan bo'lsa, login sahifasini ko'rsatamiz
       resetProfileFormState();
       document.querySelector('.bottom-nav').style.display = 'none';
-      showPage('profile');
+      showLoginPage();
     }
 
     
