@@ -4123,7 +4123,12 @@ function detectTelegramLanguage() {
       await loadLimitStatus();
       // Add to viewed liked list
       try {
-        const u = tinderUsers.find(x => Number(x.telegram_id) === toUser);
+        let u = tinderUsers.find(x => Number(x.telegram_id) === toUser);
+        if (!u) {
+          // Server javobidan yoki boshqa manbadan foydalanish
+          // Minimal ma'lumot bilan saqlash (server to_user_profile qaytarsa ishlatamiz)
+          u = data.to_user_profile || { telegram_id: toUser, id: toUser };
+        }
         if (u) addToViewed(u, 'liked');
       } catch(e) {}
       if (data.match) {
@@ -5351,10 +5356,18 @@ document.addEventListener('DOMContentLoaded', function() {
       });
       if (items.length > 50) items = items.slice(0, 50);
       localStorage.setItem(key, JSON.stringify(items));
-      // Real-time yangilash
-      const body = document.getElementById('mp-viewed-body');
-      if (body && body.closest('.mp-section-body') && body.closest('.mp-section-body').style.display !== 'none') {
+      // Real-time yangilash — mp-viewed-body (My Profile sahifasi)
+      const mpBody = document.getElementById('mp-viewed-body');
+      if (mpBody && mpBody.closest('.mp-section-body') && mpBody.closest('.mp-section-body').style.display !== 'none') {
         loadMpViewed(_currentMpViewedTab);
+      }
+      // Real-time yangilash — viewed-body (Champions/Ko'rilganlar sahifasi)
+      const viewedBody = document.getElementById('viewed-body');
+      if (viewedBody) {
+        // Faqat joriy aktiv tabga mos kelsa yangilaymiz
+        if ((type === 'liked' && _viewedTab === 'liked') || (type === 'messaged' && _viewedTab === 'messaged')) {
+          renderViewed(_viewedTab);
+        }
       }
     } catch (e) {}
   }
