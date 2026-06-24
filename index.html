@@ -423,11 +423,6 @@
 
   <!-- ======= STATISTIKA MINI-PANEL (collapsible) ======= -->
   <div class="stats-mini-panel" id="stats-mini-panel" style="display:none;">
-    <div class="stats-mini-tabs-row">
-      <button class="stats-mini-tab active" id="smtab-active" onclick="switchMiniStatsTab('active')">🔥 Faollar</button>
-      <button class="stats-mini-tab" id="smtab-likes" onclick="switchMiniStatsTab('likes')">💙 Like</button>
-      <button class="stats-mini-tab" id="smtab-superlikes" onclick="switchMiniStatsTab('superlikes')">⭐ Super</button>
-    </div>
     <div class="stats-mini-body" id="stats-mini-body">
       <div class="stats-mini-loading"><div class="spinner"></div></div>
     </div>
@@ -753,11 +748,41 @@
 
 
 
+<!-- ======= PAGE: TOP (Reyting) ======= -->
+<div class="page" id="page-top">
+  <div class="header header--compact">
+    <div class="header-left">
+      <div class="header-title-row">
+        <span class="header-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M3 3v18h18"/><path d="m19 9-5 5-4-4-3 3"/>
+          </svg>
+        </span>
+        <span class="header-title-text" data-i18n="top_page_title">🏆 TOP foydalanuvchilar</span>
+      </div>
+    </div>
+  </div>
+  <div class="card" style="padding:12px;">
+    <div class="stats-mini-tabs-row" style="margin-bottom:12px;">
+      <button class="stats-mini-tab active" id="top-tab-active" onclick="switchTopTab('active')">🔥 Faollar</button>
+      <button class="stats-mini-tab" id="top-tab-likes" onclick="switchTopTab('likes')">💙 Like</button>
+      <button class="stats-mini-tab" id="top-tab-superlikes" onclick="switchTopTab('superlikes')">⭐ Super</button>
+    </div>
+    <div id="top-page-body">
+      <div class="stats-mini-loading"><div class="spinner"></div></div>
+    </div>
+  </div>
+</div>
+
 <!-- ======= BOTTOM NAV (5 tabs) ======= -->
 <nav class="bottom-nav" style="display:none;">
   <button class="nav-btn" id="nav-search" onclick="showPage('search')">
     <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
     <span data-i18n="search">Qidirish</span>
+  </button>
+  <button class="nav-btn" id="nav-top" onclick="showPage('top')">
+    <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="m19 9-5 5-4-4-3 3"/></svg>
+    <span data-i18n="nav_top">TOP</span>
   </button>
   <button class="nav-btn" id="nav-chats" onclick="showPage('chats')" style="position:relative;">
     <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
