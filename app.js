@@ -5337,18 +5337,25 @@ document.addEventListener('DOMContentLoaded', function() {
       const raw = localStorage.getItem(key);
       if (raw) items = JSON.parse(raw);
       if (!Array.isArray(items)) items = [];
-      items = items.filter(x => x.id !== profile.id);
+      const id = profile.telegram_id || profile.id;
+      items = items.filter(x => x.id !== id);
       items.unshift({
-        id: profile.id,
-        name: profile.name || profile.first_name || '',
-        age: profile.age || '',
-        city: profile.city || '',
-        photo: profile.photo || '',
-        gender: profile.gender || '',
+        id:      id,
+        name:    profile.full_name || profile.name || profile.first_name || '',
+        age:     profile.age || '',
+        city:    profile.city || '',
+        photo:   profile.photo_base64 || profile.photo_file_id || profile.photo || '',
+        zodiac:  profile.zodiac || '',
+        gender:  profile.gender || '',
         timestamp: Date.now()
       });
       if (items.length > 50) items = items.slice(0, 50);
       localStorage.setItem(key, JSON.stringify(items));
+      // Real-time yangilash
+      const body = document.getElementById('mp-viewed-body');
+      if (body && body.closest('.mp-section-body') && body.closest('.mp-section-body').style.display !== 'none') {
+        loadMpViewed(_currentMpViewedTab);
+      }
     } catch (e) {}
   }
 
@@ -5508,21 +5515,28 @@ function switchMpViewedTab(tab) {
 }
 
 function loadMpViewed(tab) {
+  tab = tab || _currentMpViewedTab || 'liked';
+  _currentMpViewedTab = tab;
   const body = document.getElementById('mp-viewed-body');
   if (!body) return;
 
+  const key = tab === 'liked' ? 'viewed_liked' : 'viewed_messaged';
   let items = [];
   try {
-    const raw = localStorage.getItem('viewed_all');
+    const raw = localStorage.getItem(key);
     if (raw) items = JSON.parse(raw);
   } catch (e) {}
 
   if (!items || items.length === 0) {
     body.innerHTML = `
-      <div style="padding:20px 8px;text-align:center;">
-        <div style="font-size:32px;margin-bottom:8px;">👁️</div>
-        <p style="font-size:14px;color:var(--text-secondary);">Hali hech qanday anketa ko'rilmagan</p>
-        <p style="font-size:12px;color:var(--text-tertiary);margin-top:4px;">Qidiruv bo'limida anketalarni ko'ring</p>
+      <div style="padding:24px 8px;text-align:center;">
+        <div style="font-size:36px;margin-bottom:10px;">${tab === 'liked' ? '💙' : '💬'}</div>
+        <p style="font-size:14px;font-weight:600;color:var(--text-primary);">
+          ${tab === 'liked' ? "Hali like bergan anketalar yo'q" : "Hali xabar yozgan anketalar yo'q"}
+        </p>
+        <p style="font-size:12px;color:var(--text-tertiary);margin-top:6px;">
+          ${tab === 'liked' ? "Qidirish bo'limidan anketalar toping va like bosing" : "Qidirish bo'limidan anketalar toping va xabar yozing"}
+        </p>
       </div>`;
     return;
   }
@@ -5532,27 +5546,72 @@ function loadMpViewed(tab) {
     libra:'♎',scorpio:'♏',sagittarius:'♐',capricorn:'♑',aquarius:'♒',pisces:'♓'
   };
 
-  let html = '<div class="viewed-list">';
-  items.slice(0, 25).forEach((u, i) => {
+  let html = '<div style="display:flex;flex-direction:column;gap:6px;padding:4px 0;">';
+  items.slice(0, 50).forEach((u) => {
     const photoHtml = u.photo
-      ? `<img style="width:44px;height:44px;border-radius:50%;object-fit:cover;flex-shrink:0;" src="${u.photo}" alt="" />`
-      : `<div style="width:44px;height:44px;border-radius:50%;background:var(--bg-secondary);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;">${u.gender==='ayol'?'👩':'👨'}</div>`;
-    const zodiacDisplay = u.zodiac ? ` • ${zodiacEmojis[u.zodiac]||''}${tr(u.zodiac)||u.zodiac}` : '';
-    const meta = [
-      u.age ? u.age + ' yosh' : '',
-      u.city || ''
-    ].filter(Boolean).join(' • ') + zodiacDisplay;
-
+      ? `<img src="${u.photo}" alt="" style="width:48px;height:48px;border-radius:50%;object-fit:cover;flex-shrink:0;border:2px solid var(--glass-border);" />`
+      : `<div style="width:48px;height:48px;border-radius:50%;background:var(--bg-secondary);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;">${u.gender==='ayol'?'👩':'👨'}</div>`;
+    const zodiacStr = u.zodiac ? ` • ${zodiacEmojis[u.zodiac]||''} ${u.zodiac}` : '';
+    const meta = [u.age ? u.age + ' yosh' : '', u.city || ''].filter(Boolean).join(' • ') + zodiacStr;
     html += `
-      <div onclick="openProfileModalById(${u.id})" style="display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:12px;cursor:pointer;transition:background 0.15s;" onmouseenter="this.style.background='var(--bg-secondary)'" onmouseleave="this.style.background='transparent'">
-        <div style="width:24px;height:24px;border-radius:50%;background:var(--bg-secondary);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:var(--text-secondary);flex-shrink:0;">${i+1}</div>
+      <div onclick="openViewedProfile(${u.id},'${tab}')"
+           style="display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:14px;cursor:pointer;background:var(--glass-bg);border:1px solid var(--glass-border);"
+           onmousedown="this.style.opacity='0.7'" onmouseup="this.style.opacity='1'"
+           ontouchstart="this.style.opacity='0.7'" ontouchend="this.style.opacity='1'">
         ${photoHtml}
         <div style="flex:1;min-width:0;">
-          <div style="font-weight:700;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${escapeHtml(u.name || tr('no_name'))}</div>
-          ${meta ? `<div style="font-size:12px;color:var(--text-secondary);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${escapeHtml(meta)}</div>` : ''}
+          <div style="font-weight:700;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${escapeHtml(u.name || 'Anonim')}</div>
+          ${meta ? `<div style="font-size:12px;color:var(--text-secondary);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${escapeHtml(meta)}</div>` : ''}
         </div>
+        <div style="font-size:18px;">${tab === 'liked' ? '💙' : '💬'}</div>
       </div>`;
   });
   html += '</div>';
   body.innerHTML = html;
+}
+
+function openViewedProfile(id, tab) {
+  if (!id) return;
+  const key = tab === 'liked' ? 'viewed_liked' : 'viewed_messaged';
+  let items = [];
+  try {
+    const raw = localStorage.getItem(key);
+    if (raw) items = JSON.parse(raw);
+  } catch(e) {}
+  const u = items.find(x => x.id == id);
+  if (!u) { showToast('Anketa topilmadi'); return; }
+
+  const modal = document.getElementById('profile-modal');
+  const body  = document.getElementById('profile-modal-body');
+  if (!modal || !body) return;
+
+  const zodiacEmojis = {
+    aries:'♈',taurus:'♉',gemini:'♊',cancer:'♋',leo:'♌',virgo:'♍',
+    libra:'♎',scorpio:'♏',sagittarius:'♐',capricorn:'♑',aquarius:'♒',pisces:'♓'
+  };
+  const zodiacLabel = u.zodiac ? `${zodiacEmojis[u.zodiac]||''} ${u.zodiac}` : '';
+  const photoHtml = u.photo
+    ? `<img src="${u.photo}" alt="" style="width:100%;max-height:300px;object-fit:cover;border-radius:16px 16px 0 0;cursor:zoom-in;" onclick="openPhotoViewer('${escapeJs(u.photo)}','${escapeJs(u.name||'')}')" />`
+    : `<div style="width:100%;height:180px;border-radius:16px 16px 0 0;background:var(--bg-secondary);display:flex;align-items:center;justify-content:center;font-size:80px;">${u.gender==='ayol'?'👩':'👨'}</div>`;
+
+  body.innerHTML = `
+    ${photoHtml}
+    <div style="padding:18px 16px 20px;">
+      <div style="font-size:22px;font-weight:800;margin-bottom:10px;">
+        ${escapeHtml(u.name || 'Anonim')}${u.age ? ', ' + u.age : ''}
+      </div>
+      ${u.city ? `<div style="font-size:14px;color:var(--text-secondary);margin-bottom:6px;">📍 ${escapeHtml(u.city)}</div>` : ''}
+      ${zodiacLabel ? `<div style="font-size:14px;color:var(--text-secondary);margin-bottom:6px;">✨ ${escapeHtml(zodiacLabel)}</div>` : ''}
+      <div style="margin-top:16px;display:flex;gap:8px;">
+        <button onclick="sendLike(${u.id});closeProfileModal();"
+          style="flex:1;padding:12px;border-radius:12px;background:var(--ios-blue);color:#fff;font-weight:700;font-size:14px;border:none;cursor:pointer;">
+          💙 Like
+        </button>
+        <button onclick="openMessageModal(${u.id},'${escapeJs(u.name||'')}','${escapeJs(u.photo||'')}',true);closeProfileModal();"
+          style="flex:1;padding:12px;border-radius:12px;background:var(--glass-bg-strong);color:var(--text-primary);font-weight:700;font-size:14px;border:1px solid var(--glass-border);cursor:pointer;">
+          💬 Yozish
+        </button>
+      </div>
+    </div>`;
+  modal.style.display = 'flex';
 }
