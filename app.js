@@ -2510,10 +2510,12 @@ function detectTelegramLanguage() {
   }
 
   function updateLimitBar(limits) {
+    const bar = document.getElementById('limit-status-bar');
     const mpCard = document.getElementById('mp-limit-card');
 
-    // Ayol foydalanuvchilar uchun limit paneli yashiriladi
+    // Ayol foydalanuvchilar uchun limit panellari yashiriladi
     if (limits.is_female) {
+      if (bar) bar.style.display = 'none';
       if (mpCard) mpCard.style.display = 'none';
       return;
     }
@@ -2522,7 +2524,15 @@ function detectTelegramLanguage() {
     const msgsVal  = limits.unlimited ? '∞' : limits.messages_remaining;
     const slVal    = limits.unlimited ? '∞' : limits.super_likes_remaining;
 
-    // Myprofile kartochkasi
+    // Eski fixed bar (search sahifasi)
+    if (bar) {
+      bar.style.display = 'flex';
+      document.getElementById('limit-likes').textContent = likesVal;
+      document.getElementById('limit-messages').textContent = msgsVal;
+      document.getElementById('limit-superlikes').textContent = slVal;
+    }
+
+    // Yangi myprofile kartochkasi
     if (mpCard) {
       mpCard.style.display = 'flex';
       mpCard.classList.toggle('mp-limit-card--unlimited', !!limits.unlimited);
@@ -2626,11 +2636,14 @@ function detectTelegramLanguage() {
   }
 
   // ===== MESSAGE MODAL =====
-  function openMessageModal(toUserId, name, photo) {
+  let messageFromSearch = false;
+  function openMessageModal(toUserId, name, photo, canWrite) {
     messageTargetUserId = toUserId;
     messageTargetName = name;
     messageTargetPhoto = photo;
-    document.getElementById('message-modal-sub').textContent = tr('write_message_to').replace('{name}', name);
+    // 4-parametr: qidiruvdan kelganmi (tinder card'dan)
+    messageFromSearch = (canWrite !== undefined) ? true : false;
+    document.getElementById('message-modal-sub').textContent = tr('write_message_to').replace('{name}', name || '');
     document.getElementById('first-message-input').value = '';
     document.getElementById('message-modal').style.display = 'flex';
   }
@@ -2647,6 +2660,7 @@ function detectTelegramLanguage() {
     const toUserId = Number(messageTargetUserId);
     const savedName = messageTargetName;
     const savedPhoto = messageTargetPhoto;
+    const wasFromSearch = messageFromSearch;
 
     if (!message) {
       showToast(tr('enter_message_text'));
@@ -2670,6 +2684,13 @@ function detectTelegramLanguage() {
     }
 
     closeMessageModal();
+
+    // Qidiruvdan kelgan bo'lsa — keyingi anketaga o'tamiz
+    if (wasFromSearch) {
+      tinderHistory.push(tinderIndex);
+      tinderIndex++;
+      renderTinderCard('right');
+    }
 
     // 1. Avval like yuboramiz
     const likeData = await apiPost('/api/likes/send', {
@@ -2711,9 +2732,20 @@ function detectTelegramLanguage() {
       return;
     }
 
-    // 3. Match bo'lmasa — like yuborildi, pending xabarni localda saqlaymiz
+    // 3. Match bo'lmasa — like yuborildi va xabarni bot orqali yuboramiz
     try { addToViewed({ id: toUserId, name: savedName, photo: savedPhoto }, 'liked'); } catch(e) {}
+    try { addToViewed({ id: toUserId, name: savedName, photo: savedPhoto }, 'messaged'); } catch(e) {}
 
+    // Bot orqali xabar yuborish (pending message)
+    try {
+      await apiPost('/api/messages/send_pending', {
+        from_user: fromUserId,
+        to_user: toUserId,
+        message: message
+      });
+    } catch(e) {}
+
+    // Localda ham saqlaymiz (zaxira)
     try {
       const pendingKey = 'pending_msg_' + fromUserId + '_' + toUserId;
       localStorage.setItem(pendingKey, JSON.stringify({
@@ -2725,7 +2757,7 @@ function detectTelegramLanguage() {
       }));
     } catch(e) {}
 
-    showToast('💙 Like va xabar yuborildi! U ham siz bilan match bo\'lganda xabringiz yetkaziladi.');
+    showToast('💙 ' + tr('like_sent_with_hint'));
   }
 
   // ===== LIMIT CHECK HELPER =====
@@ -3683,7 +3715,7 @@ function detectTelegramLanguage() {
   }
 
   function openMessageModalFromTinder(targetId, name) {
-    openMessageModal(targetId, name);
+    openMessageModal(targetId, name, '', true);
   }
 
   function setupTinderDragOnModal(card) {
