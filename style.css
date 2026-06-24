@@ -4731,3 +4731,23 @@ body.pre-init .lang-modal-overlay.show {
 .mp-tab-btn:active:not(.active) {
   background: rgba(0,122,255,0.08);
 }
+/* ======= LOGIN PAGE STYLES ======= */
+#page-login {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  overflow-y: auto;
+  background: var(--bg-primary);
+}
+#page-login.active {
+  display: flex !important;
+}
+#manual-userid-input::-webkit-outer-spin-button,
+#manual-userid-input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+#logout-btn {
+  align-items: center;
+  gap: 6px;
+}
