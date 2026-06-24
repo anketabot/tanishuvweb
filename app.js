@@ -5114,8 +5114,7 @@ function toggleMiniStats() {
   if (_miniStatsOpen) {
     panel.style.display = 'block';
     btn && btn.classList.add('is-open');
-    if (!_miniStatsData) loadMiniStats();
-    else updateMiniStatsLabels();
+    loadMiniStats();
   } else {
     panel.style.display = 'none';
     btn && btn.classList.remove('is-open');
@@ -5131,13 +5130,57 @@ async function loadMiniStats() {
     const data = await apiPost('/api/stats/leaderboard', {});
     if (data.success) {
       _miniStatsData = data;
-      renderMiniStatsTab(_miniStatsCurrentTab);
+      renderMiniStatsAll(data);
     } else {
       body.innerHTML = '<div class="stats-mini-empty">Ma\'lumot yuklanmadi</div>';
     }
   } catch(e) {
     body.innerHTML = '<div class="stats-mini-empty">Internet aloqasini tekshiring</div>';
   }
+}
+
+function renderMiniStatsAll(data) {
+  const body = document.getElementById('stats-mini-body');
+  if (!body) return;
+  const medals = ['🥇','🥈','🥉'];
+
+  function buildRows(users, icon, label) {
+    if (!users || !users.length) return '<div class="stats-mini-empty">Hozircha ma\'lumot yo\'q 🙈</div>';
+    return users.slice(0, 10).map((u, i) => {
+      const rankHtml = i < 3
+        ? `<span class="stats-mini-rank">${medals[i]}</span>`
+        : `<span class="stats-mini-rank"><span class="stats-mini-rank-num">${i+1}</span></span>`;
+      const photo = u.photo_base64 || u.photo_file_id || '';
+      const avaHtml = photo
+        ? `<img class="stats-mini-ava" src="${photo}" alt="" />`
+        : `<div class="stats-mini-ava-letter">${(u.full_name||'?')[0].toUpperCase()}</div>`;
+      const meta = [u.age ? u.age + ' yosh' : '', u.city || ''].filter(Boolean).join(' • ');
+      return `<div class="stats-mini-row">
+        ${rankHtml}
+        ${avaHtml}
+        <div class="stats-mini-info">
+          <div class="stats-mini-name">${escapeHtml(u.full_name || 'Anonim')}</div>
+          ${meta ? `<div class="stats-mini-meta">${escapeHtml(meta)}</div>` : ''}
+        </div>
+        <div class="stats-mini-badge">${icon} ${u.count} ${label}</div>
+      </div>`;
+    }).join('');
+  }
+
+  body.innerHTML = `
+    <div class="stats-section-block">
+      <div class="stats-section-title">🔥 Eng faol foydalanuvchilar</div>
+      ${buildRows(data.most_active, '🔥', 'ta')}
+    </div>
+    <div class="stats-section-block">
+      <div class="stats-section-title">💙 Eng ko'p like to'plaganlar TOP 10</div>
+      ${buildRows(data.top_liked, '💙', 'like')}
+    </div>
+    <div class="stats-section-block">
+      <div class="stats-section-title">⭐ Eng ko'p super like to'plaganlar TOP 10</div>
+      ${buildRows(data.top_super_liked, '⭐', 'super like')}
+    </div>
+  `;
 }
 
 function switchMiniStatsTab(tab) {
