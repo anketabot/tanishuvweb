@@ -2511,24 +2511,34 @@ function detectTelegramLanguage() {
 
   function updateLimitBar(limits) {
     const bar = document.getElementById('limit-status-bar');
-    if (!bar) return;
+    const mpCard = document.getElementById('mp-limit-card');
 
-    // Ayol foydalanuvchilar uchun limit paneli yashiriladi
+    // Ayol foydalanuvchilar uchun limit panellari yashiriladi
     if (limits.is_female) {
-      bar.style.display = 'none';
+      if (bar) bar.style.display = 'none';
+      if (mpCard) mpCard.style.display = 'none';
       return;
     }
 
-    if (limits.unlimited) {
+    const likesVal = limits.unlimited ? '∞' : limits.likes_remaining;
+    const msgsVal  = limits.unlimited ? '∞' : limits.messages_remaining;
+    const slVal    = limits.unlimited ? '∞' : limits.super_likes_remaining;
+
+    // Eski fixed bar (search sahifasi)
+    if (bar) {
       bar.style.display = 'flex';
-      document.getElementById('limit-likes').textContent = '∞';
-      document.getElementById('limit-messages').textContent = '∞';
-      document.getElementById('limit-superlikes').textContent = '∞';
-    } else {
-      bar.style.display = 'flex';
-      document.getElementById('limit-likes').textContent = limits.likes_remaining;
-      document.getElementById('limit-messages').textContent = limits.messages_remaining;
-      document.getElementById('limit-superlikes').textContent = limits.super_likes_remaining;
+      document.getElementById('limit-likes').textContent = likesVal;
+      document.getElementById('limit-messages').textContent = msgsVal;
+      document.getElementById('limit-superlikes').textContent = slVal;
+    }
+
+    // Yangi myprofile kartochkasi
+    if (mpCard) {
+      mpCard.style.display = 'flex';
+      mpCard.classList.toggle('mp-limit-card--unlimited', !!limits.unlimited);
+      document.getElementById('mp-limit-likes').textContent = likesVal;
+      document.getElementById('mp-limit-messages').textContent = msgsVal;
+      document.getElementById('mp-limit-superlikes').textContent = slVal;
     }
   }
 
