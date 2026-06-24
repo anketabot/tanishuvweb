@@ -2510,12 +2510,10 @@ function detectTelegramLanguage() {
   }
 
   function updateLimitBar(limits) {
-    const bar = document.getElementById('limit-status-bar');
     const mpCard = document.getElementById('mp-limit-card');
 
-    // Ayol foydalanuvchilar uchun limit panellari yashiriladi
+    // Ayol foydalanuvchilar uchun limit paneli yashiriladi
     if (limits.is_female) {
-      if (bar) bar.style.display = 'none';
       if (mpCard) mpCard.style.display = 'none';
       return;
     }
@@ -2524,15 +2522,7 @@ function detectTelegramLanguage() {
     const msgsVal  = limits.unlimited ? '∞' : limits.messages_remaining;
     const slVal    = limits.unlimited ? '∞' : limits.super_likes_remaining;
 
-    // Eski fixed bar (search sahifasi)
-    if (bar) {
-      bar.style.display = 'flex';
-      document.getElementById('limit-likes').textContent = likesVal;
-      document.getElementById('limit-messages').textContent = msgsVal;
-      document.getElementById('limit-superlikes').textContent = slVal;
-    }
-
-    // Yangi myprofile kartochkasi
+    // Myprofile kartochkasi
     if (mpCard) {
       mpCard.style.display = 'flex';
       mpCard.classList.toggle('mp-limit-card--unlimited', !!limits.unlimited);
