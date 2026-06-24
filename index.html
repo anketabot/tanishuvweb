@@ -423,6 +423,26 @@
 
   <!-- ======= STATISTIKA MINI-PANEL (collapsible) ======= -->
   <div class="stats-mini-panel" id="stats-mini-panel" style="display:none;">
+    <!-- 4 ta tugma -->
+    <div class="top-panel-tabs">
+      <button class="top-panel-btn active" id="tpbtn-active" onclick="switchTopPanelTab('active')">
+        <span class="top-panel-btn-icon">🔥</span>
+        <span class="top-panel-btn-label">Faollar</span>
+      </button>
+      <button class="top-panel-btn" id="tpbtn-likes" onclick="switchTopPanelTab('likes')">
+        <span class="top-panel-btn-icon">💙</span>
+        <span class="top-panel-btn-label">Like TOP</span>
+      </button>
+      <button class="top-panel-btn" id="tpbtn-superlikes" onclick="switchTopPanelTab('superlikes')">
+        <span class="top-panel-btn-icon">⭐</span>
+        <span class="top-panel-btn-label">Super TOP</span>
+      </button>
+      <button class="top-panel-btn" id="tpbtn-champion" onclick="switchTopPanelTab('champion')">
+        <span class="top-panel-btn-icon">🏆</span>
+        <span class="top-panel-btn-label">Chempion</span>
+      </button>
+    </div>
+    <!-- Tanlangan bo'lim kontent -->
     <div class="stats-mini-body" id="stats-mini-body">
       <div class="stats-mini-loading"><div class="spinner"></div></div>
     </div>
