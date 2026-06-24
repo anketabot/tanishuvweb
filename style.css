@@ -4246,6 +4246,59 @@ body.pre-init .lang-modal-overlay.show {
   margin-bottom: 4px;
 }
 
+/* TOP panel — 4 tugma */
+.top-panel-tabs {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 6px;
+  padding: 10px 10px 6px;
+  border-bottom: 1px solid var(--glass-border);
+}
+
+.top-panel-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  padding: 8px 4px;
+  border-radius: 12px;
+  border: 1.5px solid var(--glass-border);
+  background: transparent;
+  cursor: pointer;
+  transition: all 0.18s ease;
+}
+
+.top-panel-btn.active {
+  background: var(--ios-blue);
+  border-color: var(--ios-blue);
+  box-shadow: 0 2px 10px rgba(0,122,255,0.3);
+}
+
+.top-panel-btn-icon {
+  font-size: 18px;
+  line-height: 1;
+}
+
+.top-panel-btn-label {
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  white-space: nowrap;
+}
+
+.top-panel-btn.active .top-panel-btn-label {
+  color: #fff;
+}
+
+.top-panel-section-title {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-primary);
+  padding: 10px 2px 8px;
+  border-bottom: 1px solid var(--glass-border);
+  margin-bottom: 4px;
+}
+
 /* ========== PROFIL — TIL TANLASH ========== */
 .profile-lang-section {
   margin: 0 16px 24px;
