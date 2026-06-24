@@ -5107,6 +5107,7 @@ function updateMiniStatsLabels() {
 }
 
 let _miniStatsOpen = false;
+let _topPanelTab = 'active';
 
 function toggleMiniStats() {
   const panel = document.getElementById('stats-mini-panel');
@@ -5123,6 +5124,18 @@ function toggleMiniStats() {
   }
 }
 
+function switchTopPanelTab(tab) {
+  _topPanelTab = tab;
+  document.querySelectorAll('.top-panel-btn').forEach(b => b.classList.remove('active'));
+  const btn = document.getElementById('tpbtn-' + tab);
+  if (btn) btn.classList.add('active');
+  if (_miniStatsData) {
+    renderTopPanelTab(tab);
+  } else {
+    loadMiniStats();
+  }
+}
+
 async function loadMiniStats() {
   updateMiniStatsLabels();
   const body = document.getElementById('stats-mini-body');
@@ -5132,7 +5145,7 @@ async function loadMiniStats() {
     const data = await apiPost('/api/stats/leaderboard', {});
     if (data.success) {
       _miniStatsData = data;
-      renderMiniStatsAll(data);
+      renderTopPanelTab(_topPanelTab);
     } else {
       body.innerHTML = '<div class="stats-mini-empty">Ma\'lumot yuklanmadi</div>';
     }
@@ -5141,9 +5154,10 @@ async function loadMiniStats() {
   }
 }
 
-function renderMiniStatsAll(data) {
+function renderTopPanelTab(tab) {
   const body = document.getElementById('stats-mini-body');
-  if (!body) return;
+  if (!body || !_miniStatsData) return;
+
   const medals = ['🥇','🥈','🥉'];
 
   function buildRows(users, icon, label) {
@@ -5158,8 +5172,7 @@ function renderMiniStatsAll(data) {
         : `<div class="stats-mini-ava-letter">${(u.full_name||'?')[0].toUpperCase()}</div>`;
       const meta = [u.age ? u.age + ' yosh' : '', u.city || ''].filter(Boolean).join(' • ');
       return `<div class="stats-mini-row">
-        ${rankHtml}
-        ${avaHtml}
+        ${rankHtml}${avaHtml}
         <div class="stats-mini-info">
           <div class="stats-mini-name">${escapeHtml(u.full_name || 'Anonim')}</div>
           ${meta ? `<div class="stats-mini-meta">${escapeHtml(meta)}</div>` : ''}
@@ -5169,32 +5182,41 @@ function renderMiniStatsAll(data) {
     }).join('');
   }
 
+  const configs = {
+    active:    { title: '🔥 Eng faol foydalanuvchilar TOP 10',      users: _miniStatsData.most_active,     icon: '🔥', label: 'ta' },
+    likes:     { title: '💙 Eng ko\'p like to\'plaganlar TOP 10',    users: _miniStatsData.top_liked,       icon: '💙', label: 'like' },
+    superlikes:{ title: '⭐ Eng ko\'p super like to\'plaganlar TOP 10', users: _miniStatsData.top_super_liked, icon: '⭐', label: 'super like' },
+    champion:  { title: '🏆 Mutloq chempion anketalar',             users: _miniStatsData.top_liked,       icon: '🏆', label: 'ball' },
+  };
+
+  const cfg = configs[tab] || configs.active;
+
+  // Chempion tab uchun kombinatsiyalangan hisob
+  let users = cfg.users;
+  if (tab === 'champion') {
+    const all = {};
+    (_miniStatsData.most_active || []).forEach(u => {
+      all[u.telegram_id] = { ...u, score: (u.count || 0) * 1 };
+    });
+    (_miniStatsData.top_liked || []).forEach(u => {
+      if (all[u.telegram_id]) all[u.telegram_id].score += (u.count || 0) * 2;
+      else all[u.telegram_id] = { ...u, score: (u.count || 0) * 2 };
+    });
+    (_miniStatsData.top_super_liked || []).forEach(u => {
+      if (all[u.telegram_id]) all[u.telegram_id].score += (u.count || 0) * 3;
+      else all[u.telegram_id] = { ...u, score: (u.count || 0) * 3 };
+    });
+    users = Object.values(all).sort((a, b) => b.score - a.score).slice(0, 10).map(u => ({ ...u, count: u.score }));
+  }
+
   body.innerHTML = `
-    <div class="stats-section-block">
-      <div class="stats-section-title">🔥 Eng faol foydalanuvchilar</div>
-      ${buildRows(data.most_active, '🔥', 'ta')}
-    </div>
-    <div class="stats-section-block">
-      <div class="stats-section-title">💙 Eng ko'p like to'plaganlar TOP 10</div>
-      ${buildRows(data.top_liked, '💙', 'like')}
-    </div>
-    <div class="stats-section-block">
-      <div class="stats-section-title">⭐ Eng ko'p super like to'plaganlar TOP 10</div>
-      ${buildRows(data.top_super_liked, '⭐', 'super like')}
-    </div>
+    <div class="top-panel-section-title">${cfg.title}</div>
+    ${buildRows(users, cfg.icon, cfg.label)}
   `;
 }
 
 function switchMiniStatsTab(tab) {
-  _miniStatsCurrentTab = tab;
-  document.querySelectorAll('.stats-mini-tab').forEach(t => t.classList.remove('active'));
-  const tabEl = document.getElementById('smtab-' + tab);
-  if (tabEl) tabEl.classList.add('active');
-  if (_miniStatsData) {
-    renderMiniStatsTab(tab);
-  } else {
-    loadMiniStats();
-  }
+  switchTopPanelTab(tab);
 }
 
 function renderMiniStatsTab(tab) {
