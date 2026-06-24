@@ -4138,7 +4138,11 @@ function detectTelegramLanguage() {
     if (data.success) {
       showToast(tr('match_with').replace('{name}', name));
       loadPendingLikesIndicator();
-      loadChats();
+      await loadChats();
+      // Match bo'lganda darhol chatni ochamiz
+      if (data.match_id) {
+        openChatRoom(data.match_id, name, photo);
+      }
     } else {
       showToast(tr('error_occurred'));
     }
@@ -4185,7 +4189,13 @@ function detectTelegramLanguage() {
       } catch(e) {}
       if (data.match) {
         showMatchOverlay();
-        loadChats();
+        await loadChats();
+        // Match bo'lsa — chatni darhol ochamiz
+        if (data.match_id) {
+          const matchName = (data.to_user_profile?.full_name) || tr('chat_user_default');
+          const matchPhoto = (data.to_user_profile?.photo_base64) || (data.to_user_profile?.photo_file_id) || '';
+          openChatRoom(data.match_id, matchName, matchPhoto);
+        }
       } else {
         showToast(tr('like_sent'));
       }
