@@ -4853,3 +4853,179 @@ body.pre-init .lang-modal-overlay.show {
   text-align: center;
   padding-top: 2px;
 }
+/* ========== LOCATION SELECTOR — PREMIUM REDESIGN ========== */
+
+/* Wrapper for each select row */
+.location-select-wrap {
+  position: relative;
+  width: 100%;
+  margin-bottom: 10px;
+}
+
+/* Icon badge on the left */
+.location-select-icon {
+  position: absolute;
+  left: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 32px;
+  height: 32px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  z-index: 2;
+  pointer-events: none;
+  flex-shrink: 0;
+}
+
+.location-select-icon--country {
+  background: linear-gradient(135deg, rgba(0,122,255,0.12), rgba(90,200,250,0.10));
+}
+.location-select-icon--region {
+  background: linear-gradient(135deg, rgba(88,86,214,0.12), rgba(175,82,222,0.10));
+}
+.location-select-icon--district {
+  background: linear-gradient(135deg, rgba(52,199,89,0.12), rgba(48,209,88,0.09));
+}
+
+/* Floating label above the select */
+.location-select-label {
+  position: absolute;
+  left: 56px;
+  top: 9px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  color: var(--ios-blue);
+  opacity: 0.75;
+  pointer-events: none;
+  z-index: 2;
+  transition: opacity 0.2s;
+}
+
+/* The actual <select> */
+.region-select {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 26px 44px 10px 56px !important;
+  border: 1.5px solid rgba(0, 122, 255, 0.18);
+  border-radius: 18px;
+  font-family: inherit;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-primary);
+  background:
+    linear-gradient(135deg, rgba(255,255,255,0.92), rgba(245,248,255,0.97));
+  outline: none;
+  appearance: none;
+  -webkit-appearance: none;
+  cursor: pointer;
+  transition: border-color 0.25s var(--ease-premium), box-shadow 0.25s var(--ease-premium), transform 0.18s var(--ease-spring);
+  background-image:
+    linear-gradient(135deg, rgba(255,255,255,0.92), rgba(245,248,255,0.97)),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23007AFF' stroke-width='2' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-position: center, calc(100% - 16px) center;
+  background-size: auto, 12px;
+  background-repeat: no-repeat;
+  box-shadow:
+    0 4px 14px rgba(0,122,255,0.07),
+    0 1px 3px rgba(15,23,42,0.04),
+    inset 0 1px 1px rgba(255,255,255,0.80);
+  min-height: 62px;
+}
+
+.region-select:hover {
+  border-color: rgba(0, 122, 255, 0.30);
+  transform: translateY(-1px);
+  box-shadow:
+    0 8px 20px rgba(0,122,255,0.11),
+    0 1px 3px rgba(15,23,42,0.04),
+    inset 0 1px 1px rgba(255,255,255,0.90);
+}
+
+.region-select:focus {
+  border-color: var(--ios-blue);
+  box-shadow:
+    0 0 0 3.5px rgba(0,122,255,0.14),
+    0 8px 22px rgba(0,122,255,0.12),
+    inset 0 1px 2px rgba(255,255,255,0.95);
+}
+
+/* When disabled / not yet filled — show placeholder style */
+.region-select:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.region-select option {
+  color: var(--text-primary);
+  background: #fff;
+  font-weight: 500;
+}
+
+/* Active/filled state — slightly tinted border */
+.location-select-wrap.is-filled .region-select {
+  border-color: rgba(0, 122, 255, 0.35);
+  background-image:
+    linear-gradient(135deg, rgba(240,247,255,0.95), rgba(232,244,255,0.98)),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23007AFF' stroke-width='2' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+}
+
+/* Step indicator dots under the selects */
+.location-steps {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 2px 8px;
+}
+.location-step-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: rgba(0,122,255,0.15);
+  transition: all 0.3s var(--ease-spring);
+  flex-shrink: 0;
+}
+.location-step-dot.active {
+  background: var(--ios-blue);
+  width: 18px;
+  border-radius: 3px;
+}
+.location-step-dot.done {
+  background: #34C759;
+}
+
+/* Section label above the group */
+.location-group-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+.location-group-icon {
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  background: linear-gradient(135deg, #007AFF, #5AC8FA);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.location-group-icon svg {
+  color: white;
+  stroke: white;
+}
+.location-group-title {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+.location-group-sub {
+  font-size: 11px;
+  color: var(--text-secondary);
+  margin-top: 1px;
+}
