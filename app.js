@@ -2808,7 +2808,11 @@ function detectTelegramLanguage() {
 
     if (nameInput && profile.full_name) nameInput.value = profile.full_name;
     if (ageInput && profile.age) ageInput.value = profile.age;
-    if (cityInput && profile.city) cityInput.value = profile.city;
+    if (cityInput && profile.city) {
+      cityInput.value = profile.city;
+      // Region selectorlarni ham to'ldirish
+      populateRegionFromCityString(profile.city);
+    }
     if (aboutInput && profile.about) aboutInput.value = profile.about;
 
     // Set zodiac
@@ -2882,6 +2886,14 @@ function detectTelegramLanguage() {
     if (cityInput) cityInput.value = '';
     if (aboutInput) aboutInput.value = '';
     if (zodiacSelect) zodiacSelect.value = '';
+
+    // Region selectorlarni tozalash
+    const countrySel = document.getElementById('inp-country');
+    const regionSel = document.getElementById('inp-region');
+    const districtSel = document.getElementById('inp-district');
+    if (countrySel) countrySel.value = '';
+    if (regionSel) { regionSel.value = ''; regionSel.style.display = 'none'; }
+    if (districtSel) { districtSel.value = ''; districtSel.style.display = 'none'; }
 
     // Clear gender selection visuals
     const maleBtn = document.getElementById('gender-erkak');
@@ -3454,6 +3466,208 @@ function detectTelegramLanguage() {
     }
   }
 
+  // ========== REGION SELECTOR FUNCTIONS ==========
+  // O'zbekiston viloyatlari va tumanlari (regions.json dan)
+  function getUzbekRegions() {
+    if (!uzbekCitiesML) return {};
+    return uzbekCitiesML['uz'] || {};
+  }
+
+  function populateRegions(selectId, regions) {
+    const sel = document.getElementById(selectId);
+    if (!sel) return;
+    const firstOpt = sel.options[0];
+    sel.innerHTML = '';
+    sel.appendChild(firstOpt);
+    Object.keys(regions).forEach(region => {
+      const opt = document.createElement('option');
+      opt.value = region;
+      opt.textContent = region;
+      sel.appendChild(opt);
+    });
+  }
+
+  function populateDistricts(selectId, districts) {
+    const sel = document.getElementById(selectId);
+    if (!sel) return;
+    const firstOpt = sel.options[0];
+    sel.innerHTML = '';
+    sel.appendChild(firstOpt);
+    (districts || []).forEach(d => {
+      const opt = document.createElement('option');
+      opt.value = d;
+      opt.textContent = d;
+      sel.appendChild(opt);
+    });
+  }
+
+  function updateHiddenCityField(fieldId, country, region, district) {
+    const el = document.getElementById(fieldId);
+    if (!el) return;
+    let val = '';
+    if (country === "Oʻzbekiston" || country === "O'zbekiston") {
+      if (district) val = district + ', ' + region;
+      else if (region) val = region;
+      else val = country;
+    } else {
+      val = country || '';
+    }
+    el.value = val;
+  }
+
+  // Anketa: Davlat o'zgartirilganda
+  function onCountryChange() {
+    const country = document.getElementById('inp-country')?.value || '';
+    const regionSel = document.getElementById('inp-region');
+    const districtSel = document.getElementById('inp-district');
+
+    if (country === "Oʻzbekiston" || country === "O'zbekiston") {
+      // O'zbekiston viloyatlarini to'ldir
+      loadRegionsData().then(() => {
+        const regions = getUzbekRegions();
+        populateRegions('inp-region', regions);
+        if (regionSel) regionSel.style.display = 'block';
+        if (districtSel) { districtSel.style.display = 'none'; districtSel.value = ''; }
+        updateHiddenCityField('inp-city', country, '', '');
+      });
+    } else {
+      if (regionSel) { regionSel.style.display = 'none'; regionSel.value = ''; }
+      if (districtSel) { districtSel.style.display = 'none'; districtSel.value = ''; }
+      updateHiddenCityField('inp-city', country, '', '');
+    }
+  }
+
+  // Anketa: Viloyat o'zgartirilganda
+  function onRegionChange() {
+    const country = document.getElementById('inp-country')?.value || '';
+    const region = document.getElementById('inp-region')?.value || '';
+    const districtSel = document.getElementById('inp-district');
+
+    if (region) {
+      const regions = getUzbekRegions();
+      const districts = regions[region] || [];
+      populateDistricts('inp-district', districts);
+      if (districtSel) districtSel.style.display = 'block';
+    } else {
+      if (districtSel) { districtSel.style.display = 'none'; districtSel.value = ''; }
+    }
+    updateHiddenCityField('inp-city', country, region, '');
+  }
+
+  // Anketa: Tuman o'zgartirilganda
+  function onDistrictChange() {
+    const country = document.getElementById('inp-country')?.value || '';
+    const region = document.getElementById('inp-region')?.value || '';
+    const district = document.getElementById('inp-district')?.value || '';
+    updateHiddenCityField('inp-city', country, region, district);
+  }
+
+  // Qidiruv: Davlat o'zgartirilganda
+  function onSearchCountryChange() {
+    const country = document.getElementById('sf-country')?.value || '';
+    const regionSel = document.getElementById('sf-region');
+    const districtSel = document.getElementById('sf-district');
+
+    if (country === "Oʻzbekiston" || country === "O'zbekiston") {
+      loadRegionsData().then(() => {
+        const regions = getUzbekRegions();
+        populateRegions('sf-region', regions);
+        if (regionSel) regionSel.style.display = 'block';
+        if (districtSel) { districtSel.style.display = 'none'; districtSel.value = ''; }
+        updateHiddenCityField('sf-city', country, '', '');
+      });
+    } else {
+      if (regionSel) { regionSel.style.display = 'none'; regionSel.value = ''; }
+      if (districtSel) { districtSel.style.display = 'none'; districtSel.value = ''; }
+      updateHiddenCityField('sf-city', country, '', '');
+    }
+  }
+
+  // Qidiruv: Viloyat o'zgartirilganda
+  function onSearchRegionChange() {
+    const country = document.getElementById('sf-country')?.value || '';
+    const region = document.getElementById('sf-region')?.value || '';
+    const districtSel = document.getElementById('sf-district');
+
+    if (region) {
+      const regions = getUzbekRegions();
+      const districts = regions[region] || [];
+      populateDistricts('sf-district', districts);
+      if (districtSel) districtSel.style.display = 'block';
+    } else {
+      if (districtSel) { districtSel.style.display = 'none'; districtSel.value = ''; }
+    }
+    updateHiddenCityField('sf-city', country, region, '');
+  }
+
+  // Anketa formini regionlardan to'ldirish (mavjud profil uchun)
+  function populateRegionFromCityString(cityStr) {
+    if (!cityStr) return;
+    // "Tuman, Viloyat" yoki "Viloyat" yoki "Davlat" formatini parse qilish
+    loadRegionsData().then(() => {
+      const regions = getUzbekRegions();
+      const regionKeys = Object.keys(regions);
+
+      // Viloyatni topish
+      let foundRegion = null;
+      let foundDistrict = null;
+
+      // "X tumani, Y viloyati" formatini tekshirish
+      const commaSplit = cityStr.split(',');
+      if (commaSplit.length >= 2) {
+        const possibleRegion = commaSplit[1].trim();
+        const possibleDistrict = commaSplit[0].trim();
+        if (regionKeys.includes(possibleRegion)) {
+          foundRegion = possibleRegion;
+          if (regions[foundRegion]?.includes(possibleDistrict)) {
+            foundDistrict = possibleDistrict;
+          }
+        }
+      }
+      // Agar topilmagan bo'lsa, to'g'ridan to'g'ri viloyat nomi
+      if (!foundRegion) {
+        for (const rk of regionKeys) {
+          if (cityStr.includes(rk) || rk.includes(cityStr.trim())) {
+            foundRegion = rk;
+            break;
+          }
+          // Tumanni tekshirish
+          if (regions[rk]?.some(d => cityStr.includes(d))) {
+            foundRegion = rk;
+            foundDistrict = regions[rk].find(d => cityStr.includes(d)) || null;
+            break;
+          }
+        }
+      }
+
+      const countrySel = document.getElementById('inp-country');
+      const regionSel = document.getElementById('inp-region');
+      const districtSel = document.getElementById('inp-district');
+
+      if (foundRegion) {
+        if (countrySel) countrySel.value = "Oʻzbekiston";
+        populateRegions('inp-region', regions);
+        if (regionSel) { regionSel.style.display = 'block'; regionSel.value = foundRegion; }
+        if (foundDistrict) {
+          const districts = regions[foundRegion] || [];
+          populateDistricts('inp-district', districts);
+          if (districtSel) { districtSel.style.display = 'block'; districtSel.value = foundDistrict; }
+        } else {
+          if (districtSel) districtSel.style.display = 'none';
+        }
+      } else {
+        // Boshqa davlat bo'lishi mumkin
+        const otherCountries = ["Rossiya","Qozogʻiston","Qirgʻiziston","Tojikiston","Turkmaniston","Ozarbayjon","Armaniston","Gruziya","Ukraina","Belarus","Moldova"];
+        for (const c of otherCountries) {
+          if (cityStr.includes(c) || c.includes(cityStr.trim())) {
+            if (countrySel) countrySel.value = c;
+            break;
+          }
+        }
+      }
+    });
+  }
+
   // === SAVE PROFILE ===
   async function saveProfile() {
     if (!photoReady || !photoBase64) {
@@ -3480,11 +3694,17 @@ function detectTelegramLanguage() {
 
     // Backendga key sifatida saqlash (int_kino, goal_dostlik kabi)
     // Ko'rsatishda tr() orqali tarjima qilinadi
+    const selectedCountry = document.getElementById('inp-country')?.value?.trim() || '';
+    const selectedRegion = document.getElementById('inp-region')?.value?.trim() || '';
+    const selectedDistrict = document.getElementById('inp-district')?.value?.trim() || '';
+
     const profile = {
       gender: selectedGender,
       full_name: name,
       age: age,
       city: city,
+      country: selectedCountry || 'Oʻzbekiston',
+      region: selectedRegion || null,
       about: about,
       zodiac: zodiac,
       interests: trimmedInterests,
@@ -3529,8 +3749,25 @@ function detectTelegramLanguage() {
     if (ageFrom) filters.age_from = parseInt(ageFrom);
     const ageTo = document.getElementById('sf-age-to')?.value?.trim();
     if (ageTo) filters.age_to = parseInt(ageTo);
-    const city = document.getElementById('sf-city')?.value?.trim();
-    if (city) filters.city = city;
+
+    // Region bo'yicha filter (davlat → viloyat → tuman)
+    const sfCountry = document.getElementById('sf-country')?.value?.trim();
+    const sfRegion = document.getElementById('sf-region')?.value?.trim();
+    const sfDistrict = document.getElementById('sf-district')?.value?.trim();
+    const sfCityHidden = document.getElementById('sf-city')?.value?.trim();
+
+    if (sfDistrict) {
+      // Eng aniq: tuman bo'yicha
+      filters.city = sfDistrict;
+    } else if (sfRegion) {
+      // Viloyat bo'yicha (barcha tumanlar)
+      filters.city = sfRegion;
+    } else if (sfCountry) {
+      // Davlat bo'yicha
+      filters.country = sfCountry;
+    } else if (sfCityHidden) {
+      filters.city = sfCityHidden;
+    }
 
     // Backendga key sifatida yuborish (goal_dostlik, int_kino kabi)
     if (selectedSearchGoals.length > 0) {
