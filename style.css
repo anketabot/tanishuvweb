@@ -4853,140 +4853,242 @@ body.pre-init .lang-modal-overlay.show {
   text-align: center;
   padding-top: 2px;
 }
-/* ========== LOCATION SELECTOR — PREMIUM REDESIGN ========== */
 
-/* Wrapper for each select row */
+/* ========== LOCATION SELECTOR — CUSTOM DROPDOWN ========== */
+
+/* Hide native selects — JS custom dropdown ishlatiladi */
+.region-select { display: none !important; }
+
+/* Wrapper */
 .location-select-wrap {
   position: relative;
   width: 100%;
   margin-bottom: 10px;
+  user-select: none;
 }
 
-/* Icon badge on the left */
-.location-select-icon {
-  position: absolute;
-  left: 14px;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 32px;
-  height: 32px;
-  border-radius: 10px;
+/* Trigger button (custom select box) */
+.loc-trigger {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 12px 14px;
+  border: 1.5px solid rgba(0, 122, 255, 0.18);
+  border-radius: 18px;
+  background: linear-gradient(135deg, rgba(255,255,255,0.92), rgba(245,248,255,0.97));
+  box-shadow:
+    0 4px 14px rgba(0,122,255,0.07),
+    inset 0 1px 1px rgba(255,255,255,0.85);
+  cursor: pointer;
+  transition: all 0.22s var(--ease-premium);
+  text-align: left;
+  font-family: inherit;
+  outline: none;
+  -webkit-tap-highlight-color: transparent;
+}
+.loc-trigger:active {
+  transform: scale(0.985);
+}
+.loc-trigger.open,
+.loc-trigger:focus {
+  border-color: var(--ios-blue);
+  box-shadow:
+    0 0 0 3.5px rgba(0,122,255,0.13),
+    0 6px 18px rgba(0,122,255,0.11),
+    inset 0 1px 2px rgba(255,255,255,0.95);
+}
+.loc-trigger.filled {
+  border-color: rgba(0,122,255,0.32);
+  background: linear-gradient(135deg, rgba(240,247,255,0.97), rgba(232,244,255,0.99));
+}
+
+/* Left icon badge */
+.loc-trigger-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 11px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 16px;
-  z-index: 2;
-  pointer-events: none;
+  font-size: 18px;
   flex-shrink: 0;
 }
+.loc-trigger-icon--country { background: linear-gradient(135deg, rgba(0,122,255,0.13), rgba(90,200,250,0.11)); }
+.loc-trigger-icon--region  { background: linear-gradient(135deg, rgba(88,86,214,0.13), rgba(175,82,222,0.11)); }
+.loc-trigger-icon--district{ background: linear-gradient(135deg, rgba(52,199,89,0.13),  rgba(48,209,88,0.10)); }
 
-.location-select-icon--country {
-  background: linear-gradient(135deg, rgba(0,122,255,0.12), rgba(90,200,250,0.10));
+/* Text section */
+.loc-trigger-text {
+  flex: 1;
+  min-width: 0;
 }
-.location-select-icon--region {
-  background: linear-gradient(135deg, rgba(88,86,214,0.12), rgba(175,82,222,0.10));
-}
-.location-select-icon--district {
-  background: linear-gradient(135deg, rgba(52,199,89,0.12), rgba(48,209,88,0.09));
-}
-
-/* Floating label above the select */
-.location-select-label {
-  position: absolute;
-  left: 56px;
-  top: 9px;
+.loc-trigger-label {
   font-size: 10px;
   font-weight: 700;
-  letter-spacing: 0.5px;
+  letter-spacing: 0.55px;
   text-transform: uppercase;
   color: var(--ios-blue);
-  opacity: 0.75;
-  pointer-events: none;
-  z-index: 2;
-  transition: opacity 0.2s;
+  opacity: 0.8;
+  margin-bottom: 2px;
 }
-
-/* The actual <select> */
-.region-select {
-  width: 100%;
-  box-sizing: border-box;
-  padding: 26px 44px 10px 56px !important;
-  border: 1.5px solid rgba(0, 122, 255, 0.18);
-  border-radius: 18px;
-  font-family: inherit;
+.loc-trigger-value {
   font-size: 15px;
   font-weight: 600;
   color: var(--text-primary);
-  background:
-    linear-gradient(135deg, rgba(255,255,255,0.92), rgba(245,248,255,0.97));
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.loc-trigger-value.placeholder {
+  color: var(--text-tertiary);
+  font-weight: 400;
+}
+
+/* Chevron arrow */
+.loc-trigger-chevron {
+  width: 20px;
+  height: 20px;
+  color: var(--ios-blue);
+  opacity: 0.6;
+  flex-shrink: 0;
+  transition: transform 0.25s var(--ease-spring);
+}
+.loc-trigger.open .loc-trigger-chevron {
+  transform: rotate(180deg);
+  opacity: 1;
+}
+
+/* ── Dropdown panel ── */
+.loc-dropdown {
+  display: none;
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  right: 0;
+  z-index: 9999;
+  background: rgba(255,255,255,0.97);
+  backdrop-filter: blur(28px) saturate(180%);
+  -webkit-backdrop-filter: blur(28px) saturate(180%);
+  border: 1.5px solid rgba(0,122,255,0.15);
+  border-radius: 18px;
+  box-shadow:
+    0 2px 8px rgba(15,23,42,0.06),
+    0 16px 40px rgba(0,122,255,0.14),
+    0 32px 64px rgba(15,23,42,0.08);
+  overflow: hidden;
+  max-height: 260px;
+  flex-direction: column;
+}
+.loc-dropdown.open {
+  display: flex;
+  animation: locDropIn 0.22s var(--ease-spring) both;
+}
+
+@keyframes locDropIn {
+  from { opacity: 0; transform: translateY(-8px) scale(0.97); }
+  to   { opacity: 1; transform: translateY(0)   scale(1); }
+}
+
+/* Search input inside dropdown */
+.loc-search {
+  padding: 10px 14px 8px;
+  border-bottom: 1px solid rgba(0,122,255,0.08);
+  flex-shrink: 0;
+}
+.loc-search-input {
+  width: 100%;
+  padding: 9px 14px 9px 36px;
+  border: 1.5px solid rgba(0,122,255,0.15);
+  border-radius: 12px;
+  font-family: inherit;
+  font-size: 14px;
+  background: rgba(245,248,255,0.95);
   outline: none;
-  appearance: none;
-  -webkit-appearance: none;
-  cursor: pointer;
-  transition: border-color 0.25s var(--ease-premium), box-shadow 0.25s var(--ease-premium), transform 0.18s var(--ease-spring);
-  background-image:
-    linear-gradient(135deg, rgba(255,255,255,0.92), rgba(245,248,255,0.97)),
-    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23007AFF' stroke-width='2' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
-  background-position: center, calc(100% - 16px) center;
-  background-size: auto, 12px;
-  background-repeat: no-repeat;
-  box-shadow:
-    0 4px 14px rgba(0,122,255,0.07),
-    0 1px 3px rgba(15,23,42,0.04),
-    inset 0 1px 1px rgba(255,255,255,0.80);
-  min-height: 62px;
-}
-
-.region-select:hover {
-  border-color: rgba(0, 122, 255, 0.30);
-  transform: translateY(-1px);
-  box-shadow:
-    0 8px 20px rgba(0,122,255,0.11),
-    0 1px 3px rgba(15,23,42,0.04),
-    inset 0 1px 1px rgba(255,255,255,0.90);
-}
-
-.region-select:focus {
-  border-color: var(--ios-blue);
-  box-shadow:
-    0 0 0 3.5px rgba(0,122,255,0.14),
-    0 8px 22px rgba(0,122,255,0.12),
-    inset 0 1px 2px rgba(255,255,255,0.95);
-}
-
-/* When disabled / not yet filled — show placeholder style */
-.region-select:disabled {
-  opacity: 0.45;
-  cursor: not-allowed;
-  transform: none;
-}
-
-.region-select option {
   color: var(--text-primary);
-  background: #fff;
+  transition: border-color 0.18s;
+  box-sizing: border-box;
+}
+.loc-search-input:focus { border-color: var(--ios-blue); }
+.loc-search-wrap {
+  position: relative;
+}
+.loc-search-icon {
+  position: absolute;
+  left: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-tertiary);
+  pointer-events: none;
+}
+
+/* Scrollable options list */
+.loc-options {
+  overflow-y: auto;
+  flex: 1;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+}
+.loc-options::-webkit-scrollbar { width: 4px; }
+.loc-options::-webkit-scrollbar-track { background: transparent; }
+.loc-options::-webkit-scrollbar-thumb { background: rgba(0,122,255,0.18); border-radius: 2px; }
+
+/* Each option row */
+.loc-option {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 16px;
+  font-size: 15px;
   font-weight: 500;
+  color: var(--text-primary);
+  cursor: pointer;
+  transition: background 0.12s;
+  border-bottom: 1px solid rgba(0,0,0,0.03);
+}
+.loc-option:last-child { border-bottom: none; }
+.loc-option:active,
+.loc-option:hover {
+  background: rgba(0,122,255,0.07);
+}
+.loc-option.selected {
+  background: rgba(0,122,255,0.08);
+  color: var(--ios-blue);
+  font-weight: 700;
+}
+.loc-option-flag {
+  font-size: 20px;
+  line-height: 1;
+  flex-shrink: 0;
+}
+.loc-option-check {
+  margin-left: auto;
+  color: var(--ios-blue);
+  flex-shrink: 0;
+  opacity: 0;
+}
+.loc-option.selected .loc-option-check { opacity: 1; }
+
+/* Empty state */
+.loc-options-empty {
+  padding: 20px 16px;
+  text-align: center;
+  font-size: 14px;
+  color: var(--text-tertiary);
 }
 
-/* Active/filled state — slightly tinted border */
-.location-select-wrap.is-filled .region-select {
-  border-color: rgba(0, 122, 255, 0.35);
-  background-image:
-    linear-gradient(135deg, rgba(240,247,255,0.95), rgba(232,244,255,0.98)),
-    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23007AFF' stroke-width='2' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
-}
-
-/* Step indicator dots under the selects */
+/* Step indicator dots */
 .location-steps {
   display: flex;
   align-items: center;
   gap: 6px;
-  padding: 4px 2px 8px;
+  padding: 4px 2px 10px;
 }
 .location-step-dot {
   width: 6px;
   height: 6px;
   border-radius: 50%;
-  background: rgba(0,122,255,0.15);
+  background: rgba(0,122,255,0.14);
   transition: all 0.3s var(--ease-spring);
   flex-shrink: 0;
 }
@@ -4997,9 +5099,11 @@ body.pre-init .lang-modal-overlay.show {
 }
 .location-step-dot.done {
   background: #34C759;
+  width: 6px;
+  border-radius: 50%;
 }
 
-/* Section label above the group */
+/* Group header */
 .location-group-header {
   display: flex;
   align-items: center;
@@ -5015,17 +5119,6 @@ body.pre-init .lang-modal-overlay.show {
   align-items: center;
   justify-content: center;
 }
-.location-group-icon svg {
-  color: white;
-  stroke: white;
-}
-.location-group-title {
-  font-size: 13px;
-  font-weight: 700;
-  color: var(--text-primary);
-}
-.location-group-sub {
-  font-size: 11px;
-  color: var(--text-secondary);
-  margin-top: 1px;
-}
+.location-group-icon svg { stroke: white; }
+.location-group-title { font-size: 13px; font-weight: 700; color: var(--text-primary); }
+.location-group-sub { font-size: 11px; color: var(--text-secondary); margin-top: 1px; }
