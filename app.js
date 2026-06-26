@@ -2406,81 +2406,86 @@ function detectTelegramLanguage() {
   let photoUploading = false;
   // REMOVED: let savedProfile = null; — always read from storage per-user
 
-  const uzbekCities = [
-    "Andijon shahri", "Xonobod shahri", "Asaka shahri", "Qorasuv shahri",
-    "Andijon tumani", "Asaka tumani", "Baliqchi tumani", "Boʻston tumani",
-    "Buloqboshi tumani", "Izboskan tumani", "Jalaquduq tumani", "Marhamat tumani",
-    "Oltinkoʻl tumani", "Paxtaobod tumani", "Shahrixon tumani", "Ulugʻnor tumani",
-    "Xoʻjaobod tumani", "Qoʻrgʻontepa tumani",
-    "Buxoro shahri", "Kogon shahri", "Olot shahri", "Vobkent shahri",
-    "Gazli shahri", "Galaosiyo shahri", "Gʻijduvon shahri", "Qorakoʻl shahri",
-    "Qorovulbozor shahri", "Romitan shahri", "Shofirkon shahri",
-    "Buxoro tumani", "Jondor tumani", "Kogon tumani", "Qorakoʻl tumani",
-    "Qorovulbozor tumani", "Olot tumani", "Peshku tumani", "Romitan tumani",
-    "Shofirkon tumani", "Vobkent tumani", "Gʻijduvon tumani",
-    "Fargʻona shahri", "Qoʻqon shahri", "Margʻilon shahri", "Quvasoy shahri",
-    "Quva shahri", "Rishton shahri", "Yaypan shahri", "Tinchlik shahri",
-    "Bogʻdod tumani", "Beshariq tumani", "Buvayda tumani", "Dangʻara tumani",
-    "Fargʻona tumani", "Furqat tumani", "Qoʻshtepa tumani", "Quva tumani",
-    "Rishton tumani", "Soʻx tumani", "Toshloq tumani", "Uchkoʻprik tumani",
-    "Oltiariq tumani", "Oʻzbekiston tumani", "Yozyovon tumani",
-    "Jizzax shahri", "Dashtobod shahri",
-    "Arnasoy tumani", "Baxmal tumani", "Doʻstlik tumani", "Forish tumani",
-    "Gallaorol tumani", "Sharof Rashidov tumani", "Mirzachoʻl tumani",
-    "Paxtakor tumani", "Yangiobod tumani", "Zomin tumani", "Zafarobod tumani",
-    "Zarbdor tumani",
-    "Urganch shahri", "Xiva shahri", "Pitnak shahri", "Gurlan shahri", "Shovot shahri",
-    "Bogʻot tumani", "Gurlan tumani", "Qoʻshkoʻpir tumani", "Shovot tumani",
-    "Yangiariq tumani", "Tuproqqalʼa tumani", "Urganch tumani", "Xonqa tumani",
-    "Xiva tumani", "Hazorasp tumani", "Yangibozor tumani",
-    "Namangan shahri", "Chust shahri", "Chartaq shahri", "Kosonsoy shahri",
-    "Uchqoʻrgʻon shahri", "Haqqulobod shahri", "Toʻraqoʻrgʻon shahri", "Pop shahri",
-    "Chartaq tumani", "Chust tumani", "Kosonsoy tumani", "Mingbuloq tumani",
-    "Namangan tumani", "Norin tumani", "Pop tumani", "Toʻraqoʻrgʻon tumani",
-    "Uychi tumani", "Uchqoʻrgʻon tumani", "Yangiqoʻrgʻon tumani", "Yangi Namangan tumani",
-    "Navoiy shahri", "Zarafshon shahri", "Uchquduq shahri", "Nurota shahri",
-    "Qiziltepa shahri", "Gʻozgʻon shahri",
-    "Karmana tumani", "Konimex tumani", "Qiziltepa tumani", "Xatirchi tumani",
-    "Navbahor tumani", "Nurota tumani", "Tomdi tumani", "Uchquduq tumani",
-    "Qarshi shahri", "Shahrisabz shahri", "Kitob shahri", "Koson shahri",
-    "Muborak shahri", "Yakkabogʻ shahri", "Gʻuzor shahri", "Kamashi shahri",
-    "Chiroqchi tumani", "Dehqonobod tumani", "Kamashi tumani", "Qarshi tumani",
-    "Koson tumani", "Koʻkdala tumani", "Kitob tumani", "Mirishkor tumani",
-    "Muborak tumani", "Nishon tumani", "Kasbi tumani", "Shahrisabz tumani",
-    "Yakkabogʻ tumani", "Gʻuzor tumani",
-    "Samarqand shahri", "Kattaqoʻrgʻon shahri", "Urgut shahri", "Oqtosh shahri",
-    "Bulungʻur shahri", "Jomboy shahri", "Chelak shahri", "Nurobod shahri",
-    "Bulungʻur tumani", "Ishtixon tumani", "Jomboy tumani", "Kattaqoʻrgʻon tumani",
-    "Qoʻshrabot tumani", "Narpay tumani", "Nurobod tumani", "Oqdaryo tumani",
-    "Paxtachi tumani", "Payariq tumani", "Pastdargʻom tumani", "Samarqand tumani",
-    "Toyloq tumani", "Urgut tumani",
-    "Guliston shahri", "Shirin shahri", "Yangiyer shahri", "Baxt shahri",
-    "Sirdaryo shahri",
-    "Boyovut tumani", "Guliston tumani", "Xovos tumani", "Mirzaobod tumani",
-    "Oqoltin tumani", "Sardoba tumani", "Sayxunobod tumani", "Sirdaryo tumani",
-    "Termiz shahri", "Denov shahri", "Boysun shahri", "Jarqoʻrgʻon shahri",
-    "Qumqoʻrgʻon shahri", "Shargʻun shahri", "Sherobod shahri", "Shoʻrchi shahri",
-    "Angor tumani", "Boysun tumani", "Denov tumani", "Jarqoʻrgʻon tumani",
-    "Qiziriq tumani", "Qumqoʻrgʻon tumani", "Muzrabot tumani", "Oltinsoy tumani",
-    "Sariosiyo tumani", "Sherobod tumani", "Shoʻrchi tumani", "Termiz tumani",
-    "Uzun tumani", "Bandixon tumani",
-    "Nurafshon shahri", "Angren shahri", "Olmaliq shahri", "Chirchiq shahri",
-    "Ohangaron shahri", "Bekobod shahri", "Yangiyoʻl shahri", "Gʻazalkent shahri",
-    "Keles shahri", "Piskent shahri", "Chinoz shahri", "Boʻka shahri",
-    "Oqqoʻrgʻon shahri", "Parkent shahri",
-    "Bekobod tumani", "Boʻstonliq tumani", "Boʻka tumani", "Chinoz tumani",
-    "Qibray tumani", "Ohangaron tumani", "Oqqoʻrgʻon tumani", "Parkent tumani",
-    "Piskent tumani", "Quyi Chirchiq tumani", "Oʻrta Chirchiq tumani",
-    "Yuqori Chirchiq tumani", "Zangiota tumani", "Toshkent tumani", "Yangiyoʻl tumani",
-    "Nukus shahri", "Beruniy shahri", "Boʻston shahri", "Mangʻit shahri",
-    "Moʻynoq shahri", "Taxiatosh shahri", "Toʻrtkoʻl shahri", "Xalqobod shahri",
-    "Chimboy shahri", "Shumanay shahri", "Xoʻjayli shahri", "Qoʻngʻirot shahri",
-    "Amudaryo tumani", "Beruniy tumani", "Chimboy tumani", "Ellikqalʼa tumani",
-    "Kegeyli tumani", "Moʻynoq tumani", "Nukus tumani", "Qonlikoʻl tumani",
-    "Qorauzyak tumani", "Qoʻngʻirot tumani", "Shumanay tumani", "Taxtakoʻpir tumani",
-    "Toʻrtkoʻl tumani", "Xoʻjayli tumani", "Taxiatosh tumani", "Boʻzatov tumani",
-    "Toshkent shahri"
+  // ============================================================
+  // REGIONLAR regions.json FAYLDAN YUKLANADI
+  // ============================================================
+  let uzbekCitiesML = null;
+  let kazakhstanCitiesML = null;
+  let _regionsLoadPromise = null;
+
+  let kyrgyzstanCitiesML = null;
+  let tajikistanCitiesML = null;
+  let russiaCitiesML = null;
+  let hindistonCitiesML = null;
+  let mdhCountriesML = null;
+
+
+  function loadRegionsData() {
+  if (_regionsLoadPromise) return _regionsLoadPromise;
+  _regionsLoadPromise = fetch('regions.json')
+  .then(r => r.json())
+  .then(data => {
+      uzbekCitiesML = data.uzbekCitiesML;
+      kazakhstanCitiesML = data.kazakhstanCitiesML;
+      kyrgyzstanCitiesML = data.kyrgyzstanCitiesML || { uz: {}, ru: {}, en: {}, kk: {}, ky: {}, kaa: {}, tg: {} };
+      tajikistanCitiesML = data.tajikistanCitiesML || { uz: {}, ru: {}, en: {}, kk: {}, ky: {}, kaa: {}, tg: {} };
+      
+      // YANGI QO'SHILGAN QISM:
+      russiaCitiesML = data.russiaCitiesML || { uz: {}, ru: {}, en: {}, kk: {}, ky: {}, kaa: {}, tg: {} };
+
+      // HINDISTON (Hindiston davlati viloyat/shtatlari va tumanlari/shaharlari)
+      hindistonCitiesML = data.hindistonCitiesML || { uz: {}, ru: {}, en: {}, kk: {}, ky: {}, kaa: {}, tg: {} };
+
+      // MDH davlatlari (faqat davlat nomlari, region/tuman bo'linishi bo'lmagan davlatlar)
+      mdhCountriesML = data.mdhCountriesML || { uz: {}, ru: {}, en: {}, kk: {}, ky: {}, kaa: {}, tg: {} };
+      
+      console.log('[Regions] regions.json muvaffaqiyatli yuklandi.');
+      return data;
+  })
+  .catch(err => {
+      console.error('[Regions] regions.json yuklanmadi:', err);
+      uzbekCitiesML = { uz: {}, ru: {}, en: {}, kk: {}, ky: {}, kaa: {}, tg: {} };
+      kazakhstanCitiesML = { uz: {}, ru: {}, en: {}, kk: {}, ky: {}, kaa: {}, tg: {} };
+      kyrgyzstanCitiesML = { uz: {}, ru: {}, en: {}, kk: {}, ky: {}, kaa: {}, tg: {} };
+      tajikistanCitiesML = { uz: {}, ru: {}, en: {}, kk: {}, ky: {}, kaa: {}, tg: {} };
+      russiaCitiesML = { uz: {}, ru: {}, en: {}, kk: {}, ky: {}, kaa: {}, tg: {} }; // Xato bo'lsa bo'sh qoldirish
+      hindistonCitiesML = { uz: {}, ru: {}, en: {}, kk: {}, ky: {}, kaa: {}, tg: {} };
+      mdhCountriesML = { uz: {}, ru: {}, en: {}, kk: {}, ky: {}, kaa: {}, tg: {} };
+  });
+  return _regionsLoadPromise;
+  }
+
+  // Sahifa yuklanishida regionlarni yuklab olish
+  loadRegionsData();
+
+  // ... keyingi qism ...
+
+  function getUzbekCitiesForLang(lang) {
+  // Agar regions.json hali yuklanmagan bo'lsa — bo'sh massiv qaytaradi
+  if (!uzbekCitiesML || !kazakhstanCitiesML) return [];
+
+  const uzData = uzbekCitiesML[lang] || uzbekCitiesML['uz'] || {};
+  const kzData = kazakhstanCitiesML[lang] || kazakhstanCitiesML['uz'] || {};
+  const kgData = kyrgyzstanCitiesML ? (kyrgyzstanCitiesML[lang] || kyrgyzstanCitiesML['uz'] || {}) : {};
+  const tjData = tajikistanCitiesML ? (tajikistanCitiesML[lang] || tajikistanCitiesML['uz'] || {}) : {};
+  // Yangi qo'shilgan Rossiya ma'lumotlari
+  const ruData = russiaCitiesML ? (russiaCitiesML[lang] || russiaCitiesML['uz'] || {}) : {};
+  // Hindiston (India) ma'lumotlari
+  const inData = hindistonCitiesML ? (hindistonCitiesML[lang] || hindistonCitiesML['uz'] || {}) : {};
+  // MDH davlatlari (faqat nomi, region bo'linishisiz)
+  const mdhData = mdhCountriesML ? (mdhCountriesML[lang] || mdhCountriesML['uz'] || {}) : {};
+
+  return [
+      ...Object.values(uzData).flat(), 
+      ...Object.values(kzData).flat(), 
+      ...Object.values(kgData).flat(), 
+      ...Object.values(tjData).flat(),
+      ...Object.values(ruData).flat(), // Rossiya shaharlarini qo'shamiz
+      ...Object.values(inData).flat(), // Hindiston shaharlarini qo'shamiz
+      ...Object.values(mdhData).flat() // MDH davlatlari nomlarini qo'shamiz
   ];
+  }
+
 
   // Chat state
   let currentChatMatchId = null;
@@ -4490,7 +4495,8 @@ function detectTelegramLanguage() {
   function showSuggestions(containerId, val, onSelect) {
     const box = document.getElementById(containerId);
     if (!val || val.length < 1) { box.style.display = 'none'; return; }
-    const filtered = uzbekCities.filter(c => c.toLowerCase().includes(val.toLowerCase())).slice(0, 8);
+    const activeCities = getUzbekCitiesForLang(currentLang);
+    const filtered = activeCities.filter(c => c.toLowerCase().includes(val.toLowerCase())).slice(0, 8);
     if (!filtered.length) { box.style.display = 'none'; return; }
 
     const fnName = `_sugg_${containerId}`;
