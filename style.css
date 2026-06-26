@@ -516,6 +516,40 @@ h1, h2, h3, h4, .header-title, .profile-name, .tinder-photo-name, .chat-list-nam
   background: rgba(255, 255, 255, 0.98);
 }
 
+/* Region selector */
+.region-select {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 13px 42px 13px 16px;
+  border: 1.5px solid rgba(0, 122, 255, 0.18);
+  border-radius: 16px;
+  font-family: inherit;
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--text-primary);
+  background: linear-gradient(135deg, rgba(255,255,255,0.88), rgba(245,248,255,0.94));
+  outline: none;
+  appearance: none;
+  -webkit-appearance: none;
+  cursor: pointer;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  background-image:
+    linear-gradient(135deg, rgba(255,255,255,0.88), rgba(245,248,255,0.94)),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23007AFF' stroke-width='1.8' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-position: center, calc(100% - 14px) center;
+  background-size: auto, 12px;
+  background-repeat: no-repeat;
+  box-shadow: 0 6px 16px rgba(0,122,255,0.06), inset 0 1px 1px rgba(255,255,255,0.7);
+}
+.region-select:focus {
+  border-color: var(--ios-blue);
+  box-shadow: 0 0 0 3px rgba(0,122,255,0.12), 0 6px 16px rgba(0,122,255,0.10);
+}
+.region-select option {
+  color: var(--text-primary);
+  background: #fff;
+}
+
 /* ========== ZODIAC GLASS SELECTOR ========== */
 .zodiac-card {
   position: relative;
