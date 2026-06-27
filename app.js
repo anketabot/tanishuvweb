@@ -3929,6 +3929,28 @@ function detectTelegramLanguage() {
   }
 
   // Dropdown ochish/yopish
+  function positionLocDropdown(trigger, dropdown) {
+    const rect = trigger.getBoundingClientRect();
+    const viewportHeight = window.innerHeight;
+    const spaceBelow = viewportHeight - rect.bottom;
+    const spaceAbove = rect.top;
+    const ddHeight = Math.min(300, dropdown.scrollHeight || 300);
+
+    dropdown.style.left = rect.left + 'px';
+    dropdown.style.width = rect.width + 'px';
+
+    // Pastda joy yetarli bo'lsa — pastga, aks holda tepaga ochamiz
+    if (spaceBelow >= 220 || spaceBelow >= spaceAbove) {
+      dropdown.style.top = (rect.bottom + 6) + 'px';
+      dropdown.style.bottom = 'auto';
+      dropdown.style.maxHeight = Math.min(300, spaceBelow - 16) + 'px';
+    } else {
+      dropdown.style.bottom = (viewportHeight - rect.top + 6) + 'px';
+      dropdown.style.top = 'auto';
+      dropdown.style.maxHeight = Math.min(300, spaceAbove - 16) + 'px';
+    }
+  }
+
   function toggleLocDropdown(triggerId, dropdownId) {
     const trigger = document.getElementById(triggerId);
     const dropdown = document.getElementById(dropdownId);
@@ -3936,8 +3958,10 @@ function detectTelegramLanguage() {
     const isOpen = dropdown.classList.contains('open');
     closeAllLocDropdowns(dropdownId);
     if (!isOpen) {
+      // Avval visible qilib, keyin pozitsiya hisoblaymiz
       dropdown.classList.add('open');
       trigger.classList.add('open');
+      positionLocDropdown(trigger, dropdown);
       const si = dropdown.querySelector('.loc-search-input');
       if (si) { si.value = ''; filterLocOptions(si); si.focus(); }
     } else {
@@ -4166,8 +4190,19 @@ function detectTelegramLanguage() {
 
     // Tashqarida bosish — yopish
     document.addEventListener('click', (e) => {
-      if (!e.target.closest('.location-select-wrap')) closeAllLocDropdowns(null);
+      if (!e.target.closest('.location-select-wrap') && !e.target.closest('.loc-dropdown')) closeAllLocDropdowns(null);
     });
+
+    // Scroll yoki resize bo'lganda ochiq dropdownni qayta pozitsiyalash
+    const _reposLocDropdown = () => {
+      document.querySelectorAll('.loc-dropdown.open').forEach(dd => {
+        const wrapId = dd.id.replace('-dd', '');
+        const trigger = document.getElementById(wrapId + '-trigger');
+        if (trigger) positionLocDropdown(trigger, dd);
+      });
+    };
+    window.addEventListener('scroll', _reposLocDropdown, true);
+    window.addEventListener('resize', _reposLocDropdown);
   }
 
   // populateRegions/populateDistricts — ham native SELECT ham custom dropdown ni to'ldiradi
