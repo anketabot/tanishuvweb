@@ -3931,23 +3931,27 @@ function detectTelegramLanguage() {
   // Dropdown ochish/yopish
   function positionLocDropdown(trigger, dropdown) {
     const rect = trigger.getBoundingClientRect();
-    const viewportHeight = window.innerHeight;
-    const spaceBelow = viewportHeight - rect.bottom;
+    const vh = window.innerHeight;
+    const spaceBelow = vh - rect.bottom;
     const spaceAbove = rect.top;
-    const ddHeight = Math.min(300, dropdown.scrollHeight || 300);
 
-    dropdown.style.left = rect.left + 'px';
-    dropdown.style.width = rect.width + 'px';
+    // Horizontal: trigger bilan bir xil kenglik va pozitsiya
+    const padding = 16;
+    const left = Math.max(padding, rect.left);
+    const right = Math.max(padding, window.innerWidth - rect.right);
+    dropdown.style.left = left + 'px';
+    dropdown.style.right = right + 'px';
+    dropdown.style.width = 'auto';
 
-    // Pastda joy yetarli bo'lsa — pastga, aks holda tepaga ochamiz
-    if (spaceBelow >= 220 || spaceBelow >= spaceAbove) {
+    // Vertical: pastda yetarli joy bo'lsa pastga, bo'lmasa tepaga
+    if (spaceBelow >= 180 || spaceBelow >= spaceAbove) {
       dropdown.style.top = (rect.bottom + 6) + 'px';
       dropdown.style.bottom = 'auto';
-      dropdown.style.maxHeight = Math.min(300, spaceBelow - 16) + 'px';
+      dropdown.style.maxHeight = Math.min(320, spaceBelow - 20) + 'px';
     } else {
-      dropdown.style.bottom = (viewportHeight - rect.top + 6) + 'px';
       dropdown.style.top = 'auto';
-      dropdown.style.maxHeight = Math.min(300, spaceAbove - 16) + 'px';
+      dropdown.style.bottom = (vh - rect.top + 6) + 'px';
+      dropdown.style.maxHeight = Math.min(320, spaceAbove - 20) + 'px';
     }
   }
 
@@ -4028,7 +4032,8 @@ function detectTelegramLanguage() {
         </div>
         <div class="loc-options" id="${wrapId}-opts"></div>
       `;
-      wrap.appendChild(dropdown);
+      // Portal: body ga append qilamiz — transform/filter parent dan mustaqil bo'lishi uchun
+      document.body.appendChild(dropdown);
     }
 
     // Options ni to'ldirish
