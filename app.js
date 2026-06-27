@@ -666,7 +666,9 @@ const tg = window.Telegram?.WebApp;
           'mp_goals_title': 'Цели & Просмотренные',
           'mp_viewed_sub': 'Анкеты с лайком и сообщением',
           'mp_liked_tab': 'Лайкнул',
-          'mp_messaged_tab': 'Написал'
+          'mp_messaged_tab': 'Написал',
+          'referral_recent_invited': 'Недавно приглашённые',
+          'mp_goals_sub': 'Мои цели и просмотренные люди'
       },
       'kk': {
           'select_language': '🌍 Тілді таңдаңыз',
@@ -957,7 +959,9 @@ const tg = window.Telegram?.WebApp;
           'mp_goals_title': 'Мақсаттар & Көргендерім',
           'mp_viewed_sub': 'Лайк және хабар жазған анкеталар',
           'mp_liked_tab': 'Лайк басқан',
-          'mp_messaged_tab': 'Жазған'
+          'mp_messaged_tab': 'Жазған',
+          'referral_recent_invited': 'Жақында шақырылғандар',
+          'mp_goals_sub': 'Менің мақсаттарым және қараған адамдарым'
       },
       'ky': {
           'select_language': '🌍 Тилди тандаңыз',
@@ -1248,7 +1252,9 @@ const tg = window.Telegram?.WebApp;
           'mp_goals_title': 'Максаттар & Көргөндөрүм',
           'mp_viewed_sub': 'Лайк жана билдирүү жазган анкеталар',
           'mp_liked_tab': 'Лайк баскан',
-          'mp_messaged_tab': 'Жазган'
+          'mp_messaged_tab': 'Жазган',
+          'referral_recent_invited': 'Жакында чакырылгандар',
+          'mp_goals_sub': 'Менин максаттарым жана кариган адамдарым'
       },
       'kaa': {
           'select_language': '🌍 Tildi tańlań',
@@ -1539,7 +1545,9 @@ const tg = window.Telegram?.WebApp;
           'mp_goals_title': 'Maqsetler & Kórgenlerim',
           'mp_viewed_sub': 'Layk hám xabar jazǵan anketalar',
           'mp_liked_tab': 'Layk basqan',
-          'mp_messaged_tab': 'Jazǵan'
+          'mp_messaged_tab': 'Jazǵan',
+          'referral_recent_invited': 'Jaqında shaqırılǵanlar',
+          'mp_goals_sub': 'Meniń maqsetlerim hám kórgen adamlarım'
       },
       'tg': {
           'select_language': '🌍 Забонро интихоб кунед',
@@ -1830,7 +1838,9 @@ const tg = window.Telegram?.WebApp;
           'mp_goals_title': 'Мақсадҳо & Дидаҳои ман',
           'mp_viewed_sub': 'Анкетаҳое, ки лайк задам ва навиштам',
           'mp_liked_tab': 'Лайк задам',
-          'mp_messaged_tab': 'Навиштам'
+          'mp_messaged_tab': 'Навиштам',
+          'referral_recent_invited': 'Охирон даъватшудагон',
+          'mp_goals_sub': 'Мақсадҳои ман ва одамоне, ки дидаам'
       },
       'en': {
           'select_language': '🌍 Select language',
@@ -2121,7 +2131,8 @@ const tg = window.Telegram?.WebApp;
           'mp_goals_title': 'Goals & Viewed',
           'mp_goals_sub': 'My goals and people I\'ve viewed',
           'mp_liked_tab': 'Liked',
-          'mp_messaged_tab': 'Messaged'
+          'mp_messaged_tab': 'Messaged',
+          'mp_viewed_sub': 'Profiles you liked and messaged'
       },
   };
 
