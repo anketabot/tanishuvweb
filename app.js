@@ -3884,26 +3884,12 @@ function detectTelegramLanguage() {
   }
 
   // O'zbekcha nom → joriy tildagi nom
-  function translateRegionName(uzName) {
-    if (!uzbekCitiesML || !uzName) return uzName;
+  function translateRegionName(name) {
+    if (!name) return name;
     const lang = currentLang || 'uz';
-    if (lang === 'uz') return uzName;
-    const uzKeys = Object.keys(uzbekCitiesML['uz'] || {});
-    const langKeys = Object.keys(uzbekCitiesML[lang] || {});
-    const idx = uzKeys.indexOf(uzName);
-    if (idx !== -1 && langKeys[idx]) return langKeys[idx];
-    // Shahar nomini district sifatida qidirish (masalan "Samarqand shahri")
-    const uzRegions = uzbekCitiesML['uz'] || {};
-    const langRegions = uzbekCitiesML[lang] || {};
-    for (let i = 0; i < uzKeys.length; i++) {
-      const uzDistricts = uzRegions[uzKeys[i]] || [];
-      const dIdx = uzDistricts.indexOf(uzName);
-      if (dIdx !== -1) {
-        const langDistrictList = langRegions[langKeys[i]] || [];
-        return langDistrictList[dIdx] || uzName;
-      }
-    }
-    return uzName;
+    // Avval _translateGenericRegion orqali barcha datasetlardan qidirish
+    const t = _translateGenericRegion(name, lang);
+    return t || name;
   }
 
   // O'zbekcha tuman nomi → joriy tildagi tuman nomi
@@ -3924,22 +3910,144 @@ function detectTelegramLanguage() {
 
   // city maydoni (o'zbekcha) → joriy tilda chiroyli ko'rsatish
   // city formati: "Tuman, Viloyat" yoki "Viloyat" yoki "Davlat"
+  // city maydoni → joriy tilda chiroyli ko'rsatish
+  // city yangi formati: "district||region||country"
+  // Eski format ham ishlaydi: "Tuman, Viloyat" yoki "Viloyat" yoki "Davlat"
   function translateCityLabel(city = '') {
     if (!city) return city;
     const lang = currentLang || 'uz';
-    if (lang === 'uz') return city;
+
+    // ── Yangi format: "district||region||country" ──
+    if (city.includes('||')) {
+      const [district, region, country] = city.split('||').map(s => s.trim());
+      return _buildLocationString(country, region, district, lang);
+    }
+
+    // ── Eski format fallback ──
     const parts = city.split(',').map(s => s.trim());
     if (parts.length === 2) {
-      // "Yunusobod tumani, Toshkent shahri"
       const [district, region] = parts;
-      return translateDistrictName(region, district) + ', ' + translateRegionName(region);
-    } else if (parts.length === 1) {
-      // "Toshkent viloyati" yoki "Samarqand shahri" yoki "Rossiya"
-      // Avval region sifatida qidiramiz, keyin district sifatida
-      const translated = translateRegionName(parts[0]);
-      return translated;
+      if (uzbekCitiesML) {
+        const t = _translateUzPart(district, region, lang);
+        if (t) return t;
+      }
+      return _translateGenericDistrict(district, lang) + ', ' + _translateGenericRegion(region, lang);
+    } else {
+      const single = parts[0];
+      const cT = _translateCountryValue(single, lang);
+      if (cT !== single) return cT;
+      if (uzbekCitiesML) {
+        const t = _translateUzRegionOnly(single, lang);
+        if (t) return t;
+      }
+      return _translateGenericRegion(single, lang);
     }
-    return city;
+  }
+
+  // Davlat value (O'zbekcha) → joriy tilda nom
+  function _translateCountryValue(value, lang) {
+    if (!value) return value;
+    const MAP = {
+      "\u004f\u02bczbekiston": 'country_uz', "O'zbekiston": 'country_uz',
+      "Rossiya": 'country_ru',
+      "Qozog\u02bbiston": 'country_kz', "Qozog'iston": 'country_kz',
+      "Qirg\u02bbiziston": 'country_kg', "Qirg'iziston": 'country_kg',
+      "Tojikiston": 'country_tj', "Turkmaniston": 'country_tm',
+      "Ozarbayjon": 'country_az', "Armaniston": 'country_am',
+      "Gruziya": 'country_ge', "Ukraina": 'country_ua',
+      "Belarus": 'country_by', "Moldova": 'country_md',
+      "Boshqa": 'country_other',
+    };
+    const key = MAP[value] || MAP[value?.trim()];
+    return key ? (tr(key) || value) : value;
+  }
+
+  // Dataset bo'yicha viloyatni tarjima qilish (barcha davlatlar)
+  function _translateGenericRegion(regionName, lang) {
+    if (!regionName) return regionName;
+    const datasets = [
+      uzbekCitiesML, kazakhstanCitiesML, kyrgyzstanCitiesML,
+      tajikistanCitiesML, russiaCitiesML, hindistonCitiesML
+    ].filter(Boolean);
+    for (const ds of datasets) {
+      for (const [srcLang, regions] of Object.entries(ds)) {
+        if (!regions || typeof regions !== 'object') continue;
+        const keys = Object.keys(regions);
+        const idx = keys.indexOf(regionName);
+        if (idx !== -1) {
+          const targetKeys = Object.keys(ds[lang] || ds['uz'] || ds[srcLang] || {});
+          if (targetKeys[idx]) return targetKeys[idx];
+        }
+      }
+    }
+    return regionName;
+  }
+
+  // Dataset bo'yicha tumanni tarjima qilish
+  function _translateGenericDistrict(districtName, lang) {
+    if (!districtName) return districtName;
+    const datasets = [
+      uzbekCitiesML, kazakhstanCitiesML, kyrgyzstanCitiesML,
+      tajikistanCitiesML, russiaCitiesML, hindistonCitiesML
+    ].filter(Boolean);
+    for (const ds of datasets) {
+      for (const [srcLang, regions] of Object.entries(ds)) {
+        if (!regions || typeof regions !== 'object') continue;
+        const regionKeys = Object.keys(regions);
+        for (let ri = 0; ri < regionKeys.length; ri++) {
+          const districts = regions[regionKeys[ri]] || [];
+          const di = districts.indexOf(districtName);
+          if (di !== -1) {
+            const targetRegions = ds[lang] || ds['uz'] || {};
+            const targetRegionKeys = Object.keys(targetRegions);
+            if (targetRegionKeys[ri]) {
+              const targetDistricts = targetRegions[targetRegionKeys[ri]] || [];
+              if (targetDistricts[di]) return targetDistricts[di];
+            }
+          }
+        }
+      }
+    }
+    return districtName;
+  }
+
+  // O'zbekiston: viloyat + tuman tarjima
+  function _translateUzPart(district, region, lang) {
+    if (!uzbekCitiesML) return null;
+    if (lang === 'uz') return district + ', ' + region;
+    const uzRegions = uzbekCitiesML['uz'] || {};
+    const langRegions = uzbekCitiesML[lang] || {};
+    const uzKeys = Object.keys(uzRegions);
+    const langKeys = Object.keys(langRegions);
+    const idx = uzKeys.indexOf(region);
+    if (idx === -1) return null;
+    const translatedRegion = langKeys[idx] || region;
+    const uzDistricts = uzRegions[region] || [];
+    const langDistricts = langRegions[langKeys[idx]] || [];
+    const di = uzDistricts.indexOf(district);
+    const translatedDistrict = di !== -1 && langDistricts[di] ? langDistricts[di] : _translateGenericDistrict(district, lang);
+    return translatedDistrict + ', ' + translatedRegion;
+  }
+
+  // O'zbekiston: faqat viloyat tarjima
+  function _translateUzRegionOnly(name, lang) {
+    if (!uzbekCitiesML) return null;
+    if (lang === 'uz') return name;
+    const uzKeys = Object.keys(uzbekCitiesML['uz'] || {});
+    const langKeys = Object.keys(uzbekCitiesML[lang] || {});
+    const idx = uzKeys.indexOf(name);
+    if (idx !== -1 && langKeys[idx]) return langKeys[idx];
+    return null;
+  }
+
+  // Asosiy builder: davlat + viloyat + tuman → joriy tilda
+  function _buildLocationString(country, region, district, lang) {
+    const districtStr = district ? (_translateGenericDistrict(district, lang) || district) : '';
+    const regionStr   = region   ? (_translateGenericRegion(region, lang)     || region)   : '';
+    const countryStr  = country  ? (_translateCountryValue(country, lang)      || country)  : '';
+    // Ko'rsatish tartibi: Tuman, Viloyat, Davlat
+    const parts = [districtStr, regionStr, countryStr].filter(Boolean);
+    return parts.join(', ');
   }
 
   function populateRegions(selectId, regions) {
@@ -3973,15 +4081,10 @@ function detectTelegramLanguage() {
   function updateHiddenCityField(fieldId, country, region, district) {
     const el = document.getElementById(fieldId);
     if (!el) return;
-    let val = '';
-    if (country === "Oʻzbekiston" || country === "O'zbekiston") {
-      if (district) val = district + ', ' + region;
-      else if (region) val = region;
-      else val = country;
-    } else {
-      val = country || '';
-    }
-    el.value = val;
+    // Format: "district||region||country" — barcha davlatlar uchun bir xil
+    // Bu format translateCityLabel da parse qilinadi
+    const parts = [district || '', region || '', country || ''].join('||');
+    el.value = parts;
   }
 
   // ═══════════════════════════════════════════════════════════════════
@@ -4532,96 +4635,122 @@ function detectTelegramLanguage() {
   // Anketa formini regionlardan to'ldirish (mavjud profil uchun)
   function populateRegionFromCityString(cityStr) {
     if (!cityStr) return;
-    // "Tuman, Viloyat" yoki "Viloyat" yoki "Davlat" formatini parse qilish
     loadRegionsData().then(() => {
-      const regions = getUzbekRegions();
-      const regionKeys = Object.keys(regions);
+      let country = '', region = '', district = '';
 
-      // Viloyatni topish
-      let foundRegion = null;
-      let foundDistrict = null;
-
-      // "X tumani, Y viloyati" formatini tekshirish
-      const commaSplit = cityStr.split(',');
-      if (commaSplit.length >= 2) {
-        const possibleRegion = commaSplit[1].trim();
-        const possibleDistrict = commaSplit[0].trim();
-        if (regionKeys.includes(possibleRegion)) {
-          foundRegion = possibleRegion;
-          if (regions[foundRegion]?.includes(possibleDistrict)) {
-            foundDistrict = possibleDistrict;
+      // Yangi format: "district||region||country"
+      if (cityStr.includes('||')) {
+        const parts = cityStr.split('||').map(s => s.trim());
+        district = parts[0] || '';
+        region   = parts[1] || '';
+        country  = parts[2] || '';
+      } else {
+        // Eski format: "Tuman, Viloyat" yoki "Viloyat" yoki "Davlat"
+        const commaSplit = cityStr.split(',').map(s => s.trim());
+        if (commaSplit.length >= 2) {
+          district = commaSplit[0];
+          region   = commaSplit[1];
+          country  = "O\u02bbzbekiston";
+        } else {
+          // Davlat yoki viloyat
+          const COUNTRIES_LIST = ["O\u02bbzbekiston","Rossiya","Qozog\u02bbiston","Qirg\u02bbiziston","Tojikiston","Turkmaniston","Ozarbayjon","Armaniston","Gruziya","Ukraina","Belarus","Moldova","Boshqa"];
+          if (COUNTRIES_LIST.includes(cityStr.trim())) {
+            country = cityStr.trim();
+          } else {
+            // Viloyat bo'lishi mumkin
+            const uzRegions = getUzbekRegions();
+            if (Object.keys(uzRegions).includes(cityStr.trim())) {
+              region  = cityStr.trim();
+              country = "O\u02bbzbekiston";
+            } else {
+              country = cityStr.trim();
+            }
           }
         }
       }
-      // Agar topilmagan bo'lsa, to'g'ridan to'g'ri viloyat nomi
-      if (!foundRegion) {
-        for (const rk of regionKeys) {
-          if (cityStr.includes(rk) || rk.includes(cityStr.trim())) {
-            foundRegion = rk;
-            break;
-          }
-          // Tumanni tekshirish
-          if (regions[rk]?.some(d => cityStr.includes(d))) {
-            foundRegion = rk;
-            foundDistrict = regions[rk].find(d => cityStr.includes(d)) || null;
-            break;
-          }
-        }
-      }
 
-      const countrySel = document.getElementById('inp-country');
-      const regionSel = document.getElementById('inp-region');
-      const districtSel = document.getElementById('inp-district');
-
-      if (foundRegion) {
-        const countrySel = document.getElementById('inp-country');
-        if (countrySel) countrySel.value = "Oʻzbekiston";
-        // Trigger matnini yangilash
+      // Davlatni o'rnating
+      if (country) {
+        const cSel = document.getElementById('inp-country');
+        if (cSel) cSel.value = country;
         const cValEl = document.getElementById('inp-country-trigger-val');
-        if (cValEl) { cValEl.textContent = "O'zbekiston"; cValEl.classList.remove('placeholder'); }
+        if (cValEl) {
+          cValEl.textContent = _translateCountryValue(country, currentLang || 'uz');
+          cValEl.classList.remove('placeholder');
+        }
         const cTrigger = document.getElementById('inp-country-trigger');
         if (cTrigger) cTrigger.classList.add('filled');
+      }
 
-        const opts = Object.keys(regions).map(r => r);
-        rebuildLocOptions('inp-region', opts, true);
-        showLocationWrap('inp-region');
-        // Viloyatni belgilash
-        const regionSel = document.getElementById('inp-region');
-        if (regionSel) regionSel.value = foundRegion;
-        const rValEl = document.getElementById('inp-region-trigger-val');
-        if (rValEl) { rValEl.textContent = foundRegion; rValEl.classList.remove('placeholder'); }
-        const rTrigger = document.getElementById('inp-region-trigger');
-        if (rTrigger) rTrigger.classList.add('filled');
-        document.querySelectorAll('#inp-region-opts .loc-option').forEach(o => o.classList.toggle('selected', o.dataset.value === foundRegion));
+      // Viloyat uchun options ni quramiz
+      if (region) {
+        const ds = _getDatasetForCountry(country);
+        if (ds) {
+          const opts = Object.keys(ds);
+          rebuildLocOptions('inp-region', opts, true);
+          showLocationWrap('inp-region');
+          const rSel = document.getElementById('inp-region');
+          if (rSel) rSel.value = region;
+          const rValEl = document.getElementById('inp-region-trigger-val');
+          if (rValEl) {
+            rValEl.textContent = _translateGenericRegion(region, currentLang || 'uz') || region;
+            rValEl.classList.remove('placeholder');
+          }
+          const rTrigger = document.getElementById('inp-region-trigger');
+          if (rTrigger) rTrigger.classList.add('filled');
+          document.querySelectorAll('#inp-region-opts .loc-option').forEach(o => o.classList.toggle('selected', o.dataset.value === region));
+        }
+      }
 
-        if (foundDistrict) {
-          const dists = regions[foundRegion] || [];
-          rebuildLocOptions('inp-district', dists, false);
+      // Tuman uchun options ni quramiz
+      if (district && region) {
+        const ds = _getDatasetForCountry(country);
+        const districts = ds ? (ds[region] || []) : [];
+        if (districts.length) {
+          rebuildLocOptions('inp-district', districts, false);
           showLocationWrap('inp-district');
-          const districtSel = document.getElementById('inp-district');
-          if (districtSel) districtSel.value = foundDistrict;
+          const dSel = document.getElementById('inp-district');
+          if (dSel) dSel.value = district;
           const dValEl = document.getElementById('inp-district-trigger-val');
-          if (dValEl) { dValEl.textContent = foundDistrict; dValEl.classList.remove('placeholder'); }
+          if (dValEl) {
+            dValEl.textContent = _translateGenericDistrict(district, currentLang || 'uz') || district;
+            dValEl.classList.remove('placeholder');
+          }
           const dTrigger = document.getElementById('inp-district-trigger');
           if (dTrigger) dTrigger.classList.add('filled');
-          document.querySelectorAll('#inp-district-opts .loc-option').forEach(o => o.classList.toggle('selected', o.dataset.value === foundDistrict));
+          document.querySelectorAll('#inp-district-opts .loc-option').forEach(o => o.classList.toggle('selected', o.dataset.value === district));
           updateLocationSteps('inp', 4);
         } else {
           hideLocationWrap('inp-district');
           updateLocationSteps('inp', 3);
         }
+      } else if (region) {
+        hideLocationWrap('inp-district');
+        updateLocationSteps('inp', 3);
       } else {
-        // Boshqa davlat bo'lishi mumkin
-        const otherCountries = ["Rossiya","Qozogʻiston","Qirgʻiziston","Tojikiston","Turkmaniston","Ozarbayjon","Armaniston","Gruziya","Ukraina","Belarus","Moldova"];
-        for (const c of otherCountries) {
-          if (cityStr.includes(c) || c.includes(cityStr.trim())) {
-            if (countrySel) countrySel.value = c;
-            break;
-          }
-        }
+        updateLocationSteps('inp', country ? 2 : 1);
       }
+
+      // city hidden inputni yangi formatda yangilash
+      updateHiddenCityField('inp-city', country, region, district);
     });
   }
+
+  // Davlat uchun joriy tildagi datastet
+  function _getDatasetForCountry(country) {
+    const lang = currentLang || 'uz';
+    const MAP = {
+      "O\u02bbzbekiston": uzbekCitiesML, "O'zbekiston": uzbekCitiesML,
+      "Rossiya": russiaCitiesML,
+      "Qozog\u02bbiston": kazakhstanCitiesML, "Qozog'iston": kazakhstanCitiesML,
+      "Qirg\u02bbiziston": kyrgyzstanCitiesML, "Qirg'iziston": kyrgyzstanCitiesML,
+      "Tojikiston": tajikistanCitiesML, "Hindiston": hindistonCitiesML,
+    };
+    const ds = MAP[country];
+    if (!ds) return null;
+    return ds[lang] || ds['uz'] || null;
+  }
+
 
   // === SAVE PROFILE ===
   async function saveProfile() {
@@ -5422,7 +5551,7 @@ function detectTelegramLanguage() {
     // Chat suhbatdoshi uchun minimal toza dizayn
     if (!showTags) {
       const photo = u.photo || u.photo_file_id || u.photo_base64;
-      const region = getCityRegion(u.city || '');
+      const locationLabel = u.city ? formatLocationLabel(u.city) : '';
 
       body.innerHTML = `
         <article class="profile-detail-minimal">
@@ -5430,13 +5559,12 @@ function detectTelegramLanguage() {
           <div class="minimal-info">
             <h2 class="minimal-name">${u.full_name}</h2>
             <div class="minimal-badge">${u.age} ${tr('years_old')} • ${u.gender === 'erkak' ? tr('male') : tr('female')}</div>
-            ${u.city ? `
+            ${locationLabel ? `
             <div class="minimal-location">
               <div class="minimal-loc-card">
                 <div class="minimal-loc-icon">📍</div>
                 <div class="minimal-loc-text">
-                  <div class="minimal-loc-city">${u.city}</div>
-                  ${region ? `<div class="minimal-loc-region">${region}</div>` : ''}
+                  <div class="minimal-loc-city">${locationLabel}</div>
                 </div>
               </div>
             </div>` : ''}
@@ -5567,13 +5695,19 @@ function detectTelegramLanguage() {
 
   function formatLocationLabel(city = '') {
     if (!city) return '';
-    // Avval tarjima qilamiz (joriy til uchun)
+    // Yangi format: "district||region||country" — to'g'ridan _buildLocationString ga yuboramiz
+    if (city.includes('||')) {
+      const lang = currentLang || 'uz';
+      const [district, region, country] = city.split('||').map(s => s.trim());
+      return _buildLocationString(country, region, district, lang);
+    }
+    // Eski format: translateCityLabel orqali
     const translated = translateCityLabel(city);
-    // Keyin viloyatni qo'shamiz (agar yo'q bo'lsa)
-    if (translated.includes(',')) return translated; // allaqachon "tuman, viloyat" formati
-    const region = getCityRegion(city); // o'zbekcha region nomi
-    const translatedRegion = translateRegionName(region);
-    return translatedRegion ? `${translated} • ${translatedRegion}` : translated;
+    if (translated.includes(',') || translated.includes('||')) return translated;
+    // Viloyat qo'shishga urinib ko'rish (faqat O'zbekiston uchun)
+    const region = getCityRegion(city);
+    const translatedRegion = region ? _translateGenericRegion(region, currentLang || 'uz') : '';
+    return translatedRegion ? `${translated}, ${translatedRegion}` : translated;
   }
 
   // ===== PROFILE HELPERS =====
