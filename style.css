@@ -553,7 +553,7 @@ h1, h2, h3, h4, .header-title, .profile-name, .tinder-photo-name, .chat-list-nam
 /* ========== ZODIAC GLASS SELECTOR ========== */
 .zodiac-card {
   position: relative;
-  overflow: hidden;
+  overflow: visible;
   border: 1px solid rgba(148, 163, 184, 0.18);
   border-radius: 28px;
   background:
@@ -5074,6 +5074,68 @@ body.pre-init .lang-modal-overlay.show {
   color: var(--text-tertiary);
 }
 
+/* ── Location Card ── */
+.location-card {
+  overflow: visible !important;
+  background: linear-gradient(145deg, rgba(248,251,255,0.98), rgba(240,247,255,0.99)) !important;
+  border: 1.5px solid rgba(0,122,255,0.13) !important;
+  padding: 14px 14px 16px !important;
+}
+
+.location-card-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+.location-card-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 10px;
+  background: linear-gradient(135deg, #007AFF, #34AADC);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  box-shadow: 0 4px 10px rgba(0,122,255,0.28);
+}
+
+.location-card-titles {
+  flex: 1;
+  min-width: 0;
+}
+
+.location-card-title {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-primary);
+  letter-spacing: -0.1px;
+}
+
+.location-card-sub {
+  font-size: 11px;
+  color: var(--text-secondary);
+  margin-top: 2px;
+}
+
+.location-steps-inline {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  flex-shrink: 0;
+}
+
+.location-selects {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.location-selects .location-select-wrap {
+  margin-bottom: 0;
+}
+
 /* Step indicator dots */
 .location-steps {
   display: flex;
@@ -5082,25 +5144,61 @@ body.pre-init .lang-modal-overlay.show {
   padding: 4px 2px 10px;
 }
 .location-step-dot {
-  width: 6px;
-  height: 6px;
+  width: 7px;
+  height: 7px;
   border-radius: 50%;
-  background: rgba(0,122,255,0.14);
-  transition: all 0.3s var(--ease-spring);
+  background: rgba(0,122,255,0.15);
+  transition: all 0.35s var(--ease-spring);
   flex-shrink: 0;
 }
 .location-step-dot.active {
   background: var(--ios-blue);
-  width: 18px;
-  border-radius: 3px;
+  width: 20px;
+  border-radius: 4px;
+  box-shadow: 0 0 6px rgba(0,122,255,0.35);
 }
 .location-step-dot.done {
   background: #34C759;
-  width: 6px;
+  width: 7px;
   border-radius: 50%;
 }
 
-/* Group header */
+/* Loc trigger — yangi zamonaviy ko'rinish */
+.loc-trigger {
+  background: rgba(255,255,255,0.95) !important;
+  border: 1.5px solid rgba(0,122,255,0.14) !important;
+  border-radius: 16px !important;
+  box-shadow: 0 2px 8px rgba(0,122,255,0.06), inset 0 1px 1px rgba(255,255,255,0.9) !important;
+  padding: 10px 12px !important;
+  transition: all 0.2s var(--ease-premium) !important;
+}
+.loc-trigger.open,
+.loc-trigger:focus {
+  border-color: var(--ios-blue) !important;
+  box-shadow: 0 0 0 3px rgba(0,122,255,0.12), 0 4px 14px rgba(0,122,255,0.10) !important;
+}
+.loc-trigger.filled {
+  background: linear-gradient(135deg, rgba(236,246,255,0.98), rgba(224,240,255,0.99)) !important;
+  border-color: rgba(0,122,255,0.28) !important;
+}
+.loc-trigger-icon {
+  width: 32px !important;
+  height: 32px !important;
+  border-radius: 9px !important;
+}
+.loc-trigger-label {
+  font-size: 10px !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.5px !important;
+  text-transform: uppercase !important;
+  color: rgba(0,122,255,0.7) !important;
+}
+.loc-trigger-value {
+  font-size: 14px !important;
+  font-weight: 600 !important;
+}
+
+/* Group header (legacy, boshqa joylarda ishlatilishi mumkin) */
 .location-group-header {
   display: flex;
   align-items: center;
@@ -5119,3 +5217,4 @@ body.pre-init .lang-modal-overlay.show {
 .location-group-icon svg { stroke: white; }
 .location-group-title { font-size: 13px; font-weight: 700; color: var(--text-primary); }
 .location-group-sub { font-size: 11px; color: var(--text-secondary); margin-top: 1px; }
+
