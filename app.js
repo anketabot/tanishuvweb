@@ -3378,14 +3378,19 @@ function detectTelegramLanguage() {
     menu.style.width = panelW + 'px';
     menu.style.left = Math.max(12, Math.min(rect.left, vw - panelW - 12)) + 'px';
 
-    if (spaceBelow >= 260 || spaceBelow >= spaceAbove) {
-      menu.style.top = (rect.bottom + 6) + 'px';
+    const MIN_HEIGHT = 180;
+    if (spaceBelow >= MIN_HEIGHT || spaceBelow >= spaceAbove) {
+      // Pastga oching
+      const maxH = Math.min(320, Math.max(MIN_HEIGHT, spaceBelow - 12));
+      menu.style.top = (rect.bottom + 4) + 'px';
       menu.style.bottom = 'auto';
-      menu.style.maxHeight = Math.min(320, spaceBelow - 16) + 'px';
+      menu.style.maxHeight = maxH + 'px';
     } else {
+      // Tepaga oching
+      const maxH = Math.min(320, Math.max(MIN_HEIGHT, spaceAbove - 12));
       menu.style.top = 'auto';
-      menu.style.bottom = (vh - rect.top + 6) + 'px';
-      menu.style.maxHeight = Math.min(320, spaceAbove - 16) + 'px';
+      menu.style.bottom = (vh - rect.top + 4) + 'px';
+      menu.style.maxHeight = maxH + 'px';
     }
     menu.style.overflowY = 'auto';
   }
@@ -3997,23 +4002,55 @@ function detectTelegramLanguage() {
   function positionLocDropdown(trigger, dropdown) {
     const rect = trigger.getBoundingClientRect();
     const viewportHeight = window.innerHeight;
+    const viewportWidth = window.innerWidth;
     const spaceBelow = viewportHeight - rect.bottom;
     const spaceAbove = rect.top;
-    const ddHeight = Math.min(300, dropdown.scrollHeight || 300);
 
-    dropdown.style.left = rect.left + 'px';
-    dropdown.style.width = rect.width + 'px';
+    // Eni trigger bilan teng, lekin viewport'dan chiqmasin
+    const panelW = Math.min(rect.width, viewportWidth - 24);
+    let leftPos = Math.max(12, Math.min(rect.left, viewportWidth - panelW - 12));
 
-    // Pastda joy yetarli bo'lsa — pastga, aks holda tepaga ochamiz
-    if (spaceBelow >= 220 || spaceBelow >= spaceAbove) {
-      dropdown.style.top = (rect.bottom + 6) + 'px';
+    dropdown.style.left = leftPos + 'px';
+    dropdown.style.width = panelW + 'px';
+    dropdown.style.right = 'auto';
+
+    // Qayerga ochish: pastga yoki tepaga?
+    const MIN_HEIGHT = 180; // minimum foydali balandlik
+    const preferBelow = spaceBelow >= MIN_HEIGHT || spaceBelow >= spaceAbove;
+
+    if (preferBelow) {
+      // Pastga oching
+      const availH = Math.max(MIN_HEIGHT, spaceBelow - 12);
+      const maxH = Math.min(300, availH);
+      dropdown.style.top = (rect.bottom + 4) + 'px';
       dropdown.style.bottom = 'auto';
-      dropdown.style.maxHeight = Math.min(300, spaceBelow - 16) + 'px';
+      dropdown.style.maxHeight = maxH + 'px';
     } else {
-      dropdown.style.bottom = (viewportHeight - rect.top + 6) + 'px';
+      // Tepaga oching
+      const availH = Math.max(MIN_HEIGHT, spaceAbove - 12);
+      const maxH = Math.min(300, availH);
       dropdown.style.top = 'auto';
-      dropdown.style.maxHeight = Math.min(300, spaceAbove - 16) + 'px';
+      dropdown.style.bottom = (viewportHeight - rect.top + 4) + 'px';
+      dropdown.style.maxHeight = maxH + 'px';
     }
+
+    // Har holda ekran chegarasidan chiqmasin (clamp)
+    requestAnimationFrame(() => {
+      const ddRect = dropdown.getBoundingClientRect();
+      if (ddRect.bottom > viewportHeight - 8) {
+        const overflow = ddRect.bottom - (viewportHeight - 8);
+        const curTop = parseFloat(dropdown.style.top) || 0;
+        if (dropdown.style.bottom === 'auto') {
+          dropdown.style.top = Math.max(8, curTop - overflow) + 'px';
+        }
+      }
+      if (ddRect.top < 8) {
+        if (dropdown.style.bottom !== 'auto') {
+          const curBottom = parseFloat(dropdown.style.bottom) || 0;
+          dropdown.style.bottom = Math.max(8, curBottom - (8 - ddRect.top)) + 'px';
+        }
+      }
+    });
   }
 
   function toggleLocDropdown(triggerId, dropdownId) {
