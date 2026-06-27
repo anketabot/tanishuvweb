@@ -3904,7 +3904,7 @@ function detectTelegramLanguage() {
     const el = document.getElementById(fieldId);
     if (!el) return;
     let val = '';
-    if (country.replace(/[ʻ'']/g, "'") === "O'zbekiston") {
+    if (country === "Oʻzbekiston" || country === "O'zbekiston") {
       if (district) val = district + ', ' + region;
       else if (region) val = region;
       else val = country;
@@ -4202,6 +4202,8 @@ function detectTelegramLanguage() {
         if (dd) dd.classList.remove('open');
         if (trigger) trigger.classList.remove('open');
         // trigger onChange
+        if (cfgId === 'inp-country')  { onCountryChange(); }
+        if (cfgId === 'sf-country')   { onSearchCountryChange(); }
         if (cfgId === 'inp-region')   { onRegionChange(); }
         if (cfgId === 'inp-district') { onDistrictChange(); }
         if (cfgId === 'sf-region')    { onSearchRegionChange(); }
@@ -4216,7 +4218,7 @@ function detectTelegramLanguage() {
   function onCountryChange() {
     const country = document.getElementById('inp-country')?.value || '';
 
-    if (country.replace(/[ʻ'']/g, "'") === "O'zbekiston") {
+    if (country === "Oʻzbekiston" || country === "O'zbekiston") {
       loadRegionsData().then(() => {
         const regions = getUzbekRegions();
         const opts = Object.keys(regions).map(r => r);
