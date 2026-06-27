@@ -265,46 +265,40 @@
       <input class="form-input" id="inp-age" type="number" data-i18n-placeholder="age_placeholder" placeholder="Masalan: 22" min="16" max="80" />
     </div>
     <div class="form-group">
-      <div class="location-group-header">
-        <div class="location-group-icon">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-        </div>
-        <div>
-          <div class="location-group-title" data-i18n="city_district">Joylashuv</div>
-          <div class="location-group-sub" data-i18n="loc_step_hint">Davlat → Viloyat → Tuman</div>
-        </div>
-      </div>
+      <label class="form-label" data-i18n="about_short">O'zingiz haqingizda qisqacha</label>
+      <textarea class="form-input" id="inp-about" rows="3" maxlength="220" data-i18n-placeholder="about_placeholder" placeholder="Kim bo'lishni xohlaysiz..."></textarea>
+    </div>
+  </div>
 
-      <!-- Step indicators -->
-      <div class="location-steps" id="inp-location-steps">
+  <!-- Joylashuv — alohida card, overflow:visible -->
+  <div class="card location-card">
+    <div class="location-card-header">
+      <div class="location-card-icon">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+      </div>
+      <div class="location-card-titles">
+        <div class="location-card-title" data-i18n="city_district">Joylashuv</div>
+        <div class="location-card-sub" data-i18n="loc_step_hint">Davlat → Viloyat → Tuman</div>
+      </div>
+      <div class="location-steps-inline" id="inp-location-steps">
         <div class="location-step-dot active" id="inp-step-1"></div>
         <div class="location-step-dot" id="inp-step-2"></div>
         <div class="location-step-dot" id="inp-step-3"></div>
       </div>
+    </div>
 
-      <!-- Davlat tanlash — custom dropdown (buildLocDropdown tomonidan quriladi) -->
+    <div class="location-selects">
       <div class="location-select-wrap" id="inp-country-wrap">
         <input type="hidden" id="inp-country" />
       </div>
-
-      <!-- Viloyat tanlash — custom dropdown -->
       <div class="location-select-wrap" id="inp-region-wrap" style="display:none;">
         <input type="hidden" id="inp-region" />
       </div>
-
-      <!-- Tuman tanlash — custom dropdown -->
       <div class="location-select-wrap" id="inp-district-wrap" style="display:none;">
         <input type="hidden" id="inp-district" />
       </div>
-
-      <!-- Yashirin city maydoni (backend uchun) -->
       <input type="hidden" id="inp-city" />
-
       <div id="geo-status" class="geo-status" style="display:none;"></div>
-    </div>
-    <div class="form-group">
-      <label class="form-label" data-i18n="about_short">O'zingiz haqingizda qisqacha</label>
-      <textarea class="form-input" id="inp-about" rows="3" maxlength="220" data-i18n-placeholder="about_placeholder" placeholder="Kim bo'lishni xohlaysiz..."></textarea>
     </div>
   </div>
 
@@ -528,32 +522,35 @@
           <input class="form-input" id="sf-age-to" type="number" placeholder="50" min="16" max="80" />
         </div>
       </div>
-      <div class="section-title" style="margin-top:16px;" data-i18n="city_label">📍 Joylashuv bo'yicha qidirish</div>
-
-      <!-- Search location steps -->
-      <div class="location-steps" id="sf-location-steps">
-        <div class="location-step-dot active" id="sf-step-1"></div>
-        <div class="location-step-dot" id="sf-step-2"></div>
-        <div class="location-step-dot" id="sf-step-3"></div>
+      <!-- Qidiruv: Joylashuv — location-card -->
+      <div class="location-card" style="margin:12px 0 4px; border-radius:18px;">
+        <div class="location-card-header">
+          <div class="location-card-icon">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          </div>
+          <div class="location-card-titles">
+            <div class="location-card-title" data-i18n="city_label">📍 Joylashuv bo'yicha qidirish</div>
+            <div class="location-card-sub" data-i18n="loc_step_hint">Davlat → Viloyat → Tuman</div>
+          </div>
+          <div class="location-steps-inline" id="sf-location-steps">
+            <div class="location-step-dot active" id="sf-step-1"></div>
+            <div class="location-step-dot" id="sf-step-2"></div>
+            <div class="location-step-dot" id="sf-step-3"></div>
+          </div>
+        </div>
+        <div class="location-selects">
+          <div class="location-select-wrap" id="sf-country-wrap">
+            <input type="hidden" id="sf-country" />
+          </div>
+          <div class="location-select-wrap" id="sf-region-wrap" style="display:none;">
+            <input type="hidden" id="sf-region" />
+          </div>
+          <div class="location-select-wrap" id="sf-district-wrap" style="display:none;">
+            <input type="hidden" id="sf-district" />
+          </div>
+          <input type="hidden" id="sf-city" />
+        </div>
       </div>
-
-      <!-- Qidiruv: Davlat — custom dropdown (buildLocDropdown tomonidan quriladi) -->
-      <div class="location-select-wrap" id="sf-country-wrap">
-        <input type="hidden" id="sf-country" />
-      </div>
-
-      <!-- Qidiruv: Viloyat — custom dropdown -->
-      <div class="location-select-wrap" id="sf-region-wrap" style="display:none;">
-        <input type="hidden" id="sf-region" />
-      </div>
-
-      <!-- Qidiruv: Tuman — custom dropdown -->
-      <div class="location-select-wrap" id="sf-district-wrap" style="display:none;">
-        <input type="hidden" id="sf-district" />
-      </div>
-
-      <!-- Yashirin city filter maydoni -->
-      <input type="hidden" id="sf-city" />
       <div class="section-title" style="margin-top:16px;" data-i18n="goal">Maqsad</div>
       <div class="chips-wrap" id="sf-goals-chips">
         <div class="chip" data-i18n-chip="goal_dostlik" onclick="toggleChip(this,'sf-goals')">Do'stlik</div>
