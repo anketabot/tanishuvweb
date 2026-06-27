@@ -405,7 +405,7 @@ h1, h2, h3, h4, .header-title, .profile-name, .tinder-photo-name, .chat-list-nam
   padding: 16px;
   margin: 10px 10px 0;
   position: relative;
-  overflow: hidden;
+  overflow: visible;
   transition: transform 0.45s var(--ease-premium), box-shadow 0.45s var(--ease-premium);
 }
 
@@ -4962,22 +4962,19 @@ body.pre-init .lang-modal-overlay.show {
 /* ── Dropdown panel ── */
 .loc-dropdown {
   display: none;
-  position: absolute;
-  top: calc(100% + 6px);
-  left: 0;
-  right: 0;
-  z-index: 9999;
-  background: rgba(255,255,255,0.97);
+  position: fixed;
+  z-index: 99999;
+  background: rgba(255,255,255,0.98);
   backdrop-filter: blur(28px) saturate(180%);
   -webkit-backdrop-filter: blur(28px) saturate(180%);
-  border: 1.5px solid rgba(0,122,255,0.15);
+  border: 1.5px solid rgba(0,122,255,0.18);
   border-radius: 18px;
   box-shadow:
-    0 2px 8px rgba(15,23,42,0.06),
-    0 16px 40px rgba(0,122,255,0.14),
-    0 32px 64px rgba(15,23,42,0.08);
+    0 2px 8px rgba(15,23,42,0.08),
+    0 16px 40px rgba(0,122,255,0.18),
+    0 32px 64px rgba(15,23,42,0.12);
   overflow: hidden;
-  max-height: 260px;
+  max-height: 300px;
   flex-direction: column;
 }
 .loc-dropdown.open {
