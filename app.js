@@ -666,9 +666,7 @@ const tg = window.Telegram?.WebApp;
           'mp_goals_title': 'Цели & Просмотренные',
           'mp_viewed_sub': 'Анкеты с лайком и сообщением',
           'mp_liked_tab': 'Лайкнул',
-          'mp_messaged_tab': 'Написал',
-          'referral_recent_invited': 'Недавно приглашённые',
-          'mp_goals_sub': 'Мои цели и просмотренные люди'
+          'mp_messaged_tab': 'Написал'
       },
       'kk': {
           'select_language': '🌍 Тілді таңдаңыз',
@@ -959,9 +957,7 @@ const tg = window.Telegram?.WebApp;
           'mp_goals_title': 'Мақсаттар & Көргендерім',
           'mp_viewed_sub': 'Лайк және хабар жазған анкеталар',
           'mp_liked_tab': 'Лайк басқан',
-          'mp_messaged_tab': 'Жазған',
-          'referral_recent_invited': 'Жақында шақырылғандар',
-          'mp_goals_sub': 'Менің мақсаттарым және қараған адамдарым'
+          'mp_messaged_tab': 'Жазған'
       },
       'ky': {
           'select_language': '🌍 Тилди тандаңыз',
@@ -1252,9 +1248,7 @@ const tg = window.Telegram?.WebApp;
           'mp_goals_title': 'Максаттар & Көргөндөрүм',
           'mp_viewed_sub': 'Лайк жана билдирүү жазган анкеталар',
           'mp_liked_tab': 'Лайк баскан',
-          'mp_messaged_tab': 'Жазган',
-          'referral_recent_invited': 'Жакында чакырылгандар',
-          'mp_goals_sub': 'Менин максаттарым жана кариган адамдарым'
+          'mp_messaged_tab': 'Жазган'
       },
       'kaa': {
           'select_language': '🌍 Tildi tańlań',
@@ -1545,9 +1539,7 @@ const tg = window.Telegram?.WebApp;
           'mp_goals_title': 'Maqsetler & Kórgenlerim',
           'mp_viewed_sub': 'Layk hám xabar jazǵan anketalar',
           'mp_liked_tab': 'Layk basqan',
-          'mp_messaged_tab': 'Jazǵan',
-          'referral_recent_invited': 'Jaqında shaqırılǵanlar',
-          'mp_goals_sub': 'Meniń maqsetlerim hám kórgen adamlarım'
+          'mp_messaged_tab': 'Jazǵan'
       },
       'tg': {
           'select_language': '🌍 Забонро интихоб кунед',
@@ -1838,9 +1830,7 @@ const tg = window.Telegram?.WebApp;
           'mp_goals_title': 'Мақсадҳо & Дидаҳои ман',
           'mp_viewed_sub': 'Анкетаҳое, ки лайк задам ва навиштам',
           'mp_liked_tab': 'Лайк задам',
-          'mp_messaged_tab': 'Навиштам',
-          'referral_recent_invited': 'Охирон даъватшудагон',
-          'mp_goals_sub': 'Мақсадҳои ман ва одамоне, ки дидаам'
+          'mp_messaged_tab': 'Навиштам'
       },
       'en': {
           'select_language': '🌍 Select language',
@@ -2131,8 +2121,7 @@ const tg = window.Telegram?.WebApp;
           'mp_goals_title': 'Goals & Viewed',
           'mp_goals_sub': 'My goals and people I\'ve viewed',
           'mp_liked_tab': 'Liked',
-          'mp_messaged_tab': 'Messaged',
-          'mp_viewed_sub': 'Profiles you liked and messaged'
+          'mp_messaged_tab': 'Messaged'
       },
   };
 
@@ -2516,7 +2505,7 @@ function detectTelegramLanguage() {
         return;
       }
     }
-    showToast(tr('data_too_long'));
+    showToast('Xatolik: ma\'lumot juda uzun.');
   }
 
   const ICONS = {
@@ -2878,7 +2867,7 @@ function detectTelegramLanguage() {
         loadChats();
         openChatRoom(likeData.match_id, savedName, savedPhoto);
       } else {
-        showToast('✅ ' + tr('match_subtitle'));
+        showToast('✅ Match! Chat bo\'limidan davom eting.');
         loadChats();
       }
       return;
@@ -3595,7 +3584,7 @@ function detectTelegramLanguage() {
         updatePhotoUploadState(tr('person_confirmed_uploading'), false);
         proceedWithPhotoPreview(file);
       } else {
-        showToast(tr('no_person_in_image'));
+        showToast('Rasmda inson topilmadi. Iltimos, o\'zingizni ko\'rsatadigan rasm tanlang.');
         input.value = '';
         photoBase64 = '';
         photoReady = false;
@@ -3604,7 +3593,7 @@ function detectTelegramLanguage() {
       }
     } catch (err) {
       console.error('COCO-SSD tekshiruvi xatolik:', err);
-      showToast(tr('image_check_error'));
+      showToast('Rasm tekshirishda xatolik. Internet aloqasini tekshiring va qayta urinib ko\'ring.');
       input.value = '';
       photoBase64 = '';
       photoReady = false;
@@ -3622,50 +3611,189 @@ function detectTelegramLanguage() {
     return uzbekCitiesML[lang] || uzbekCitiesML['uz'] || {};
   }
 
-  // O'zbekcha nom → joriy tildagi nom
-  function translateRegionName(uzName) {
+  // Joriy til uchun viloyatlar qaytaradi
+  function getUzbekRegions() {
+    if (!uzbekCitiesML) return {};
+    const lang = currentLang || 'uz';
+    return uzbekCitiesML[lang] || uzbekCitiesML['uz'] || {};
+  }
+
+  // ── Location Translation Engine ─────────────────────────────────────
+  // uzbekCitiesML indekslari: har tilda viloyatlar bir xil tartibda
+  // region index: uzbekCitiesML['uz'] keys → uzbekCitiesML[lang] keys
+  // district index: har viloyat ichida district array indeksi bir xil
+
+  // O'zbekcha viloyat nomi → joriy tilda
+  function translateRegionName(uzRegionName) {
+    if (!uzbekCitiesML || !uzRegionName) return uzRegionName;
+    const lang = currentLang || 'uz';
+    if (lang === 'uz') return uzRegionName;
+    const uzKeys = Object.keys(uzbekCitiesML['uz'] || {});
+    const langKeys = Object.keys(uzbekCitiesML[lang] || {});
+    const idx = uzKeys.indexOf(uzRegionName);
+    if (idx !== -1 && langKeys[idx]) return langKeys[idx];
+    return uzRegionName;
+  }
+
+  // O'zbekcha district nomi → joriy tilda
+  // uzRegionName: o'zbekcha viloyat nomi (lookup uchun)
+  function translateDistrictName(uzRegionName, uzDistrictName) {
+    if (!uzbekCitiesML || !uzRegionName || !uzDistrictName) return uzDistrictName;
+    const lang = currentLang || 'uz';
+    if (lang === 'uz') return uzDistrictName;
+    const uzKeys = Object.keys(uzbekCitiesML['uz'] || {});
+    const langKeys = Object.keys(uzbekCitiesML[lang] || {});
+    const rIdx = uzKeys.indexOf(uzRegionName);
+    if (rIdx === -1 || !langKeys[rIdx]) return uzDistrictName;
+    const uzDistricts = uzbekCitiesML['uz'][uzRegionName] || [];
+    const langDistricts = uzbekCitiesML[lang][langKeys[rIdx]] || [];
+    const dIdx = uzDistricts.indexOf(uzDistrictName);
+    if (dIdx !== -1 && langDistricts[dIdx]) return langDistricts[dIdx];
+    return uzDistrictName;
+  }
+
+  // Istalgan o'zbekcha nom (viloyat yoki tuman) → joriy tilda
+  // Avval viloyat ro'yxatidan qidiradi, topilmasa barcha tumanlardan qidiradi
+  function translateAnyLocationName(uzName) {
     if (!uzbekCitiesML || !uzName) return uzName;
     const lang = currentLang || 'uz';
     if (lang === 'uz') return uzName;
-    const uzKeys = Object.keys(uzbekCitiesML['uz'] || {});
-    const langKeys = Object.keys(uzbekCitiesML[lang] || {});
-    const idx = uzKeys.indexOf(uzName);
-    if (idx !== -1 && langKeys[idx]) return langKeys[idx];
-    return uzName;
+
+    const uzData = uzbekCitiesML['uz'] || {};
+    const langData = uzbekCitiesML[lang] || {};
+    const uzKeys = Object.keys(uzData);
+    const langKeys = Object.keys(langData);
+
+    // 1. Viloyat sifatida qidirish
+    const rIdx = uzKeys.indexOf(uzName);
+    if (rIdx !== -1 && langKeys[rIdx]) return langKeys[rIdx];
+
+    // 2. Barcha viloyatlar ichidagi tumanlardan qidirish
+    for (let i = 0; i < uzKeys.length; i++) {
+      const uzRegion = uzKeys[i];
+      const districts = uzData[uzRegion] || [];
+      const dIdx = districts.indexOf(uzName);
+      if (dIdx !== -1) {
+        const langRegionKey = langKeys[i];
+        if (!langRegionKey) return uzName;
+        const langDistricts = langData[langRegionKey] || [];
+        if (langDistricts[dIdx]) return langDistricts[dIdx];
+      }
+    }
+    return uzName; // topilmadi — o'zicha qaytaradi
   }
 
-  // O'zbekcha tuman nomi → joriy tildagi tuman nomi
-  function translateDistrictName(uzRegion, uzDistrict) {
-    if (!uzbekCitiesML || !uzRegion || !uzDistrict) return uzDistrict;
+  // O'zbekcha nom uchun viloyatini ham topadi → { district, region, langDistrict, langRegion }
+  function lookupLocationFull(uzName) {
+    if (!uzbekCitiesML || !uzName) return null;
     const lang = currentLang || 'uz';
-    if (lang === 'uz') return uzDistrict;
-    const uzKeys = Object.keys(uzbekCitiesML['uz'] || {});
-    const langKeys = Object.keys(uzbekCitiesML[lang] || {});
-    const idx = uzKeys.indexOf(uzRegion);
-    if (idx === -1 || !langKeys[idx]) return uzDistrict;
-    const uzDistricts = uzbekCitiesML['uz'][uzRegion] || [];
-    const langDistricts = uzbekCitiesML[lang][langKeys[idx]] || [];
-    const dIdx = uzDistricts.indexOf(uzDistrict);
-    if (dIdx !== -1 && langDistricts[dIdx]) return langDistricts[dIdx];
-    return uzDistrict;
+    const uzData = uzbekCitiesML['uz'] || {};
+    const langData = uzbekCitiesML[lang] || {};
+    const uzKeys = Object.keys(uzData);
+    const langKeys = Object.keys(langData);
+    const nameLower = uzName.toLowerCase().trim();
+
+    // 1. To'liq mos — viloyat sifatida
+    const rIdx = uzKeys.indexOf(uzName);
+    if (rIdx !== -1) {
+      return {
+        isRegion: true,
+        uzRegion: uzName,
+        langRegion: langKeys[rIdx] || uzName,
+        uzDistrict: null,
+        langDistrict: null,
+      };
+    }
+
+    // 2. To'liq mos — tuman sifatida
+    for (let i = 0; i < uzKeys.length; i++) {
+      const uzRegion = uzKeys[i];
+      const districts = uzData[uzRegion] || [];
+      const dIdx = districts.indexOf(uzName);
+      if (dIdx !== -1) {
+        const langRegionKey = langKeys[i] || uzRegion;
+        const langDistricts = langData[langRegionKey] || [];
+        return {
+          isRegion: false,
+          uzRegion,
+          langRegion: langRegionKey,
+          uzDistrict: uzName,
+          langDistrict: langDistricts[dIdx] || uzName,
+        };
+      }
+    }
+
+    // 3. Qisman mos — tuman nomi ichida (masalan "Denov" → "Denov tumani")
+    for (let i = 0; i < uzKeys.length; i++) {
+      const uzRegion = uzKeys[i];
+      const districts = uzData[uzRegion] || [];
+      for (let j = 0; j < districts.length; j++) {
+        const distLower = districts[j].toLowerCase();
+        if (distLower.startsWith(nameLower) || distLower.includes(nameLower)) {
+          const langRegionKey = langKeys[i] || uzRegion;
+          const langDistricts = langData[langRegionKey] || [];
+          return {
+            isRegion: false,
+            uzRegion,
+            langRegion: langRegionKey,
+            uzDistrict: districts[j],
+            langDistrict: langDistricts[j] || districts[j],
+          };
+        }
+      }
+    }
+
+    // 4. Qisman mos — viloyat nomi ichida (masalan "Samarqand" → "Samarqand viloyati")
+    for (let i = 0; i < uzKeys.length; i++) {
+      const regionLower = uzKeys[i].toLowerCase();
+      if (regionLower.startsWith(nameLower) || regionLower.includes(nameLower)) {
+        return {
+          isRegion: true,
+          uzRegion: uzKeys[i],
+          langRegion: langKeys[i] || uzKeys[i],
+          uzDistrict: null,
+          langDistrict: null,
+        };
+      }
+    }
+
+    return null; // topilmadi
   }
 
-  // city maydoni (o'zbekcha) → joriy tilda chiroyli ko'rsatish
-  // city formati: "Tuman, Viloyat" yoki "Viloyat" yoki "Davlat"
+  // city maydoni (o'zbekcha) → joriy tilda chiroyli label
+  // Formatlar:
+  //   "Toshkent shahri"        → viloyat (region key) → tarjima
+  //   "Samarqand viloyati"     → viloyat             → tarjima
+  //   "Samarqand shahri"       → tuman               → "город Самарканд • Самаркандская область"
+  //   "Yunusobod tumani, Toshkent shahri" → tuman, viloyat → tarjima ikkalasini
+  //   "Rossiya"                → tarjima yo'q         → o'zicha
   function translateCityLabel(city = '') {
     if (!city) return city;
     const lang = currentLang || 'uz';
-    if (lang === 'uz') return city;
-    const parts = city.split(',').map(s => s.trim());
-    if (parts.length === 2) {
-      // "Yunusobod tumani, Toshkent shahri"
-      const [district, region] = parts;
-      return translateDistrictName(region, district) + ', ' + translateRegionName(region);
-    } else if (parts.length === 1) {
-      // "Toshkent viloyati" yoki "Rossiya"
-      return translateRegionName(parts[0]);
+
+    // "district, region" formati
+    if (city.includes(',')) {
+      const commaIdx = city.indexOf(',');
+      const distPart   = city.slice(0, commaIdx).trim();
+      const regionPart = city.slice(commaIdx + 1).trim();
+      if (lang === 'uz') return city;
+      const translatedDist   = translateAnyLocationName(distPart);
+      const translatedRegion = translateAnyLocationName(regionPart);
+      return `${translatedDist}, ${translatedRegion}`;
     }
-    return city;
+
+    // Bitta nom
+    if (lang === 'uz') return city;
+    const info = lookupLocationFull(city);
+    if (!info) return city; // Boshqa davlat yoki noma'lum
+
+    if (info.isRegion) {
+      // Viloyat: faqat tarjima
+      return info.langRegion;
+    } else {
+      // Tuman: "tarjima_tuman • tarjima_viloyat"
+      return `${info.langDistrict} • ${info.langRegion}`;
+    }
   }
 
   function populateRegions(selectId, regions) {
@@ -3754,7 +3882,7 @@ function detectTelegramLanguage() {
     });
     let empty = container.querySelector('.loc-options-empty');
     if (!found) {
-      if (!empty) { empty = document.createElement('div'); empty.className = 'loc-options-empty'; empty.textContent = tr('no_one_found'); container.appendChild(empty); }
+      if (!empty) { empty = document.createElement('div'); empty.className = 'loc-options-empty'; empty.textContent = 'Natija topilmadi'; container.appendChild(empty); }
       empty.style.display = '';
     } else if (empty) {
       empty.style.display = 'none';
@@ -4348,7 +4476,7 @@ function detectTelegramLanguage() {
       if (panelBody) {
         panelBody.innerHTML = `<div class="empty-state"><div class="empty-icon">${ICONS.alert}</div><h3>${tr('server_error')}</h3><p>${tr('check_internet')}</p><button class="btn-primary" style="margin-top:16px;padding:12px 24px;border-radius:999rem;" onclick="closeSearchResultsModal();setTimeout(doSearch,300)">🔄 ${tr('retry_btn')}</button></div>`;
       }
-      showToast(tr('server_error'));
+      showToast('Server bilan aloqa yo\'q');
     }
   }
 
@@ -4451,7 +4579,7 @@ function detectTelegramLanguage() {
   }
 
   function tinderBackModal() {
-    if (tinderHistory.length === 0) { showToast(tr('cannot_go_back')); return; }
+    if (tinderHistory.length === 0) { showToast('Orqaga qaytish imkoni yo\'q'); return; }
     tinderIndex = tinderHistory.pop();
     renderTinderCardInModal();
   }
@@ -4528,7 +4656,7 @@ function detectTelegramLanguage() {
         if (resultsEl) resultsEl.style.display = 'block';
       }
     } catch (error) {
-      showToast(tr('server_error'));
+      showToast('Server bilan aloqa yo\'q');
       if (swipeContainer) {
         swipeContainer.innerHTML = `<div class="empty-state"><div class="empty-icon">${ICONS.alert}</div><h3>${tr('cannot_connect')}</h3><p>${tr('check_internet')}</p></div>`;
       }
@@ -4837,7 +4965,7 @@ function detectTelegramLanguage() {
       loadPendingLikesIndicator();
       openIncomingLikesModal();
     } else {
-      showToast(tr('error_retry'));
+      showToast('Xatolik yuz berdi. Iltimos qayta urinib ko\'ring.');
     }
   }
 
@@ -4856,7 +4984,7 @@ function detectTelegramLanguage() {
       <div class="profile-photo">${photoHtml}</div>
       <div class="profile-info">
         <div class="profile-name"><span style="display:inline-flex;vertical-align:middle;margin-right:6px;">${icon}</span> ${u.full_name}</div>
-        <div class="profile-age-city">${tr('age')}: ${u.age} &nbsp;•&nbsp; ${locationLabel || tr('no_city')}${u.zodiac ? ' • ' + getZodiacDisplay(u.zodiac) : ''}</div>
+        <div class="profile-age-city">Yosh: ${u.age} &nbsp;•&nbsp; ${locationLabel || tr('no_city')}${u.zodiac ? ' • ' + getZodiacDisplay(u.zodiac) : ''}</div>
         ${u.about ? `<div class="profile-bio" style="margin-top:6px;color:var(--text-secondary);font-size:13px;line-height:1.4;">${escapeHtml(u.about)}</div>` : ''}
         <div class="profile-tags" style="margin-top:8px;">${goals}${interests}</div>
       </div>
@@ -4895,7 +5023,7 @@ function detectTelegramLanguage() {
     const toUser = Number(toUserId);
 
     if (!Number.isFinite(fromUserId) || fromUserId <= 0) {
-      showToast(tr('fill_profile_first'));
+      showToast('Avval profilingizni to\'ldiring');
       return;
     }
     if (!Number.isFinite(toUser) || toUser <= 0) {
@@ -4942,7 +5070,7 @@ function detectTelegramLanguage() {
         showToast(tr('like_sent'));
       }
     } else {
-      showToast(tr('error_prefix') + (data.error || tr('unknown_error')));
+      showToast('Xatolik: ' + (data.error || 'Noma\'lum'));
     }
   }
 
@@ -4967,7 +5095,7 @@ function detectTelegramLanguage() {
     // Chat suhbatdoshi uchun minimal toza dizayn
     if (!showTags) {
       const photo = u.photo || u.photo_file_id || u.photo_base64;
-      const region = getCityRegion(u.city || '');
+      const cityLabel = formatLocationLabel(u.city || '');
 
       body.innerHTML = `
         <article class="profile-detail-minimal">
@@ -4975,13 +5103,12 @@ function detectTelegramLanguage() {
           <div class="minimal-info">
             <h2 class="minimal-name">${u.full_name}</h2>
             <div class="minimal-badge">${u.age} ${tr('years_old')} • ${u.gender === 'erkak' ? tr('male') : tr('female')}</div>
-            ${u.city ? `
+            ${cityLabel ? `
             <div class="minimal-location">
               <div class="minimal-loc-card">
                 <div class="minimal-loc-icon">📍</div>
                 <div class="minimal-loc-text">
-                  <div class="minimal-loc-city">${u.city}</div>
-                  ${region ? `<div class="minimal-loc-region">${region}</div>` : ''}
+                  <div class="minimal-loc-city">${cityLabel}</div>
                 </div>
               </div>
             </div>` : ''}
@@ -5000,7 +5127,7 @@ function detectTelegramLanguage() {
     const goals = (u.goals || []).map(g => `<span class="tag">${tr(g) || g}</span>`).join('');
     const visibleInterests = (u.interests || []).slice(0, MAX_INTERESTS_ALLOWED);
     const interests = (u.interests || []).slice(0, MAX_INTERESTS_ALLOWED).map(i => `<span class="tag" style="background:rgba(0,122,255,0.10);color:var(--ios-blue);">${tr(i) || i}</span>`).join('');
-    const aboutText = (u.about || '').trim() || tr('default_about');
+    const aboutText = (u.about || '').trim() || tr('default_about') || '';
     const photoHtml = photo
       ? `<div class="profile-detail-photo-wrap"><img src="${photo}" alt="${u.full_name}" onclick="openPhotoViewer('${escapeJs(photo)}','${escapeJs(u.full_name)}')" /></div>`
       : '';
@@ -5112,13 +5239,35 @@ function detectTelegramLanguage() {
 
   function formatLocationLabel(city = '') {
     if (!city) return '';
-    // Avval tarjima qilamiz (joriy til uchun)
-    const translated = translateCityLabel(city);
-    // Keyin viloyatni qo'shamiz (agar yo'q bo'lsa)
-    if (translated.includes(',')) return translated; // allaqachon "tuman, viloyat" formati
-    const region = getCityRegion(city); // o'zbekcha region nomi
-    const translatedRegion = translateRegionName(region);
-    return translatedRegion ? `${translated} • ${translatedRegion}` : translated;
+    const lang = currentLang || 'uz';
+
+    // "district, region" formati
+    if (city.includes(',')) {
+      return translateCityLabel(city);
+    }
+
+    // uzbekCitiesML yuklanmagan bo'lsa — eski getCityRegion bilan
+    if (!uzbekCitiesML) {
+      const region = getCityRegion(city);
+      return region ? `${city} • ${region}` : city;
+    }
+
+    const info = lookupLocationFull(city);
+    if (!info) {
+      // Boshqa davlat yoki noma'lum — o'zicha qaytaradi
+      return city;
+    }
+
+    if (info.isRegion) {
+      // Viloyat o'zi ko'rsatilgan: faqat tarjima
+      return lang === 'uz' ? city : info.langRegion;
+    } else {
+      // Tuman: "tarjima_tuman • tarjima_viloyat"
+      if (lang === 'uz') {
+        return `${city} • ${info.uzRegion}`;
+      }
+      return `${info.langDistrict} • ${info.langRegion}`;
+    }
   }
 
   // ===== PROFILE HELPERS =====
@@ -5890,13 +6039,13 @@ function renderStatsRows(containerId, users, icon, label) {
     const avaHtml = photo
       ? `<img class="stats-ava" src="${photo}" alt="" />`
       : `<div class="stats-ava-letter">${(u.full_name||'?')[0].toUpperCase()}</div>`;
-    const meta = [u.age ? u.age + ' yosh' : '', u.city || ''].filter(Boolean).join(' • ');
+    const meta = [u.age ? u.age + ' ' + tr('years_old') : '', u.city ? formatLocationLabel(u.city) : ''].filter(Boolean).join(' • ');
     return `
       <div class="stats-row">
         ${medalHtml}
         ${avaHtml}
         <div class="stats-info">
-          <div class="stats-uname">${escapeHtml(u.full_name || 'Anonim')}</div>
+          <div class="stats-uname">${escapeHtml(u.full_name || tr('no_name'))}</div>
           ${meta ? `<div class="stats-umeta">${escapeHtml(meta)}</div>` : ''}
         </div>
         <div class="stats-count-badge">${icon} ${u.count} ${label}</div>
@@ -6014,11 +6163,11 @@ function renderTopPanelTab(tab) {
       const avaHtml = photo
         ? `<img class="stats-mini-ava" src="${photo}" alt="" />`
         : `<div class="stats-mini-ava-letter">${(u.full_name||'?')[0].toUpperCase()}</div>`;
-      const meta = [u.age ? u.age + ' yosh' : '', u.city || ''].filter(Boolean).join(' • ');
+      const meta = [u.age ? u.age + ' ' + tr('years_old') : '', u.city ? formatLocationLabel(u.city) : ''].filter(Boolean).join(' • ');
       return `<div class="stats-mini-row">
         ${rankHtml}${avaHtml}
         <div class="stats-mini-info">
-          <div class="stats-mini-name">${escapeHtml(u.full_name || 'Anonim')}</div>
+          <div class="stats-mini-name">${escapeHtml(u.full_name || tr('no_name'))}</div>
           ${meta ? `<div class="stats-mini-meta">${escapeHtml(meta)}</div>` : ''}
         </div>
         <div class="stats-mini-badge">${icon} ${u.count} ${label}</div>
@@ -6087,12 +6236,12 @@ function renderMiniStatsTab(tab) {
     const avaHtml = photo
       ? `<img class="stats-mini-ava" src="${photo}" alt="" />`
       : `<div class="stats-mini-ava-letter">${(u.full_name||'?')[0].toUpperCase()}</div>`;
-    const meta = [u.age ? u.age + ' yosh' : '', u.city || ''].filter(Boolean).join(' • ');
+    const meta = [u.age ? u.age + ' ' + tr('years_old') : '', u.city ? formatLocationLabel(u.city) : ''].filter(Boolean).join(' • ');
     return `<div class="stats-mini-row">
       ${rankHtml}
       ${avaHtml}
       <div class="stats-mini-info">
-        <div class="stats-mini-name">${escapeHtml(u.full_name || 'Anonim')}</div>
+        <div class="stats-mini-name">${escapeHtml(u.full_name || tr('no_name'))}</div>
         ${meta ? `<div class="stats-mini-meta">${escapeHtml(meta)}</div>` : ''}
       </div>
       <div class="stats-mini-badge">${icon} ${u.count} ${label}</div>
@@ -6158,7 +6307,7 @@ document.addEventListener('DOMContentLoaded', function() {
           <img class="viewed-photo" src="${u.photo || 'https://api.dicebear.com/7.x/avataaars/svg?seed=' + encodeURIComponent(u.name || 'user')}" alt="${u.name || ''}" />
           <div class="viewed-info">
             <div class="viewed-name">${u.name || tr('no_name')}</div>
-            <div class="viewed-count">${u.age || ''} ${u.age ? tr('years_old') : ''} ${u.city ? '• ' + u.city : ''}</div>
+            <div class="viewed-count">${u.age || ''} ${u.age ? tr('years_old') : ''} ${u.city ? '• ' + formatLocationLabel(u.city) : ''}</div>
           </div>
           <div class="viewed-actions">
             <button class="viewed-btn ${tab === 'liked' ? 'liked-btn' : ''}" onclick="event.stopPropagation();${tab === 'liked' ? 'openMessageModal(' + (u.id||0) + ')' : 'openChatRoom(' + (u.id||0) + ')'}">
@@ -6404,7 +6553,7 @@ function loadMpViewed(tab) {
       ? `<img src="${u.photo}" alt="" style="width:48px;height:48px;border-radius:50%;object-fit:cover;flex-shrink:0;border:2px solid var(--glass-border);" />`
       : `<div style="width:48px;height:48px;border-radius:50%;background:var(--bg-secondary);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;">${u.gender==='ayol'?'👩':'👨'}</div>`;
     const zodiacStr = u.zodiac ? ` • ${zodiacEmojis[u.zodiac]||''} ${u.zodiac}` : '';
-    const meta = [u.age ? u.age + ' yosh' : '', u.city || ''].filter(Boolean).join(' • ') + zodiacStr;
+    const meta = [u.age ? u.age + ' ' + tr('years_old') : '', u.city ? formatLocationLabel(u.city) : ''].filter(Boolean).join(' • ') + zodiacStr;
     html += `
       <div onclick="openViewedProfile(${u.id},'${tab}')"
            style="display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:14px;cursor:pointer;background:var(--glass-bg);border:1px solid var(--glass-border);"
@@ -6412,7 +6561,7 @@ function loadMpViewed(tab) {
            ontouchstart="this.style.opacity='0.7'" ontouchend="this.style.opacity='1'">
         ${photoHtml}
         <div style="flex:1;min-width:0;">
-          <div style="font-weight:700;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${escapeHtml(u.name || 'Anonim')}</div>
+          <div style="font-weight:700;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${escapeHtml(u.name || tr('no_name'))}</div>
           ${meta ? `<div style="font-size:12px;color:var(--text-secondary);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${escapeHtml(meta)}</div>` : ''}
         </div>
         <div style="font-size:18px;">${tab === 'liked' ? '💙' : '💬'}</div>
@@ -6431,7 +6580,7 @@ function openViewedProfile(id, tab) {
     if (raw) items = JSON.parse(raw);
   } catch(e) {}
   const u = items.find(x => x.id == id);
-  if (!u) { showToast(tr('profile_not_found')); return; }
+  if (!u) { showToast('Anketa topilmadi'); return; }
 
   const modal = document.getElementById('profile-modal');
   const body  = document.getElementById('profile-modal-body');
@@ -6450,7 +6599,7 @@ function openViewedProfile(id, tab) {
     ${photoHtml}
     <div style="padding:18px 16px 20px;">
       <div style="font-size:22px;font-weight:800;margin-bottom:10px;">
-        ${escapeHtml(u.name || 'Anonim')}${u.age ? ', ' + u.age : ''}
+        ${escapeHtml(u.name || tr('no_name'))}${u.age ? ', ' + u.age : ''}
       </div>
       ${u.city ? `<div style="font-size:14px;color:var(--text-secondary);margin-bottom:6px;">📍 ${escapeHtml(u.city)}</div>` : ''}
       ${zodiacLabel ? `<div style="font-size:14px;color:var(--text-secondary);margin-bottom:6px;">✨ ${escapeHtml(zodiacLabel)}</div>` : ''}
