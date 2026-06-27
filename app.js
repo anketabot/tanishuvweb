@@ -377,7 +377,25 @@ const tg = window.Telegram?.WebApp;
           'mp_liked_tab': 'Like bergan',
           'mp_messaged_tab': 'Yozgan',
           'like': 'Like',
-          'write': 'Yozish'
+          'write': 'Yozish',
+          'country_uz': "O'zbekiston",
+          'country_ru': 'Rossiya',
+          'country_kz': "Qozog'iston",
+          'country_kg': "Qirg'iziston",
+          'country_tj': 'Tojikiston',
+          'country_tm': 'Turkmaniston',
+          'country_az': 'Ozarbayjon',
+          'country_am': 'Armaniston',
+          'country_ge': 'Gruziya',
+          'country_ua': 'Ukraina',
+          'country_by': 'Belarus',
+          'country_md': 'Moldova',
+          'country_other': 'Boshqa',
+          'loc_step_hint': 'Davlat → Viloyat → Tuman',
+          'country_label': 'Davlat',
+          'region_label': 'Viloyat',
+          'district_label': 'Tuman / Shahar',
+          'all_countries': '— Barcha davlatlar —'
       },
       'ru': {
           'select_language': '🌍 Выберите язык',
@@ -672,7 +690,25 @@ const tg = window.Telegram?.WebApp;
           'like': 'Лайк',
           'write': 'Написать',
           'referral_recent_invited': 'Недавно приглашённые',
-          'mp_goals_sub': 'Мои цели и просмотренные люди'
+          'mp_goals_sub': 'Мои цели и просмотренные люди',
+          'country_uz': 'Узбекистан',
+          'country_ru': 'Россия',
+          'country_kz': 'Казахстан',
+          'country_kg': 'Кыргызстан',
+          'country_tj': 'Таджикистан',
+          'country_tm': 'Туркменистан',
+          'country_az': 'Азербайджан',
+          'country_am': 'Армения',
+          'country_ge': 'Грузия',
+          'country_ua': 'Украина',
+          'country_by': 'Беларусь',
+          'country_md': 'Молдова',
+          'country_other': 'Другое',
+          'loc_step_hint': 'Страна → Область → Район',
+          'country_label': 'Страна',
+          'region_label': 'Область',
+          'district_label': 'Район / Город',
+          'all_countries': '— Все страны —'
       },
       'kk': {
           'select_language': '🌍 Тілді таңдаңыз',
@@ -967,7 +1003,25 @@ const tg = window.Telegram?.WebApp;
           'like': 'Лайк',
           'write': 'Жазу',
           'referral_recent_invited': 'Жақында шақырылғандар',
-          'mp_goals_sub': 'Менің мақсаттарым және қараған адамдарым'
+          'mp_goals_sub': 'Менің мақсаттарым және қараған адамдарым',
+          'country_uz': 'Өзбекстан',
+          'country_ru': 'Ресей',
+          'country_kz': 'Қазақстан',
+          'country_kg': 'Қырғызстан',
+          'country_tj': 'Тәжікстан',
+          'country_tm': 'Түркіменстан',
+          'country_az': 'Әзербайжан',
+          'country_am': 'Армения',
+          'country_ge': 'Грузия',
+          'country_ua': 'Украина',
+          'country_by': 'Беларусь',
+          'country_md': 'Молдова',
+          'country_other': 'Басқа',
+          'loc_step_hint': 'Ел → Облыс → Аудан',
+          'country_label': 'Ел',
+          'region_label': 'Облыс',
+          'district_label': 'Аудан / Қала',
+          'all_countries': '— Барлық елдер —'
       },
       'ky': {
           'select_language': '🌍 Тилди тандаңыз',
@@ -1262,7 +1316,25 @@ const tg = window.Telegram?.WebApp;
           'like': 'Лайк',
           'write': 'Жазуу',
           'referral_recent_invited': 'Жакында чакырылгандар',
-          'mp_goals_sub': 'Менин максаттарым жана кариган адамдарым'
+          'mp_goals_sub': 'Менин максаттарым жана кариган адамдарым',
+          'country_uz': 'Өзбекстан',
+          'country_ru': 'Россия',
+          'country_kz': 'Казакстан',
+          'country_kg': 'Кыргызстан',
+          'country_tj': 'Тажикстан',
+          'country_tm': 'Түркмөнстан',
+          'country_az': 'Азербайжан',
+          'country_am': 'Армения',
+          'country_ge': 'Грузия',
+          'country_ua': 'Украина',
+          'country_by': 'Беларусь',
+          'country_md': 'Молдова',
+          'country_other': 'Башка',
+          'loc_step_hint': 'Өлкө → Облус → Район',
+          'country_label': 'Өлкө',
+          'region_label': 'Облус',
+          'district_label': 'Район / Шаар',
+          'all_countries': '— Бардык өлкөлөр —'
       },
       'kaa': {
           'select_language': '🌍 Tildi tańlań',
@@ -1557,7 +1629,25 @@ const tg = window.Telegram?.WebApp;
           'like': 'Layk',
           'write': 'Jazıw',
           'referral_recent_invited': 'Jaqında shaqırılǵanlar',
-          'mp_goals_sub': 'Meniń maqsetlerim hám kórgen adamlarım'
+          'mp_goals_sub': 'Meniń maqsetlerim hám kórgen adamlarım',
+          'country_uz': "O'zbekstan",
+          'country_ru': 'Rossiya',
+          'country_kz': "Qazaqstan",
+          'country_kg': "Qırǵızstan",
+          'country_tj': 'Tájikstan',
+          'country_tm': 'Túrkmenistan',
+          'country_az': 'Ázerbayjan',
+          'country_am': 'Armeniya',
+          'country_ge': 'Gruziya',
+          'country_ua': 'Ukraina',
+          'country_by': 'Belarus',
+          'country_md': 'Moldova',
+          'country_other': 'Basqa',
+          'loc_step_hint': 'Mámleketler → Wılayat → Rayon',
+          'country_label': 'Mámleketler',
+          'region_label': 'Wılayat',
+          'district_label': 'Rayon / Qala',
+          'all_countries': '— Barlıq mámleketler —'
       },
       'tg': {
           'select_language': '🌍 Забонро интихоб кунед',
@@ -1852,7 +1942,25 @@ const tg = window.Telegram?.WebApp;
           'like': 'Лайк',
           'write': 'Навиштан',
           'referral_recent_invited': 'Охирон даъватшудагон',
-          'mp_goals_sub': 'Мақсадҳои ман ва одамоне, ки дидаам'
+          'mp_goals_sub': 'Мақсадҳои ман ва одамоне, ки дидаам',
+          'country_uz': 'Ӯзбекистон',
+          'country_ru': 'Русия',
+          'country_kz': 'Қазоқистон',
+          'country_kg': 'Қирғизистон',
+          'country_tj': 'Тоҷикистон',
+          'country_tm': 'Туркманистон',
+          'country_az': 'Озарбойҷон',
+          'country_am': 'Арманистон',
+          'country_ge': 'Гурҷистон',
+          'country_ua': 'Украина',
+          'country_by': 'Беларус',
+          'country_md': 'Молдова',
+          'country_other': 'Дигар',
+          'loc_step_hint': 'Кишвар → Вилоят → Ноҳия',
+          'country_label': 'Кишвар',
+          'region_label': 'Вилоят',
+          'district_label': 'Ноҳия / Шаҳр',
+          'all_countries': '— Ҳама кишварҳо —'
       },
       'en': {
           'select_language': '🌍 Select language',
@@ -2146,7 +2254,25 @@ const tg = window.Telegram?.WebApp;
           'mp_messaged_tab': 'Messaged',
           'like': 'Like',
           'write': 'Write',
-          'mp_viewed_sub': 'Profiles you liked and messaged'
+          'mp_viewed_sub': 'Profiles you liked and messaged',
+          'country_uz': 'Uzbekistan',
+          'country_ru': 'Russia',
+          'country_kz': 'Kazakhstan',
+          'country_kg': 'Kyrgyzstan',
+          'country_tj': 'Tajikistan',
+          'country_tm': 'Turkmenistan',
+          'country_az': 'Azerbaijan',
+          'country_am': 'Armenia',
+          'country_ge': 'Georgia',
+          'country_ua': 'Ukraine',
+          'country_by': 'Belarus',
+          'country_md': 'Moldova',
+          'country_other': 'Other',
+          'loc_step_hint': 'Country → Region → District',
+          'country_label': 'Country',
+          'region_label': 'Region',
+          'district_label': 'District / City',
+          'all_countries': '— All countries —'
       },
   };
 
@@ -2253,17 +2379,35 @@ const tg = window.Telegram?.WebApp;
       if (valEl && valEl.classList.contains('placeholder')) valEl.textContent = ph;
     });
 
+    // Davlat dropdown options ni yangi tilda qayta qur
+    ['inp-country', 'sf-country'].forEach(id => {
+      const wrap = document.getElementById(id + '-wrap');
+      if (!wrap) return;
+      const native = document.getElementById(id);
+      const currentVal = native ? native.value : '';
+      const isSearch = id.startsWith('sf-');
+      const opts = getCountriesList(isSearch);
+      rebuildLocOptions(id, opts, false);
+      // Tanlangan davlat trigger matnini yangi tilda yangilash
+      if (currentVal) {
+        const selOpt = opts.find(o => o.value === currentVal);
+        const valEl = document.getElementById(id + '-trigger-val');
+        if (valEl && selOpt) { valEl.textContent = selOpt.label; valEl.classList.remove('placeholder'); }
+        document.querySelectorAll(`#${id}-opts .loc-option`).forEach(o => {
+          o.classList.toggle('selected', o.dataset.value === currentVal);
+        });
+      }
+    });
+
     // Viloyat trigger matnini joriy tilda ko'rsatish
     ['inp-region', 'sf-region'].forEach(id => {
       const native = document.getElementById(id);
       if (!native || !native.value) return;
       const valEl = document.getElementById(id + '-trigger-val');
       if (!valEl) return;
-      // native.value o'zbekcha bo'lishi mumkin — uni joriy tilda ko'rsatamiz
       const uzRegions = Object.keys(uzbekCitiesML['uz'] || {});
       const langRegions = Object.keys(uzbekCitiesML[lang] || {});
       const idx = uzRegions.indexOf(native.value);
-      // native.value allaqachon joriy tilda bo'lishi ham mumkin — indeks bo'yicha check
       const langIdx = langRegions.indexOf(native.value);
       if (idx !== -1 && langRegions[idx]) {
         valEl.textContent = langRegions[idx];
@@ -2281,9 +2425,7 @@ const tg = window.Telegram?.WebApp;
       const regions = getUzbekRegions(); // endi joriy tilda
       const opts = Object.keys(regions);
       rebuildLocOptions(id, opts, true);
-      // Avvalgi tanlovni qayta belgilash
       if (currentVal) {
-        // currentVal eski tilda bo'lishi mumkin — mosini topamiz
         document.querySelectorAll(`#${id}-opts .loc-option`).forEach(o => {
           o.classList.toggle('selected', o.dataset.value === currentVal);
         });
@@ -2298,7 +2440,16 @@ const tg = window.Telegram?.WebApp;
       const regionNative = document.getElementById(regionId);
       if (!regionNative || !regionNative.value) return;
       const regions = getUzbekRegions();
-      const districts = regions[regionNative.value] || [];
+      let districts = regions[regionNative.value] || [];
+      if (!districts.length && uzbekCitiesML) {
+        const uzRegions = uzbekCitiesML['uz'] || {};
+        const uzKeys = Object.keys(uzRegions);
+        const langRegions = Object.keys(regions);
+        const langIdx = langRegions.indexOf(regionNative.value);
+        if (langIdx !== -1 && uzKeys[langIdx]) {
+          districts = uzRegions[uzKeys[langIdx]] || [];
+        }
+      }
       if (!districts.length) return;
       const native = document.getElementById(id);
       const currentVal = native ? native.value : '';
@@ -2717,11 +2868,11 @@ function detectTelegramLanguage() {
     const text = document.getElementById('limit-modal-text');
     if (modal && text) {
       const messages = {
-        'likes': 'Sizning kunlik like limitingiz tugadi. Guruhga odam qo\'shib, limitni oshiring!',
-        'messages': 'Sizning kunlik xabar yuborish limitingiz tugadi. Guruhga odam qo\'shib, limitni oshiring!',
-        'super_likes': 'Sizning kunlik Super Like limitingiz tugadi. Guruhga odam qo\'shib, limitni oshiring!'
+        'likes': tr('limit_likes_exceeded'),
+        'messages': tr('limit_messages_exceeded'),
+        'super_likes': tr('limit_super_likes_exceeded')
       };
-      text.textContent = messages[type] || 'Kunlik limitingiz tugadi. Guruhga odam qo\'shib, limitni oshiring!';
+      text.textContent = messages[type] || tr('limit_exceeded_default');
       modal.style.display = 'flex';
     }
   }
@@ -3899,7 +4050,29 @@ function detectTelegramLanguage() {
   }
   function markLocationFilled(id, filled) {} // legacy compat — unused
 
-  // Davlatlar ro'yxati
+  // Davlatlar ro'yxati — tarjima orqali
+  function getCountriesList(includeAll = false) {
+    const list = [
+      { value: "Oʻzbekiston", key: 'country_uz', flag: "🇺🇿" },
+      { value: "Rossiya",      key: 'country_ru', flag: "🇷🇺" },
+      { value: "Qozogʻiston", key: 'country_kz', flag: "🇰🇿" },
+      { value: "Qirgʻiziston",key: 'country_kg', flag: "🇰🇬" },
+      { value: "Tojikiston",   key: 'country_tj', flag: "🇹🇯" },
+      { value: "Turkmaniston", key: 'country_tm', flag: "🇹🇲" },
+      { value: "Ozarbayjon",   key: 'country_az', flag: "🇦🇿" },
+      { value: "Armaniston",   key: 'country_am', flag: "🇦🇲" },
+      { value: "Gruziya",      key: 'country_ge', flag: "🇬🇪" },
+      { value: "Ukraina",      key: 'country_ua', flag: "🇺🇦" },
+      { value: "Belarus",      key: 'country_by', flag: "🇧🇾" },
+      { value: "Moldova",      key: 'country_md', flag: "🇲🇩" },
+      { value: "Boshqa",       key: 'country_other', flag: "🌍" },
+    ].map(c => ({ value: c.value, label: tr(c.key) || c.value, flag: c.flag }));
+    if (includeAll) {
+      return [{ value: '', label: tr('all_countries') || '— Barcha davlatlar —', flag: '🌐' }, ...list];
+    }
+    return list;
+  }
+
   const COUNTRIES = [
     { value: "Oʻzbekiston", label: "O'zbekiston", flag: "🇺🇿" },
     { value: "Rossiya",      label: "Rossiya",      flag: "🇷🇺" },
@@ -3920,34 +4093,34 @@ function detectTelegramLanguage() {
   function initLocationDropdowns() {
     // ── Anketa sahifasi ──────────────────────────────
     buildLocDropdown('inp-country', {
-      type: 'country', emoji: '🌍', label: 'Davlat', placeholder: tr('loc_select_country') || '— Tanlang —',
-      options: COUNTRIES,
+      type: 'country', emoji: '🌍', label: tr('country_label') || 'Davlat', placeholder: tr('loc_select_country') || '— Tanlang —',
+      options: getCountriesList(false),
       onChange: (val) => { document.getElementById('inp-country').value = val; onCountryChange(); }
     });
     buildLocDropdown('inp-region', {
-      type: 'region', emoji: '🗺️', label: 'Viloyat', placeholder: tr('loc_select_region') || '— Viloyatni tanlang —',
+      type: 'region', emoji: '🗺️', label: tr('region_label') || 'Viloyat', placeholder: tr('loc_select_region') || '— Viloyatni tanlang —',
       options: [],
       onChange: (val) => { document.getElementById('inp-region').value = val; onRegionChange(); }
     });
     buildLocDropdown('inp-district', {
-      type: 'district', emoji: '📍', label: 'Tuman / Shahar', placeholder: tr('loc_select_district') || '— Tumanni tanlang —',
+      type: 'district', emoji: '📍', label: tr('district_label') || 'Tuman / Shahar', placeholder: tr('loc_select_district') || '— Tumanni tanlang —',
       options: [],
       onChange: (val) => { document.getElementById('inp-district').value = val; onDistrictChange(); }
     });
 
     // ── Qidiruv sahifasi ─────────────────────────────
     buildLocDropdown('sf-country', {
-      type: 'country', emoji: '🌍', label: 'Davlat', placeholder: tr('loc_all_countries') || '— Barcha davlatlar —',
-      options: [{ value: '', label: 'Barcha davlatlar', flag: '🌐' }, ...COUNTRIES],
+      type: 'country', emoji: '🌍', label: tr('country_label') || 'Davlat', placeholder: tr('loc_all_countries') || '— Barcha davlatlar —',
+      options: getCountriesList(true),
       onChange: (val) => { document.getElementById('sf-country').value = val; onSearchCountryChange(); }
     });
     buildLocDropdown('sf-region', {
-      type: 'region', emoji: '🗺️', label: 'Viloyat', placeholder: tr('loc_all_regions') || '— Barcha viloyatlar —',
+      type: 'region', emoji: '🗺️', label: tr('region_label') || 'Viloyat', placeholder: tr('loc_all_regions') || '— Barcha viloyatlar —',
       options: [],
       onChange: (val) => { document.getElementById('sf-region').value = val; onSearchRegionChange(); }
     });
     buildLocDropdown('sf-district', {
-      type: 'district', emoji: '📍', label: 'Tuman / Shahar', placeholder: tr('loc_all_districts') || '— Barcha tumanlar —',
+      type: 'district', emoji: '📍', label: tr('district_label') || 'Tuman / Shahar', placeholder: tr('loc_all_districts') || '— Barcha tumanlar —',
       options: [],
       onChange: (val) => { document.getElementById('sf-district').value = val; }
     });
@@ -4029,7 +4202,18 @@ function detectTelegramLanguage() {
 
     if (region) {
       const regions = getUzbekRegions();
-      const districts = regions[region] || [];
+      // Viloyat joriy tilda yoki o'zbekchada bo'lishi mumkin — ikkalasini sinash
+      let districts = regions[region] || [];
+      // Agar topilmasa, o'zbek tilidan qidirish
+      if (!districts.length && uzbekCitiesML) {
+        const uzRegions = uzbekCitiesML['uz'] || {};
+        const uzKeys = Object.keys(uzRegions);
+        const langRegions = Object.keys(regions);
+        const langIdx = langRegions.indexOf(region);
+        if (langIdx !== -1 && uzKeys[langIdx]) {
+          districts = uzRegions[uzKeys[langIdx]] || [];
+        }
+      }
       rebuildLocOptions('inp-district', districts, false);
       showLocationWrap('inp-district');
       updateLocationSteps('inp', 3);
@@ -4077,7 +4261,16 @@ function detectTelegramLanguage() {
 
     if (region) {
       const regions = getUzbekRegions();
-      const districts = regions[region] || [];
+      let districts = regions[region] || [];
+      if (!districts.length && uzbekCitiesML) {
+        const uzRegions = uzbekCitiesML['uz'] || {};
+        const uzKeys = Object.keys(uzRegions);
+        const langRegions = Object.keys(regions);
+        const langIdx = langRegions.indexOf(region);
+        if (langIdx !== -1 && uzKeys[langIdx]) {
+          districts = uzRegions[uzKeys[langIdx]] || [];
+        }
+      }
       rebuildLocOptions('sf-district', districts, false);
       showLocationWrap('sf-district');
       updateLocationSteps('sf', 3);
@@ -5892,7 +6085,7 @@ function renderStatsRows(containerId, users, icon, label) {
   const el = document.getElementById(containerId);
   if (!el) return;
   if (!users || !users.length) {
-    el.innerHTML = '<div class="stats-empty">Hozircha ma\'lumot yo\'q 🙈</div>';
+    el.innerHTML = `<div class="stats-empty">${tr('no_one_found') || 'Hozircha ma\'lumot yo\'q'} 🙈</div>`;
     return;
   }
   const medals = ['🥇','🥈','🥉'];
@@ -5904,13 +6097,13 @@ function renderStatsRows(containerId, users, icon, label) {
     const avaHtml = photo
       ? `<img class="stats-ava" src="${photo}" alt="" />`
       : `<div class="stats-ava-letter">${(u.full_name||'?')[0].toUpperCase()}</div>`;
-    const meta = [u.age ? u.age + ' yosh' : '', u.city || ''].filter(Boolean).join(' • ');
+    const meta = [u.age ? u.age + ' ' + tr('years_old') : '', u.city || ''].filter(Boolean).join(' • ');
     return `
       <div class="stats-row">
         ${medalHtml}
         ${avaHtml}
         <div class="stats-info">
-          <div class="stats-uname">${escapeHtml(u.full_name || 'Anonim')}</div>
+          <div class="stats-uname">${escapeHtml(u.full_name || tr('no_name') || 'Anonim')}</div>
           ${meta ? `<div class="stats-umeta">${escapeHtml(meta)}</div>` : ''}
         </div>
         <div class="stats-count-badge">${icon} ${u.count} ${label}</div>
@@ -5931,16 +6124,16 @@ async function openStatsModal() {
   try {
     const data = await apiPost('/api/stats/leaderboard', {});
     if (data.success) {
-      renderStatsRows('stats-active-list',     data.most_active,     '🔥', 'ta');
-      renderStatsRows('stats-likes-list',      data.top_liked,       '💙', 'like');
-      renderStatsRows('stats-superlikes-list', data.top_super_liked, '⭐', 'super like');
+      renderStatsRows('stats-active-list',     data.most_active,     '🔥', tr('count_pcs') || 'ta');
+      renderStatsRows('stats-likes-list',      data.top_liked,       '💙', tr('stats_likes') || 'like');
+      renderStatsRows('stats-superlikes-list', data.top_super_liked, '⭐', tr('stats_superlikes') || 'super like');
     } else {
-      const errHtml = '<div class="stats-error">❌ Ma\'lumot yuklanmadi</div>';
+      const errHtml = `<div class="stats-error">❌ ${tr('server_error') || 'Ma\'lumot yuklanmadi'}</div>`;
       ['stats-active-list','stats-likes-list','stats-superlikes-list']
         .forEach(id => { const e = document.getElementById(id); if (e) e.innerHTML = errHtml; });
     }
   } catch(e) {
-    const errHtml = '<div class="stats-error">❌ Internet aloqasini tekshiring</div>';
+    const errHtml = `<div class="stats-error">❌ ${tr('check_internet') || 'Internet aloqasini tekshiring'}</div>`;
     ['stats-active-list','stats-likes-list','stats-superlikes-list']
       .forEach(id => { const el = document.getElementById(id); if (el) el.innerHTML = errHtml; });
   }
@@ -6005,10 +6198,10 @@ async function loadMiniStats() {
       _miniStatsData = data;
       renderTopPanelTab(_topPanelTab);
     } else {
-      body.innerHTML = '<div class="stats-mini-empty">Ma\'lumot yuklanmadi</div>';
+      body.innerHTML = `<div class="stats-mini-empty">${tr('server_error') || 'Ma\'lumot yuklanmadi'}</div>`;
     }
   } catch(e) {
-    body.innerHTML = '<div class="stats-mini-empty">Internet aloqasini tekshiring</div>';
+    body.innerHTML = `<div class="stats-mini-empty">${tr('check_internet') || 'Internet aloqasini tekshiring'}</div>`;
   }
 }
 
@@ -6019,7 +6212,7 @@ function renderTopPanelTab(tab) {
   const medals = ['🥇','🥈','🥉'];
 
   function buildRows(users, icon, label) {
-    if (!users || !users.length) return '<div class="stats-mini-empty">Hozircha ma\'lumot yo\'q 🙈</div>';
+    if (!users || !users.length) return `<div class="stats-mini-empty">${tr('no_one_found') || 'Hozircha ma\'lumot yo\'q'} 🙈</div>`;
     return users.slice(0, 10).map((u, i) => {
       const rankHtml = i < 3
         ? `<span class="stats-mini-rank">${medals[i]}</span>`
@@ -6028,11 +6221,11 @@ function renderTopPanelTab(tab) {
       const avaHtml = photo
         ? `<img class="stats-mini-ava" src="${photo}" alt="" />`
         : `<div class="stats-mini-ava-letter">${(u.full_name||'?')[0].toUpperCase()}</div>`;
-      const meta = [u.age ? u.age + ' yosh' : '', u.city || ''].filter(Boolean).join(' • ');
+      const meta = [u.age ? u.age + ' ' + tr('years_old') : '', u.city || ''].filter(Boolean).join(' • ');
       return `<div class="stats-mini-row">
         ${rankHtml}${avaHtml}
         <div class="stats-mini-info">
-          <div class="stats-mini-name">${escapeHtml(u.full_name || 'Anonim')}</div>
+          <div class="stats-mini-name">${escapeHtml(u.full_name || tr('no_name') || 'Anonim')}</div>
           ${meta ? `<div class="stats-mini-meta">${escapeHtml(meta)}</div>` : ''}
         </div>
         <div class="stats-mini-badge">${icon} ${u.count} ${label}</div>
@@ -6041,11 +6234,11 @@ function renderTopPanelTab(tab) {
   }
 
   const configs = {
-    active:    { title: '🔥 Eng faol foydalanuvchilar TOP 10',      users: _miniStatsData.most_active,     icon: '🔥', label: 'ta' },
-    likes:     { title: '💙 Eng ko\'p like to\'plaganlar TOP 10',    users: _miniStatsData.top_liked,       icon: '💙', label: 'like' },
-    superlikes:{ title: '⭐ Eng ko\'p super like to\'plaganlar TOP 10', users: _miniStatsData.top_super_liked, icon: '⭐', label: 'super like' },
-    champion:  { title: '🏆 Mutloq chempion anketalar',             users: _miniStatsData.top_liked,       icon: '🏆', label: 'ball' },
-  };
+      active:    { title: `🔥 ${tr('stats_active') || 'Faollar'} TOP 10`,      users: _miniStatsData.most_active,     icon: '🔥', label: tr('count_pcs') || 'ta' },
+      likes:     { title: `💙 ${tr('stats_likes') || 'Like'} TOP 10`,           users: _miniStatsData.top_liked,       icon: '💙', label: tr('stats_likes') || 'like' },
+      superlikes:{ title: `⭐ ${tr('stats_superlikes') || 'Super'} TOP 10`,      users: _miniStatsData.top_super_liked, icon: '⭐', label: tr('stats_superlikes') || 'super like' },
+      champion:  { title: `🏆 ${tr('champions_title') || 'Mutloq chempion'}`,   users: _miniStatsData.top_liked,       icon: '🏆', label: tr('count_pcs') || 'ball' },
+    };
 
   const cfg = configs[tab] || configs.active;
 
@@ -6082,14 +6275,14 @@ function renderMiniStatsTab(tab) {
   if (!body || !_miniStatsData) return;
   let users, icon, label;
   if (tab === 'active') {
-    users = _miniStatsData.most_active; icon = '🔥'; label = 'ta';
+    users = _miniStatsData.most_active; icon = '🔥'; label = tr('count_pcs') || 'ta';
   } else if (tab === 'likes') {
-    users = _miniStatsData.top_liked; icon = '💙'; label = 'like';
+    users = _miniStatsData.top_liked; icon = '💙'; label = tr('stats_likes') || 'like';
   } else {
-    users = _miniStatsData.top_super_liked; icon = '⭐'; label = 'super like';
+    users = _miniStatsData.top_super_liked; icon = '⭐'; label = tr('stats_superlikes') || 'super like';
   }
   if (!users || !users.length) {
-    body.innerHTML = '<div class="stats-mini-empty">Hozircha ma\'lumot yo\'q 🙈</div>';
+    body.innerHTML = `<div class="stats-mini-empty">${tr('no_one_found') || 'Hozircha ma\'lumot yo\'q'} 🙈</div>`;
     return;
   }
   const medals = ['🥇','🥈','🥉'];
@@ -6101,12 +6294,12 @@ function renderMiniStatsTab(tab) {
     const avaHtml = photo
       ? `<img class="stats-mini-ava" src="${photo}" alt="" />`
       : `<div class="stats-mini-ava-letter">${(u.full_name||'?')[0].toUpperCase()}</div>`;
-    const meta = [u.age ? u.age + ' yosh' : '', u.city || ''].filter(Boolean).join(' • ');
+    const meta = [u.age ? u.age + ' ' + tr('years_old') : '', u.city || ''].filter(Boolean).join(' • ');
     return `<div class="stats-mini-row">
       ${rankHtml}
       ${avaHtml}
       <div class="stats-mini-info">
-        <div class="stats-mini-name">${escapeHtml(u.full_name || 'Anonim')}</div>
+        <div class="stats-mini-name">${escapeHtml(u.full_name || tr('no_name') || 'Anonim')}</div>
         ${meta ? `<div class="stats-mini-meta">${escapeHtml(meta)}</div>` : ''}
       </div>
       <div class="stats-mini-badge">${icon} ${u.count} ${label}</div>
