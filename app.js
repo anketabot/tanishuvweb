@@ -6202,6 +6202,9 @@ document.addEventListener('DOMContentLoaded', function() {
         name:    profile.full_name || profile.name || profile.first_name || '',
         age:     profile.age || '',
         city:    profile.city || '',
+        country: profile.country || '',
+        region:  profile.region || '',
+        district: profile.district || '',
         photo:   profile.photo_base64 || profile.photo_file_id || profile.photo || '',
         zodiac:  profile.zodiac || '',
         gender:  profile.gender || '',
@@ -6407,18 +6410,15 @@ function loadMpViewed(tab) {
     return;
   }
 
-  const zodiacEmojis = {
-    aries:'♈',taurus:'♉',gemini:'♊',cancer:'♋',leo:'♌',virgo:'♍',
-    libra:'♎',scorpio:'♏',sagittarius:'♐',capricorn:'♑',aquarius:'♒',pisces:'♓'
-  };
-
   let html = '<div style="display:flex;flex-direction:column;gap:6px;padding:4px 0;">';
   items.slice(0, 50).forEach((u) => {
     const photoHtml = u.photo
       ? `<img src="${u.photo}" alt="" style="width:48px;height:48px;border-radius:50%;object-fit:cover;flex-shrink:0;border:2px solid var(--glass-border);" />`
       : `<div style="width:48px;height:48px;border-radius:50%;background:var(--bg-secondary);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;">${u.gender==='ayol'?'👩':'👨'}</div>`;
-    const zodiacStr = u.zodiac ? ` • ${zodiacEmojis[u.zodiac]||''} ${u.zodiac}` : '';
-    const meta = [u.age ? u.age + ' ' + tr('years_old') : '', u.city || ''].filter(Boolean).join(' • ') + zodiacStr;
+    const zodiacStr = u.zodiac ? ` • ${getZodiacDisplay(u.zodiac)}` : '';
+    const locationParts = [u.city, u.region, u.country].filter(Boolean);
+    const metaLocation = locationParts.join(' • ') || '';
+    const meta = [u.age ? u.age + ' ' + tr('years_old') : '', metaLocation].filter(Boolean).join(' • ') + zodiacStr;
     html += `
       <div onclick="openViewedProfile(${u.id},'${tab}')"
            style="display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:14px;cursor:pointer;background:var(--glass-bg);border:1px solid var(--glass-border);"
@@ -6451,11 +6451,12 @@ function openViewedProfile(id, tab) {
   const body  = document.getElementById('profile-modal-body');
   if (!modal || !body) return;
 
-  const zodiacEmojis = {
-    aries:'♈',taurus:'♉',gemini:'♊',cancer:'♋',leo:'♌',virgo:'♍',
-    libra:'♎',scorpio:'♏',sagittarius:'♐',capricorn:'♑',aquarius:'♒',pisces:'♓'
-  };
-  const zodiacLabel = u.zodiac ? `${zodiacEmojis[u.zodiac]||''} ${u.zodiac}` : '';
+  const zodiacLabel = u.zodiac ? getZodiacDisplay(u.zodiac) : '';
+
+  // To'liq manzilni qurish: shahar • viloyat • davlat
+  const locationParts = [u.city, u.region, u.country].filter(Boolean);
+  const fullLocation = locationParts.join(' • ');
+
   const photoHtml = u.photo
     ? `<img src="${u.photo}" alt="" style="width:100%;max-height:300px;object-fit:cover;border-radius:16px 16px 0 0;cursor:zoom-in;" onclick="openPhotoViewer('${escapeJs(u.photo)}','${escapeJs(u.name||'')}')" />`
     : `<div style="width:100%;height:180px;border-radius:16px 16px 0 0;background:var(--bg-secondary);display:flex;align-items:center;justify-content:center;font-size:80px;">${u.gender==='ayol'?'👩':'👨'}</div>`;
@@ -6466,7 +6467,7 @@ function openViewedProfile(id, tab) {
       <div style="font-size:22px;font-weight:800;margin-bottom:10px;">
         ${escapeHtml(u.name || tr('no_name'))}${u.age ? ', ' + u.age : ''}
       </div>
-      ${u.city ? `<div style="font-size:14px;color:var(--text-secondary);margin-bottom:6px;">📍 ${escapeHtml(u.city)}</div>` : ''}
+      ${fullLocation ? `<div style="font-size:14px;color:var(--text-secondary);margin-bottom:6px;">📍 ${escapeHtml(fullLocation)}</div>` : (u.city ? `<div style="font-size:14px;color:var(--text-secondary);margin-bottom:6px;">📍 ${escapeHtml(u.city)}</div>` : '')}
       ${zodiacLabel ? `<div style="font-size:14px;color:var(--text-secondary);margin-bottom:6px;">✨ ${escapeHtml(zodiacLabel)}</div>` : ''}
       <div style="margin-top:16px;display:flex;gap:8px;">
         <button onclick="sendLike(${u.id});closeProfileModal();"
