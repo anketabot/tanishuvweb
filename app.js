@@ -2516,7 +2516,7 @@ function detectTelegramLanguage() {
         return;
       }
     }
-    showToast('Xatolik: ma\'lumot juda uzun.');
+    showToast(tr('data_too_long'));
   }
 
   const ICONS = {
@@ -2878,7 +2878,7 @@ function detectTelegramLanguage() {
         loadChats();
         openChatRoom(likeData.match_id, savedName, savedPhoto);
       } else {
-        showToast('✅ Match! Chat bo\'limidan davom eting.');
+        showToast('✅ ' + tr('match_subtitle'));
         loadChats();
       }
       return;
@@ -3595,7 +3595,7 @@ function detectTelegramLanguage() {
         updatePhotoUploadState(tr('person_confirmed_uploading'), false);
         proceedWithPhotoPreview(file);
       } else {
-        showToast('Rasmda inson topilmadi. Iltimos, o\'zingizni ko\'rsatadigan rasm tanlang.');
+        showToast(tr('no_person_in_image'));
         input.value = '';
         photoBase64 = '';
         photoReady = false;
@@ -3604,7 +3604,7 @@ function detectTelegramLanguage() {
       }
     } catch (err) {
       console.error('COCO-SSD tekshiruvi xatolik:', err);
-      showToast('Rasm tekshirishda xatolik. Internet aloqasini tekshiring va qayta urinib ko\'ring.');
+      showToast(tr('image_check_error'));
       input.value = '';
       photoBase64 = '';
       photoReady = false;
@@ -3754,7 +3754,7 @@ function detectTelegramLanguage() {
     });
     let empty = container.querySelector('.loc-options-empty');
     if (!found) {
-      if (!empty) { empty = document.createElement('div'); empty.className = 'loc-options-empty'; empty.textContent = 'Natija topilmadi'; container.appendChild(empty); }
+      if (!empty) { empty = document.createElement('div'); empty.className = 'loc-options-empty'; empty.textContent = tr('no_one_found'); container.appendChild(empty); }
       empty.style.display = '';
     } else if (empty) {
       empty.style.display = 'none';
@@ -4348,7 +4348,7 @@ function detectTelegramLanguage() {
       if (panelBody) {
         panelBody.innerHTML = `<div class="empty-state"><div class="empty-icon">${ICONS.alert}</div><h3>${tr('server_error')}</h3><p>${tr('check_internet')}</p><button class="btn-primary" style="margin-top:16px;padding:12px 24px;border-radius:999rem;" onclick="closeSearchResultsModal();setTimeout(doSearch,300)">🔄 ${tr('retry_btn')}</button></div>`;
       }
-      showToast('Server bilan aloqa yo\'q');
+      showToast(tr('server_error'));
     }
   }
 
@@ -4451,7 +4451,7 @@ function detectTelegramLanguage() {
   }
 
   function tinderBackModal() {
-    if (tinderHistory.length === 0) { showToast('Orqaga qaytish imkoni yo\'q'); return; }
+    if (tinderHistory.length === 0) { showToast(tr('cannot_go_back')); return; }
     tinderIndex = tinderHistory.pop();
     renderTinderCardInModal();
   }
@@ -4528,7 +4528,7 @@ function detectTelegramLanguage() {
         if (resultsEl) resultsEl.style.display = 'block';
       }
     } catch (error) {
-      showToast('Server bilan aloqa yo\'q');
+      showToast(tr('server_error'));
       if (swipeContainer) {
         swipeContainer.innerHTML = `<div class="empty-state"><div class="empty-icon">${ICONS.alert}</div><h3>${tr('cannot_connect')}</h3><p>${tr('check_internet')}</p></div>`;
       }
@@ -4837,7 +4837,7 @@ function detectTelegramLanguage() {
       loadPendingLikesIndicator();
       openIncomingLikesModal();
     } else {
-      showToast('Xatolik yuz berdi. Iltimos qayta urinib ko\'ring.');
+      showToast(tr('error_retry'));
     }
   }
 
@@ -4856,7 +4856,7 @@ function detectTelegramLanguage() {
       <div class="profile-photo">${photoHtml}</div>
       <div class="profile-info">
         <div class="profile-name"><span style="display:inline-flex;vertical-align:middle;margin-right:6px;">${icon}</span> ${u.full_name}</div>
-        <div class="profile-age-city">Yosh: ${u.age} &nbsp;•&nbsp; ${locationLabel || tr('no_city')}${u.zodiac ? ' • ' + getZodiacDisplay(u.zodiac) : ''}</div>
+        <div class="profile-age-city">${tr('age')}: ${u.age} &nbsp;•&nbsp; ${locationLabel || tr('no_city')}${u.zodiac ? ' • ' + getZodiacDisplay(u.zodiac) : ''}</div>
         ${u.about ? `<div class="profile-bio" style="margin-top:6px;color:var(--text-secondary);font-size:13px;line-height:1.4;">${escapeHtml(u.about)}</div>` : ''}
         <div class="profile-tags" style="margin-top:8px;">${goals}${interests}</div>
       </div>
@@ -4895,7 +4895,7 @@ function detectTelegramLanguage() {
     const toUser = Number(toUserId);
 
     if (!Number.isFinite(fromUserId) || fromUserId <= 0) {
-      showToast('Avval profilingizni to\'ldiring');
+      showToast(tr('fill_profile_first'));
       return;
     }
     if (!Number.isFinite(toUser) || toUser <= 0) {
@@ -4942,7 +4942,7 @@ function detectTelegramLanguage() {
         showToast(tr('like_sent'));
       }
     } else {
-      showToast('Xatolik: ' + (data.error || 'Noma\'lum'));
+      showToast(tr('error_prefix') + (data.error || tr('unknown_error')));
     }
   }
 
@@ -5000,7 +5000,7 @@ function detectTelegramLanguage() {
     const goals = (u.goals || []).map(g => `<span class="tag">${tr(g) || g}</span>`).join('');
     const visibleInterests = (u.interests || []).slice(0, MAX_INTERESTS_ALLOWED);
     const interests = (u.interests || []).slice(0, MAX_INTERESTS_ALLOWED).map(i => `<span class="tag" style="background:rgba(0,122,255,0.10);color:var(--ios-blue);">${tr(i) || i}</span>`).join('');
-    const aboutText = (u.about || '').trim() || 'Bu foydalanuvchi o\'z maqsadi va qiziqishlarini ko\'rsatib ketgan.';
+    const aboutText = (u.about || '').trim() || tr('default_about');
     const photoHtml = photo
       ? `<div class="profile-detail-photo-wrap"><img src="${photo}" alt="${u.full_name}" onclick="openPhotoViewer('${escapeJs(photo)}','${escapeJs(u.full_name)}')" /></div>`
       : '';
@@ -5009,15 +5009,15 @@ function detectTelegramLanguage() {
       <article class="profile-detail-shell">
         ${photoHtml}
         <section class="profile-detail-card">
-          <div class="profile-detail-badge">${u.gender === 'erkak' ? 'Erkak' : 'Ayol'} • ${u.age} yosh</div>
+          <div class="profile-detail-badge">${u.gender === 'erkak' ? tr('male') : tr('female')} • ${u.age} ${tr('years_old')}</div>
           <div class="profile-detail-title">${icon} ${u.full_name}</div>
           <div class="profile-detail-meta">📍 ${profileLocation}${u.zodiac ? ' • ' + getZodiacDisplay(u.zodiac) : ''}</div>
           <div class="profile-detail-section">
             <div class="profile-detail-label">${tr('about_me')}</div>
             <p class="profile-detail-summary">${escapeHtml(aboutText)}</p>
           </div>
-          ${showTags ? `<div class="profile-detail-section"><div class="profile-detail-label">${tr('goals_label')}</div><div class="chip-row">${goals || '<span class="muted-chip">Ko\'rsatilmagan</span>'}</div></div>` : ''}
-          ${showTags ? `<div class="profile-detail-section"><div class="profile-detail-label">${tr('interests_label')}</div><div class="chip-row">${interests || '<span class="muted-chip">Ko\'rsatilmagan</span>'}</div><div class="muted-chip" style="margin-top:6px;">Maksimal 5 ta qiziqish ko\'rsatiladi.</div></div>` : ''}
+          ${showTags ? `<div class="profile-detail-section"><div class="profile-detail-label">${tr('goals_label')}</div><div class="chip-row">${goals || `<span class="muted-chip">${tr('not_specified')}</span>`}</div></div>` : ''}
+          ${showTags ? `<div class="profile-detail-section"><div class="profile-detail-label">${tr('interests_label')}</div><div class="chip-row">${interests || `<span class="muted-chip">${tr('not_specified')}</span>`}</div><div class="muted-chip" style="margin-top:6px;">${tr('max_interests_display')}</div></div>` : ''}
         </section>
         <div class="profile-action-grid">
           <button class="action-btn btn-like" onclick="sendLike(${u.telegram_id}); closeProfileModal();">
@@ -6431,7 +6431,7 @@ function openViewedProfile(id, tab) {
     if (raw) items = JSON.parse(raw);
   } catch(e) {}
   const u = items.find(x => x.id == id);
-  if (!u) { showToast('Anketa topilmadi'); return; }
+  if (!u) { showToast(tr('profile_not_found')); return; }
 
   const modal = document.getElementById('profile-modal');
   const body  = document.getElementById('profile-modal-body');
