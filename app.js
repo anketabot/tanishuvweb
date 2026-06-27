@@ -276,6 +276,12 @@ const tg = window.Telegram?.WebApp;
           'you_rejected': 'Siz {name} ni rad qildingiz.',
           'error_retry': 'Xatolik yuz berdi. Iltimos qayta urinib ko\'ring.',
           'age_label': 'Yosh',
+          'loc_select_country': '— Tanlang —',
+          'loc_select_region': '— Viloyatni tanlang —',
+          'loc_select_district': '— Tumanni tanlang —',
+          'loc_all_countries': '— Barcha davlatlar —',
+          'loc_all_regions': '— Barcha viloyatlar —',
+          'loc_all_districts': '— Barcha tumanlar —',
           'no_city': 'Shahar ko\'rsatilmagan',
           'message': 'Xabar',
           'block': 'Blok',
@@ -562,6 +568,12 @@ const tg = window.Telegram?.WebApp;
           'you_rejected': 'Вы отклонили {name}.',
           'error_retry': 'Произошла ошибка. Пожалуйста, попробуйте снова.',
           'age_label': 'Возраст',
+          'loc_select_country': '— Выберите страну —',
+          'loc_select_region': '— Выберите область —',
+          'loc_select_district': '— Выберите район —',
+          'loc_all_countries': '— Все страны —',
+          'loc_all_regions': '— Все области —',
+          'loc_all_districts': '— Все районы —',
           'no_city': 'Город не указан',
           'message': 'Сообщение',
           'block': 'Блок',
@@ -847,6 +859,12 @@ const tg = window.Telegram?.WebApp;
           'you_rejected': 'Сіз {name} бас тарттыңыз.',
           'error_retry': 'Қате орын алды. Өтінеміз, қайта байқап көріңіз.',
           'age_label': 'Жасы',
+          'loc_select_country': '— Таңдаңыз —',
+          'loc_select_region': '— Облысты таңдаңыз —',
+          'loc_select_district': '— Ауданды таңдаңыз —',
+          'loc_all_countries': '— Барлық елдер —',
+          'loc_all_regions': '— Барлық облыстар —',
+          'loc_all_districts': '— Барлық аудандар —',
           'no_city': 'Қала көрсетілмеген',
           'message': 'Хабар',
           'block': 'Блок',
@@ -1132,6 +1150,12 @@ const tg = window.Telegram?.WebApp;
           'you_rejected': 'Сиз {name} баш тарттыңыз.',
           'error_retry': 'Ката кетти. Сураныч, кайра аракет кылыңыз.',
           'age_label': 'Жашы',
+          'loc_select_country': '— Тандаңыз —',
+          'loc_select_region': '— Облусту тандаңыз —',
+          'loc_select_district': '— Районду тандаңыз —',
+          'loc_all_countries': '— Бардык өлкөлөр —',
+          'loc_all_regions': '— Бардык облустар —',
+          'loc_all_districts': '— Бардык райондор —',
           'no_city': 'Шаар көрсөтүлгөн эмес',
           'message': 'Билдирүү',
           'block': 'Блок',
@@ -1417,6 +1441,12 @@ const tg = window.Telegram?.WebApp;
           'you_rejected': 'Siz {name} biykar ettińiz.',
           'error_retry': 'Qátelik júz berdi. Ótinem, qayta urınıp kóriń.',
           'age_label': 'Jası',
+          'loc_select_country': '— Tańlaň —',
+          'loc_select_region': '— Wılayattı tańlaň —',
+          'loc_select_district': '— Rayondı tańlaň —',
+          'loc_all_countries': '— Barlıq mámleketler —',
+          'loc_all_regions': '— Barlıq wılayatlar —',
+          'loc_all_districts': '— Barlıq rayonlar —',
           'no_city': 'Qala kórsetilmegen',
           'message': 'Xabar',
           'block': 'Blok',
@@ -1702,6 +1732,12 @@ const tg = window.Telegram?.WebApp;
           'you_rejected': 'Шумо {name} рад кардед.',
           'error_retry': 'Хатогӣ рӯй дод. Лутфан, боз кӯшиш кунед.',
           'age_label': 'Синн',
+          'loc_select_country': '— Интихоб кунед —',
+          'loc_select_region': '— Вилоятро интихоб кунед —',
+          'loc_select_district': '— Ноҳияро интихоб кунед —',
+          'loc_all_countries': '— Ҳама кишварҳо —',
+          'loc_all_regions': '— Ҳама вилоятҳо —',
+          'loc_all_districts': '— Ҳама ноҳияҳо —',
           'no_city': 'Шаҳр нишон дода нашудааст',
           'message': 'Паём',
           'block': 'Блок',
@@ -1987,6 +2023,12 @@ const tg = window.Telegram?.WebApp;
           'you_rejected': 'You rejected {name}.',
           'error_retry': 'An error occurred. Please try again.',
           'age_label': 'Age',
+          'loc_select_country': '— Select country —',
+          'loc_select_region': '— Select region —',
+          'loc_select_district': '— Select district —',
+          'loc_all_countries': '— All countries —',
+          'loc_all_regions': '— All regions —',
+          'loc_all_districts': '— All districts —',
           'no_city': 'City not specified',
           'message': 'Message',
           'block': 'Block',
@@ -2162,6 +2204,86 @@ const tg = window.Telegram?.WebApp;
               }
           }
       });
+
+      // Til o'zgarganda location dropdownlarni joriy tilda qayta qurish
+      refreshLocationDropdownsForLang();
+  }
+
+  // Til o'zgarganda location dropdownlarni qayta qurish
+  function refreshLocationDropdownsForLang() {
+    if (!uzbekCitiesML) return;
+    const lang = currentLang || 'uz';
+
+    // Trigger placeholder larini yangi tilda yangilash
+    const placeholders = {
+      'inp-country':  tr('loc_select_country')  || '— Tanlang —',
+      'inp-region':   tr('loc_select_region')   || '— Viloyatni tanlang —',
+      'inp-district': tr('loc_select_district') || '— Tumanni tanlang —',
+      'sf-country':   tr('loc_all_countries')   || '— Barcha davlatlar —',
+      'sf-region':    tr('loc_all_regions')     || '— Barcha viloyatlar —',
+      'sf-district':  tr('loc_all_districts')   || '— Barcha tumanlar —',
+    };
+    Object.entries(placeholders).forEach(([id, ph]) => {
+      const valEl = document.getElementById(id + '-trigger-val');
+      if (valEl && valEl.classList.contains('placeholder')) valEl.textContent = ph;
+    });
+
+    // Viloyat trigger matnini joriy tilda ko'rsatish
+    ['inp-region', 'sf-region'].forEach(id => {
+      const native = document.getElementById(id);
+      if (!native || !native.value) return;
+      const valEl = document.getElementById(id + '-trigger-val');
+      if (!valEl) return;
+      // native.value o'zbekcha bo'lishi mumkin — uni joriy tilda ko'rsatamiz
+      const uzRegions = Object.keys(uzbekCitiesML['uz'] || {});
+      const langRegions = Object.keys(uzbekCitiesML[lang] || {});
+      const idx = uzRegions.indexOf(native.value);
+      // native.value allaqachon joriy tilda bo'lishi ham mumkin — indeks bo'yicha check
+      const langIdx = langRegions.indexOf(native.value);
+      if (idx !== -1 && langRegions[idx]) {
+        valEl.textContent = langRegions[idx];
+      } else if (langIdx !== -1) {
+        // already in current lang
+      }
+    });
+
+    // Viloyat dropdown ochiq bo'lsa options ni qayta qur
+    ['inp-region', 'sf-region'].forEach(id => {
+      const wrap = document.getElementById(id + '-wrap');
+      if (!wrap || wrap.style.display === 'none') return;
+      const native = document.getElementById(id);
+      const currentVal = native ? native.value : '';
+      const regions = getUzbekRegions(); // endi joriy tilda
+      const opts = Object.keys(regions);
+      rebuildLocOptions(id, opts, true);
+      // Avvalgi tanlovni qayta belgilash
+      if (currentVal) {
+        // currentVal eski tilda bo'lishi mumkin — mosini topamiz
+        document.querySelectorAll(`#${id}-opts .loc-option`).forEach(o => {
+          o.classList.toggle('selected', o.dataset.value === currentVal);
+        });
+      }
+    });
+
+    // Tuman dropdown options ni ham qayta qur
+    ['inp-district', 'sf-district'].forEach(id => {
+      const wrap = document.getElementById(id + '-wrap');
+      if (!wrap || wrap.style.display === 'none') return;
+      const regionId = id.replace('district', 'region');
+      const regionNative = document.getElementById(regionId);
+      if (!regionNative || !regionNative.value) return;
+      const regions = getUzbekRegions();
+      const districts = regions[regionNative.value] || [];
+      if (!districts.length) return;
+      const native = document.getElementById(id);
+      const currentVal = native ? native.value : '';
+      rebuildLocOptions(id, districts, false);
+      if (currentVal) {
+        document.querySelectorAll(`#${id}-opts .loc-option`).forEach(o => {
+          o.classList.toggle('selected', o.dataset.value === currentVal);
+        });
+      }
+    });
   }
 
   // Joriy faol sahifadagi dinamik matnlarni til o'zgarganda yangilash
@@ -3482,9 +3604,57 @@ function detectTelegramLanguage() {
 
   // ========== REGION SELECTOR FUNCTIONS ==========
   // O'zbekiston viloyatlari va tumanlari (regions.json dan)
+  // Joriy til uchun viloyatlar qaytaradi
   function getUzbekRegions() {
     if (!uzbekCitiesML) return {};
-    return uzbekCitiesML['uz'] || {};
+    const lang = currentLang || 'uz';
+    return uzbekCitiesML[lang] || uzbekCitiesML['uz'] || {};
+  }
+
+  // O'zbekcha nom → joriy tildagi nom
+  function translateRegionName(uzName) {
+    if (!uzbekCitiesML || !uzName) return uzName;
+    const lang = currentLang || 'uz';
+    if (lang === 'uz') return uzName;
+    const uzKeys = Object.keys(uzbekCitiesML['uz'] || {});
+    const langKeys = Object.keys(uzbekCitiesML[lang] || {});
+    const idx = uzKeys.indexOf(uzName);
+    if (idx !== -1 && langKeys[idx]) return langKeys[idx];
+    return uzName;
+  }
+
+  // O'zbekcha tuman nomi → joriy tildagi tuman nomi
+  function translateDistrictName(uzRegion, uzDistrict) {
+    if (!uzbekCitiesML || !uzRegion || !uzDistrict) return uzDistrict;
+    const lang = currentLang || 'uz';
+    if (lang === 'uz') return uzDistrict;
+    const uzKeys = Object.keys(uzbekCitiesML['uz'] || {});
+    const langKeys = Object.keys(uzbekCitiesML[lang] || {});
+    const idx = uzKeys.indexOf(uzRegion);
+    if (idx === -1 || !langKeys[idx]) return uzDistrict;
+    const uzDistricts = uzbekCitiesML['uz'][uzRegion] || [];
+    const langDistricts = uzbekCitiesML[lang][langKeys[idx]] || [];
+    const dIdx = uzDistricts.indexOf(uzDistrict);
+    if (dIdx !== -1 && langDistricts[dIdx]) return langDistricts[dIdx];
+    return uzDistrict;
+  }
+
+  // city maydoni (o'zbekcha) → joriy tilda chiroyli ko'rsatish
+  // city formati: "Tuman, Viloyat" yoki "Viloyat" yoki "Davlat"
+  function translateCityLabel(city = '') {
+    if (!city) return city;
+    const lang = currentLang || 'uz';
+    if (lang === 'uz') return city;
+    const parts = city.split(',').map(s => s.trim());
+    if (parts.length === 2) {
+      // "Yunusobod tumani, Toshkent shahri"
+      const [district, region] = parts;
+      return translateDistrictName(region, district) + ', ' + translateRegionName(region);
+    } else if (parts.length === 1) {
+      // "Toshkent viloyati" yoki "Rossiya"
+      return translateRegionName(parts[0]);
+    }
+    return city;
   }
 
   function populateRegions(selectId, regions) {
@@ -3725,35 +3895,34 @@ function detectTelegramLanguage() {
   function initLocationDropdowns() {
     // ── Anketa sahifasi ──────────────────────────────
     buildLocDropdown('inp-country', {
-      type: 'country', emoji: '🌍', label: 'Davlat', placeholder: '— Tanlang —',
+      type: 'country', emoji: '🌍', label: 'Davlat', placeholder: tr('loc_select_country') || '— Tanlang —',
       options: COUNTRIES,
       onChange: (val) => { document.getElementById('inp-country').value = val; onCountryChange(); }
     });
     buildLocDropdown('inp-region', {
-      type: 'region', emoji: '🗺️', label: 'Viloyat', placeholder: '— Viloyatni tanlang —',
+      type: 'region', emoji: '🗺️', label: 'Viloyat', placeholder: tr('loc_select_region') || '— Viloyatni tanlang —',
       options: [],
       onChange: (val) => { document.getElementById('inp-region').value = val; onRegionChange(); }
     });
     buildLocDropdown('inp-district', {
-      type: 'district', emoji: '📍', label: 'Tuman / Shahar', placeholder: '— Tumanni tanlang —',
+      type: 'district', emoji: '📍', label: 'Tuman / Shahar', placeholder: tr('loc_select_district') || '— Tumanni tanlang —',
       options: [],
       onChange: (val) => { document.getElementById('inp-district').value = val; onDistrictChange(); }
     });
 
     // ── Qidiruv sahifasi ─────────────────────────────
-    const sfCountryPlaceholder = '— Barcha davlatlar —';
     buildLocDropdown('sf-country', {
-      type: 'country', emoji: '🌍', label: 'Davlat', placeholder: sfCountryPlaceholder,
+      type: 'country', emoji: '🌍', label: 'Davlat', placeholder: tr('loc_all_countries') || '— Barcha davlatlar —',
       options: [{ value: '', label: 'Barcha davlatlar', flag: '🌐' }, ...COUNTRIES],
       onChange: (val) => { document.getElementById('sf-country').value = val; onSearchCountryChange(); }
     });
     buildLocDropdown('sf-region', {
-      type: 'region', emoji: '🗺️', label: 'Viloyat', placeholder: '— Barcha viloyatlar —',
+      type: 'region', emoji: '🗺️', label: 'Viloyat', placeholder: tr('loc_all_regions') || '— Barcha viloyatlar —',
       options: [],
       onChange: (val) => { document.getElementById('sf-region').value = val; onSearchRegionChange(); }
     });
     buildLocDropdown('sf-district', {
-      type: 'district', emoji: '📍', label: 'Tuman / Shahar', placeholder: '— Barcha tumanlar —',
+      type: 'district', emoji: '📍', label: 'Tuman / Shahar', placeholder: tr('loc_all_districts') || '— Barcha tumanlar —',
       options: [],
       onChange: (val) => { document.getElementById('sf-district').value = val; }
     });
@@ -4676,7 +4845,7 @@ function detectTelegramLanguage() {
       <div class="profile-photo">${photoHtml}</div>
       <div class="profile-info">
         <div class="profile-name"><span style="display:inline-flex;vertical-align:middle;margin-right:6px;">${icon}</span> ${u.full_name}</div>
-        <div class="profile-age-city">Yosh: ${u.age} &nbsp;•&nbsp; ${locationLabel || 'Shahar ko\'rsatilmagan'}${u.zodiac ? ' • ' + getZodiacDisplay(u.zodiac) : ''}</div>
+        <div class="profile-age-city">Yosh: ${u.age} &nbsp;•&nbsp; ${locationLabel || tr('no_city')}${u.zodiac ? ' • ' + getZodiacDisplay(u.zodiac) : ''}</div>
         ${u.about ? `<div class="profile-bio" style="margin-top:6px;color:var(--text-secondary);font-size:13px;line-height:1.4;">${escapeHtml(u.about)}</div>` : ''}
         <div class="profile-tags" style="margin-top:8px;">${goals}${interests}</div>
       </div>
@@ -4816,7 +4985,7 @@ function detectTelegramLanguage() {
     const icon = u.gender === 'erkak' ? ICONS.male : ICONS.female;
     const photo = u.photo || u.photo_file_id || u.photo_base64;
     const locationLabel = formatLocationLabel(u.city || '');
-    const profileLocation = locationLabel || (u.city || 'Joy ko\'rsatilmagan');
+    const profileLocation = locationLabel || (u.city ? translateCityLabel(u.city) : tr('no_city'));
     const goals = (u.goals || []).map(g => `<span class="tag">${tr(g) || g}</span>`).join('');
     const visibleInterests = (u.interests || []).slice(0, MAX_INTERESTS_ALLOWED);
     const interests = (u.interests || []).slice(0, MAX_INTERESTS_ALLOWED).map(i => `<span class="tag" style="background:rgba(0,122,255,0.10);color:var(--ios-blue);">${tr(i) || i}</span>`).join('');
@@ -4931,8 +5100,14 @@ function detectTelegramLanguage() {
   }
 
   function formatLocationLabel(city = '') {
-    const region = getCityRegion(city);
-    return region ? `${city} • ${region}` : city;
+    if (!city) return '';
+    // Avval tarjima qilamiz (joriy til uchun)
+    const translated = translateCityLabel(city);
+    // Keyin viloyatni qo'shamiz (agar yo'q bo'lsa)
+    if (translated.includes(',')) return translated; // allaqachon "tuman, viloyat" formati
+    const region = getCityRegion(city); // o'zbekcha region nomi
+    const translatedRegion = translateRegionName(region);
+    return translatedRegion ? `${translated} • ${translatedRegion}` : translated;
   }
 
   // ===== PROFILE HELPERS =====
