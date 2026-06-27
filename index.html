@@ -282,44 +282,19 @@
         <div class="location-step-dot" id="inp-step-3"></div>
       </div>
 
-      <!-- Davlat tanlash -->
+      <!-- Davlat tanlash — custom dropdown (buildLocDropdown tomonidan quriladi) -->
       <div class="location-select-wrap" id="inp-country-wrap">
-        <div class="location-select-icon location-select-icon--country">🌍</div>
-        <span class="location-select-label">Davlat</span>
-        <select class="region-select" id="inp-country" onchange="onCountryChange()">
-          <option value="">— Davlatni tanlang —</option>
-          <option value="Oʻzbekiston">🇺🇿 O'zbekiston</option>
-          <option value="Rossiya">🇷🇺 Rossiya</option>
-          <option value="Qozogʻiston">🇰🇿 Qozog'iston</option>
-          <option value="Qirgʻiziston">🇰🇬 Qirg'iziston</option>
-          <option value="Tojikiston">🇹🇯 Tojikiston</option>
-          <option value="Turkmaniston">🇹🇲 Turkmaniston</option>
-          <option value="Ozarbayjon">🇦🇿 Ozarbayjon</option>
-          <option value="Armaniston">🇦🇲 Armaniston</option>
-          <option value="Gruziya">🇬🇪 Gruziya</option>
-          <option value="Ukraina">🇺🇦 Ukraina</option>
-          <option value="Belarus">🇧🇾 Belarus</option>
-          <option value="Moldova">🇲🇩 Moldova</option>
-          <option value="Boshqa">🌍 Boshqa</option>
-        </select>
+        <input type="hidden" id="inp-country" />
       </div>
 
-      <!-- Viloyat tanlash (faqat O'zbekiston uchun) -->
+      <!-- Viloyat tanlash — custom dropdown -->
       <div class="location-select-wrap" id="inp-region-wrap" style="display:none;">
-        <div class="location-select-icon location-select-icon--region">🗺️</div>
-        <span class="location-select-label">Viloyat</span>
-        <select class="region-select" id="inp-region" onchange="onRegionChange()">
-          <option value="">— Viloyatni tanlang —</option>
-        </select>
+        <input type="hidden" id="inp-region" />
       </div>
 
-      <!-- Tuman tanlash -->
+      <!-- Tuman tanlash — custom dropdown -->
       <div class="location-select-wrap" id="inp-district-wrap" style="display:none;">
-        <div class="location-select-icon location-select-icon--district">📍</div>
-        <span class="location-select-label">Tuman / Shahar</span>
-        <select class="region-select" id="inp-district" onchange="onDistrictChange()">
-          <option value="">— Tumanni tanlang —</option>
-        </select>
+        <input type="hidden" id="inp-district" />
       </div>
 
       <!-- Yashirin city maydoni (backend uchun) -->
@@ -562,44 +537,19 @@
         <div class="location-step-dot" id="sf-step-3"></div>
       </div>
 
-      <!-- Qidiruv: Davlat -->
+      <!-- Qidiruv: Davlat — custom dropdown (buildLocDropdown tomonidan quriladi) -->
       <div class="location-select-wrap" id="sf-country-wrap">
-        <div class="location-select-icon location-select-icon--country">🌍</div>
-        <span class="location-select-label">Davlat</span>
-        <select class="region-select" id="sf-country" onchange="onSearchCountryChange()">
-          <option value="">— Barcha davlatlar —</option>
-          <option value="Oʻzbekiston">🇺🇿 O'zbekiston</option>
-          <option value="Rossiya">🇷🇺 Rossiya</option>
-          <option value="Qozogʻiston">🇰🇿 Qozog'iston</option>
-          <option value="Qirgʻiziston">🇰🇬 Qirg'iziston</option>
-          <option value="Tojikiston">🇹🇯 Tojikiston</option>
-          <option value="Turkmaniston">🇹🇲 Turkmaniston</option>
-          <option value="Ozarbayjon">🇦🇿 Ozarbayjon</option>
-          <option value="Armaniston">🇦🇲 Armaniston</option>
-          <option value="Gruziya">🇬🇪 Gruziya</option>
-          <option value="Ukraina">🇺🇦 Ukraina</option>
-          <option value="Belarus">🇧🇾 Belarus</option>
-          <option value="Moldova">🇲🇩 Moldova</option>
-          <option value="Boshqa">🌍 Boshqa</option>
-        </select>
+        <input type="hidden" id="sf-country" />
       </div>
 
-      <!-- Qidiruv: Viloyat (O'zbekiston uchun) -->
+      <!-- Qidiruv: Viloyat — custom dropdown -->
       <div class="location-select-wrap" id="sf-region-wrap" style="display:none;">
-        <div class="location-select-icon location-select-icon--region">🗺️</div>
-        <span class="location-select-label">Viloyat</span>
-        <select class="region-select" id="sf-region" onchange="onSearchRegionChange()">
-          <option value="">— Barcha viloyatlar —</option>
-        </select>
+        <input type="hidden" id="sf-region" />
       </div>
 
-      <!-- Qidiruv: Tuman -->
+      <!-- Qidiruv: Tuman — custom dropdown -->
       <div class="location-select-wrap" id="sf-district-wrap" style="display:none;">
-        <div class="location-select-icon location-select-icon--district">📍</div>
-        <span class="location-select-label">Tuman / Shahar</span>
-        <select class="region-select" id="sf-district">
-          <option value="">— Barcha tumanlar —</option>
-        </select>
+        <input type="hidden" id="sf-district" />
       </div>
 
       <!-- Yashirin city filter maydoni -->
