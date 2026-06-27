@@ -3343,10 +3343,66 @@ function detectTelegramLanguage() {
     }
   }
 
+  // overlay-root: backdrop-filter yo'q, hech narsa ustida
+  function getOverlayRoot() {
+    let root = document.getElementById('overlay-root');
+    if (!root) {
+      root = document.createElement('div');
+      root.id = 'overlay-root';
+      root.style.cssText = 'position:fixed;top:0;left:0;width:0;height:0;z-index:2147483647;pointer-events:none;';
+      document.body.appendChild(root);
+    }
+    return root;
+  }
+
+  // Panel ni overlay-root ga ko'chirib, trigger yoniga joylash
+  function positionPanel(menu, trigger) {
+    if (!menu || !trigger) return;
+
+    // overlay-root ga ko'chirish (backdrop-filter stacking muammosidan xalos)
+    const root = getOverlayRoot();
+    if (menu.parentElement !== root) {
+      root.appendChild(menu);
+    }
+
+    const rect = trigger.getBoundingClientRect();
+    const vw = window.innerWidth;
+    const vh = window.innerHeight;
+    const panelW = Math.min(Math.max(rect.width, 200), vw - 24);
+    const spaceBelow = vh - rect.bottom;
+    const spaceAbove = rect.top;
+
+    menu.style.position = 'fixed';
+    menu.style.zIndex = '2147483647';
+    menu.style.pointerEvents = 'auto';
+    menu.style.width = panelW + 'px';
+    menu.style.left = Math.max(12, Math.min(rect.left, vw - panelW - 12)) + 'px';
+
+    if (spaceBelow >= 260 || spaceBelow >= spaceAbove) {
+      menu.style.top = (rect.bottom + 6) + 'px';
+      menu.style.bottom = 'auto';
+      menu.style.maxHeight = Math.min(320, spaceBelow - 16) + 'px';
+    } else {
+      menu.style.top = 'auto';
+      menu.style.bottom = (vh - rect.top + 6) + 'px';
+      menu.style.maxHeight = Math.min(320, spaceAbove - 16) + 'px';
+    }
+    menu.style.overflowY = 'auto';
+  }
+
   function toggleZodiacMenu() {
     const menu = document.getElementById('zodiac-options');
+    const trigger = document.getElementById('zodiac-picker-toggle');
     if (!menu) return;
-    menu.style.display = menu.style.display === 'none' ? 'grid' : 'none';
+
+    const isOpen = menu.style.display !== 'none' && menu.style.display !== '';
+    if (isOpen) {
+      menu.style.display = 'none';
+    } else {
+      if (menu.parentElement !== document.body) document.body.appendChild(menu);
+      menu.style.display = 'grid';
+      positionPanel(menu, trigger);
+    }
   }
 
   function syncZodiacPicker() {
@@ -3389,8 +3445,17 @@ function detectTelegramLanguage() {
 
   function toggleSearchZodiacMenu() {
     const menu = document.getElementById('sf-zodiac-options');
+    const trigger = document.getElementById('sf-zodiac-toggle');
     if (!menu) return;
-    menu.style.display = menu.style.display === 'none' ? 'grid' : 'none';
+
+    const isOpen = menu.style.display !== 'none' && menu.style.display !== '';
+    if (isOpen) {
+      menu.style.display = 'none';
+    } else {
+      if (menu.parentElement !== document.body) document.body.appendChild(menu);
+      menu.style.display = 'grid';
+      positionPanel(menu, trigger);
+    }
   }
 
   function syncSearchZodiacPicker() {
@@ -4028,7 +4093,9 @@ function detectTelegramLanguage() {
         </div>
         <div class="loc-options" id="${wrapId}-opts"></div>
       `;
-      wrap.appendChild(dropdown);
+      // dropdown ni overlay-root ga ko'chirish — backdrop-filter stacking muammosidan xalos
+      getOverlayRoot().appendChild(dropdown);
+      dropdown.style.pointerEvents = 'auto';
     }
 
     // Options ni to'ldirish
@@ -4191,14 +4258,35 @@ function detectTelegramLanguage() {
     // Tashqarida bosish — yopish
     document.addEventListener('click', (e) => {
       if (!e.target.closest('.location-select-wrap') && !e.target.closest('.loc-dropdown')) closeAllLocDropdowns(null);
+      // Zodiac panellarni tashqariga bosilganda yopish
+      const zodiacMenus = ['zodiac-options', 'sf-zodiac-options'];
+      zodiacMenus.forEach(id => {
+        const menu = document.getElementById(id);
+        const trigger = document.getElementById(
+          id === 'zodiac-options' ? 'zodiac-picker-toggle' : 'sf-zodiac-toggle'
+        );
+        if (menu && menu.style.display !== 'none' && menu.style.display !== '') {
+          if (!e.target.closest('#' + id) && e.target !== trigger && !trigger?.contains(e.target)) {
+            menu.style.display = 'none';
+          }
+        }
+      });
     });
 
-    // Scroll yoki resize bo'lganda ochiq dropdownni qayta pozitsiyalash
+    // Scroll yoki resize bo'lganda ochiq dropdownlarni qayta pozitsiyalash
     const _reposLocDropdown = () => {
       document.querySelectorAll('.loc-dropdown.open').forEach(dd => {
         const wrapId = dd.id.replace('-dd', '');
         const trigger = document.getElementById(wrapId + '-trigger');
         if (trigger) positionLocDropdown(trigger, dd);
+      });
+      // Zodiac panellarni ham qayta pozitsiyalash
+      [['zodiac-options','zodiac-picker-toggle'],['sf-zodiac-options','sf-zodiac-toggle']].forEach(([mid, tid]) => {
+        const menu = document.getElementById(mid);
+        const trigger = document.getElementById(tid);
+        if (menu && menu.style.display !== 'none' && menu.style.display !== '') {
+          positionPanel(menu, trigger);
+        }
       });
     };
     window.addEventListener('scroll', _reposLocDropdown, true);
