@@ -3508,6 +3508,7 @@ function detectTelegramLanguage() {
       .trim();
 
     const aliases = {
+      // Uzbek
       'qoy': 'qoy', 'qo y': 'qoy', 'aries': 'qoy',
       'buzoq': 'buzoq', 'buqa': 'buzoq', 'taurus': 'buzoq',
       'egizak': 'egizak', 'egizaklar': 'egizak', 'gemini': 'egizak',
@@ -3519,7 +3520,32 @@ function detectTelegramLanguage() {
       'oqotar': 'oqotar', 'o qotar': 'oqotar', 'yoy': 'oqotar', 'sagittarius': 'oqotar',
       'tog echkisi': 'tog_echkisi', 'tog echkisi': 'tog_echkisi', 'capricorn': 'tog_echkisi',
       'qovga': 'qovga', 'qovg a': 'qovga', 'qovunchi': 'qovga', 'aquarius': 'qovga',
-      'baliq': 'baliq', 'pisces': 'baliq'
+      'baliq': 'baliq', 'pisces': 'baliq',
+      // Russian (ru)
+      'овен': 'qoy', 'телец': 'buzoq', 'близнецы': 'egizak',
+      'рак': 'qisqichbaqa', 'лев': 'arslon', 'дева': 'sunbula',
+      'весы': 'tarozi', 'скорпион': 'chayon', 'стрелец': 'oqotar',
+      'козерог': 'tog_echkisi', 'водолей': 'qovga', 'рыбы': 'baliq',
+      // Kazakh (kk)
+      'қой': 'qoy', 'бұқа': 'buzoq', 'егіздер': 'egizak',
+      'шаян': 'qisqichbaqa', 'арыстан': 'arslon', 'бикеш': 'sunbula',
+      'таразы': 'tarozi', 'скорпион': 'chayon', 'мерген': 'oqotar',
+      'ешкімүйіз': 'tog_echkisi', 'су құйғыш': 'qovga', 'балық': 'baliq',
+      // Kyrgyz (ky)
+      'кой': 'qoy', 'бука': 'buzoq', 'эгиздер': 'egizak',
+      'чаян': 'qisqichbaqa', 'арстан': 'arslon', 'башак': 'sunbula',
+      'тараза': 'tarozi', 'чаяндар': 'chayon', 'мерген': 'oqotar',
+      'теке': 'tog_echkisi', 'суу куюучу': 'qovga', 'балыктар': 'baliq',
+      // Karakalpak (kaa)
+      'qoy': 'qoy', 'buqa': 'buzoq', 'egizler': 'egizak',
+      'shayan': 'qisqichbaqa', 'arıslan': 'arslon', 'sunbile': 'sunbula',
+      'tarazi': 'tarozi', 'şayon': 'chayon', 'mergen': 'oqotar',
+      'uwıl şal': 'tog_echkisi', 'quwba': 'qovga', 'balıq': 'baliq',
+      // Tajik (tg)
+      'ҳамал': 'qoy', 'савр': 'buzoq', 'ҷавзо': 'egizak',
+      'саратон': 'qisqichbaqa', 'асад': 'arslon', 'сунбула': 'sunbula',
+      'мезон': 'tarozi', 'ақраб': 'chayon', 'қавс': 'oqotar',
+      'ҷадй': 'tog_echkisi', 'далв': 'qovga', 'ҳут': 'baliq',
     };
 
     return aliases[text] || text.replace(/\s*\([^)]*\)\s*$/, '');
@@ -3796,6 +3822,17 @@ function detectTelegramLanguage() {
     const langKeys = Object.keys(uzbekCitiesML[lang] || {});
     const idx = uzKeys.indexOf(uzName);
     if (idx !== -1 && langKeys[idx]) return langKeys[idx];
+    // Shahar nomini district sifatida qidirish (masalan "Samarqand shahri")
+    const uzRegions = uzbekCitiesML['uz'] || {};
+    const langRegions = uzbekCitiesML[lang] || {};
+    for (let i = 0; i < uzKeys.length; i++) {
+      const uzDistricts = uzRegions[uzKeys[i]] || [];
+      const dIdx = uzDistricts.indexOf(uzName);
+      if (dIdx !== -1) {
+        const langDistrictList = langRegions[langKeys[i]] || [];
+        return langDistrictList[dIdx] || uzName;
+      }
+    }
     return uzName;
   }
 
@@ -3827,8 +3864,10 @@ function detectTelegramLanguage() {
       const [district, region] = parts;
       return translateDistrictName(region, district) + ', ' + translateRegionName(region);
     } else if (parts.length === 1) {
-      // "Toshkent viloyati" yoki "Rossiya"
-      return translateRegionName(parts[0]);
+      // "Toshkent viloyati" yoki "Samarqand shahri" yoki "Rossiya"
+      // Avval region sifatida qidiramiz, keyin district sifatida
+      const translated = translateRegionName(parts[0]);
+      return translated;
     }
     return city;
   }
@@ -4268,7 +4307,11 @@ function detectTelegramLanguage() {
         const langRegions = Object.keys(regions);
         const langIdx = langRegions.indexOf(region);
         if (langIdx !== -1 && uzKeys[langIdx]) {
-          districts = uzRegions[uzKeys[langIdx]] || [];
+          // Show districts in current language
+          const lang = currentLang || 'uz';
+          const langData = uzbekCitiesML[lang] || {};
+          const langDistricts = langData[region] || langData[Object.keys(langData)[langIdx]];
+          districts = langDistricts || uzRegions[uzKeys[langIdx]] || [];
         }
       }
       rebuildLocOptions('sf-district', districts, false);
