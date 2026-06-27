@@ -843,7 +843,7 @@
         </div>
         <div class="mp-section-toggle-text">
           <div class="mp-section-toggle-title" data-i18n="viewed_title">Men ko'rganlarim</div>
-          <div class="mp-section-toggle-sub">Oxirgi ko'rgan 25 ta anketa</div>
+          <div class="mp-section-toggle-sub" data-i18n="mp_viewed_sub">Like bergan va xabar yozgan anketalar</div>
         </div>
       </div>
       <svg class="mp-section-chevron" id="mp-chevron-viewed" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
@@ -950,14 +950,12 @@
       </div>
       <button class="modal-close" onclick="closeMapPicker()">✕</button>
     </div>
-    <div class="map-picker-hint" id="map-hint">📍 Xaritaga bosing yoki GPS tugmasini bosing</div>
-    <div class="map-format-hint">
-      Shahar: <b>Toshkent shahri</b> &nbsp;|&nbsp; Tuman: <b>Qibray tumani, Toshkent viloyati</b>
-    </div>
+    <div class="map-picker-hint" id="map-hint" data-i18n="map_hint_text">📍 Xaritaga bosing yoki GPS tugmasini bosing</div>
+    <div class="map-format-hint" id="map-format-hint" style="display:none;"></div>
     <div id="map-container" style="width:100%; height:400px; border-radius:16px; overflow:hidden; position:relative;"></div>
     <div class="map-picker-result" id="map-result" style="display:none;">
       <div class="map-result-icon">📍</div>
-      <div class="map-result-text" id="map-result-text">Aniqlanmoqda...</div>
+      <div class="map-result-text" id="map-result-text" data-i18n="geo_detecting">Aniqlanmoqda...</div>
     </div>
     <div class="map-picker-actions">
       <button class="map-gps-btn" id="map-gps-btn" onclick="useMyLocation()">
