@@ -4966,7 +4966,7 @@ body.pre-init .lang-modal-overlay.show {
 .loc-dropdown {
   display: none;
   position: fixed;
-  z-index: 99999;
+  z-index: 2147483647;
   background: rgba(255,255,255,0.98);
   backdrop-filter: blur(28px) saturate(180%);
   -webkit-backdrop-filter: blur(28px) saturate(180%);
