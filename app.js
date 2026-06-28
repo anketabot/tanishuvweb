@@ -385,6 +385,7 @@ const tg = window.Telegram?.WebApp;
           'mp_liked_tab': 'Like bergan',
           'mp_messaged_tab': 'Yozgan',
           'like': 'Like',
+          'super_like': 'Super Like',
           'write': 'Yozish',
           'country_uz': "O'zbekiston",
           'country_ru': 'Rossiya',
@@ -705,6 +706,7 @@ const tg = window.Telegram?.WebApp;
           'mp_liked_tab': 'Лайкнул',
           'mp_messaged_tab': 'Написал',
           'like': 'Лайк',
+          'super_like': 'Супер Лайк',
           'write': 'Написать',
           'referral_recent_invited': 'Недавно приглашённые',
           'mp_goals_sub': 'Мои цели и просмотренные люди',
@@ -1027,6 +1029,7 @@ const tg = window.Telegram?.WebApp;
           'mp_liked_tab': 'Лайк басқан',
           'mp_messaged_tab': 'Жазған',
           'like': 'Лайк',
+          'super_like': 'Супер Лайк',
           'write': 'Жазу',
           'referral_recent_invited': 'Жақында шақырылғандар',
           'mp_goals_sub': 'Менің мақсаттарым және қараған адамдарым',
@@ -1349,6 +1352,7 @@ const tg = window.Telegram?.WebApp;
           'mp_liked_tab': 'Лайк баскан',
           'mp_messaged_tab': 'Жазган',
           'like': 'Лайк',
+          'super_like': 'Супер Лайк',
           'write': 'Жазуу',
           'referral_recent_invited': 'Жакында чакырылгандар',
           'mp_goals_sub': 'Менин максаттарым жана кариган адамдарым',
@@ -1671,6 +1675,7 @@ const tg = window.Telegram?.WebApp;
           'mp_liked_tab': 'Layk basqan',
           'mp_messaged_tab': 'Jazǵan',
           'like': 'Layk',
+          'super_like': 'Super Layk',
           'write': 'Jazıw',
           'referral_recent_invited': 'Jaqında shaqırılǵanlar',
           'mp_goals_sub': 'Meniń maqsetlerim hám kórgen adamlarım',
@@ -1993,6 +1998,7 @@ const tg = window.Telegram?.WebApp;
           'mp_liked_tab': 'Лайк задам',
           'mp_messaged_tab': 'Навиштам',
           'like': 'Лайк',
+          'super_like': 'Супер Лайк',
           'write': 'Навиштан',
           'referral_recent_invited': 'Охирон даъватшудагон',
           'mp_goals_sub': 'Мақсадҳои ман ва одамоне, ки дидаам',
@@ -2315,6 +2321,7 @@ const tg = window.Telegram?.WebApp;
           'mp_liked_tab': 'Liked',
           'mp_messaged_tab': 'Messaged',
           'like': 'Like',
+          'super_like': 'Super Like',
           'write': 'Write',
           'mp_viewed_sub': 'Profiles you liked and messaged',
           'country_uz': 'Uzbekistan',
@@ -2889,12 +2896,14 @@ function detectTelegramLanguage() {
   }
 
   function updateLimitBar(limits) {
+    // Qidiruv bo'limidagi limit-status-bar olib tashlandi — faqat profil bo'limida ko'rsatiladi
     const bar = document.getElementById('limit-status-bar');
+    if (bar) bar.style.display = 'none';
+
     const mpCard = document.getElementById('mp-limit-card');
 
-    // Ayol foydalanuvchilar uchun limit panellari yashiriladi
+    // Ayol foydalanuvchilar uchun limit kartochkasi yashiriladi
     if (limits.is_female) {
-      if (bar) bar.style.display = 'none';
       if (mpCard) mpCard.style.display = 'none';
       return;
     }
@@ -2903,15 +2912,7 @@ function detectTelegramLanguage() {
     const msgsVal  = limits.unlimited ? '∞' : limits.messages_remaining;
     const slVal    = limits.unlimited ? '∞' : limits.super_likes_remaining;
 
-    // Eski fixed bar (search sahifasi)
-    if (bar) {
-      bar.style.display = 'flex';
-      document.getElementById('limit-likes').textContent = likesVal;
-      document.getElementById('limit-messages').textContent = msgsVal;
-      document.getElementById('limit-superlikes').textContent = slVal;
-    }
-
-    // Yangi myprofile kartochkasi
+    // Faqat profil (myprofile) bo'limidagi kartochka
     if (mpCard) {
       mpCard.style.display = 'flex';
       mpCard.classList.toggle('mp-limit-card--unlimited', !!limits.unlimited);
