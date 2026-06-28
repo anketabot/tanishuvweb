@@ -7611,40 +7611,170 @@ function openViewedProfile(id, tab) {
   modal.style.display = 'flex';
 }
 
-// ========== VERIFIKATSIYA (SELFI) ==========
-// Telegram WebView getUserMedia ishlamaydi — capture="user" file input ishlatamiz
+// ========== VERIFIKATSIYA (IN-APP KAMERA) ==========
 let _selfieBase64 = null;
+let _selfieStream = null;
+let _selfieFacingMode = 'user'; // 'user' = old, 'environment' = orqa
 
+// 1. Kamera modalini ochish
+async function openSelfieCamera() {
+  const modal = document.getElementById('selfie-camera-modal');
+  const loadingEl = document.getElementById('selfie-cam-loading');
+  const errorEl = document.getElementById('selfie-cam-error');
+  const video = document.getElementById('selfie-video');
+
+  if (!modal) return;
+  modal.style.display = 'flex';
+  if (loadingEl) loadingEl.style.display = 'flex';
+  if (errorEl) errorEl.style.display = 'none';
+
+  // Avvalgi stream'ni to'xtatish
+  if (_selfieStream) {
+    _selfieStream.getTracks().forEach(t => t.stop());
+    _selfieStream = null;
+  }
+
+  try {
+    const stream = await navigator.mediaDevices.getUserMedia({
+      video: {
+        facingMode: _selfieFacingMode,
+        width: { ideal: 1280 },
+        height: { ideal: 720 }
+      },
+      audio: false
+    });
+    _selfieStream = stream;
+    if (video) {
+      video.srcObject = stream;
+      // Mirror faqat old kamerada
+      video.className = _selfieFacingMode === 'user'
+        ? 'selfie-cam-video'
+        : 'selfie-cam-video rear-cam';
+      video.onloadedmetadata = function() {
+        video.play();
+        if (loadingEl) loadingEl.style.display = 'none';
+      };
+    }
+  } catch (err) {
+    console.warn('getUserMedia xato:', err);
+    if (loadingEl) loadingEl.style.display = 'none';
+    if (errorEl) {
+      const errText = document.getElementById('selfie-cam-error-text');
+      if (errText) {
+        if (err.name === 'NotAllowedError' || err.name === 'PermissionDeniedError') {
+          errText.textContent = 'Kameraga ruxsat berilmagan. Sozlamalardan ruxsat bering yoki galereyadan tanlang.';
+        } else if (err.name === 'NotFoundError') {
+          errText.textContent = 'Kamera topilmadi. Galereyadan tanlang.';
+        } else {
+          errText.textContent = 'Kamera ishlamadi. Galereyadan tanlang.';
+        }
+      }
+      errorEl.style.display = 'flex';
+    }
+  }
+}
+
+// 2. Kamerani yopish
+function closeSelfieCamera() {
+  const modal = document.getElementById('selfie-camera-modal');
+  if (modal) modal.style.display = 'none';
+  if (_selfieStream) {
+    _selfieStream.getTracks().forEach(t => t.stop());
+    _selfieStream = null;
+  }
+  const video = document.getElementById('selfie-video');
+  if (video) { video.srcObject = null; }
+}
+
+// 3. Kamerani almashtirish (old/orqa)
+async function flipSelfieCamera() {
+  _selfieFacingMode = _selfieFacingMode === 'user' ? 'environment' : 'user';
+  await openSelfieCamera();
+}
+
+// 4. Snapshot olish
+function takeSelfieSnapshot() {
+  const video = document.getElementById('selfie-video');
+  const canvas = document.getElementById('selfie-canvas');
+  const shell = document.querySelector('.selfie-cam-shell');
+  if (!video || !canvas) return;
+
+  // Flash effekti
+  const flash = document.createElement('div');
+  flash.className = 'selfie-flash';
+  if (shell) shell.appendChild(flash);
+  setTimeout(() => flash.remove(), 400);
+
+  // Canvas'ga yozish
+  canvas.width = video.videoWidth || 640;
+  canvas.height = video.videoHeight || 480;
+  const ctx = canvas.getContext('2d');
+
+  // Old kamera uchun mirror
+  if (_selfieFacingMode === 'user') {
+    ctx.translate(canvas.width, 0);
+    ctx.scale(-1, 1);
+  }
+  ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+  const dataUrl = canvas.toDataURL('image/jpeg', 0.88);
+  _selfieBase64 = dataUrl.split(',')[1];
+
+  // Preview
+  const previewImg = document.getElementById('selfie-preview-img');
+  const previewWrap = document.getElementById('selfie-preview-wrap');
+  if (previewImg) previewImg.src = dataUrl;
+  if (previewWrap) previewWrap.style.display = 'flex';
+
+  // Kamerani yopish
+  closeSelfieCamera();
+
+  // Tugmalar va status
+  const openBtn = document.getElementById('selfie-open-btn');
+  const sendBtn = document.getElementById('selfie-send-btn');
+  const retakeBtn = document.getElementById('selfie-retake-btn');
+  const statusEl = document.getElementById('selfie-status');
+  if (openBtn) openBtn.style.display = 'none';
+  if (sendBtn) sendBtn.style.display = 'flex';
+  if (retakeBtn) retakeBtn.style.display = 'flex';
+  if (statusEl) {
+    statusEl.textContent = '✅ Selfi tayyor! Yuborish tugmasini bosing.';
+    statusEl.style.color = '#34a853';
+    statusEl.style.fontWeight = '600';
+  }
+}
+
+// 5. Fallback: file input orqali galereyadan (getUserMedia bo'lmasa)
+function triggerFallbackInput() {
+  closeSelfieCamera();
+  const fallback = document.getElementById('selfie-input-fallback');
+  if (fallback) fallback.click();
+}
+
+// 6. Fallback file input handler (eski onSelfieSelected)
 function onSelfieSelected(input) {
   const file = input.files && input.files[0];
   if (!file) return;
-
-  // Hajm tekshirish — max 8MB
   if (file.size > 8 * 1024 * 1024) {
     const statusEl = document.getElementById('selfie-status');
     if (statusEl) { statusEl.textContent = '❌ Rasm hajmi juda katta (max 8MB)'; statusEl.style.color = '#FF3B30'; }
     return;
   }
-
   const reader = new FileReader();
   reader.onload = function(e) {
     const dataUrl = e.target.result;
     _selfieBase64 = dataUrl.split(',')[1];
-
-    // Preview
     const previewImg = document.getElementById('selfie-preview-img');
     const previewWrap = document.getElementById('selfie-preview-wrap');
     if (previewImg) previewImg.src = dataUrl;
-    if (previewWrap) previewWrap.style.display = 'block';
-
-    // Tugmalar
+    if (previewWrap) previewWrap.style.display = 'flex';
     const openBtn = document.getElementById('selfie-open-btn');
     const sendBtn = document.getElementById('selfie-send-btn');
     const retakeBtn = document.getElementById('selfie-retake-btn');
     const statusEl = document.getElementById('selfie-status');
     if (openBtn) openBtn.style.display = 'none';
-    if (sendBtn) sendBtn.style.display = '';
-    if (retakeBtn) retakeBtn.style.display = '';
+    if (sendBtn) sendBtn.style.display = 'flex';
+    if (retakeBtn) retakeBtn.style.display = 'flex';
     if (statusEl) { statusEl.textContent = '✅ Selfi tayyor! Yuborish tugmasini bosing.'; statusEl.style.color = '#34a853'; statusEl.style.fontWeight = '600'; }
   };
   reader.readAsDataURL(file);
@@ -7682,12 +7812,14 @@ async function sendSelfieForVerification() {
       const badge = document.getElementById('verified-badge-form');
       if (badge) badge.style.display = 'inline';
 
-      // Open btn'ni yashirish
+      // Open btn'ni tasdiqlangan holatga o'tkazish
       const openBtn = document.getElementById('selfie-open-btn');
       if (openBtn) {
         openBtn.style.display = '';
-        openBtn.textContent = '💙 Tasdiqlangan';
-        openBtn.style.background = 'linear-gradient(135deg,#1A73E8,#34a853)';
+        openBtn.querySelector('.verif-btn-camera-inner').innerHTML = `
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+          <span>💙 Tasdiqlangan</span>`;
+        openBtn.style.background = 'linear-gradient(135deg, #34a853, #007AFF)';
         openBtn.disabled = true;
       }
 
@@ -7725,8 +7857,11 @@ async function loadVerificationStatus() {
       // Selfi tugmasini yangilash
       const openBtn = document.getElementById('selfie-open-btn');
       if (openBtn) {
-        openBtn.textContent = '💙 Tasdiqlangan';
-        openBtn.style.background = 'linear-gradient(135deg,#1A73E8,#34a853)';
+        const inner = openBtn.querySelector('.verif-btn-camera-inner');
+        if (inner) inner.innerHTML = `
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+          <span>💙 Tasdiqlangan</span>`;
+        openBtn.style.background = 'linear-gradient(135deg, #34a853, #007AFF)';
         openBtn.disabled = true;
       }
       const statusEl = document.getElementById('selfie-status');
