@@ -246,6 +246,7 @@ const tg = window.Telegram?.WebApp;
           'error_recipient_not_found': 'Xatolik: qabul qiluvchi topilmadi. Iltimos, qayta urinib ko\'ring.',
           'message_sent': '💬 Xabar yuborildi!',
           'like_sent_with_hint': '💙 Like yuborildi! Agar u ham sizni yoqtirsa, match bo\'lib suhbat ochiladi.',
+          'super_like_sent_hint': '⭐ {sticker} Super Like yuborildi! U qabul qilsa, suhbat ochiladi.',
           'like_not_sent': 'Like yuborilmadi',
           'max_interests_hint': 'Maksimal 5 ta qiziqish tanlash mumkin.',
           'zodiac_not_set': 'Burjingiz aniqlanmadi',
@@ -568,6 +569,7 @@ const tg = window.Telegram?.WebApp;
           'error_recipient_not_found': 'Ошибка: получатель не найден. Пожалуйста, попробуйте снова.',
           'message_sent': '💬 Сообщение отправлено!',
           'like_sent_with_hint': '💙 Лайк отправлен! Если он/она тоже вас лайкнет, откроется чат.',
+          'super_like_sent_hint': '⭐ {sticker} Супер Лайк отправлен! Если примет — откроется чат.',
           'like_not_sent': 'Лайк не отправлен',
           'max_interests_hint': 'Можно выбрать максимум 5 интересов.',
           'zodiac_not_set': 'Ваш знак зодиака не определен',
@@ -890,7 +892,8 @@ const tg = window.Telegram?.WebApp;
           'error_user_id_not_found': 'Қате: сіздің пайдаланушы идентификаторыңыз табылмады.',
           'error_recipient_not_found': 'Қате: алушы табылмады. Өтінеміз, қайта байқап көріңіз.',
           'message_sent': '💬 Хабар жіберілді!',
-          'like_sent_with_hint': '💙 Лайк жіберілді! Егер ол/ол сізді де лайк етсе, чат ашылады.',
+          'like_sent_with_hint': '💙 Лайк жіберілді! Егер ол сізді де лайк етсе, чат ашылады.',
+          'super_like_sent_hint': '⭐ {sticker} Супер Лайк жіберілді! Қабылдаса — чат ашылады.',
           'like_not_sent': 'Лайк жіберілмеді',
           'max_interests_hint': 'Ең көбі 5 қызығушылықты таңдауға болады.',
           'zodiac_not_set': 'Жұлдызнамаңыз анықталмады',
@@ -1213,7 +1216,8 @@ const tg = window.Telegram?.WebApp;
           'error_user_id_not_found': 'Ката: сиздин колдонуучу идентификаторуңуз табылган жок.',
           'error_recipient_not_found': 'Ката: алуучу табылган жок. Сураныч, кайра аракет кылыңыз.',
           'message_sent': '💬 Билдирүү жиберилди!',
-          'like_sent_with_hint': '💙 Лайк жиберилди! Эгер ал/ал сизди да лайк кылса, чат ачылат.',
+          'like_sent_with_hint': '💙 Лайк жиберилди! Эгер ал сизди да лайк кылса, чат ачылат.',
+          'super_like_sent_hint': '⭐ {sticker} Супер Лайк жиберилди! Кабыл алса — чат ачылат.',
           'like_not_sent': 'Лайк жиберилген жок',
           'max_interests_hint': 'Эң көбү 5 кызыгуу тандаса болот.',
           'zodiac_not_set': 'Жылдызнамаңыз аныкталган жок',
@@ -1537,6 +1541,7 @@ const tg = window.Telegram?.WebApp;
           'error_recipient_not_found': 'Qátelik: qabıllawshı tabılmadı. Ótinem, qayta urınıp kóriń.',
           'message_sent': '💬 Xabar jiberildi!',
           'like_sent_with_hint': '💙 Layk jiberildi! Eger ol hám sizdi layk etse, chat ashıladı.',
+          'super_like_sent_hint': '⭐ {sticker} Super Layk jiberildi! Qabıl alsa — chat ashıladı.',
           'like_not_sent': 'Layk jiberilmegen',
           'max_interests_hint': 'Eń kópi menen 5 qızıǵıwshılıq saylawǵa boladı.',
           'zodiac_not_set': 'Juldıznamańız anıqlanbadı',
@@ -1859,7 +1864,8 @@ const tg = window.Telegram?.WebApp;
           'error_user_id_not_found': 'Хатогӣ: идентификатори корбари шумо ёфт нашуд.',
           'error_recipient_not_found': 'Хатогӣ: гиранда ёфт нашуд. Лутфан, боз кӯшиш кунед.',
           'message_sent': '💬 Паём фиристода шуд!',
-          'like_sent_with_hint': '💙 Лайк фиристода шуд! Агар ӯ/вай шуморо ҳам лайк кунад, чат кушода мешавад.',
+          'like_sent_with_hint': '💙 Лайк фиристода шуд! Агар ӯ шуморо ҳам лайк кунад, чат кушода мешавад.',
+          'super_like_sent_hint': '⭐ {sticker} Супер Лайк фиристода шуд! Агар қабул кунад — чат кушода мешавад.',
           'like_not_sent': 'Лайк фиристода нашуд',
           'max_interests_hint': 'Ҳадди аксар 5 манфиат интихоб кардан мумкин аст.',
           'zodiac_not_set': 'Бурҷи шумо муайян нашуд',
@@ -2183,6 +2189,7 @@ const tg = window.Telegram?.WebApp;
           'error_recipient_not_found': 'Error: recipient not found. Please try again.',
           'message_sent': '💬 Message sent!',
           'like_sent_with_hint': "💙 Like sent! If they like you back, you'll get a match and a chat.",
+          'super_like_sent_hint': '⭐ {sticker} Super Like sent! If they accept, a chat will open.',
           'like_not_sent': 'Like was not sent',
           'max_interests_hint': 'You can select up to 5 interests.',
           'zodiac_not_set': 'Your zodiac sign is not set',
@@ -3090,17 +3097,16 @@ function detectTelegramLanguage() {
 
     await loadLimitStatus();
 
-    // 2. Match bo'lsa — darhol xabar yuboramiz va chatni ochamiz
+    try { addToViewed({ id: toUserId, name: savedName, photo: savedPhoto }, 'liked'); } catch(e) {}
+    try { addToViewed({ id: toUserId, name: savedName, photo: savedPhoto }, 'messaged'); } catch(e) {}
+
+    // 2. Mutual match bo'lsa — xabar yuboramiz va chatni ochamiz
     if (likeData.match && likeData.match_id) {
       const chatData = await apiPost('/api/chat/send', {
         match_id: likeData.match_id,
         sender_id: fromUserId,
         message: message
       });
-
-      try { addToViewed({ id: toUserId, name: savedName, photo: savedPhoto }, 'liked'); } catch(e) {}
-      try { addToViewed({ id: toUserId, name: savedName, photo: savedPhoto }, 'messaged'); } catch(e) {}
-
       if (chatData.success) {
         showToast(tr('message_sent'));
         loadChats();
@@ -3112,11 +3118,8 @@ function detectTelegramLanguage() {
       return;
     }
 
-    // 3. Match bo'lmasa — like yuborildi va xabarni bot orqali yuboramiz
-    try { addToViewed({ id: toUserId, name: savedName, photo: savedPhoto }, 'liked'); } catch(e) {}
-    try { addToViewed({ id: toUserId, name: savedName, photo: savedPhoto }, 'messaged'); } catch(e) {}
-
-    // Bot orqali xabar yuborish (pending message)
+    // 3. Bir tomonlama like — like + pending xabar yuborildi, chat OCHILMAYDI
+    // Pending xabarni bot orqali yuborish (xabar limiti ishlatildi)
     try {
       await apiPost('/api/messages/send_pending', {
         from_user: fromUserId,
@@ -3125,7 +3128,7 @@ function detectTelegramLanguage() {
       });
     } catch(e) {}
 
-    // Localda ham saqlaymiz (zaxira)
+    // Lokalda zaxira
     try {
       const pendingKey = 'pending_msg_' + fromUserId + '_' + toUserId;
       localStorage.setItem(pendingKey, JSON.stringify({
@@ -5374,14 +5377,19 @@ function detectTelegramLanguage() {
     }
 
     if (likeData.match && likeData.match_id) {
+      // Mutual match — super like + chat xabar yuboramiz va chatni ochamiz
       await apiPost('/api/chat/send', {
         match_id: likeData.match_id,
         sender_id: userId,
         message: `${sticker} ⭐ Super Like!`
       });
+      await loadChats();
       showToast(tr('match_super_like').replace('{sticker}', sticker));
+      const matchName = tr('chat_user_default');
+      openChatRoom(likeData.match_id, matchName, '');
     } else {
-      showToast(tr('super_like_sent').replace('{sticker}', sticker));
+      // Bir tomonlama — faqat toast, chat OCHILMAYDI
+      showToast(tr('super_like_sent_hint').replace('{sticker}', sticker));
     }
 
     const renderNextCard = document.getElementById('swipe-container-modal')
@@ -5568,27 +5576,24 @@ function detectTelegramLanguage() {
 
     if (data.success) {
       await loadLimitStatus();
-      // Add to viewed liked list
+      // Ko'rilganlarga qo'shish
       try {
         let u = tinderUsers.find(x => Number(x.telegram_id) === toUser);
         if (!u) {
-          // Server javobidan yoki boshqa manbadan foydalanish
-          // Minimal ma'lumot bilan saqlash (server to_user_profile qaytarsa ishlatamiz)
           u = data.to_user_profile || { telegram_id: toUser, id: toUser };
         }
         if (u) addToViewed(u, 'liked');
       } catch(e) {}
-      if (data.match) {
+      if (data.match && data.match_id) {
+        // Mutual match — ikkalasi ham like bosgan, chat ochiladi
         showMatchOverlay();
         await loadChats();
-        // Match bo'lsa — chatni darhol ochamiz
-        if (data.match_id) {
-          const matchName = (data.to_user_profile?.full_name) || tr('chat_user_default');
-          const matchPhoto = (data.to_user_profile?.photo_base64) || (data.to_user_profile?.photo_file_id) || '';
-          openChatRoom(data.match_id, matchName, matchPhoto);
-        }
+        const matchName = (data.to_user_profile?.full_name) || tr('chat_user_default');
+        const matchPhoto = (data.to_user_profile?.photo_base64) || (data.to_user_profile?.photo_file_id) || '';
+        openChatRoom(data.match_id, matchName, matchPhoto);
       } else {
-        showToast(tr('like_sent'));
+        // Bir tomonlama like — qabul qiluvchiga bildirishnoma yuborildi
+        showToast(tr('like_sent_with_hint'));
       }
     } else {
       showToast(tr('error_prefix') + (data.error || tr('unknown_error')));
