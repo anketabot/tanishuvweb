@@ -7350,15 +7350,40 @@ function switchTopPanelTab(tab) {
   }
 }
 
-async function loadMiniStats() {
+async function loadMiniStats(forceRefresh) {
   updateMiniStatsLabels();
   const body = document.getElementById('stats-mini-body');
   if (!body) return;
+
+  // Haftalik kesh: har dushanbada yangilanadi
+  const CACHE_KEY = 'top10_weekly_cache';
+  const CACHE_WEEK_KEY = 'top10_weekly_week';
+  const now = new Date();
+  const jan1 = new Date(now.getFullYear(), 0, 1);
+  const weekNum = Math.ceil(((now - jan1) / 86400000 + jan1.getDay() + 1) / 7);
+  const currentWeekId = now.getFullYear() + '-W' + weekNum;
+
+  if (!forceRefresh) {
+    try {
+      const cachedWeek = localStorage.getItem(CACHE_WEEK_KEY);
+      const cachedData = localStorage.getItem(CACHE_KEY);
+      if (cachedWeek === currentWeekId && cachedData) {
+        _miniStatsData = JSON.parse(cachedData);
+        renderTopPanelTab(_topPanelTab);
+        return;
+      }
+    } catch(e) {}
+  }
+
   body.innerHTML = '<div class="stats-mini-loading"><div class="spinner"></div></div>';
   try {
     const data = await apiPost('/api/stats/leaderboard', {});
     if (data.success) {
       _miniStatsData = data;
+      try {
+        localStorage.setItem(CACHE_KEY, JSON.stringify(data));
+        localStorage.setItem(CACHE_WEEK_KEY, currentWeekId);
+      } catch(e) {}
       renderTopPanelTab(_topPanelTab);
     } else {
       body.innerHTML = `<div class="stats-mini-empty">${tr('server_error') || 'Ma\'lumot yuklanmadi'}</div>`;
@@ -7423,8 +7448,23 @@ function renderTopPanelTab(tab) {
     users = Object.values(all).sort((a, b) => b.score - a.score).slice(0, 10).map(u => ({ ...u, count: u.score }));
   }
 
+  // Haftalik yangilanish info
+  let weeklyBadge = '';
+  if (_miniStatsData && _miniStatsData.weekly) {
+    const sec = _miniStatsData.seconds_until_reset || 0;
+    const days = Math.floor(sec / 86400);
+    const hours = Math.floor((sec % 86400) / 3600);
+    const mins = Math.floor((sec % 3600) / 60);
+    let timeStr = '';
+    if (days > 0) timeStr = `${days}k ${hours}s`;
+    else if (hours > 0) timeStr = `${hours}s ${mins}d`;
+    else timeStr = `${mins}d`;
+    weeklyBadge = `<div class="top-weekly-badge">📅 Haftalik TOP &nbsp;•&nbsp; 🔄 ${timeStr} da yangilanadi</div>`;
+  }
+
   body.innerHTML = `
     <div class="top-panel-section-title">${cfg.title}</div>
+    ${weeklyBadge}
     ${buildRows(users, cfg.icon, cfg.label)}
   `;
 }
