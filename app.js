@@ -3080,12 +3080,9 @@ function detectTelegramLanguage() {
     }
 
     // 1. Avval like yuboramiz
-    const _senderProfile3083 = getProfile();
-    const _senderCity3083 = _senderProfile3083?.city || '';
     const likeData = await apiPost('/api/likes/send', {
       from_user: fromUserId,
-      to_user: toUserId,
-      sender_location_labels: _buildLocationAllLangs(_senderCity3083)
+      to_user: toUserId
     });
 
     if (likeData.error === 'limit_exceeded') {
@@ -4013,19 +4010,63 @@ function detectTelegramLanguage() {
     }
   }
 
-  // Davlat value (O'zbekcha) → joriy tilda nom
+  // Davlat value (istalgan tilda) → joriy tilda nom
   function _translateCountryValue(value, lang) {
     if (!value) return value;
     const MAP = {
-      "\u004f\u02bczbekiston": 'country_uz', "O'zbekiston": 'country_uz',
-      "Rossiya": 'country_ru',
-      "Qozog\u02bbiston": 'country_kz', "Qozog'iston": 'country_kz',
-      "Qirg\u02bbiziston": 'country_kg', "Qirg'iziston": 'country_kg',
-      "Tojikiston": 'country_tj', "Turkmaniston": 'country_tm',
-      "Ozarbayjon": 'country_az', "Armaniston": 'country_am',
-      "Gruziya": 'country_ge', "Ukraina": 'country_ua',
-      "Belarus": 'country_by', "Moldova": 'country_md',
-      "Boshqa": 'country_other',
+      // O'zbekiston
+      "Oʻzbekiston": 'country_uz', "O'zbekiston": 'country_uz',
+      "Ўzbekiston": 'country_uz', "Узбекистан": 'country_uz',
+      "Uzbekistan": 'country_uz', "Өзбекстан": 'country_uz',
+      "Ӥзбекистон": 'country_uz', "O'zbekstan": 'country_uz',
+      // Rossiya
+      "Rossiya": 'country_ru', "Россия": 'country_ru',
+      "Russia": 'country_ru', "Ресей": 'country_ru',
+      "Русия": 'country_ru',
+      // Qozog'iston
+      "Qozogʻiston": 'country_kz', "Qozog'iston": 'country_kz',
+      "Казахстан": 'country_kz',
+      "Kazakhstan": 'country_kz', "Қазақстан": 'country_kz',
+      "Qazaqstan": 'country_kz', "Қазоқистон": 'country_kz',
+      // Qirg'iziston
+      "Qirgʻiziston": 'country_kg', "Qirg'iziston": 'country_kg',
+      "Кыргызстан": 'country_kg',
+      "Kyrgyzstan": 'country_kg', "Қырғызстан": 'country_kg',
+      "Қирғизистон": 'country_kg',
+      // Tojikiston
+      "Tojikiston": 'country_tj', "Таджикистан": 'country_tj',
+      "Tajikistan": 'country_tj', "Тәжікстан": 'country_tj',
+      "Тажикстан": 'country_tj',
+      "Тоҷикистон": 'country_tj',
+      // Turkmaniston
+      "Turkmaniston": 'country_tm', "Туркменистан": 'country_tm',
+      "Turkmenistan": 'country_tm', "Түркіменстан": 'country_tm',
+      "Түркмөнстан": 'country_tm',
+      "Туркманистон": 'country_tm',
+      // Ozarbayjon
+      "Ozarbayjon": 'country_az', "Азербайджан": 'country_az',
+      "Azerbaijan": 'country_az', "Әзербайжан": 'country_az',
+      "Озарбойҷон": 'country_az',
+      // Armaniston
+      "Armaniston": 'country_am', "Армения": 'country_am',
+      "Armenia": 'country_am', "Armeniya": 'country_am',
+      "Арманистон": 'country_am',
+      // Gruziya
+      "Gruziya": 'country_ge', "Грузия": 'country_ge',
+      "Georgia": 'country_ge', "Гурҷистон": 'country_ge',
+      // Ukraina
+      "Ukraina": 'country_ua', "Украина": 'country_ua',
+      "Ukraine": 'country_ua',
+      // Belarus
+      "Belarus": 'country_by', "Беларусь": 'country_by',
+      "Беларус": 'country_by',
+      // Moldova
+      "Moldova": 'country_md', "Молдова": 'country_md',
+      // Boshqa
+      "Boshqa": 'country_other', "Другое": 'country_other',
+      "Other": 'country_other', "Басқа": 'country_other',
+      "Башка": 'country_other', "Basqa": 'country_other',
+      "Дигар": 'country_other',
     };
     const key = MAP[value] || MAP[value?.trim()];
     return key ? (tr(key) || value) : value;
@@ -4117,27 +4158,6 @@ function detectTelegramLanguage() {
     // Ko'rsatish tartibi: Tuman, Viloyat, Davlat
     const parts = [districtStr, regionStr, countryStr].filter(Boolean);
     return parts.join(', ');
-  }
-
-  // Barcha tillarda joylashuv labellarini qaytaradi (server bildirishnomasi uchun)
-  function _buildLocationAllLangs(cityRaw) {
-    if (!cityRaw) return {};
-    const LANGS = Object.keys(SUPPORTED_LANGUAGES); // ['uz','ru','kk','ky','kaa','tg','en']
-    const result = {};
-    if (cityRaw.includes('||')) {
-      const [district, region, country] = cityRaw.split('||').map(s => s.trim());
-      for (const lang of LANGS) {
-        result[lang] = _buildLocationString(country, region, district, lang);
-      }
-    } else {
-      for (const lang of LANGS) {
-        const translated = _translateCountryValue(cityRaw, lang);
-        if (translated !== cityRaw) { result[lang] = translated; continue; }
-        const t = translateCityLabel ? translateCityLabel(cityRaw) : cityRaw;
-        result[lang] = t;
-      }
-    }
-    return result;
   }
 
   function populateRegions(selectId, regions) {
@@ -5388,14 +5408,11 @@ function detectTelegramLanguage() {
     const card = document.getElementById('tinder-card');
     if (card) card.classList.add('animate-up');
 
-    const _senderProfileSticker = getProfile();
-    const _senderCitySticker = _senderProfileSticker?.city || '';
     const likeData = await apiPost('/api/likes/send', {
       from_user: userId,
       to_user: stickerTargetId,
       super_like: true,
-      sticker: sticker,
-      sender_location_labels: _buildLocationAllLangs(_senderCitySticker)
+      sticker: sticker
     });
 
     if (likeData.error === 'limit_exceeded') {
@@ -5594,13 +5611,7 @@ function detectTelegramLanguage() {
       return;
     }
 
-    const _senderProfile5570 = getProfile();
-    const _senderCity5570 = _senderProfile5570?.city || '';
-    const data = await apiPost('/api/likes/send', {
-      from_user: fromUserId,
-      to_user: toUser,
-      sender_location_labels: _buildLocationAllLangs(_senderCity5570)
-    });
+    const data = await apiPost('/api/likes/send', { from_user: fromUserId, to_user: toUser });
 
     if (data.error === 'limit_exceeded') {
       showLimitExceeded('likes');
