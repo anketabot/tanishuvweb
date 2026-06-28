@@ -360,7 +360,10 @@ const tg = window.Telegram?.WebApp;
           'interface_language': 'Interfeys tili',
           'champions_title': '🏆 Mutloq chempion',
           'nav_champions': 'Chemp.',
-          'viewed_title': '👁 Men ko\'rganlarim',
+          'top_btn_active': 'Faollar',
+          'top_btn_likes': 'Like TOP',
+          'top_btn_superlikes': 'Super TOP',
+          'top_btn_champion': 'Chempion',
           'nav_viewed': 'Ko\'rganlar',
           'tab_viewed_liked': '💙 Like bergan',
           'tab_viewed_messaged': '💬 Xabar yozgan',
@@ -672,6 +675,10 @@ const tg = window.Telegram?.WebApp;
           'interface_language': 'Язык интерфейса',
           'champions_title': '🏆 Абсолютный чемпион',
           'nav_champions': 'Чемп.',
+          'top_btn_active': 'Активные',
+          'top_btn_likes': 'Лайк TOP',
+          'top_btn_superlikes': 'Супер TOP',
+          'top_btn_champion': 'Чемпион',
           'viewed_title': '👁 Мои просмотры',
           'nav_viewed': 'Просмотры',
           'tab_viewed_liked': '💙 Лайкнул',
@@ -985,6 +992,10 @@ const tg = window.Telegram?.WebApp;
           'interface_language': 'Интерфейс тілі',
           'champions_title': '🏆 Үздік чемпион',
           'nav_champions': 'Чемп.',
+          'top_btn_active': 'Белсенділер',
+          'top_btn_likes': 'Лайк TOP',
+          'top_btn_superlikes': 'Супер TOP',
+          'top_btn_champion': 'Чемпион',
           'viewed_title': '👁 Мен көргендерім',
           'nav_viewed': 'Көргендер',
           'tab_viewed_liked': '💙 Лайк басқан',
@@ -1298,6 +1309,10 @@ const tg = window.Telegram?.WebApp;
           'interface_language': 'Интерфейс тили',
           'champions_title': '🏆 Абсолюттук чемпион',
           'nav_champions': 'Чемп.',
+          'top_btn_active': 'Активдүүлөр',
+          'top_btn_likes': 'Лайк TOP',
+          'top_btn_superlikes': 'Супер TOP',
+          'top_btn_champion': 'Чемпион',
           'viewed_title': '👁 Мен көргөндөрүм',
           'nav_viewed': 'Көргөндөр',
           'tab_viewed_liked': '💙 Лайк баскан',
@@ -1611,6 +1626,10 @@ const tg = window.Telegram?.WebApp;
           'interface_language': 'Interfeys tіlі',
           'champions_title': '🏆 Mutloq chempion',
           'nav_champions': 'Chemp.',
+          'top_btn_active': 'Belgіlіler',
+          'top_btn_likes': 'Like TOP',
+          'top_btn_superlikes': 'Super TOP',
+          'top_btn_champion': 'Chempion',
           'viewed_title': '👁 Men kórgеnim',
           'nav_viewed': 'Kórgenler',
           'tab_viewed_liked': '💙 Like basqan',
@@ -1924,6 +1943,10 @@ const tg = window.Telegram?.WebApp;
           'interface_language': 'Забони интерфейс',
           'champions_title': '🏆 Мутлоқ чемпион',
           'nav_champions': 'Чемп.',
+          'top_btn_active': 'Фаъолон',
+          'top_btn_likes': 'Лайк TOP',
+          'top_btn_superlikes': 'Супер TOP',
+          'top_btn_champion': 'Чемпион',
           'viewed_title': '👁 Ман дидаам',
           'nav_viewed': 'Дидаҳо',
           'tab_viewed_liked': '💙 Лайк задаам',
@@ -2237,6 +2260,10 @@ const tg = window.Telegram?.WebApp;
           'interface_language': 'Interface language',
           'champions_title': '🏆 Absolute Champion',
           'nav_champions': 'Champ.',
+          'top_btn_active': 'Active',
+          'top_btn_likes': 'Like TOP',
+          'top_btn_superlikes': 'Super TOP',
+          'top_btn_champion': 'Champion',
           'viewed_title': '👁 My Views',
           'nav_viewed': 'Viewed',
           'tab_viewed_liked': '💙 Liked',
@@ -3927,22 +3954,18 @@ function detectTelegramLanguage() {
     const parts = city.split(',').map(s => s.trim());
     if (parts.length === 2) {
       const [district, region] = parts;
-      // O'zbekiston uchun davlatni ham qo'shamiz
-      const uzCountry = tr('country_uz') || "O'zbekiston";
       if (uzbekCitiesML) {
         const t = _translateUzPart(district, region, lang);
-        if (t) return uzCountry + ' › ' + t.replace(', ', ' › ');
+        if (t) return t;
       }
-      const dStr = _translateGenericDistrict(district, lang) || district;
-      const rStr = _translateGenericRegion(region, lang) || region;
-      return uzCountry + ' › ' + rStr + ' › ' + dStr;
+      return _translateGenericDistrict(district, lang) + ', ' + _translateGenericRegion(region, lang);
     } else {
       const single = parts[0];
       const cT = _translateCountryValue(single, lang);
       if (cT !== single) return cT;
       if (uzbekCitiesML) {
         const t = _translateUzRegionOnly(single, lang);
-        if (t) return (tr('country_uz') || "O'zbekiston") + ' › ' + t;
+        if (t) return t;
       }
       return _translateGenericRegion(single, lang);
     }
@@ -4018,7 +4041,7 @@ function detectTelegramLanguage() {
   // O'zbekiston: viloyat + tuman tarjima
   function _translateUzPart(district, region, lang) {
     if (!uzbekCitiesML) return null;
-    if (lang === 'uz') return region + ' › ' + district;
+    if (lang === 'uz') return district + ', ' + region;
     const uzRegions = uzbekCitiesML['uz'] || {};
     const langRegions = uzbekCitiesML[lang] || {};
     const uzKeys = Object.keys(uzRegions);
@@ -4030,7 +4053,7 @@ function detectTelegramLanguage() {
     const langDistricts = langRegions[langKeys[idx]] || [];
     const di = uzDistricts.indexOf(district);
     const translatedDistrict = di !== -1 && langDistricts[di] ? langDistricts[di] : _translateGenericDistrict(district, lang);
-    return translatedRegion + ' › ' + translatedDistrict;
+    return translatedDistrict + ', ' + translatedRegion;
   }
 
   // O'zbekiston: faqat viloyat tarjima
@@ -4049,13 +4072,9 @@ function detectTelegramLanguage() {
     const districtStr = district ? (_translateGenericDistrict(district, lang) || district) : '';
     const regionStr   = region   ? (_translateGenericRegion(region, lang)     || region)   : '';
     const countryStr  = country  ? (_translateCountryValue(country, lang)      || country)  : '';
-    // Ko'rsatish tartibi: Davlat › Viloyat › Tuman
-    // Har uchala qism ham ko'rsatilishi kerak
-    const parts = [];
-    if (countryStr) parts.push(countryStr);
-    if (regionStr && regionStr !== countryStr) parts.push(regionStr);
-    if (districtStr && districtStr !== regionStr) parts.push(districtStr);
-    return parts.join(' › ');
+    // Ko'rsatish tartibi: Tuman, Viloyat, Davlat
+    const parts = [districtStr, regionStr, countryStr].filter(Boolean);
+    return parts.join(', ');
   }
 
   function populateRegions(selectId, regions) {
@@ -5391,7 +5410,7 @@ function detectTelegramLanguage() {
               <div class="like-notification-info">
                 <div>
                   <strong>${u.full_name}</strong>
-                  <div class="like-notification-meta">${u.age} ${tr('years_old')}${u.city ? ' • ' + formatLocationLabel(u.city) : ''}</div>
+                  <div class="like-notification-meta">${u.age} ${tr('years_old')} • ${u.city}</div>
                 </div>
                 <div class="like-notification-actions">
                   <button class="like-btn" onclick="event.stopPropagation(); acceptLike(${u.telegram_id}, '${escapeJs(u.full_name)}', '${escapeJs(photo)}'); closeLikesModal();">${tr('accept')}</button>
@@ -5632,110 +5651,8 @@ function detectTelegramLanguage() {
     if (!modal || !img) return;
 
     img.src = src || '';
-    img.style.transform = 'scale(1)';
-    img.style.transformOrigin = 'center center';
-    img.style.cursor = 'zoom-in';
-    img.style.transition = 'transform 0.25s ease';
     if (label) label.textContent = caption || tr('photo');
     modal.style.display = 'flex';
-
-    // Pinch-zoom va double-tap zoom
-    let _scale = 1, _lastScale = 1;
-    let _startDist = 0;
-    let _lastTap = 0;
-    let _isDragging = false;
-    let _startX = 0, _startY = 0;
-    let _transX = 0, _transY = 0, _lastTransX = 0, _lastTransY = 0;
-
-    function _applyTransform(sc, tx, ty, animate) {
-      img.style.transition = animate ? 'transform 0.28s ease' : 'none';
-      img.style.transform = `translate(${tx}px, ${ty}px) scale(${sc})`;
-    }
-
-    function _clampTrans(sc, tx, ty) {
-      const maxX = Math.max(0, (img.naturalWidth * sc - window.innerWidth) / 2);
-      const maxY = Math.max(0, (img.naturalHeight * sc - window.innerHeight) / 2);
-      return [Math.min(maxX, Math.max(-maxX, tx)), Math.min(maxY, Math.max(-maxY, ty))];
-    }
-
-    // Touch start
-    const _onTouchStart = (e) => {
-      if (e.touches.length === 2) {
-        _startDist = Math.hypot(
-          e.touches[0].clientX - e.touches[1].clientX,
-          e.touches[0].clientY - e.touches[1].clientY
-        );
-        _lastScale = _scale;
-        img.style.transition = 'none';
-      } else if (e.touches.length === 1) {
-        _startX = e.touches[0].clientX - _transX;
-        _startY = e.touches[0].clientY - _transY;
-        _lastTransX = _transX;
-        _lastTransY = _transY;
-        _isDragging = true;
-        img.style.transition = 'none';
-        // Double tap
-        const now = Date.now();
-        if (now - _lastTap < 300) {
-          if (_scale > 1) {
-            _scale = 1; _transX = 0; _transY = 0;
-            img.style.cursor = 'zoom-in';
-          } else {
-            _scale = 2.5; _transX = 0; _transY = 0;
-            img.style.cursor = 'zoom-out';
-          }
-          _applyTransform(_scale, _transX, _transY, true);
-        }
-        _lastTap = now;
-      }
-    };
-
-    // Touch move
-    const _onTouchMove = (e) => {
-      e.preventDefault();
-      if (e.touches.length === 2) {
-        const dist = Math.hypot(
-          e.touches[0].clientX - e.touches[1].clientX,
-          e.touches[0].clientY - e.touches[1].clientY
-        );
-        _scale = Math.min(5, Math.max(1, _lastScale * (dist / _startDist)));
-        _applyTransform(_scale, _transX, _transY, false);
-      } else if (e.touches.length === 1 && _isDragging && _scale > 1) {
-        let tx = e.touches[0].clientX - _startX;
-        let ty = e.touches[0].clientY - _startY;
-        [tx, ty] = _clampTrans(_scale, tx, ty);
-        _transX = tx; _transY = ty;
-        _applyTransform(_scale, _transX, _transY, false);
-      }
-    };
-
-    // Touch end
-    const _onTouchEnd = () => {
-      _isDragging = false;
-      if (_scale < 1.05) {
-        _scale = 1; _transX = 0; _transY = 0;
-        _applyTransform(1, 0, 0, true);
-        img.style.cursor = 'zoom-in';
-      } else {
-        img.style.cursor = 'zoom-out';
-        const [cx, cy] = _clampTrans(_scale, _transX, _transY);
-        _transX = cx; _transY = cy;
-        _applyTransform(_scale, _transX, _transY, true);
-      }
-    };
-
-    // Cleanup old listeners
-    img._cleanupPhotoViewer?.();
-
-    img.addEventListener('touchstart', _onTouchStart, { passive: false });
-    img.addEventListener('touchmove', _onTouchMove, { passive: false });
-    img.addEventListener('touchend', _onTouchEnd);
-
-    img._cleanupPhotoViewer = () => {
-      img.removeEventListener('touchstart', _onTouchStart);
-      img.removeEventListener('touchmove', _onTouchMove);
-      img.removeEventListener('touchend', _onTouchEnd);
-    };
   }
 
   function closeProfileModal(e) {
@@ -5811,8 +5728,13 @@ function detectTelegramLanguage() {
       const [district, region, country] = city.split('||').map(s => s.trim());
       return _buildLocationString(country, region, district, lang);
     }
-    // Eski format: translateCityLabel orqali (country endi avtomatik qo'shiladi)
-    return translateCityLabel(city);
+    // Eski format: translateCityLabel orqali
+    const translated = translateCityLabel(city);
+    if (translated.includes(',') || translated.includes('||')) return translated;
+    // Viloyat qo'shishga urinib ko'rish (faqat O'zbekiston uchun)
+    const region = getCityRegion(city);
+    const translatedRegion = region ? _translateGenericRegion(region, currentLang || 'uz') : '';
+    return translatedRegion ? `${translated}, ${translatedRegion}` : translated;
   }
 
   // ===== PROFILE HELPERS =====
@@ -6225,14 +6147,7 @@ function detectTelegramLanguage() {
 
   function closePhotoViewer(e) {
     if (e && e.target !== e.currentTarget) return;
-    const modal = document.getElementById('photo-viewer-modal');
-    const img = document.getElementById('photo-viewer-img');
-    if (modal) modal.style.display = 'none';
-    if (img) {
-      img.style.transform = 'scale(1)';
-      img.style.transition = 'none';
-      img._cleanupPhotoViewer?.();
-    }
+    document.getElementById('photo-viewer-modal').style.display = 'none';
   }
 
   // === INIT ===
@@ -6591,7 +6506,7 @@ function renderStatsRows(containerId, users, icon, label) {
     const avaHtml = photo
       ? `<img class="stats-ava" src="${photo}" alt="" />`
       : `<div class="stats-ava-letter">${(u.full_name||'?')[0].toUpperCase()}</div>`;
-    const meta = [u.age ? u.age + ' ' + tr('years_old') : '', u.city ? formatLocationLabel(u.city) : ''].filter(Boolean).join(' • ');
+    const meta = [u.age ? u.age + ' ' + tr('years_old') : '', u.city || ''].filter(Boolean).join(' • ');
     return `
       <div class="stats-row">
         ${medalHtml}
@@ -6643,12 +6558,28 @@ let _miniStatsData = null;
 let _miniStatsCurrentTab = 'active';
 
 function updateMiniStatsLabels() {
-  const tabActive = document.getElementById('smtab-active');
-  if (tabActive) tabActive.textContent = tr('stats_active') || '🔥 Faollar';
-  const tabLikes = document.getElementById('smtab-likes');
-  if (tabLikes) tabLikes.textContent = tr('stats_likes') || '💙 Like';
-  const tabSuper = document.getElementById('smtab-superlikes');
-  if (tabSuper) tabSuper.textContent = tr('stats_superlikes') || '⭐ Super';
+  // TOP panel tugmalarini tarjima qilish
+  const labelMap = {
+    'active':     { key: 'top_btn_active',     fallback: 'Faollar' },
+    'likes':      { key: 'top_btn_likes',      fallback: 'Like TOP' },
+    'superlikes': { key: 'top_btn_superlikes', fallback: 'Super TOP' },
+    'champion':   { key: 'top_btn_champion',   fallback: 'Chempion' },
+  };
+  Object.entries(labelMap).forEach(([tab, { key, fallback }]) => {
+    const btn = document.getElementById('tpbtn-' + tab);
+    if (!btn) return;
+    const labelEl = btn.querySelector('.top-panel-btn-label');
+    if (labelEl) labelEl.textContent = tr(key) || fallback;
+  });
+  // Eski smtab-* lar uchun ham (stats modal)
+  const smActive = document.getElementById('smtab-active');
+  if (smActive) smActive.textContent = tr('stats_active') || '🔥 Faollar';
+  const smLikes = document.getElementById('smtab-likes');
+  if (smLikes) smLikes.textContent = tr('stats_likes') || '💙 Like';
+  const smSuper = document.getElementById('smtab-superlikes');
+  if (smSuper) smSuper.textContent = tr('stats_superlikes') || '⭐ Super';
+  // Agar TOP panel ochiq bo'lsa, qayta render qilish
+  if (_miniStatsOpen && _miniStatsData) renderTopPanelTab(_topPanelTab);
 }
 
 let _miniStatsOpen = false;
@@ -6788,7 +6719,7 @@ function renderMiniStatsTab(tab) {
     const avaHtml = photo
       ? `<img class="stats-mini-ava" src="${photo}" alt="" />`
       : `<div class="stats-mini-ava-letter">${(u.full_name||'?')[0].toUpperCase()}</div>`;
-    const meta = [u.age ? u.age + ' ' + tr('years_old') : '', u.city ? formatLocationLabel(u.city) : ''].filter(Boolean).join(' • ');
+    const meta = [u.age ? u.age + ' ' + tr('years_old') : '', u.city || ''].filter(Boolean).join(' • ');
     return `<div class="stats-mini-row">
       ${rankHtml}
       ${avaHtml}
@@ -6859,7 +6790,7 @@ document.addEventListener('DOMContentLoaded', function() {
           <img class="viewed-photo" src="${u.photo || 'https://api.dicebear.com/7.x/avataaars/svg?seed=' + encodeURIComponent(u.name || 'user')}" alt="${u.name || ''}" />
           <div class="viewed-info">
             <div class="viewed-name">${u.name || tr('no_name')}</div>
-            <div class="viewed-count">${u.age || ''} ${u.age ? tr('years_old') : ''} ${u.city ? '• ' + formatLocationLabel(u.city) : ''}</div>
+            <div class="viewed-count">${u.age || ''} ${u.age ? tr('years_old') : ''} ${u.city ? '• ' + u.city : ''}</div>
           </div>
           <div class="viewed-actions">
             <button class="viewed-btn ${tab === 'liked' ? 'liked-btn' : ''}" onclick="event.stopPropagation();${tab === 'liked' ? 'openMessageModal(' + (u.id||0) + ')' : 'openChatRoom(' + (u.id||0) + ')'}">
@@ -6975,7 +6906,7 @@ document.addEventListener('DOMContentLoaded', function() {
           <div style="font-size:22px;font-weight:800;margin-bottom:6px;">
             ${escapeHtml(u.name || tr('no_name'))}${u.age ? ', ' + u.age : ''}
           </div>
-          ${u.city ? `<div style="font-size:14px;color:var(--text-secondary);margin-bottom:4px;">📍 ${escapeHtml(formatLocationLabel(u.city))}</div>` : ''}
+          ${u.city ? `<div style="font-size:14px;color:var(--text-secondary);margin-bottom:4px;">📍 ${escapeHtml(u.city)}</div>` : ''}
           ${zodiacDisplay ? `<div style="font-size:14px;color:var(--text-secondary);">✨ ${escapeHtml(zodiacDisplay)}</div>` : ''}
         </div>`;
       modal.style.display = 'flex';
