@@ -297,6 +297,16 @@
       <div class="location-select-wrap" id="inp-district-wrap" style="display:none;">
         <input type="hidden" id="inp-district" />
       </div>
+
+      <!-- Erkin matn maydonlari: regions.json da yo'q davlatlar uchun (GPS dan avtomatik to'ldiriladi) -->
+      <div id="inp-region-free-wrap" style="display:none;">
+        <div class="loc-free-label" data-i18n="region_label">Viloyat</div>
+        <input type="text" id="inp-region-free" class="loc-free-input" autocomplete="off" />
+      </div>
+      <div id="inp-district-free-wrap" style="display:none;">
+        <div class="loc-free-label" data-i18n="district_label">Tuman / Shahar</div>
+        <input type="text" id="inp-district-free" class="loc-free-input" autocomplete="off" />
+      </div>
       <input type="hidden" id="inp-city" />
       <div id="geo-status" class="geo-status" style="display:none;"></div>
       <button type="button" id="geo-direct-btn" class="geo-direct-btn" onclick="useGpsDirectFill()">
