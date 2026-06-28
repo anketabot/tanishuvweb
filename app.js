@@ -239,6 +239,7 @@ const tg = window.Telegram?.WebApp;
           'count_super_label': 'ta super like',
           'count_score_label': 'ball',
           'top_label': 'TOP',
+          'until_date': 'gacha',
           'no_name': 'Ismsiz',
           'write_message_to': '{name} ga birinchi xabaringizni yozing.',
           'enter_message_text': 'Xabar matnini kiriting!',
@@ -364,6 +365,10 @@ const tg = window.Telegram?.WebApp;
           'interface_language': 'Interfeys tili',
           'champions_title': '🏆 Mutloq chempion',
           'nav_champions': 'Chemp.',
+          'top_btn_active': 'Faollar',
+          'top_btn_likes': 'Like TOP',
+          'top_btn_superlikes': 'Super TOP',
+          'top_btn_champion': 'Chempion',
           'viewed_title': '👁 Men ko\'rganlarim',
           'nav_viewed': 'Ko\'rganlar',
           'tab_viewed_liked': '💙 Like bergan',
@@ -681,6 +686,10 @@ const tg = window.Telegram?.WebApp;
           'interface_language': 'Язык интерфейса',
           'champions_title': '🏆 Абсолютный чемпион',
           'nav_champions': 'Чемп.',
+          'top_btn_active': 'Активные',
+          'top_btn_likes': 'Лайк ТОП',
+          'top_btn_superlikes': 'Супер ТОП',
+          'top_btn_champion': 'Чемпион',
           'viewed_title': '👁 Мои просмотры',
           'nav_viewed': 'Просмотры',
           'tab_viewed_liked': '💙 Лайкнул',
@@ -999,6 +1008,10 @@ const tg = window.Telegram?.WebApp;
           'interface_language': 'Интерфейс тілі',
           'champions_title': '🏆 Үздік чемпион',
           'nav_champions': 'Чемп.',
+          'top_btn_active': 'Белсенділер',
+          'top_btn_likes': 'Лайк ТОП',
+          'top_btn_superlikes': 'Супер ТОП',
+          'top_btn_champion': 'Чемпион',
           'viewed_title': '👁 Мен көргендерім',
           'nav_viewed': 'Көргендер',
           'tab_viewed_liked': '💙 Лайк басқан',
@@ -1317,6 +1330,10 @@ const tg = window.Telegram?.WebApp;
           'interface_language': 'Интерфейс тили',
           'champions_title': '🏆 Абсолюттук чемпион',
           'nav_champions': 'Чемп.',
+          'top_btn_active': 'Активдүүлөр',
+          'top_btn_likes': 'Лайк ТОП',
+          'top_btn_superlikes': 'Супер ТОП',
+          'top_btn_champion': 'Чемпион',
           'viewed_title': '👁 Мен көргөндөрүм',
           'nav_viewed': 'Көргөндөр',
           'tab_viewed_liked': '💙 Лайк баскан',
@@ -1635,6 +1652,10 @@ const tg = window.Telegram?.WebApp;
           'interface_language': 'Interfeys tіlі',
           'champions_title': '🏆 Mutloq chempion',
           'nav_champions': 'Chemp.',
+          'top_btn_active': 'Belgіlіler',
+          'top_btn_likes': 'Like TOP',
+          'top_btn_superlikes': 'Super TOP',
+          'top_btn_champion': 'Chempion',
           'viewed_title': '👁 Men kórgеnim',
           'nav_viewed': 'Kórgenler',
           'tab_viewed_liked': '💙 Like basqan',
@@ -1953,6 +1974,10 @@ const tg = window.Telegram?.WebApp;
           'interface_language': 'Забони интерфейс',
           'champions_title': '🏆 Мутлоқ чемпион',
           'nav_champions': 'Чемп.',
+          'top_btn_active': 'Фаъолон',
+          'top_btn_likes': 'Лайк ТОП',
+          'top_btn_superlikes': 'Супер ТОП',
+          'top_btn_champion': 'Чемпион',
           'viewed_title': '👁 Ман дидаам',
           'nav_viewed': 'Дидаҳо',
           'tab_viewed_liked': '💙 Лайк задаам',
@@ -2271,6 +2296,10 @@ const tg = window.Telegram?.WebApp;
           'interface_language': 'Interface language',
           'champions_title': '🏆 Absolute Champion',
           'nav_champions': 'Champ.',
+          'top_btn_active': 'Active',
+          'top_btn_likes': 'Like TOP',
+          'top_btn_superlikes': 'Super TOP',
+          'top_btn_champion': 'Champion',
           'viewed_title': '👁 My Views',
           'nav_viewed': 'Viewed',
           'tab_viewed_liked': '💙 Liked',
@@ -6569,7 +6598,7 @@ function updateMiniStatsLabels() {
   const toggleLabel = document.getElementById('stats-toggle-label');
   if (toggleLabel) toggleLabel.textContent = tr('top_label') || 'TOP';
 
-  // TOP panel tugmalari labellari
+  // 4 tab tugmalar labellari
   const labelMap = {
     'active':     { key: 'top_btn_active',     fallback: 'Faollar' },
     'likes':      { key: 'top_btn_likes',      fallback: 'Like TOP' },
@@ -6583,7 +6612,7 @@ function updateMiniStatsLabels() {
     if (labelEl) labelEl.textContent = tr(key) || fallback;
   });
 
-  // Eski smtab-* lar uchun (stats modal)
+  // stats modal tablar
   const smActive = document.getElementById('smtab-active');
   if (smActive) smActive.textContent = tr('stats_active') || '🔥 Faollar';
   const smLikes = document.getElementById('smtab-likes');
@@ -6591,8 +6620,10 @@ function updateMiniStatsLabels() {
   const smSuper = document.getElementById('smtab-superlikes');
   if (smSuper) smSuper.textContent = tr('stats_superlikes') || '⭐ Super';
 
-  // Agar TOP panel ochiq bo'lsa — qayta render
-  if (_miniStatsOpen && _miniStatsData) renderTopPanelTab(_topPanelTab);
+  // Panel ochiq bo'lsa qayta render
+  if (typeof _miniStatsOpen !== 'undefined' && _miniStatsOpen && _miniStatsData) {
+    renderTopPanelTab(typeof _topPanelTab !== 'undefined' ? _topPanelTab : 'active');
+  }
 }
 
 let _miniStatsOpen = false;
@@ -6672,10 +6703,10 @@ function renderTopPanelTab(tab) {
   }
 
   const configs = {
-      active:    { title: `🔥 ${tr('top_btn_active') || 'Faollar'} TOP 10`,        users: _miniStatsData.most_active,     icon: '🔥', label: tr('count_active_label') || 'ta' },
-      likes:     { title: `💙 ${tr('top_btn_likes') || 'Like TOP'} 10`,             users: _miniStatsData.top_liked,       icon: '💙', label: tr('count_likes_label') || 'like' },
-      superlikes:{ title: `⭐ ${tr('top_btn_superlikes') || 'Super TOP'} 10`,        users: _miniStatsData.top_super_liked, icon: '⭐', label: tr('count_super_label') || 'super like' },
-      champion:  { title: `🏆 ${tr('champions_title') || 'Mutloq chempion'}`,       users: _miniStatsData.top_liked,       icon: '🏆', label: tr('count_score_label') || 'ball' },
+      active:    { title: `🔥 ${tr('top_btn_active') || 'Faollar'} TOP 10`,       users: _miniStatsData.most_active,     icon: '🔥', label: tr('count_active_label') || 'ta' },
+      likes:     { title: `💙 ${tr('top_btn_likes') || 'Like TOP'} 10`,              users: _miniStatsData.top_liked,       icon: '💙', label: tr('count_likes_label') || 'like' },
+      superlikes:{ title: `⭐ ${tr('top_btn_superlikes') || 'Super TOP'} 10`,         users: _miniStatsData.top_super_liked, icon: '⭐', label: tr('count_super_label') || 'super like' },
+      champion:  { title: `🏆 ${tr('champions_title') || 'Mutloq chempion'}`,        users: _miniStatsData.top_liked,       icon: '🏆', label: tr('count_score_label') || 'ball' },
     };
 
   const cfg = configs[tab] || configs.active;
@@ -6715,9 +6746,9 @@ function renderMiniStatsTab(tab) {
   if (tab === 'active') {
     users = _miniStatsData.most_active; icon = '🔥'; label = tr('count_active_label') || 'ta';
   } else if (tab === 'likes') {
-    users = _miniStatsData.top_liked; icon = '💙'; label = tr('count_likes_label') || 'like';
+    users = _miniStatsData.top_liked; icon = '💙'; label = tr('stats_likes') || 'like';
   } else {
-    users = _miniStatsData.top_super_liked; icon = '⭐'; label = tr('count_super_label') || 'super like';
+    users = _miniStatsData.top_super_liked; icon = '⭐'; label = tr('stats_superlikes') || 'super like';
   }
   if (!users || !users.length) {
     body.innerHTML = `<div class="stats-mini-empty">${tr('no_one_found') || 'Hozircha ma\'lumot yo\'q'} 🙈</div>`;
