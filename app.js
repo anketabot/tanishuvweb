@@ -4010,63 +4010,19 @@ function detectTelegramLanguage() {
     }
   }
 
-  // Davlat value (istalgan tilda) → joriy tilda nom
+  // Davlat value (O'zbekcha) → joriy tilda nom
   function _translateCountryValue(value, lang) {
     if (!value) return value;
     const MAP = {
-      // O'zbekiston
-      "Oʻzbekiston": 'country_uz', "O'zbekiston": 'country_uz',
-      "Ўzbekiston": 'country_uz', "Узбекистан": 'country_uz',
-      "Uzbekistan": 'country_uz', "Өзбекстан": 'country_uz',
-      "Ӥзбекистон": 'country_uz', "O'zbekstan": 'country_uz',
-      // Rossiya
-      "Rossiya": 'country_ru', "Россия": 'country_ru',
-      "Russia": 'country_ru', "Ресей": 'country_ru',
-      "Русия": 'country_ru',
-      // Qozog'iston
-      "Qozogʻiston": 'country_kz', "Qozog'iston": 'country_kz',
-      "Казахстан": 'country_kz',
-      "Kazakhstan": 'country_kz', "Қазақстан": 'country_kz',
-      "Qazaqstan": 'country_kz', "Қазоқистон": 'country_kz',
-      // Qirg'iziston
-      "Qirgʻiziston": 'country_kg', "Qirg'iziston": 'country_kg',
-      "Кыргызстан": 'country_kg',
-      "Kyrgyzstan": 'country_kg', "Қырғызстан": 'country_kg',
-      "Қирғизистон": 'country_kg',
-      // Tojikiston
-      "Tojikiston": 'country_tj', "Таджикистан": 'country_tj',
-      "Tajikistan": 'country_tj', "Тәжікстан": 'country_tj',
-      "Тажикстан": 'country_tj',
-      "Тоҷикистон": 'country_tj',
-      // Turkmaniston
-      "Turkmaniston": 'country_tm', "Туркменистан": 'country_tm',
-      "Turkmenistan": 'country_tm', "Түркіменстан": 'country_tm',
-      "Түркмөнстан": 'country_tm',
-      "Туркманистон": 'country_tm',
-      // Ozarbayjon
-      "Ozarbayjon": 'country_az', "Азербайджан": 'country_az',
-      "Azerbaijan": 'country_az', "Әзербайжан": 'country_az',
-      "Озарбойҷон": 'country_az',
-      // Armaniston
-      "Armaniston": 'country_am', "Армения": 'country_am',
-      "Armenia": 'country_am', "Armeniya": 'country_am',
-      "Арманистон": 'country_am',
-      // Gruziya
-      "Gruziya": 'country_ge', "Грузия": 'country_ge',
-      "Georgia": 'country_ge', "Гурҷистон": 'country_ge',
-      // Ukraina
-      "Ukraina": 'country_ua', "Украина": 'country_ua',
-      "Ukraine": 'country_ua',
-      // Belarus
-      "Belarus": 'country_by', "Беларусь": 'country_by',
-      "Беларус": 'country_by',
-      // Moldova
-      "Moldova": 'country_md', "Молдова": 'country_md',
-      // Boshqa
-      "Boshqa": 'country_other', "Другое": 'country_other',
-      "Other": 'country_other', "Басқа": 'country_other',
-      "Башка": 'country_other', "Basqa": 'country_other',
-      "Дигар": 'country_other',
+      "\u004f\u02bczbekiston": 'country_uz', "O'zbekiston": 'country_uz',
+      "Rossiya": 'country_ru',
+      "Qozog\u02bbiston": 'country_kz', "Qozog'iston": 'country_kz',
+      "Qirg\u02bbiziston": 'country_kg', "Qirg'iziston": 'country_kg',
+      "Tojikiston": 'country_tj', "Turkmaniston": 'country_tm',
+      "Ozarbayjon": 'country_az', "Armaniston": 'country_am',
+      "Gruziya": 'country_ge', "Ukraina": 'country_ua',
+      "Belarus": 'country_by', "Moldova": 'country_md',
+      "Boshqa": 'country_other',
     };
     const key = MAP[value] || MAP[value?.trim()];
     return key ? (tr(key) || value) : value;
@@ -5503,7 +5459,7 @@ function detectTelegramLanguage() {
                   <div class="like-notification-meta">${u.age} ${tr('years_old')}${u.city ? ' • ' + formatLocationLabel(u.city || '') : ''}</div>
                 </div>
                 <div class="like-notification-actions">
-                  <button class="like-btn" onclick="event.stopPropagation(); acceptLike(${u.telegram_id}, '${escapeJs(u.full_name)}', '${escapeJs(photo)}'); closeLikesModal();">${tr('accept')}</button>
+                  <button class="like-btn" onclick="event.stopPropagation(); acceptLike(${u.telegram_id}, '${escapeJs(u.full_name)}', '${escapeJs(photo)}');">${tr('accept')}</button>
                   <button class="reject-btn" onclick="event.stopPropagation(); rejectLike(${u.telegram_id}, '${escapeJs(u.full_name)}');">${tr('reject')}</button>
                 </div>
               </div>
@@ -5580,6 +5536,16 @@ function detectTelegramLanguage() {
     const data = await apiPost('/api/likes/accept', { telegram_id: userId, from_user: fromUserId });
     if (data.success) {
       showToast(tr('match_with').replace('{name}', name));
+      // Accept qilingan kartochkani darhol modal'dan o'chirish
+      const card = document.querySelector(`.like-notification-card[data-user*='"telegram_id":${fromUserId}']`);
+      if (card) card.remove();
+      // Qolgan likelar yo'q bo'lsa bo'sh holat ko'rsatish
+      const remaining = document.querySelectorAll('.like-notification-card');
+      if (remaining.length === 0) {
+        const body = document.getElementById('likes-modal-body');
+        if (body) body.innerHTML = `<div class="empty-state"><div class="empty-icon">${ICONS.info}</div><h3>${tr('no_likes_yet')}</h3><p>${tr('no_likes_hint')}</p></div>`;
+        document.getElementById('likes-modal').style.display = 'none';
+      }
       loadPendingLikesIndicator();
       await loadChats();
       // Match bo'lganda darhol chatni ochamiz
