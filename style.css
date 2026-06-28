@@ -5361,32 +5361,473 @@ body.pre-init .lang-modal-overlay.show {
 .location-group-icon svg { stroke: white; }
 .location-group-title { font-size: 13px; font-weight: 700; color: var(--text-primary); }
 .location-group-sub { font-size: 11px; color: var(--text-secondary); margin-top: 1px; }
-/* ── GPS erkin matn maydonlari (regions.json da yo'q davlatlar uchun) ─── */
-.loc-free-label {
-  font-size: 12px;
-  font-weight: 600;
-  color: var(--text-secondary);
-  margin-bottom: 5px;
-  padding-left: 2px;
+/* ===== VERIFIKATSIYA CARD ===== */
+.verif-card {
+  background: linear-gradient(145deg, rgba(255,255,255,0.96), rgba(240,247,255,0.98));
+  border: 1.5px solid rgba(0,122,255,0.18);
+  border-radius: 22px;
+  padding: 20px;
+  position: relative;
+  overflow: hidden;
 }
-.loc-free-input {
-  width: 100%;
-  padding: 11px 14px;
-  border-radius: 13px;
-  border: 1.5px solid var(--glass-border);
-  background: var(--glass-bg);
+.verif-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, #007AFF, #5AC8FA, #34a853);
+  border-radius: 22px 22px 0 0;
+}
+
+.verif-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+.verif-header-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.verif-icon-wrap {
+  width: 40px; height: 40px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #007AFF, #0051D5);
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 4px 12px rgba(0,122,255,0.35);
+  flex-shrink: 0;
+}
+.verif-title {
+  font-size: 16px;
+  font-weight: 700;
   color: var(--text-primary);
+  letter-spacing: -0.2px;
+}
+.verif-sub {
+  font-size: 12px;
+  color: var(--text-secondary);
+  margin-top: 1px;
+}
+.verif-badge-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: linear-gradient(135deg, #007AFF, #34a853);
+  color: white;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 5px 10px;
+  border-radius: 20px;
+  letter-spacing: 0.2px;
+  box-shadow: 0 2px 8px rgba(0,122,255,0.3);
+}
+
+/* Steps */
+.verif-steps-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  margin-bottom: 18px;
+  padding: 12px 8px;
+  background: rgba(0,122,255,0.05);
+  border-radius: 14px;
+  border: 1px solid rgba(0,122,255,0.1);
+}
+.verif-step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  flex: 1;
+}
+.verif-step-num {
+  width: 26px; height: 26px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #007AFF, #5AC8FA);
+  color: white;
+  font-size: 12px;
+  font-weight: 800;
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 2px 6px rgba(0,122,255,0.3);
+}
+.verif-step-text {
+  font-size: 10px;
+  color: var(--text-secondary);
+  text-align: center;
+  font-weight: 500;
+  line-height: 1.3;
+}
+.verif-step-arrow {
   font-size: 14px;
-  font-family: inherit;
-  outline: none;
-  box-sizing: border-box;
-  transition: border-color 0.18s, background 0.18s;
+  color: rgba(0,122,255,0.4);
+  flex-shrink: 0;
 }
-.loc-free-input:focus {
-  border-color: var(--ios-blue);
-  background: var(--glass-bg-strong, var(--glass-bg));
+
+/* Preview */
+.verif-preview-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 14px;
+  animation: fadeInScale 0.35s ease;
 }
-#inp-region-free-wrap,
-#inp-district-free-wrap {
-  margin-top: 8px;
+@keyframes fadeInScale {
+  from { opacity: 0; transform: scale(0.85); }
+  to   { opacity: 1; transform: scale(1); }
+}
+.verif-preview-ring {
+  position: relative;
+  width: 120px; height: 120px;
+}
+.verif-preview-img {
+  width: 120px; height: 120px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid #007AFF;
+  box-shadow: 0 4px 20px rgba(0,122,255,0.3), 0 0 0 6px rgba(0,122,255,0.08);
+}
+.verif-preview-checkmark {
+  position: absolute;
+  bottom: 4px; right: 4px;
+  width: 26px; height: 26px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #34a853, #1e7e34);
+  display: flex; align-items: center; justify-content: center;
+  border: 2px solid white;
+  box-shadow: 0 2px 6px rgba(52,168,83,0.4);
+}
+.verif-preview-label {
+  font-size: 12px;
+  color: #34a853;
+  font-weight: 600;
+}
+
+/* Status */
+.verif-status {
+  font-size: 13px;
+  text-align: center;
+  margin-bottom: 12px;
+  min-height: 18px;
+  font-weight: 500;
+  transition: all 0.2s;
+}
+
+/* Buttons */
+.verif-btn-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.verif-btn-camera {
+  position: relative;
+  width: 100%;
+  padding: 0;
+  background: linear-gradient(135deg, #007AFF 0%, #0051D5 100%);
+  color: white;
+  border: none;
+  border-radius: 16px;
+  font-weight: 700;
+  font-size: 15px;
+  cursor: pointer;
+  overflow: hidden;
+  box-shadow: 0 6px 20px rgba(0,122,255,0.4), 0 2px 6px rgba(0,122,255,0.25);
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+.verif-btn-camera:active {
+  transform: scale(0.97);
+  box-shadow: 0 3px 10px rgba(0,122,255,0.3);
+}
+.verif-btn-camera-inner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 15px 20px;
+  position: relative;
+  z-index: 1;
+}
+.verif-btn-shimmer {
+  position: absolute;
+  top: -50%; left: -75%;
+  width: 50%; height: 200%;
+  background: linear-gradient(105deg, transparent 40%, rgba(255,255,255,0.18) 50%, transparent 60%);
+  animation: shimmerSlide 2.5s infinite;
+}
+@keyframes shimmerSlide {
+  0%   { left: -75%; }
+  100% { left: 125%; }
+}
+
+.verif-btn-send {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  padding: 14px;
+  background: linear-gradient(135deg, #34a853, #137333);
+  color: white;
+  border: none;
+  border-radius: 16px;
+  font-weight: 700;
+  font-size: 15px;
+  cursor: pointer;
+  box-shadow: 0 4px 16px rgba(52,168,83,0.35);
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+.verif-btn-send:active { transform: scale(0.97); }
+.verif-btn-send:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.verif-btn-retake {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  width: 100%;
+  padding: 12px;
+  background: var(--glass-bg-strong);
+  color: var(--text-secondary);
+  border: 1.5px solid var(--glass-border);
+  border-radius: 16px;
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.verif-btn-retake:active { background: rgba(0,122,255,0.07); }
+
+/* ===== IN-APP SELFIE CAMERA MODAL ===== */
+.selfie-cam-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: #000;
+  display: flex;
+  align-items: stretch;
+  justify-content: center;
+}
+.selfie-cam-shell {
+  width: 100%;
+  max-width: 480px;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  position: relative;
+  background: #000;
+}
+
+/* Topbar */
+.selfie-cam-topbar {
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 16px;
+  padding-top: max(16px, env(safe-area-inset-top));
+  background: linear-gradient(to bottom, rgba(0,0,0,0.6) 0%, transparent 100%);
+}
+.selfie-cam-title {
+  color: white;
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: -0.2px;
+}
+.selfie-cam-close-btn,
+.selfie-cam-flip-btn {
+  width: 40px; height: 40px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.15);
+  border: none;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  transition: background 0.2s;
+}
+.selfie-cam-close-btn:active,
+.selfie-cam-flip-btn:active { background: rgba(255,255,255,0.28); }
+
+/* Viewport */
+.selfie-cam-viewport {
+  flex: 1;
+  position: relative;
+  overflow: hidden;
+  background: #111;
+}
+.selfie-cam-video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transform: scaleX(-1); /* Mirror effect for front camera */
+}
+.selfie-cam-video.rear-cam {
+  transform: scaleX(1); /* No mirror for rear cam */
+}
+
+/* Face guide oval */
+.selfie-face-guide {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+.selfie-face-oval {
+  width: 200px;
+  height: 260px;
+  border-radius: 50%;
+  border: 2.5px solid rgba(255,255,255,0.65);
+  box-shadow: 0 0 0 9999px rgba(0,0,0,0.35);
+  animation: ovalPulse 2.5s ease-in-out infinite;
+}
+@keyframes ovalPulse {
+  0%, 100% { border-color: rgba(255,255,255,0.5); box-shadow: 0 0 0 9999px rgba(0,0,0,0.35); }
+  50%       { border-color: rgba(0,200,100,0.85);  box-shadow: 0 0 0 9999px rgba(0,0,0,0.28), 0 0 0 2px rgba(0,200,100,0.3); }
+}
+.selfie-face-hint {
+  color: rgba(255,255,255,0.85);
+  font-size: 13px;
+  font-weight: 500;
+  margin-top: 18px;
+  text-align: center;
+  text-shadow: 0 1px 4px rgba(0,0,0,0.6);
+  letter-spacing: 0.1px;
+}
+
+/* Loading overlay */
+.selfie-cam-loading {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  background: #111;
+  z-index: 5;
+  transition: opacity 0.4s;
+}
+.selfie-cam-spinner {
+  width: 44px; height: 44px;
+  border: 3px solid rgba(255,255,255,0.15);
+  border-top-color: #007AFF;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+.selfie-cam-loading-text {
+  color: rgba(255,255,255,0.7);
+  font-size: 14px;
+  font-weight: 500;
+}
+
+/* Error overlay */
+.selfie-cam-error {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  background: rgba(0,0,0,0.85);
+  z-index: 6;
+  padding: 32px;
+}
+.selfie-cam-error-text {
+  color: rgba(255,255,255,0.8);
+  font-size: 15px;
+  font-weight: 600;
+  text-align: center;
+}
+.selfie-cam-fallback-btn {
+  padding: 12px 24px;
+  background: rgba(255,255,255,0.12);
+  border: 1.5px solid rgba(255,255,255,0.25);
+  border-radius: 30px;
+  color: white;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 4px;
+}
+.selfie-cam-fallback-btn:active { background: rgba(255,255,255,0.22); }
+
+/* Bottom shutter */
+.selfie-cam-bottom {
+  padding: 20px 20px;
+  padding-bottom: max(24px, env(safe-area-inset-bottom));
+  background: linear-gradient(to top, rgba(0,0,0,0.75) 0%, transparent 100%);
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+.selfie-cam-bottom-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+.selfie-shutter-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+  transition: transform 0.12s;
+}
+.selfie-shutter-btn:active { transform: scale(0.9); }
+.selfie-shutter-outer {
+  width: 72px; height: 72px;
+  border-radius: 50%;
+  border: 4px solid rgba(255,255,255,0.9);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.4);
+}
+.selfie-shutter-inner {
+  width: 54px; height: 54px;
+  border-radius: 50%;
+  background: white;
+  box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
+  transition: transform 0.12s, background 0.12s;
+}
+.selfie-shutter-btn:active .selfie-shutter-inner {
+  transform: scale(0.88);
+  background: #e8e8e8;
+}
+.selfie-cam-hint {
+  color: rgba(255,255,255,0.7);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.1px;
+}
+
+/* Snapshot flash effect */
+.selfie-flash {
+  position: absolute;
+  inset: 0;
+  background: white;
+  z-index: 20;
+  opacity: 0;
+  pointer-events: none;
+  animation: flashBlink 0.35s ease-out forwards;
+}
+@keyframes flashBlink {
+  0%   { opacity: 0.85; }
+  100% { opacity: 0; }
 }
