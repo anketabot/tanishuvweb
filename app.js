@@ -7793,13 +7793,7 @@ async function sendSelfieForVerification() {
   if (statusEl) statusEl.textContent = '🔄 Selfi yuklanmoqda, iltimos kuting...';
 
   try {
-    const BASE_URL = window.BASE_URL || '';
-    const res = await fetch(BASE_URL + '/api/verify/upload', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ telegram_id: userId, selfie_base64: _selfieBase64 })
-    });
-    const data = await res.json();
+    const data = await apiPost('/api/verify/upload', { telegram_id: userId, selfie_base64: _selfieBase64 });
 
     if (data.success) {
       statusEl.textContent = '💙 Profilingiz tasdiqlandi! Ko\'k galochka qo\'yildi.';
@@ -7828,13 +7822,13 @@ async function sendSelfieForVerification() {
       statusEl.textContent = '❌ Xatolik: ' + (data.error || 'Qayta urinib ko\'ring');
       statusEl.style.color = 'var(--ios-red, #FF3B30)';
       sendBtn.disabled = false;
-      sendBtn.textContent = '✅ Tasdiqlash uchun yuborish';
+      sendBtn.innerHTML = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Tasdiqlash uchun yuborish';
     }
   } catch (err) {
     statusEl.textContent = '❌ Server bilan bog\'lanishda xatolik.';
     statusEl.style.color = 'var(--ios-red, #FF3B30)';
     sendBtn.disabled = false;
-    sendBtn.textContent = '✅ Tasdiqlash uchun yuborish';
+    sendBtn.innerHTML = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Tasdiqlash uchun yuborish';
   }
 }
 
@@ -7842,13 +7836,7 @@ async function sendSelfieForVerification() {
 async function loadVerificationStatus() {
   if (!userId) return;
   try {
-    const BASE_URL = window.BASE_URL || '';
-    const res = await fetch(BASE_URL + '/api/verify/status', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ telegram_id: userId })
-    });
-    const data = await res.json();
+    const data = await apiPost('/api/verify/status', { telegram_id: userId });
     if (data.success && data.is_verified) {
       // Form ichidagi badge
       const badge = document.getElementById('verified-badge-form');
