@@ -7610,3 +7610,218 @@ function openViewedProfile(id, tab) {
     </div>`;
   modal.style.display = 'flex';
 }
+
+// ========== VERIFIKATSIYA (SELFI) ==========
+let _selfieStream = null;
+let _selfieBase64 = null;
+
+async function openSelfieCamera() {
+  const wrap = document.getElementById('selfie-camera-wrap');
+  const video = document.getElementById('selfie-video');
+  const statusEl = document.getElementById('selfie-status');
+  const openBtn = document.getElementById('selfie-open-btn');
+
+  if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+    statusEl.textContent = '❌ Kamera ishlamaydi. Iltimos, brauzer ruxsat bering.';
+    return;
+  }
+
+  try {
+    statusEl.textContent = '📷 Kamera ochilmoqda...';
+    _selfieStream = await navigator.mediaDevices.getUserMedia({
+      video: { facingMode: 'user', width: { ideal: 640 }, height: { ideal: 640 } },
+      audio: false
+    });
+    video.srcObject = _selfieStream;
+    wrap.style.display = 'block';
+    openBtn.style.display = 'none';
+    statusEl.textContent = '😊 Kameraga qarang va rasm oling';
+  } catch (err) {
+    statusEl.textContent = '❌ Kameraga ruxsat berilmadi. Sozlamalardan ruxsat bering.';
+  }
+}
+
+function stopSelfieCamera() {
+  if (_selfieStream) {
+    _selfieStream.getTracks().forEach(t => t.stop());
+    _selfieStream = null;
+  }
+  const wrap = document.getElementById('selfie-camera-wrap');
+  const openBtn = document.getElementById('selfie-open-btn');
+  const statusEl = document.getElementById('selfie-status');
+  if (wrap) wrap.style.display = 'none';
+  if (openBtn) openBtn.style.display = '';
+  if (statusEl) statusEl.textContent = '';
+}
+
+function takeSelfie() {
+  const video = document.getElementById('selfie-video');
+  const canvas = document.getElementById('selfie-canvas');
+  const previewWrap = document.getElementById('selfie-preview-wrap');
+  const previewImg = document.getElementById('selfie-preview-img');
+  const sendBtn = document.getElementById('selfie-send-btn');
+  const retakeBtn = document.getElementById('selfie-retake-btn');
+  const openBtn = document.getElementById('selfie-open-btn');
+  const statusEl = document.getElementById('selfie-status');
+
+  if (!video || !canvas) return;
+
+  const size = 480;
+  canvas.width = size;
+  canvas.height = size;
+  const ctx = canvas.getContext('2d');
+
+  // Square crop from center
+  const vw = video.videoWidth, vh = video.videoHeight;
+  const side = Math.min(vw, vh);
+  const sx = (vw - side) / 2, sy = (vh - side) / 2;
+  ctx.drawImage(video, sx, sy, side, side, 0, 0, size, size);
+
+  _selfieBase64 = canvas.toDataURL('image/jpeg', 0.82).split(',')[1];
+
+  // Preview ko'rsatish
+  previewImg.src = 'data:image/jpeg;base64,' + _selfieBase64;
+  previewWrap.style.display = 'block';
+  statusEl.textContent = '✅ Rasm olindi! Tasdiqlash uchun yuboring.';
+
+  // Kamerani o'chirish
+  stopSelfieCamera();
+
+  // Tugmalar
+  sendBtn.style.display = '';
+  retakeBtn.style.display = '';
+  if (openBtn) openBtn.style.display = 'none';
+}
+
+function retakeSelfie() {
+  _selfieBase64 = null;
+  const previewWrap = document.getElementById('selfie-preview-wrap');
+  const sendBtn = document.getElementById('selfie-send-btn');
+  const retakeBtn = document.getElementById('selfie-retake-btn');
+  const openBtn = document.getElementById('selfie-open-btn');
+  const statusEl = document.getElementById('selfie-status');
+  if (previewWrap) previewWrap.style.display = 'none';
+  if (sendBtn) sendBtn.style.display = 'none';
+  if (retakeBtn) retakeBtn.style.display = 'none';
+  if (openBtn) openBtn.style.display = '';
+  if (statusEl) statusEl.textContent = '';
+  openSelfieCamera();
+}
+
+async function sendSelfieForVerification() {
+  if (!_selfieBase64) { showToast('Avval selfi oling!'); return; }
+  if (!userId) { showToast('Telegram orqali kiring!'); return; }
+
+  const sendBtn = document.getElementById('selfie-send-btn');
+  const retakeBtn = document.getElementById('selfie-retake-btn');
+  const statusEl = document.getElementById('selfie-status');
+
+  sendBtn.disabled = true;
+  sendBtn.textContent = '⏳ Tekshirilmoqda...';
+  if (statusEl) statusEl.textContent = '🔄 Selfi yuklanmoqda, iltimos kuting...';
+
+  try {
+    const BASE_URL = window.BASE_URL || '';
+    const res = await fetch(BASE_URL + '/api/verify/upload', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ telegram_id: userId, selfie_base64: _selfieBase64 })
+    });
+    const data = await res.json();
+
+    if (data.success) {
+      statusEl.textContent = '💙 Profilingiz tasdiqlandi! Ko\'k galochka qo\'yildi.';
+      statusEl.style.color = '#1A73E8';
+      statusEl.style.fontWeight = '700';
+      sendBtn.style.display = 'none';
+      retakeBtn.style.display = 'none';
+
+      // Badge ko'rsatish (form ichida)
+      const badge = document.getElementById('verified-badge-form');
+      if (badge) badge.style.display = 'inline';
+
+      // Open btn'ni yashirish
+      const openBtn = document.getElementById('selfie-open-btn');
+      if (openBtn) {
+        openBtn.style.display = '';
+        openBtn.textContent = '💙 Tasdiqlangan';
+        openBtn.style.background = 'linear-gradient(135deg,#1A73E8,#34a853)';
+        openBtn.disabled = true;
+      }
+
+      showToast('💙 Verifikatsiya muvaffaqiyatli!');
+    } else {
+      statusEl.textContent = '❌ Xatolik: ' + (data.error || 'Qayta urinib ko\'ring');
+      statusEl.style.color = 'var(--ios-red, #FF3B30)';
+      sendBtn.disabled = false;
+      sendBtn.textContent = '✅ Tasdiqlash uchun yuborish';
+    }
+  } catch (err) {
+    statusEl.textContent = '❌ Server bilan bog\'lanishda xatolik.';
+    statusEl.style.color = 'var(--ios-red, #FF3B30)';
+    sendBtn.disabled = false;
+    sendBtn.textContent = '✅ Tasdiqlash uchun yuborish';
+  }
+}
+
+// Profil yuklanganda verifikatsiya holatini ko'rsatish
+async function loadVerificationStatus() {
+  if (!userId) return;
+  try {
+    const BASE_URL = window.BASE_URL || '';
+    const res = await fetch(BASE_URL + '/api/verify/status', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ telegram_id: userId })
+    });
+    const data = await res.json();
+    if (data.success && data.is_verified) {
+      // Form ichidagi badge
+      const badge = document.getElementById('verified-badge-form');
+      if (badge) badge.style.display = 'inline';
+
+      // Selfi tugmasini yangilash
+      const openBtn = document.getElementById('selfie-open-btn');
+      if (openBtn) {
+        openBtn.textContent = '💙 Tasdiqlangan';
+        openBtn.style.background = 'linear-gradient(135deg,#1A73E8,#34a853)';
+        openBtn.disabled = true;
+      }
+      const statusEl = document.getElementById('selfie-status');
+      if (statusEl) {
+        statusEl.textContent = '💙 Profilingiz allaqachon tasdiqlangan.';
+        statusEl.style.color = '#1A73E8';
+        statusEl.style.fontWeight = '600';
+      }
+    }
+  } catch (e) {}
+}
+
+// Qidiruvda va profil kartochkasida galochka ko'rsatish uchun helper
+function verifiedBadgeHtml(isVerified) {
+  if (!isVerified) return '';
+  return '<span title="Tasdiqlangan profil" style="color:#1A73E8;font-size:14px;margin-left:3px;">✔️</span>';
+}
+
+// Profil sahifasi ochilganda verifikatsiya holatini yuklash
+(function() {
+  let _checked = false;
+  const interval = setInterval(function() {
+    if (typeof showPage === 'function' && !_checked) {
+      const origShow = window.showPage;
+      window.showPage = function(page) {
+        origShow(page);
+        if (page === 'profile') {
+          loadVerificationStatus();
+        }
+      };
+      _checked = true;
+      clearInterval(interval);
+    }
+  }, 300);
+})();
+
+// Sahifa birinchi yuklanganda ham tekshirish
+document.addEventListener('DOMContentLoaded', function() {
+  setTimeout(loadVerificationStatus, 1000);
+});
