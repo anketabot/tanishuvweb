@@ -3956,6 +3956,32 @@ body.pre-init .lang-modal-overlay.show {
   gap: 6px;
 }
 
+.geo-direct-btn {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin-top: 10px;
+  padding: 10px 16px;
+  background: rgba(0,122,255,0.10);
+  border: 1.5px solid rgba(0,122,255,0.22);
+  border-radius: 14px;
+  color: var(--ios-blue);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  width: 100%;
+  justify-content: center;
+  transition: background 0.15s, opacity 0.15s;
+}
+.geo-direct-btn:active {
+  background: rgba(0,122,255,0.18);
+  opacity: 0.85;
+}
+.geo-direct-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
 /* Xarita Modal */
 .map-picker-sheet {
   background: var(--glass-bg-strong);
