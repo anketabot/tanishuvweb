@@ -3080,9 +3080,12 @@ function detectTelegramLanguage() {
     }
 
     // 1. Avval like yuboramiz
+    const _senderProfile3083 = getProfile();
+    const _senderCity3083 = _senderProfile3083?.city || '';
     const likeData = await apiPost('/api/likes/send', {
       from_user: fromUserId,
-      to_user: toUserId
+      to_user: toUserId,
+      sender_location_labels: _buildLocationAllLangs(_senderCity3083)
     });
 
     if (likeData.error === 'limit_exceeded') {
@@ -4114,6 +4117,27 @@ function detectTelegramLanguage() {
     // Ko'rsatish tartibi: Tuman, Viloyat, Davlat
     const parts = [districtStr, regionStr, countryStr].filter(Boolean);
     return parts.join(', ');
+  }
+
+  // Barcha tillarda joylashuv labellarini qaytaradi (server bildirishnomasi uchun)
+  function _buildLocationAllLangs(cityRaw) {
+    if (!cityRaw) return {};
+    const LANGS = Object.keys(SUPPORTED_LANGUAGES); // ['uz','ru','kk','ky','kaa','tg','en']
+    const result = {};
+    if (cityRaw.includes('||')) {
+      const [district, region, country] = cityRaw.split('||').map(s => s.trim());
+      for (const lang of LANGS) {
+        result[lang] = _buildLocationString(country, region, district, lang);
+      }
+    } else {
+      for (const lang of LANGS) {
+        const translated = _translateCountryValue(cityRaw, lang);
+        if (translated !== cityRaw) { result[lang] = translated; continue; }
+        const t = translateCityLabel ? translateCityLabel(cityRaw) : cityRaw;
+        result[lang] = t;
+      }
+    }
+    return result;
   }
 
   function populateRegions(selectId, regions) {
@@ -5364,11 +5388,14 @@ function detectTelegramLanguage() {
     const card = document.getElementById('tinder-card');
     if (card) card.classList.add('animate-up');
 
+    const _senderProfileSticker = getProfile();
+    const _senderCitySticker = _senderProfileSticker?.city || '';
     const likeData = await apiPost('/api/likes/send', {
       from_user: userId,
       to_user: stickerTargetId,
       super_like: true,
-      sticker: sticker
+      sticker: sticker,
+      sender_location_labels: _buildLocationAllLangs(_senderCitySticker)
     });
 
     if (likeData.error === 'limit_exceeded') {
@@ -5567,7 +5594,13 @@ function detectTelegramLanguage() {
       return;
     }
 
-    const data = await apiPost('/api/likes/send', { from_user: fromUserId, to_user: toUser });
+    const _senderProfile5570 = getProfile();
+    const _senderCity5570 = _senderProfile5570?.city || '';
+    const data = await apiPost('/api/likes/send', {
+      from_user: fromUserId,
+      to_user: toUser,
+      sender_location_labels: _buildLocationAllLangs(_senderCity5570)
+    });
 
     if (data.error === 'limit_exceeded') {
       showLimitExceeded('likes');
