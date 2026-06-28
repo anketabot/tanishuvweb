@@ -2441,6 +2441,23 @@ const tg = window.Telegram?.WebApp;
     if (!uzbekCitiesML) return;
     const lang = currentLang || 'uz';
 
+    // ── Trigger LABEL larini (Davlat / Viloyat / Tuman so'zlarini) yangilash ──
+    const labelMap = {
+      'inp-country':  tr('country_label')   || 'Davlat',
+      'inp-region':   tr('region_label')    || 'Viloyat',
+      'inp-district': tr('district_label')  || 'Tuman / Shahar',
+      'sf-country':   tr('country_label')   || 'Davlat',
+      'sf-region':    tr('region_label')    || 'Viloyat',
+      'sf-district':  tr('district_label')  || 'Tuman / Shahar',
+    };
+    Object.entries(labelMap).forEach(([id, label]) => {
+      const trigger = document.getElementById(id + '-trigger');
+      if (trigger) {
+        const labelEl = trigger.querySelector('.loc-trigger-label');
+        if (labelEl) labelEl.textContent = label;
+      }
+    });
+
     // Trigger placeholder larini yangi tilda yangilash
     const placeholders = {
       'inp-country':  tr('loc_select_country')  || '— Tanlang —',
@@ -4612,20 +4629,48 @@ function detectTelegramLanguage() {
     return ds[lang] || ds['uz'] || null;
   }
 
+  // Davlat uchun to'liq dataset va tarjimalangan options qaytaruvchi helper
+  function _getLocOptsForCountry(country) {
+    const lang = currentLang || 'uz';
+    const fn = COUNTRY_DATASET_MAP[country] || COUNTRY_DATASET_MAP[country?.trim()];
+    if (!fn) return null;
+    const fullDs = fn();
+    if (!fullDs) return null;
+    const uzDs   = fullDs['uz'] || {};
+    const langDs = fullDs[lang] || fullDs['uz'] || {};
+    const uzKeys   = Object.keys(uzDs);
+    const langKeys = Object.keys(langDs);
+    // value = uzKey (doim), label = langKey (joriy tilda)
+    return uzKeys.map((uzKey, i) => ({ value: uzKey, label: langKeys[i] || uzKey }));
+  }
+
+  // Viloyat uchun tuman options (value=uzDistrict, label=langDistrict)
+  function _getDistrictOpts(country, uzRegion) {
+    const lang = currentLang || 'uz';
+    const fn = COUNTRY_DATASET_MAP[country] || COUNTRY_DATASET_MAP[country?.trim()];
+    if (!fn) return [];
+    const fullDs = fn();
+    if (!fullDs) return [];
+    const uzDs     = fullDs['uz'] || {};
+    const langDs   = fullDs[lang] || fullDs['uz'] || {};
+    const uzKeys   = Object.keys(uzDs);
+    const langKeys = Object.keys(langDs);
+    const uzIdx    = uzKeys.indexOf(uzRegion);
+    const uzDists  = uzDs[uzRegion] || [];
+    const langDists = (uzIdx !== -1 && langKeys[uzIdx]) ? (langDs[langKeys[uzIdx]] || uzDists) : uzDists;
+    return uzDists.map((uzD, i) => ({ value: uzD, label: langDists[i] || uzD }));
+  }
+
   function onCountryChange() {
     const country = document.getElementById('inp-country')?.value || '';
-
     loadRegionsData().then(() => {
-      const regions = getCountryDataset(country);
-      if (regions && Object.keys(regions).length > 0) {
-        // Viloyatlari bor davlat
-        const opts = Object.keys(regions);
-        rebuildLocOptions('inp-region', opts, true);
+      const regionOpts = _getLocOptsForCountry(country);
+      if (regionOpts && regionOpts.length > 0) {
+        rebuildLocOptions('inp-region', regionOpts, true);
         showLocationWrap('inp-region');
         hideLocationWrap('inp-district');
         updateLocationSteps('inp', 2);
       } else {
-        // Viloyat/tumani yo'q davlat — faqat davlat tanlanadi
         hideLocationWrap('inp-region');
         hideLocationWrap('inp-district');
         updateLocationSteps('inp', country ? 2 : 1);
@@ -4638,31 +4683,13 @@ function detectTelegramLanguage() {
   function onRegionChange() {
     const country = document.getElementById('inp-country')?.value || '';
     const region  = document.getElementById('inp-region')?.value  || '';
-
     if (region) {
-      const regions = getCountryDataset(country) || {};
-      let districts = regions[region] || [];
-
-      // Agar joriy tilda topilmasa, uz tilida qidir
-      if (!districts.length) {
-        const fn = COUNTRY_DATASET_MAP[country];
-        if (fn) {
-          const uzRegions = fn()?.['uz'] || {};
-          const uzKeys = Object.keys(uzRegions);
-          const langKeys = Object.keys(regions);
-          const langIdx = langKeys.indexOf(region);
-          if (langIdx !== -1 && uzKeys[langIdx]) {
-            districts = uzRegions[uzKeys[langIdx]] || [];
-          }
-        }
-      }
-
-      if (districts.length > 0) {
-        rebuildLocOptions('inp-district', districts, false);
+      const distOpts = _getDistrictOpts(country, region);
+      if (distOpts.length > 0) {
+        rebuildLocOptions('inp-district', distOpts, false);
         showLocationWrap('inp-district');
         updateLocationSteps('inp', 3);
       } else {
-        // Tuman yo'q viloyat — tuman selectni yashir
         hideLocationWrap('inp-district');
         updateLocationSteps('inp', 2);
       }
@@ -4684,18 +4711,14 @@ function detectTelegramLanguage() {
   // Qidiruv: Davlat o'zgartirilganda
   function onSearchCountryChange() {
     const country = document.getElementById('sf-country')?.value || '';
-
     loadRegionsData().then(() => {
-      const regions = getCountryDataset(country);
-      if (regions && Object.keys(regions).length > 0) {
-        // Viloyatlari bor davlat
-        const opts = Object.keys(regions);
-        rebuildLocOptions('sf-region', opts, true);
+      const regionOpts = _getLocOptsForCountry(country);
+      if (regionOpts && regionOpts.length > 0) {
+        rebuildLocOptions('sf-region', regionOpts, true);
         showLocationWrap('sf-region');
         hideLocationWrap('sf-district');
         updateLocationSteps('sf', 2);
       } else {
-        // Viloyat/tumani yo'q davlat
         hideLocationWrap('sf-region');
         hideLocationWrap('sf-district');
         updateLocationSteps('sf', country ? 2 : 1);
@@ -4708,27 +4731,10 @@ function detectTelegramLanguage() {
   function onSearchRegionChange() {
     const country = document.getElementById('sf-country')?.value || '';
     const region  = document.getElementById('sf-region')?.value  || '';
-
     if (region) {
-      const regions = getCountryDataset(country) || {};
-      let districts = regions[region] || [];
-
-      // Agar joriy tilda topilmasa, uz tilida qidir
-      if (!districts.length) {
-        const fn = COUNTRY_DATASET_MAP[country];
-        if (fn) {
-          const uzRegions = fn()?.['uz'] || {};
-          const uzKeys = Object.keys(uzRegions);
-          const langKeys = Object.keys(regions);
-          const langIdx = langKeys.indexOf(region);
-          if (langIdx !== -1 && uzKeys[langIdx]) {
-            districts = uzRegions[uzKeys[langIdx]] || [];
-          }
-        }
-      }
-
-      if (districts.length > 0) {
-        rebuildLocOptions('sf-district', districts, false);
+      const distOpts = _getDistrictOpts(country, region);
+      if (distOpts.length > 0) {
+        rebuildLocOptions('sf-district', distOpts, false);
         showLocationWrap('sf-district');
         updateLocationSteps('sf', 3);
       } else {
@@ -6272,6 +6278,11 @@ function detectTelegramLanguage() {
       // Custom location dropdownlarni ishga tushirish
       initLocationDropdowns();
 
+      // Til yuklangandan so'ng dropdown labellarini (Davlat/Viloyat/Tuman) tarjima qilish
+      loadRegionsData().then(() => {
+        refreshLocationDropdownsForLang();
+      });
+
     // CRITICAL: Don't restore photo state until we know who the user is
     // This prevents cross-user photo leakage
 
@@ -6394,15 +6405,22 @@ function detectTelegramLanguage() {
     showMapResult(tr('map_searching'));
   }
 
+  // Matnni tozalash: suffix va maxsus belgilarni olib tashlash
+  function _cleanLocName(s) {
+    if (!s) return '';
+    return String(s)
+      .toLowerCase()
+      .replace(/viloyati?|shahari?|tumani?|shahri?|oblasti?|область|район|город|region|district|city|province|province/gi, '')
+      .replace(/[''`ʻʼ]/g, '')
+      .replace(/\s+/g, ' ')
+      .trim();
+  }
+
   // GPS natijasidan regions.json ga mos keluvchi joy topish
+  // Barcha tillardagi nomlar bo'yicha qidiradi, natijani UZ kalitiga qaytaradi
   function _matchGeoToRegions(nominatimAddr) {
     if (!nominatimAddr) return null;
-    // Nominatim qaytaradigan maydonlar
-    const state   = (nominatimAddr.state || nominatimAddr.region || '').toLowerCase().trim();
-    const county  = (nominatimAddr.county || '').toLowerCase().trim();
-    const city    = (nominatimAddr.city || '').toLowerCase().trim();
-    const town    = (nominatimAddr.town || '').toLowerCase().trim();
-    const village = (nominatimAddr.village || nominatimAddr.hamlet || '').toLowerCase().trim();
+
     const country_code = (nominatimAddr.country_code || '').toLowerCase().trim();
 
     // Davlat aniqlash
@@ -6414,7 +6432,7 @@ function detectTelegramLanguage() {
     };
     const detectedCountry = COUNTRY_CODES[country_code] || "Boshqa";
 
-    // Davlat dataset'ini olish
+    // Davlat uchun dataset
     const DATASET_MAP = {
       "Oʻzbekiston":  () => uzbekCitiesML,
       "Rossiya":       () => russiaCitiesML,
@@ -6428,33 +6446,83 @@ function detectTelegramLanguage() {
     const ds = dsGetter();
     if (!ds) return { country: detectedCountry, region: null, district: null };
 
-    // O'zbek tili ro'yxati bo'yicha qidiramiz
+    // Nominatim dan kelgan barcha joy nomlarini yig'ish
+    const rawCandidates = [
+      nominatimAddr.state, nominatimAddr.region,
+      nominatimAddr.county, nominatimAddr.city,
+      nominatimAddr.town, nominatimAddr.village,
+      nominatimAddr.hamlet, nominatimAddr.suburb,
+      nominatimAddr.city_district
+    ].filter(Boolean);
+
+    // Har bir kandidatni tozalash
+    const cleanedCandidates = rawCandidates.map(c => _cleanLocName(c));
+
+    // Barcha tillardagi viloyat nomlarini to'plash: { langKey: [regionNames] }
+    // va teskari map: cleanedName -> uzRegionKey
+    const regionCleanToUz = {}; // cleaned(anyLangRegion) -> uzRegion
     const uzRegions = ds['uz'] || {};
 
-    // Viloyatni state nomi bo'yicha topish
+    const uzKeys   = Object.keys(uzRegions);
+    Object.keys(ds).forEach(lang => {
+      const langRegions = ds[lang] || {};
+      const langKeys = Object.keys(langRegions);
+      langKeys.forEach((langRegion, idx) => {
+        const cleaned = _cleanLocName(langRegion);
+        if (cleaned && uzKeys[idx]) {
+          regionCleanToUz[cleaned] = uzKeys[idx];
+        }
+      });
+    });
+
+    // Viloyatni topish: har bir rawCandidate ni barcha lang regionlar bilan solishtir
     function _findRegion() {
-      const stateWords = state.replace(/(viloyati?|oblast|область|region|shahar[i]?|city|город)/gi, '').trim();
-      for (const [uzRegion] of Object.entries(uzRegions)) {
-        const regionLow = uzRegion.toLowerCase().replace(/(viloyati?|shahar[i]?)/gi, '').trim();
-        if (stateWords.includes(regionLow) || regionLow.includes(stateWords) ||
-            state.includes(regionLow)) {
-          return uzRegion;
+      for (const cand of cleanedCandidates) {
+        if (!cand) continue;
+        // To'g'ridan-to'g'ri moslik
+        if (regionCleanToUz[cand]) return regionCleanToUz[cand];
+        // Qisman moslik
+        for (const [cleaned, uzKey] of Object.entries(regionCleanToUz)) {
+          if (!cleaned) continue;
+          if (cand.includes(cleaned) || cleaned.includes(cand)) {
+            return uzKey;
+          }
         }
       }
       return null;
     }
 
-    // Tumanni topish
+    // Tumanni topish: uzRegion ostidagi barcha tillardagi tuman nomlarini solishtir
     function _findDistrict(uzRegion) {
       if (!uzRegion) return null;
-      const districts = uzRegions[uzRegion] || [];
-      const candidates = [county, city, town, village].filter(Boolean);
-      for (const cand of candidates) {
-        const candClean = cand.replace(/(tumani?|shahri?|district|city|village)/gi, '').trim();
-        for (const d of districts) {
-          const dLow = d.toLowerCase().replace(/(tumani?|shahri?)/gi, '').trim();
-          if (dLow === candClean || d.toLowerCase() === cand || dLow.includes(candClean) || candClean.includes(dLow)) {
-            return d;
+      const uzIdx = uzKeys.indexOf(uzRegion);
+      if (uzIdx === -1) return null;
+
+      // Barcha tillardagi tuman nomlarini yig'ish: cleanedName -> uzDistrictName
+      const districtCleanToUz = {};
+      const uzDistricts = uzRegions[uzRegion] || [];
+
+      Object.keys(ds).forEach(lang => {
+        const langRegions = ds[lang] || {};
+        const langKeys2 = Object.keys(langRegions);
+        if (!langKeys2[uzIdx]) return;
+        const langDistricts = langRegions[langKeys2[uzIdx]] || [];
+        langDistricts.forEach((ld, di) => {
+          const cleaned = _cleanLocName(ld);
+          if (cleaned && uzDistricts[di]) {
+            districtCleanToUz[cleaned] = uzDistricts[di];
+          }
+        });
+      });
+
+      // Nominatim kandidatlaridan tuman topish
+      for (const cand of cleanedCandidates) {
+        if (!cand) continue;
+        if (districtCleanToUz[cand]) return districtCleanToUz[cand];
+        for (const [cleaned, uzDist] of Object.entries(districtCleanToUz)) {
+          if (!cleaned) continue;
+          if (cand.includes(cleaned) || cleaned.includes(cand)) {
+            return uzDist;
           }
         }
       }
@@ -6475,56 +6543,81 @@ function detectTelegramLanguage() {
   function _autoFillLocationFromGeo(matchedLoc) {
     if (!matchedLoc) return;
     const { country, region, district } = matchedLoc;
+    const lang = currentLang || 'uz';
+
+    // DS getter - har doim to'liq dataset (barcha tillar)
+    const DS_MAP = {
+      "Oʻzbekiston": () => uzbekCitiesML,
+      "O'zbekiston": () => uzbekCitiesML,
+      "Rossiya":       () => russiaCitiesML,
+      "Qozogʻiston":  () => kazakhstanCitiesML,
+      "Qirgʻiziston": () => kyrgyzstanCitiesML,
+      "Tojikiston":   () => tajikistanCitiesML,
+    };
 
     loadRegionsData().then(() => {
       // 1. Davlat
       if (country) {
         const cSel = document.getElementById('inp-country');
         if (cSel) cSel.value = country;
+        const cLabel = _translateCountryValue(country, lang);
         const cValEl = document.getElementById('inp-country-trigger-val');
-        if (cValEl) {
-          cValEl.textContent = _translateCountryValue(country, currentLang || 'uz');
-          cValEl.classList.remove('placeholder');
-        }
+        if (cValEl) { cValEl.textContent = cLabel; cValEl.classList.remove('placeholder'); }
         document.getElementById('inp-country-trigger')?.classList.add('filled');
         document.querySelectorAll('#inp-country-opts .loc-option').forEach(o =>
           o.classList.toggle('selected', o.dataset.value === country));
       }
 
-      // 2. Viloyat
-      if (region) {
-        const ds = _getDatasetForCountry(country);
-        if (ds) {
-          const opts = Object.keys(ds);
-          rebuildLocOptions('inp-region', opts, true);
-          showLocationWrap('inp-region');
-          const rSel = document.getElementById('inp-region');
-          if (rSel) rSel.value = region;
-          const rValEl = document.getElementById('inp-region-trigger-val');
-          if (rValEl) {
-            rValEl.textContent = _translateGenericRegion(region, currentLang || 'uz') || region;
-            rValEl.classList.remove('placeholder');
-          }
-          document.getElementById('inp-region-trigger')?.classList.add('filled');
-          document.querySelectorAll('#inp-region-opts .loc-option').forEach(o =>
-            o.classList.toggle('selected', o.dataset.value === region));
-        }
+      const fullDs = DS_MAP[country] ? DS_MAP[country]() : null;
+      // UZ kalit ro'yxati (value sifatida ishlatamiz)
+      const uzDs   = fullDs ? (fullDs['uz'] || {}) : {};
+      const uzKeys = Object.keys(uzDs);
+      // Joriy til ro'yxati (label sifatida ko'rsatamiz)
+      const langDs   = fullDs ? (fullDs[lang] || fullDs['uz'] || {}) : {};
+      const langKeys = Object.keys(langDs);
+
+      // 2. Viloyat - value=uzKey, label=langKey
+      if (region && uzKeys.length) {
+        const regionOpts = uzKeys.map((uzKey, i) => ({
+          value: uzKey,
+          label: langKeys[i] || uzKey
+        }));
+        rebuildLocOptions('inp-region', regionOpts, true);
+        showLocationWrap('inp-region');
+
+        const rSel = document.getElementById('inp-region');
+        if (rSel) rSel.value = region;
+
+        const rLabel = _translateGenericRegion(region, lang) || region;
+        const rValEl = document.getElementById('inp-region-trigger-val');
+        if (rValEl) { rValEl.textContent = rLabel; rValEl.classList.remove('placeholder'); }
+        document.getElementById('inp-region-trigger')?.classList.add('filled');
+        document.querySelectorAll('#inp-region-opts .loc-option').forEach(o =>
+          o.classList.toggle('selected', o.dataset.value === region));
       }
 
-      // 3. Tuman
+      // 3. Tuman - value=uzDistrict, label=langDistrict
       if (district && region) {
-        const ds = _getDatasetForCountry(country);
-        const districts = ds ? (ds[region] || []) : [];
-        if (districts.length) {
-          rebuildLocOptions('inp-district', districts, false);
+        const uzDistList = uzDs[region] || [];
+        const uzIdx      = uzKeys.indexOf(region);
+        const langDistList = (uzIdx !== -1 && langKeys[uzIdx])
+          ? (langDs[langKeys[uzIdx]] || uzDistList)
+          : uzDistList;
+
+        if (uzDistList.length) {
+          const distOpts = uzDistList.map((uzD, i) => ({
+            value: uzD,
+            label: langDistList[i] || uzD
+          }));
+          rebuildLocOptions('inp-district', distOpts, false);
           showLocationWrap('inp-district');
+
           const dSel = document.getElementById('inp-district');
           if (dSel) dSel.value = district;
+
+          const dLabel = _translateGenericDistrict(district, lang) || district;
           const dValEl = document.getElementById('inp-district-trigger-val');
-          if (dValEl) {
-            dValEl.textContent = _translateGenericDistrict(district, currentLang || 'uz') || district;
-            dValEl.classList.remove('placeholder');
-          }
+          if (dValEl) { dValEl.textContent = dLabel; dValEl.classList.remove('placeholder'); }
           document.getElementById('inp-district-trigger')?.classList.add('filled');
           document.querySelectorAll('#inp-district-opts .loc-option').forEach(o =>
             o.classList.toggle('selected', o.dataset.value === district));
@@ -6682,16 +6775,31 @@ function detectTelegramLanguage() {
       const matched = _matchGeoToRegions(addr);
       if (matched) {
         _autoFillLocationFromGeo(matched);
-        // Agar regions.json da mos joy topilmasa, city fieldiga oddiy matn yozamiz
         if (!matched.region && !matched.district) {
           updateHiddenCityField('inp-city', matched.country, '', '');
         }
-      }
 
-      // Geo-status ni ham yangilash (xaritasiz GPS rejimi uchun)
-      const geoStatus = document.getElementById('geo-status');
-      if (geoStatus && geoStatus.style.display !== 'none') {
-        geoStatus.textContent = tr('geo_success') + ': ' + locationName;
+        // Geo-status xabarini o'zbek tilidagi tarjimada ko'rsatish
+        const lang = currentLang || 'uz';
+        const districtLabel  = matched.district ? (_translateGenericDistrict(matched.district, lang) || matched.district) : '';
+        const regionLabel    = matched.region   ? (_translateGenericRegion(matched.region, lang)     || matched.region)   : '';
+        const countryLabel   = matched.country  ? (_translateCountryValue(matched.country, lang)      || matched.country)  : '';
+        const geoDisplayParts = [districtLabel, regionLabel, countryLabel].filter(Boolean);
+        const geoDisplayText  = geoDisplayParts.length > 0 ? geoDisplayParts.join(', ') : locationName;
+
+        const geoStatus = document.getElementById('geo-status');
+        if (geoStatus) {
+          geoStatus.style.display = 'flex';
+          geoStatus.textContent = tr('geo_success') + ': ' + geoDisplayText;
+        }
+        showMapResult(geoDisplayText);
+        selectedLocationName = geoDisplayText;
+      } else {
+        // Geo-status ni ham yangilash (xaritasiz GPS rejimi uchun)
+        const geoStatus = document.getElementById('geo-status');
+        if (geoStatus && geoStatus.style.display !== 'none') {
+          geoStatus.textContent = tr('geo_success') + ': ' + locationName;
+        }
       }
 
       const confirmBtn = document.getElementById('map-confirm-btn');
