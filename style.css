@@ -5361,3 +5361,32 @@ body.pre-init .lang-modal-overlay.show {
 .location-group-icon svg { stroke: white; }
 .location-group-title { font-size: 13px; font-weight: 700; color: var(--text-primary); }
 .location-group-sub { font-size: 11px; color: var(--text-secondary); margin-top: 1px; }
+/* ── GPS erkin matn maydonlari (regions.json da yo'q davlatlar uchun) ─── */
+.loc-free-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  margin-bottom: 5px;
+  padding-left: 2px;
+}
+.loc-free-input {
+  width: 100%;
+  padding: 11px 14px;
+  border-radius: 13px;
+  border: 1.5px solid var(--glass-border);
+  background: var(--glass-bg);
+  color: var(--text-primary);
+  font-size: 14px;
+  font-family: inherit;
+  outline: none;
+  box-sizing: border-box;
+  transition: border-color 0.18s, background 0.18s;
+}
+.loc-free-input:focus {
+  border-color: var(--ios-blue);
+  background: var(--glass-bg-strong, var(--glass-bg));
+}
+#inp-region-free-wrap,
+#inp-district-free-wrap {
+  margin-top: 8px;
+}
