@@ -369,6 +369,10 @@ const tg = window.Telegram?.WebApp;
           'top_btn_likes': '💙 Like TOP',
           'top_btn_superlikes': '⭐ Super TOP',
           'top_btn_champion': '🏆 Chempion',
+          'weekly_top_badge': '📅 Haftalik TOP',
+          'weekly_reset_days': '{d}k {h}s da yangilanadi',
+          'weekly_reset_hours': '{h}s {m}d da yangilanadi',
+          'weekly_reset_mins': '{m}d da yangilanadi',
           'viewed_title': '👁 Men ko\'rganlarim',
           'nav_viewed': 'Ko\'rganlar',
           'tab_viewed_liked': '💙 Like bergan',
@@ -723,6 +727,10 @@ const tg = window.Telegram?.WebApp;
           'top_btn_likes': '💙 Лайки TOP',
           'top_btn_superlikes': '⭐ Супер TOP',
           'top_btn_champion': '🏆 Чемпион',
+          'weekly_top_badge': '📅 Еженедельный ТОП',
+          'weekly_reset_days': 'обновится через {d}д {h}ч',
+          'weekly_reset_hours': 'обновится через {h}ч {m}м',
+          'weekly_reset_mins': 'обновится через {m}м',
           'viewed_title': '👁 Мои просмотры',
           'nav_viewed': 'Просмотры',
           'tab_viewed_liked': '💙 Лайкнул',
@@ -1078,6 +1086,10 @@ const tg = window.Telegram?.WebApp;
           'top_btn_likes': '💙 Лайк TOP',
           'top_btn_superlikes': '⭐ Супер TOP',
           'top_btn_champion': '🏆 Чемпион',
+          'weekly_top_badge': '📅 Апталық ТОП',
+          'weekly_reset_days': '{d}к {h}с-та жаңарады',
+          'weekly_reset_hours': '{h}с {m}м-да жаңарады',
+          'weekly_reset_mins': '{m}м-да жаңарады',
           'viewed_title': '👁 Мен көргендерім',
           'nav_viewed': 'Көргендер',
           'tab_viewed_liked': '💙 Лайк басқан',
@@ -1433,6 +1445,10 @@ const tg = window.Telegram?.WebApp;
           'top_btn_likes': '💙 Лайк TOP',
           'top_btn_superlikes': '⭐ Супер TOP',
           'top_btn_champion': '🏆 Чемпион',
+          'weekly_top_badge': '📅 Жумалык ТОП',
+          'weekly_reset_days': '{d}к {h}с-та жаңыртылат',
+          'weekly_reset_hours': '{h}с {m}м-да жаңыртылат',
+          'weekly_reset_mins': '{m}м-да жаңыртылат',
           'viewed_title': '👁 Мен көргөндөрүм',
           'nav_viewed': 'Көргөндөр',
           'tab_viewed_liked': '💙 Лайк баскан',
@@ -1788,6 +1804,10 @@ const tg = window.Telegram?.WebApp;
           'top_btn_likes': '💙 Layk TOP',
           'top_btn_superlikes': '⭐ Super TOP',
           'top_btn_champion': '🏆 Chempion',
+          'weekly_top_badge': '📅 Háptelig TOP',
+          'weekly_reset_days': '{d}k {h}s-ta jańalanadi',
+          'weekly_reset_hours': '{h}s {m}d-da jańalanadi',
+          'weekly_reset_mins': '{m}d-da jańalanadi',
           'viewed_title': '👁 Men kórgеnim',
           'nav_viewed': 'Kórgenler',
           'tab_viewed_liked': '💙 Like basqan',
@@ -2143,6 +2163,10 @@ const tg = window.Telegram?.WebApp;
           'top_btn_likes': '💙 Лайк TOP',
           'top_btn_superlikes': '⭐ Супер TOP',
           'top_btn_champion': '🏆 Чемпион',
+          'weekly_top_badge': '📅 ТОП-и ҳафтагӣ',
+          'weekly_reset_days': 'баъди {d}р {h}с навсозӣ мешавад',
+          'weekly_reset_hours': 'баъди {h}с {m}д навсозӣ мешавад',
+          'weekly_reset_mins': 'баъди {m}д навсозӣ мешавад',
           'viewed_title': '👁 Ман дидаам',
           'nav_viewed': 'Дидаҳо',
           'tab_viewed_liked': '💙 Лайк задаам',
@@ -2498,6 +2522,10 @@ const tg = window.Telegram?.WebApp;
           'top_btn_likes': '💙 Likes TOP',
           'top_btn_superlikes': '⭐ Super TOP',
           'top_btn_champion': '🏆 Champion',
+          'weekly_top_badge': '📅 Weekly TOP',
+          'weekly_reset_days': 'resets in {d}d {h}h',
+          'weekly_reset_hours': 'resets in {h}h {m}m',
+          'weekly_reset_mins': 'resets in {m}m',
           'viewed_title': '👁 My Views',
           'nav_viewed': 'Viewed',
           'tab_viewed_liked': '💙 Liked',
@@ -7456,10 +7484,18 @@ function renderTopPanelTab(tab) {
     const hours = Math.floor((sec % 86400) / 3600);
     const mins = Math.floor((sec % 3600) / 60);
     let timeStr = '';
-    if (days > 0) timeStr = `${days}k ${hours}s`;
-    else if (hours > 0) timeStr = `${hours}s ${mins}d`;
-    else timeStr = `${mins}d`;
-    weeklyBadge = `<div class="top-weekly-badge">📅 Haftalik TOP &nbsp;•&nbsp; 🔄 ${timeStr} da yangilanadi</div>`;
+    if (days > 0) {
+      const tpl = tr('weekly_reset_days') || '{d}k {h}s da yangilanadi';
+      timeStr = tpl.replace('{d}', days).replace('{h}', hours);
+    } else if (hours > 0) {
+      const tpl = tr('weekly_reset_hours') || '{h}s {m}d da yangilanadi';
+      timeStr = tpl.replace('{h}', hours).replace('{m}', mins);
+    } else {
+      const tpl = tr('weekly_reset_mins') || '{m}d da yangilanadi';
+      timeStr = tpl.replace('{m}', mins);
+    }
+    const badgeLabel = tr('weekly_top_badge') || '📅 Haftalik TOP';
+    weeklyBadge = `<div class="top-weekly-badge">${badgeLabel} &nbsp;•&nbsp; 🔄 ${timeStr}</div>`;
   }
 
   body.innerHTML = `
