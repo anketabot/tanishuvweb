@@ -5456,7 +5456,7 @@ function detectTelegramLanguage() {
               <div class="like-notification-info">
                 <div>
                   <strong>${u.full_name}</strong>
-                  <div class="like-notification-meta">${u.age} ${tr('years_old')} • ${u.city}</div>
+                  <div class="like-notification-meta">${u.age} ${tr('years_old')}${u.city ? ' • ' + formatLocationLabel(u.city || '') : ''}</div>
                 </div>
                 <div class="like-notification-actions">
                   <button class="like-btn" onclick="event.stopPropagation(); acceptLike(${u.telegram_id}, '${escapeJs(u.full_name)}', '${escapeJs(photo)}'); closeLikesModal();">${tr('accept')}</button>
@@ -6546,7 +6546,7 @@ function renderStatsRows(containerId, users, icon, label) {
     const avaHtml = photo
       ? `<img class="stats-ava" src="${photo}" alt="" />`
       : `<div class="stats-ava-letter">${(u.full_name||'?')[0].toUpperCase()}</div>`;
-    const meta = [u.age ? u.age + ' ' + tr('years_old') : '', u.city || ''].filter(Boolean).join(' • ');
+    const meta = [u.age ? u.age + ' ' + tr('years_old') : '', u.city ? formatLocationLabel(u.city || '') : ''].filter(Boolean).join(' • ');
     return `
       <div class="stats-row">
         ${medalHtml}
@@ -6692,7 +6692,7 @@ function renderTopPanelTab(tab) {
       const avaHtml = photo
         ? `<img class="stats-mini-ava" src="${photo}" alt="" />`
         : `<div class="stats-mini-ava-letter">${(u.full_name||'?')[0].toUpperCase()}</div>`;
-      const meta = [u.age ? u.age + ' ' + tr('years_old') : '', u.city || ''].filter(Boolean).join(' • ');
+      const meta = [u.age ? u.age + ' ' + tr('years_old') : '', u.city ? formatLocationLabel(u.city || '') : ''].filter(Boolean).join(' • ');
       return `<div class="stats-mini-row">
         ${rankHtml}${avaHtml}
         <div class="stats-mini-info">
@@ -6765,7 +6765,7 @@ function renderMiniStatsTab(tab) {
     const avaHtml = photo
       ? `<img class="stats-mini-ava" src="${photo}" alt="" />`
       : `<div class="stats-mini-ava-letter">${(u.full_name||'?')[0].toUpperCase()}</div>`;
-    const meta = [u.age ? u.age + ' ' + tr('years_old') : '', u.city || ''].filter(Boolean).join(' • ');
+    const meta = [u.age ? u.age + ' ' + tr('years_old') : '', u.city ? formatLocationLabel(u.city || '') : ''].filter(Boolean).join(' • ');
     return `<div class="stats-mini-row">
       ${rankHtml}
       ${avaHtml}
@@ -6836,7 +6836,7 @@ document.addEventListener('DOMContentLoaded', function() {
           <img class="viewed-photo" src="${u.photo || 'https://api.dicebear.com/7.x/avataaars/svg?seed=' + encodeURIComponent(u.name || 'user')}" alt="${u.name || ''}" />
           <div class="viewed-info">
             <div class="viewed-name">${u.name || tr('no_name')}</div>
-            <div class="viewed-count">${u.age || ''} ${u.age ? tr('years_old') : ''} ${u.city ? '• ' + u.city : ''}</div>
+            <div class="viewed-count">${u.age || ''} ${u.age ? tr('years_old') : ''} ${u.city ? '• ' + formatLocationLabel(u.city || '') : ''}</div>
           </div>
           <div class="viewed-actions">
             <button class="viewed-btn ${tab === 'liked' ? 'liked-btn' : ''}" onclick="event.stopPropagation();${tab === 'liked' ? 'openMessageModal(' + (u.id||0) + ')' : 'openChatRoom(' + (u.id||0) + ')'}">
@@ -6952,7 +6952,7 @@ document.addEventListener('DOMContentLoaded', function() {
           <div style="font-size:22px;font-weight:800;margin-bottom:6px;">
             ${escapeHtml(u.name || tr('no_name'))}${u.age ? ', ' + u.age : ''}
           </div>
-          ${u.city ? `<div style="font-size:14px;color:var(--text-secondary);margin-bottom:4px;">📍 ${escapeHtml(u.city)}</div>` : ''}
+          ${u.city ? `<div style="font-size:14px;color:var(--text-secondary);margin-bottom:4px;">📍 ${escapeHtml(formatLocationLabel(u.city || ''))}</div>` : ''}
           ${zodiacDisplay ? `<div style="font-size:14px;color:var(--text-secondary);">✨ ${escapeHtml(zodiacDisplay)}</div>` : ''}
         </div>`;
       modal.style.display = 'flex';
