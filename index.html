@@ -412,49 +412,41 @@
 
   <!-- ======= VERIFIKATSIYA BO'LIMI ======= -->
   <div class="card" id="verification-card">
-    <div class="section-title">
+    <div class="section-title" style="display:flex;align-items:center;gap:8px;">
       <span>Verifikatsiya</span>
-      <span id="verified-badge-form" style="display:none;margin-left:8px;color:#1A73E8;font-size:16px;">✔️ Tasdiqlangan</span>
+      <span id="verified-badge-form" style="display:none;background:#1A73E8;color:#fff;font-size:11px;font-weight:700;padding:2px 8px;border-radius:20px;letter-spacing:0.3px;">✔ Tasdiqlangan</span>
     </div>
-    <p style="font-size:13px;color:var(--text-secondary);margin-bottom:14px;line-height:1.5;">
-      Profilingizga 💙 <strong>ko'k galochka</strong> olish uchun selfi oling. Rasm avtomatik tasdiqlanadi.
+    <p style="font-size:13px;color:var(--text-secondary);margin-bottom:16px;line-height:1.6;">
+      Profilingizga 💙 <strong>ko'k galochka</strong> olish uchun selfi oling.<br>Kamera to'g'ridan-to'g'ri ochiladi.
     </p>
 
-    <!-- Kamera oynasi -->
-    <div id="selfie-camera-wrap" style="display:none;position:relative;border-radius:16px;overflow:hidden;background:#000;margin-bottom:12px;">
-      <video id="selfie-video" autoplay playsinline muted
-        style="width:100%;max-height:300px;object-fit:cover;display:block;border-radius:16px;"></video>
-      <div style="position:absolute;top:0;left:0;right:0;bottom:0;border:3px solid rgba(26,115,232,0.7);border-radius:16px;pointer-events:none;"></div>
-      <div style="position:absolute;bottom:16px;left:50%;transform:translateX(-50%);display:flex;gap:12px;">
-        <button onclick="takeSelfie()" style="padding:12px 28px;background:#1A73E8;color:#fff;border:none;border-radius:50px;font-weight:700;font-size:15px;cursor:pointer;box-shadow:0 4px 16px rgba(26,115,232,0.5);">
-          📸 Rasm olish
-        </button>
-        <button onclick="stopSelfieCamera()" style="padding:12px 16px;background:rgba(0,0,0,0.6);color:#fff;border:none;border-radius:50px;font-size:14px;cursor:pointer;">
-          ✕
-        </button>
-      </div>
-    </div>
+    <!-- Yashirin file input — capture="user" old kamerani ochadi -->
+    <input type="file" id="selfie-input" accept="image/*" capture="user"
+      style="display:none;" onchange="onSelfieSelected(this)" />
 
     <!-- Preview -->
-    <canvas id="selfie-canvas" style="display:none;"></canvas>
-    <div id="selfie-preview-wrap" style="display:none;margin-bottom:12px;text-align:center;">
-      <img id="selfie-preview-img" alt="selfie" style="width:120px;height:120px;border-radius:50%;object-fit:cover;border:3px solid #1A73E8;" />
+    <div id="selfie-preview-wrap" style="display:none;margin-bottom:16px;text-align:center;">
+      <img id="selfie-preview-img" alt="selfie"
+        style="width:130px;height:130px;border-radius:50%;object-fit:cover;border:3px solid #1A73E8;box-shadow:0 4px 20px rgba(26,115,232,0.3);" />
+      <div style="margin-top:8px;font-size:12px;color:var(--text-secondary);">Selfi olindi ✓</div>
     </div>
 
-    <!-- Holat -->
-    <div id="selfie-status" style="font-size:13px;text-align:center;margin-bottom:12px;min-height:20px;"></div>
+    <!-- Holat xabari -->
+    <div id="selfie-status" style="font-size:13px;text-align:center;margin-bottom:12px;min-height:18px;font-weight:500;"></div>
 
     <!-- Tugmalar -->
-    <div id="selfie-actions" style="display:flex;flex-direction:column;gap:8px;">
-      <button id="selfie-open-btn" onclick="openSelfieCamera()"
-        style="width:100%;padding:13px;background:linear-gradient(135deg,#1A73E8,#0D47A1);color:#fff;border:none;border-radius:14px;font-weight:700;font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
-        Selfi orqali tasdiqlash
+    <div style="display:flex;flex-direction:column;gap:8px;">
+      <button id="selfie-open-btn" onclick="document.getElementById('selfie-input').click()"
+        style="width:100%;padding:14px;background:linear-gradient(135deg,#1A73E8,#0D47A1);color:#fff;border:none;border-radius:14px;font-weight:700;font-size:15px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;box-shadow:0 4px 16px rgba(26,115,232,0.35);">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+        📸 Selfi olish
       </button>
-      <button id="selfie-send-btn" onclick="sendSelfieForVerification()" style="display:none;width:100%;padding:13px;background:linear-gradient(135deg,#34a853,#137333);color:#fff;border:none;border-radius:14px;font-weight:700;font-size:14px;cursor:pointer;">
+      <button id="selfie-send-btn" onclick="sendSelfieForVerification()"
+        style="display:none;width:100%;padding:14px;background:linear-gradient(135deg,#34a853,#137333);color:#fff;border:none;border-radius:14px;font-weight:700;font-size:15px;cursor:pointer;">
         ✅ Tasdiqlash uchun yuborish
       </button>
-      <button id="selfie-retake-btn" onclick="retakeSelfie()" style="display:none;width:100%;padding:11px;background:var(--glass-bg-strong);color:var(--text-primary);border:1px solid var(--glass-border);border-radius:14px;font-weight:600;font-size:14px;cursor:pointer;">
+      <button id="selfie-retake-btn" onclick="document.getElementById('selfie-input').click()"
+        style="display:none;width:100%;padding:12px;background:var(--glass-bg-strong);color:var(--text-primary);border:1px solid var(--glass-border);border-radius:14px;font-weight:600;font-size:14px;cursor:pointer;">
         🔄 Qayta tushirish
       </button>
     </div>
