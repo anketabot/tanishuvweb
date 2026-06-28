@@ -4477,6 +4477,20 @@ body.pre-init .lang-modal-overlay.show {
   margin-bottom: 4px;
 }
 
+.top-weekly-badge {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: linear-gradient(135deg, rgba(0,122,255,0.08), rgba(52,199,89,0.08));
+  border: 1px solid rgba(0,122,255,0.15);
+  border-radius: 10px;
+  padding: 7px 12px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--ios-blue, #007AFF);
+  margin: 6px 0 8px;
+}
+
 /* ========== PROFIL — TIL TANLASH ========== */
 .profile-lang-section {
   margin: 0 16px 24px;
