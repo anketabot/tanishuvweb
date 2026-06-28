@@ -5503,7 +5503,7 @@ function detectTelegramLanguage() {
                   <div class="like-notification-meta">${u.age} ${tr('years_old')}${u.city ? ' • ' + formatLocationLabel(u.city || '') : ''}</div>
                 </div>
                 <div class="like-notification-actions">
-                  <button class="like-btn" onclick="event.stopPropagation(); acceptLike(${u.telegram_id}, '${escapeJs(u.full_name)}', '${escapeJs(photo)}'); closeLikesModal();">${tr('accept')}</button>
+                  <button class="like-btn" onclick="event.stopPropagation(); acceptLike(${u.telegram_id}, '${escapeJs(u.full_name)}', '${escapeJs(photo)}');">${tr('accept')}</button>
                   <button class="reject-btn" onclick="event.stopPropagation(); rejectLike(${u.telegram_id}, '${escapeJs(u.full_name)}');">${tr('reject')}</button>
                 </div>
               </div>
@@ -5582,6 +5582,32 @@ function detectTelegramLanguage() {
       showToast(tr('match_with').replace('{name}', name));
       loadPendingLikesIndicator();
       await loadChats();
+
+      // Qabul qilingan profil kartochkasini bildirishnomalar ro'yxatidan olib tashlaymiz
+      const modal = document.getElementById('likes-modal');
+      const body  = document.getElementById('likes-modal-body');
+      if (body) {
+        // Qabul qilingan foydalanuvchi kartochkasini topib o'chiramiz
+        const cards = body.querySelectorAll('.like-notification-card');
+        cards.forEach(card => {
+          try {
+            const raw = card.dataset.user
+              .replace(/&quot;/g, '"').replace(/&#39;/g, "'")
+              .replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>');
+            const u = JSON.parse(raw);
+            if (Number(u.telegram_id) === Number(fromUserId)) {
+              card.remove();
+            }
+          } catch(e) {}
+        });
+
+        // Agar ro'yxat bo'sh qolsa, "hali like yo'q" xabarini ko'rsatamiz
+        const remaining = body.querySelectorAll('.like-notification-card');
+        if (remaining.length === 0) {
+          body.innerHTML = `<div class="empty-state"><div class="empty-icon">${ICONS.info}</div><h3>${tr('no_likes_yet')}</h3><p>${tr('no_likes_hint')}</p></div>`;
+        }
+      }
+
       // Match bo'lganda darhol chatni ochamiz
       if (data.match_id) {
         openChatRoom(data.match_id, name, photo);
@@ -6068,6 +6094,9 @@ function detectTelegramLanguage() {
       }
     }
     currentChatPartner = { name, photo, user: decodedPartner };
+    // Likes modali ochiq bo'lsa yopamiz
+    const likesModal = document.getElementById('likes-modal');
+    if (likesModal) likesModal.style.display = 'none';
     document.getElementById('chat-modal').style.display = 'flex';
     document.getElementById('chat-user-name').textContent = name;
     document.getElementById('chat-user-photo').src = photo || '';
