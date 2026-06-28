@@ -7612,100 +7612,42 @@ function openViewedProfile(id, tab) {
 }
 
 // ========== VERIFIKATSIYA (SELFI) ==========
-let _selfieStream = null;
+// Telegram WebView getUserMedia ishlamaydi — capture="user" file input ishlatamiz
 let _selfieBase64 = null;
 
-async function openSelfieCamera() {
-  const wrap = document.getElementById('selfie-camera-wrap');
-  const video = document.getElementById('selfie-video');
-  const statusEl = document.getElementById('selfie-status');
-  const openBtn = document.getElementById('selfie-open-btn');
+function onSelfieSelected(input) {
+  const file = input.files && input.files[0];
+  if (!file) return;
 
-  if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-    statusEl.textContent = '❌ Kamera ishlamaydi. Iltimos, brauzer ruxsat bering.';
+  // Hajm tekshirish — max 8MB
+  if (file.size > 8 * 1024 * 1024) {
+    const statusEl = document.getElementById('selfie-status');
+    if (statusEl) { statusEl.textContent = '❌ Rasm hajmi juda katta (max 8MB)'; statusEl.style.color = '#FF3B30'; }
     return;
   }
 
-  try {
-    statusEl.textContent = '📷 Kamera ochilmoqda...';
-    _selfieStream = await navigator.mediaDevices.getUserMedia({
-      video: { facingMode: 'user', width: { ideal: 640 }, height: { ideal: 640 } },
-      audio: false
-    });
-    video.srcObject = _selfieStream;
-    wrap.style.display = 'block';
-    openBtn.style.display = 'none';
-    statusEl.textContent = '😊 Kameraga qarang va rasm oling';
-  } catch (err) {
-    statusEl.textContent = '❌ Kameraga ruxsat berilmadi. Sozlamalardan ruxsat bering.';
-  }
-}
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    const dataUrl = e.target.result;
+    _selfieBase64 = dataUrl.split(',')[1];
 
-function stopSelfieCamera() {
-  if (_selfieStream) {
-    _selfieStream.getTracks().forEach(t => t.stop());
-    _selfieStream = null;
-  }
-  const wrap = document.getElementById('selfie-camera-wrap');
-  const openBtn = document.getElementById('selfie-open-btn');
-  const statusEl = document.getElementById('selfie-status');
-  if (wrap) wrap.style.display = 'none';
-  if (openBtn) openBtn.style.display = '';
-  if (statusEl) statusEl.textContent = '';
-}
+    // Preview
+    const previewImg = document.getElementById('selfie-preview-img');
+    const previewWrap = document.getElementById('selfie-preview-wrap');
+    if (previewImg) previewImg.src = dataUrl;
+    if (previewWrap) previewWrap.style.display = 'block';
 
-function takeSelfie() {
-  const video = document.getElementById('selfie-video');
-  const canvas = document.getElementById('selfie-canvas');
-  const previewWrap = document.getElementById('selfie-preview-wrap');
-  const previewImg = document.getElementById('selfie-preview-img');
-  const sendBtn = document.getElementById('selfie-send-btn');
-  const retakeBtn = document.getElementById('selfie-retake-btn');
-  const openBtn = document.getElementById('selfie-open-btn');
-  const statusEl = document.getElementById('selfie-status');
-
-  if (!video || !canvas) return;
-
-  const size = 480;
-  canvas.width = size;
-  canvas.height = size;
-  const ctx = canvas.getContext('2d');
-
-  // Square crop from center
-  const vw = video.videoWidth, vh = video.videoHeight;
-  const side = Math.min(vw, vh);
-  const sx = (vw - side) / 2, sy = (vh - side) / 2;
-  ctx.drawImage(video, sx, sy, side, side, 0, 0, size, size);
-
-  _selfieBase64 = canvas.toDataURL('image/jpeg', 0.82).split(',')[1];
-
-  // Preview ko'rsatish
-  previewImg.src = 'data:image/jpeg;base64,' + _selfieBase64;
-  previewWrap.style.display = 'block';
-  statusEl.textContent = '✅ Rasm olindi! Tasdiqlash uchun yuboring.';
-
-  // Kamerani o'chirish
-  stopSelfieCamera();
-
-  // Tugmalar
-  sendBtn.style.display = '';
-  retakeBtn.style.display = '';
-  if (openBtn) openBtn.style.display = 'none';
-}
-
-function retakeSelfie() {
-  _selfieBase64 = null;
-  const previewWrap = document.getElementById('selfie-preview-wrap');
-  const sendBtn = document.getElementById('selfie-send-btn');
-  const retakeBtn = document.getElementById('selfie-retake-btn');
-  const openBtn = document.getElementById('selfie-open-btn');
-  const statusEl = document.getElementById('selfie-status');
-  if (previewWrap) previewWrap.style.display = 'none';
-  if (sendBtn) sendBtn.style.display = 'none';
-  if (retakeBtn) retakeBtn.style.display = 'none';
-  if (openBtn) openBtn.style.display = '';
-  if (statusEl) statusEl.textContent = '';
-  openSelfieCamera();
+    // Tugmalar
+    const openBtn = document.getElementById('selfie-open-btn');
+    const sendBtn = document.getElementById('selfie-send-btn');
+    const retakeBtn = document.getElementById('selfie-retake-btn');
+    const statusEl = document.getElementById('selfie-status');
+    if (openBtn) openBtn.style.display = 'none';
+    if (sendBtn) sendBtn.style.display = '';
+    if (retakeBtn) retakeBtn.style.display = '';
+    if (statusEl) { statusEl.textContent = '✅ Selfi tayyor! Yuborish tugmasini bosing.'; statusEl.style.color = '#34a853'; statusEl.style.fontWeight = '600'; }
+  };
+  reader.readAsDataURL(file);
 }
 
 async function sendSelfieForVerification() {
