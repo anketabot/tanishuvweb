@@ -4663,6 +4663,8 @@ function detectTelegramLanguage() {
 
   function onCountryChange() {
     const country = document.getElementById('inp-country')?.value || '';
+    // Erkin matn maydonlarini har doim yashirish (manual tanlash rejimi)
+    _hideFreeLocationFields();
     loadRegionsData().then(() => {
       const regionOpts = _getLocOptsForCountry(country);
       if (regionOpts && regionOpts.length > 0) {
@@ -6539,8 +6541,40 @@ function detectTelegramLanguage() {
     };
   }
 
+  // Erkin matn maydonlarini yashirish va tozalash
+  function _hideFreeLocationFields() {
+    const rWrap = document.getElementById('inp-region-free-wrap');
+    const dWrap = document.getElementById('inp-district-free-wrap');
+    if (rWrap) rWrap.style.display = 'none';
+    if (dWrap) dWrap.style.display = 'none';
+    const rFree = document.getElementById('inp-region-free');
+    const dFree = document.getElementById('inp-district-free');
+    if (rFree) rFree.value = '';
+    if (dFree) dFree.value = '';
+  }
+
+  // Erkin matn: region/district inputlarini o'zgarishida hidden city fieldni yangilash
+  function _bindFreeLocationInputs() {
+    const rFree = document.getElementById('inp-region-free');
+    const dFree = document.getElementById('inp-district-free');
+    if (rFree && !rFree._freeBound) {
+      rFree._freeBound = true;
+      rFree.addEventListener('input', () => {
+        const country = document.getElementById('inp-country')?.value || '';
+        updateHiddenCityField('inp-city', country, rFree.value, dFree?.value || '');
+      });
+    }
+    if (dFree && !dFree._freeBound) {
+      dFree._freeBound = true;
+      dFree.addEventListener('input', () => {
+        const country = document.getElementById('inp-country')?.value || '';
+        updateHiddenCityField('inp-city', country, rFree?.value || '', dFree.value);
+      });
+    }
+  }
+
   // Geolokatsiyadan topilgan joyni anketa selectorlariga avtomatik to'ldirish
-  function _autoFillLocationFromGeo(matchedLoc) {
+  function _autoFillLocationFromGeo(matchedLoc, rawNominatimAddr) {
     if (!matchedLoc) return;
     const { country, region, district } = matchedLoc;
     const lang = currentLang || 'uz';
@@ -6554,6 +6588,56 @@ function detectTelegramLanguage() {
       "Qirgʻiziston": () => kyrgyzstanCitiesML,
       "Tojikiston":   () => tajikistanCitiesML,
     };
+
+    // Agar bu davlat uchun regions.json dataseti yo'q bo'lsa —
+    // Nominatim dan kelgan state/city ma'lumotlarini erkin matn sifatida to'ldirish
+    const hasDsForCountry = !!(DS_MAP[country] || COUNTRY_DATASET_MAP[country]);
+    if (!hasDsForCountry && country) {
+      loadRegionsData().then(() => {
+        // Davlatni to'ldirish
+        const cSel = document.getElementById('inp-country');
+        if (cSel) cSel.value = country;
+        const cLabel = _translateCountryValue(country, lang);
+        const cValEl = document.getElementById('inp-country-trigger-val');
+        if (cValEl) { cValEl.textContent = cLabel || country; cValEl.classList.remove('placeholder'); }
+        document.getElementById('inp-country-trigger')?.classList.add('filled');
+        document.querySelectorAll('#inp-country-opts .loc-option').forEach(o =>
+          o.classList.toggle('selected', o.dataset.value === country));
+
+        // Dropdown viloyat/tuman ni yashirish
+        hideLocationWrap('inp-region');
+        hideLocationWrap('inp-district');
+
+        // Nominatim dan region/district nomini olish
+        const addr = rawNominatimAddr || {};
+        const rawRegion   = addr.state || addr.region || '';
+        const rawDistrict = addr.city || addr.town || addr.county || addr.suburb || addr.village || '';
+
+        const rWrap = document.getElementById('inp-region-free-wrap');
+        const dWrap = document.getElementById('inp-district-free-wrap');
+        const rFree = document.getElementById('inp-region-free');
+        const dFree = document.getElementById('inp-district-free');
+
+        if (rawRegion && rWrap && rFree) {
+          rFree.value = rawRegion;
+          rWrap.style.display = 'block';
+        } else if (rWrap) {
+          rWrap.style.display = 'none';
+        }
+
+        if (rawDistrict && dWrap && dFree) {
+          dFree.value = rawDistrict;
+          dWrap.style.display = 'block';
+        } else if (dWrap) {
+          dWrap.style.display = 'none';
+        }
+
+        _bindFreeLocationInputs();
+        updateHiddenCityField('inp-city', country, rawRegion, rawDistrict);
+        updateLocationSteps('inp', rawDistrict ? 4 : (rawRegion ? 3 : 2));
+      });
+      return; // Qolgan logikani chaqirmaslik
+    }
 
     loadRegionsData().then(() => {
       // 1. Davlat
@@ -6774,7 +6858,8 @@ function detectTelegramLanguage() {
       // ── YANGI: regions.json bilan moslashtirish va selectorlarni to'ldirish ──
       const matched = _matchGeoToRegions(addr);
       if (matched) {
-        _autoFillLocationFromGeo(matched);
+        _hideFreeLocationFields(); // avval erkin maydonlarni tozalash
+        _autoFillLocationFromGeo(matched, addr);
         if (!matched.region && !matched.district) {
           updateHiddenCityField('inp-city', matched.country, '', '');
         }
