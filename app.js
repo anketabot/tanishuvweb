@@ -405,7 +405,38 @@ const tg = window.Telegram?.WebApp;
           'country_label': 'Davlat',
           'region_label': 'Viloyat',
           'district_label': 'Tuman / Shahar',
-          'all_countries': '— Barcha davlatlar —'
+          'all_countries': '— Barcha davlatlar —',
+          'verif_title': 'Verifikatsiya',
+          'verif_sub': 'Ko\'k galochka olish',
+          'verif_step1': 'Kamera ochiladi',
+          'verif_step2': 'Selfi olasiz',
+          'verif_step3': '💙 Galochka',
+          'verif_selfie_ready': '✅ Selfi tayyor! Yuborish tugmasini bosing.',
+          'verif_selfie_uploading': '🔄 Selfi yuklanmoqda, iltimos kuting...',
+          'verif_take_selfie_first': 'Avval selfi oling!',
+          'verif_login_required': 'Telegram orqali kiring!',
+          'verif_checking': '⏳ Tekshirilmoqda...',
+          'verif_success_status': '💙 Profilingiz tasdiqlandi! Ko\'k galochka qo\'yildi.',
+          'verif_success_toast': '💙 Verifikatsiya muvaffaqiyatli!',
+          'verif_error_prefix': '❌ Xatolik: ',
+          'verif_error_retry': 'Qayta urinib ko\'ring',
+          'verif_server_error': '❌ Server bilan bog\'lanishda xatolik.',
+          'verif_btn_send': 'Tasdiqlash uchun yuborish',
+          'verif_btn_retake': 'Qayta tushirish',
+          'verif_btn_camera': 'Kamera orqali selfi olish',
+          'verif_confirmed': '💙 Tasdiqlangan',
+          'verif_already_verified': '💙 Profilingiz allaqachon tasdiqlangan.',
+          'verif_profile_confirmed': 'Tasdiqlangan profil',
+          'verif_selfie_ready_label': 'Selfi tayyor ✓',
+          'verif_face_hint': 'Yuzingizni doira ichiga joylashtiring',
+          'verif_cam_loading': 'Kamera yoqilmoqda...',
+          'verif_cam_no_permission': 'Kameraga ruxsat berilmagan. Sozlamalardan ruxsat bering yoki galereyadan tanlang.',
+          'verif_cam_not_found': 'Kamera topilmadi. Galereyadan tanlang.',
+          'verif_cam_error': 'Kamera ishlamadi. Galereyadan tanlang.',
+          'verif_gallery_btn': 'Galereyadan tanlash',
+          'verif_shutter_hint': 'Tugmani bosib selfi oling',
+          'verif_selfie_title': 'Selfi olish',
+          'verif_required_to_save': '⚠️ Anketani saqlash uchun avval verifikatsiyadan o\'ting!'
       },
       'ru': {
           'select_language': '🌍 Выберите язык',
@@ -729,7 +760,38 @@ const tg = window.Telegram?.WebApp;
           'country_label': 'Страна',
           'region_label': 'Область',
           'district_label': 'Район / Город',
-          'all_countries': '— Все страны —'
+          'all_countries': '— Все страны —',
+          'verif_title': 'Верификация',
+          'verif_sub': 'Получить синюю галочку',
+          'verif_step1': 'Открывается камера',
+          'verif_step2': 'Делаете селфи',
+          'verif_step3': '💙 Галочка',
+          'verif_selfie_ready': '✅ Селфи готово! Нажмите кнопку отправить.',
+          'verif_selfie_uploading': '🔄 Селфи загружается, подождите...',
+          'verif_take_selfie_first': 'Сначала сделайте селфи!',
+          'verif_login_required': 'Войдите через Telegram!',
+          'verif_checking': '⏳ Проверяется...',
+          'verif_success_status': '💙 Ваш профиль подтверждён! Синяя галочка добавлена.',
+          'verif_success_toast': '💙 Верификация прошла успешно!',
+          'verif_error_prefix': '❌ Ошибка: ',
+          'verif_error_retry': 'Попробуйте снова',
+          'verif_server_error': '❌ Ошибка подключения к серверу.',
+          'verif_btn_send': 'Отправить для подтверждения',
+          'verif_btn_retake': 'Переснять',
+          'verif_btn_camera': 'Сделать селфи через камеру',
+          'verif_confirmed': '💙 Подтверждён',
+          'verif_already_verified': '💙 Ваш профиль уже подтверждён.',
+          'verif_profile_confirmed': 'Подтверждённый профиль',
+          'verif_selfie_ready_label': 'Селфи готово ✓',
+          'verif_face_hint': 'Поместите лицо в круг',
+          'verif_cam_loading': 'Камера включается...',
+          'verif_cam_no_permission': 'Доступ к камере запрещён. Разрешите в настройках или выберите из галереи.',
+          'verif_cam_not_found': 'Камера не найдена. Выберите из галереи.',
+          'verif_cam_error': 'Камера не работает. Выберите из галереи.',
+          'verif_gallery_btn': 'Выбрать из галереи',
+          'verif_shutter_hint': 'Нажмите кнопку для селфи',
+          'verif_selfie_title': 'Сделать селфи',
+          'verif_required_to_save': '⚠️ Для сохранения анкеты сначала пройдите верификацию!'
       },
       'kk': {
           'select_language': '🌍 Тілді таңдаңыз',
@@ -1053,7 +1115,38 @@ const tg = window.Telegram?.WebApp;
           'country_label': 'Ел',
           'region_label': 'Облыс',
           'district_label': 'Аудан / Қала',
-          'all_countries': '— Барлық елдер —'
+          'all_countries': '— Барлық елдер —',
+          'verif_title': 'Верификация',
+          'verif_sub': 'Көк белгі алу',
+          'verif_step1': 'Камера ашылады',
+          'verif_step2': 'Селфи аласыз',
+          'verif_step3': '💙 Белгі',
+          'verif_selfie_ready': '✅ Селфи дайын! Жіберу түймесін басыңыз.',
+          'verif_selfie_uploading': '🔄 Селфи жүктелуде, күте тұрыңыз...',
+          'verif_take_selfie_first': 'Алдымен селфи алыңыз!',
+          'verif_login_required': 'Telegram арқылы кіріңіз!',
+          'verif_checking': '⏳ Тексерілуде...',
+          'verif_success_status': '💙 Профиліңіз расталды! Көк белгі қойылды.',
+          'verif_success_toast': '💙 Верификация сәтті өтті!',
+          'verif_error_prefix': '❌ Қате: ',
+          'verif_error_retry': 'Қайта көріңіз',
+          'verif_server_error': '❌ Сервермен байланысу қатесі.',
+          'verif_btn_send': 'Растау үшін жіберу',
+          'verif_btn_retake': 'Қайта түсіру',
+          'verif_btn_camera': 'Камера арқылы селфи алу',
+          'verif_confirmed': '💙 Расталған',
+          'verif_already_verified': '💙 Профиліңіз бұрыннан расталған.',
+          'verif_profile_confirmed': 'Расталған профиль',
+          'verif_selfie_ready_label': 'Селфи дайын ✓',
+          'verif_face_hint': 'Бетіңізді шеңбердің ішіне орналастырыңыз',
+          'verif_cam_loading': 'Камера іске қосылуда...',
+          'verif_cam_no_permission': 'Камераға рұқсат жоқ. Параметрлерден рұқсат беріңіз немесе галереядан таңдаңыз.',
+          'verif_cam_not_found': 'Камера табылмады. Галереядан таңдаңыз.',
+          'verif_cam_error': 'Камера жұмыс істемеді. Галереядан таңдаңыз.',
+          'verif_gallery_btn': 'Галереядан таңдау',
+          'verif_shutter_hint': 'Селфи алу үшін түймені басыңыз',
+          'verif_selfie_title': 'Селфи алу',
+          'verif_required_to_save': '⚠️ Анкетаны сақтау үшін алдымен верификациядан өтіңіз!'
       },
       'ky': {
           'select_language': '🌍 Тилди тандаңыз',
@@ -1377,7 +1470,38 @@ const tg = window.Telegram?.WebApp;
           'country_label': 'Өлкө',
           'region_label': 'Облус',
           'district_label': 'Район / Шаар',
-          'all_countries': '— Бардык өлкөлөр —'
+          'all_countries': '— Бардык өлкөлөр —',
+          'verif_title': 'Верификация',
+          'verif_sub': 'Көк белги алуу',
+          'verif_step1': 'Камера ачылат',
+          'verif_step2': 'Селфи аласыз',
+          'verif_step3': '💙 Белги',
+          'verif_selfie_ready': '✅ Селфи даяр! Жөнөтүү баскычын басыңыз.',
+          'verif_selfie_uploading': '🔄 Селфи жүктөлүүдө, күтүңүз...',
+          'verif_take_selfie_first': 'Алгач селфи алыңыз!',
+          'verif_login_required': 'Telegram аркылуу кириңиз!',
+          'verif_checking': '⏳ Текшерилүүдө...',
+          'verif_success_status': '💙 Профилиңиз ырасталды! Көк белги коюлду.',
+          'verif_success_toast': '💙 Верификация ийгиликтүү болду!',
+          'verif_error_prefix': '❌ Ката: ',
+          'verif_error_retry': 'Кайра аракет кылыңыз',
+          'verif_server_error': '❌ Сервер менен байланышта ката.',
+          'verif_btn_send': 'Ырастоо үчүн жөнөтүү',
+          'verif_btn_retake': 'Кайра тартуу',
+          'verif_btn_camera': 'Камера аркылуу селфи алуу',
+          'verif_confirmed': '💙 Ырасталган',
+          'verif_already_verified': '💙 Профилиңиз мурунтан ырасталган.',
+          'verif_profile_confirmed': 'Ырасталган профиль',
+          'verif_selfie_ready_label': 'Селфи даяр ✓',
+          'verif_face_hint': 'Жүзүңүздү чөйрөнүн ичине коюңуз',
+          'verif_cam_loading': 'Камера күйгүзүлүүдө...',
+          'verif_cam_no_permission': 'Камерага уруксат жок. Жөндөөлөрдөн уруксат бериңиз же галереядан тандаңыз.',
+          'verif_cam_not_found': 'Камера табылган жок. Галереядан тандаңыз.',
+          'verif_cam_error': 'Камера иштеген жок. Галереядан тандаңыз.',
+          'verif_gallery_btn': 'Галереядан тандоо',
+          'verif_shutter_hint': 'Селфи алуу үчүн баскычты басыңыз',
+          'verif_selfie_title': 'Селфи алуу',
+          'verif_required_to_save': '⚠️ Анкетаны сактоо үчүн алгач верификациядан өтүңүз!'
       },
       'kaa': {
           'select_language': '🌍 Tildi tańlań',
@@ -1701,7 +1825,38 @@ const tg = window.Telegram?.WebApp;
           'country_label': 'Mámleketler',
           'region_label': 'Wılayat',
           'district_label': 'Rayon / Qala',
-          'all_countries': '— Barlıq mámleketler —'
+          'all_countries': '— Barlıq mámleketler —',
+          'verif_title': 'Verifikatsiya',
+          'verif_sub': 'Kók belgini alıw',
+          'verif_step1': 'Kamera ashıladi',
+          'verif_step2': 'Selfi alasız',
+          'verif_step3': '💙 Belgi',
+          'verif_selfie_ready': '✅ Selfi tayar! Jiberiw túymesin basıń.',
+          'verif_selfie_uploading': '🔄 Selfi júkleniwde, kútiń...',
+          'verif_take_selfie_first': 'Áwweli selfi alıń!',
+          'verif_login_required': 'Telegram arqalı kiriń!',
+          'verif_checking': '⏳ Tekserilmekte...',
+          'verif_success_status': '💙 Profiliñiz tastıyıqlandı! Kók belgi qoyıldı.',
+          'verif_success_toast': '💙 Verifikatsiya wátiliwshe ótdi!',
+          'verif_error_prefix': '❌ Qátelik: ',
+          'verif_error_retry': 'Qayta urınıp kóriń',
+          'verif_server_error': '❌ Server menen baylanısıwda qátelik.',
+          'verif_btn_send': 'Tastıyıqlaw ushın jiberiw',
+          'verif_btn_retake': 'Qayta túsiriw',
+          'verif_btn_camera': 'Kamera arqalı selfi alıw',
+          'verif_confirmed': '💙 Tastıyıqlandı',
+          'verif_already_verified': '💙 Profiliñiz burın tastıyıqlandı.',
+          'verif_profile_confirmed': 'Tastıyıqlandı profil',
+          'verif_selfie_ready_label': 'Selfi tayar ✓',
+          'verif_face_hint': 'Betińizdi shemberge qoyıń',
+          'verif_cam_loading': 'Kamera qosılmaqta...',
+          'verif_cam_no_permission': 'Kameraga ruxsat berilmegen. Sazlamalardan ruxsat beriń yáki galereyadán tańlań.',
+          'verif_cam_not_found': 'Kamera tabılmadı. Galereyadán tańlań.',
+          'verif_cam_error': 'Kamera islegen joq. Galereyadán tańlań.',
+          'verif_gallery_btn': 'Galereyadán tańlaw',
+          'verif_shutter_hint': 'Selfi alıw ushın túymesin basıń',
+          'verif_selfie_title': 'Selfi alıw',
+          'verif_required_to_save': '⚠️ Anketa saqlaw ushın áwweli verifikatsiyadan ótiń!'
       },
       'tg': {
           'select_language': '🌍 Забонро интихоб кунед',
@@ -2025,7 +2180,38 @@ const tg = window.Telegram?.WebApp;
           'country_label': 'Кишвар',
           'region_label': 'Вилоят',
           'district_label': 'Ноҳия / Шаҳр',
-          'all_countries': '— Ҳама кишварҳо —'
+          'all_countries': '— Ҳама кишварҳо —',
+          'verif_title': 'Тасдиқ',
+          'verif_sub': 'Гирифтани аломати кабуд',
+          'verif_step1': 'Камера кушода мешавад',
+          'verif_step2': 'Селфи мегиред',
+          'verif_step3': '💙 Аломат',
+          'verif_selfie_ready': '✅ Селфи тайёр! Тугмаи фиристоданро пахш кунед.',
+          'verif_selfie_uploading': '🔄 Селфи боргузорӣ мешавад, лутфан интизор шавед...',
+          'verif_take_selfie_first': 'Аввал селфи гиред!',
+          'verif_login_required': 'Тавассути Telegram ворид шавед!',
+          'verif_checking': '⏳ Тафтиш мешавад...',
+          'verif_success_status': '💙 Профили шумо тасдиқ шуд! Аломати кабуд гузошта шуд.',
+          'verif_success_toast': '💙 Тасдиқ бомуваффақият анҷом ёфт!',
+          'verif_error_prefix': '❌ Хато: ',
+          'verif_error_retry': 'Бори дигар кӯшиш кунед',
+          'verif_server_error': '❌ Хатои пайвастшавӣ ба сервер.',
+          'verif_btn_send': 'Барои тасдиқ фиристодан',
+          'verif_btn_retake': 'Аз нав гирифтан',
+          'verif_btn_camera': 'Тавассути камера селфи гирифтан',
+          'verif_confirmed': '💙 Тасдиқшуда',
+          'verif_already_verified': '💙 Профили шумо аллакай тасдиқ шудааст.',
+          'verif_profile_confirmed': 'Профили тасдиқшуда',
+          'verif_selfie_ready_label': 'Селфи тайёр ✓',
+          'verif_face_hint': 'Чеҳраатонро дар доира ҷойгир кунед',
+          'verif_cam_loading': 'Камера фаъол мешавад...',
+          'verif_cam_no_permission': 'Иҷозаи камера дода нашудааст. Аз танзимот иҷозат диҳед ё аз галерея интихоб кунед.',
+          'verif_cam_not_found': 'Камера ёфт нашуд. Аз галерея интихоб кунед.',
+          'verif_cam_error': 'Камера кор накард. Аз галерея интихоб кунед.',
+          'verif_gallery_btn': 'Аз галерея интихоб кардан',
+          'verif_shutter_hint': 'Барои гирифтани селфи тугмаро пахш кунед',
+          'verif_selfie_title': 'Селфи гирифтан',
+          'verif_required_to_save': '⚠️ Барои захира кардани анкета аввал тасдиқро гузаред!'
       },
       'en': {
           'select_language': '🌍 Select language',
@@ -2348,7 +2534,38 @@ const tg = window.Telegram?.WebApp;
           'country_label': 'Country',
           'region_label': 'Region',
           'district_label': 'District / City',
-          'all_countries': '— All countries —'
+          'all_countries': '— All countries —',
+          'verif_title': 'Verification',
+          'verif_sub': 'Get a blue checkmark',
+          'verif_step1': 'Camera opens',
+          'verif_step2': 'Take a selfie',
+          'verif_step3': '💙 Checkmark',
+          'verif_selfie_ready': '✅ Selfie ready! Press the send button.',
+          'verif_selfie_uploading': '🔄 Selfie uploading, please wait...',
+          'verif_take_selfie_first': 'Take a selfie first!',
+          'verif_login_required': 'Please login via Telegram!',
+          'verif_checking': '⏳ Checking...',
+          'verif_success_status': '💙 Your profile is verified! Blue checkmark added.',
+          'verif_success_toast': '💙 Verification successful!',
+          'verif_error_prefix': '❌ Error: ',
+          'verif_error_retry': 'Please try again',
+          'verif_server_error': '❌ Server connection error.',
+          'verif_btn_send': 'Send for verification',
+          'verif_btn_retake': 'Retake',
+          'verif_btn_camera': 'Take selfie with camera',
+          'verif_confirmed': '💙 Verified',
+          'verif_already_verified': '💙 Your profile is already verified.',
+          'verif_profile_confirmed': 'Verified profile',
+          'verif_selfie_ready_label': 'Selfie ready ✓',
+          'verif_face_hint': 'Place your face inside the circle',
+          'verif_cam_loading': 'Camera starting...',
+          'verif_cam_no_permission': 'Camera access denied. Enable in settings or choose from gallery.',
+          'verif_cam_not_found': 'Camera not found. Choose from gallery.',
+          'verif_cam_error': 'Camera failed. Choose from gallery.',
+          'verif_gallery_btn': 'Choose from gallery',
+          'verif_shutter_hint': 'Press the button to take a selfie',
+          'verif_selfie_title': 'Take selfie',
+          'verif_required_to_save': '⚠️ Please complete verification before saving your profile!'
       },
   };
 
@@ -4888,6 +5105,15 @@ function detectTelegramLanguage() {
     if (!age || age < 16 || age > 80) { showToast(tr('enter_age_prompt')); return; }
     if (!city) { showToast(tr('enter_city_prompt')); return; }
     if (selectedGoals.length === 0) { showToast(tr('select_goal_prompt')); return; }
+
+    // Verifikatsiya tekshiruvi: selfi yuborilmagan bo'lsa saqlatma
+    if (!_selfieVerified) {
+      showToast(tr('verif_required_to_save'));
+      // Verifikatsiya bo'limiga scroll qilish
+      const verifCard = document.getElementById('verification-card');
+      if (verifCard) verifCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      return;
+    }
 
     const trimmedInterests = Array.from(new Set((selectedInterests || []).filter(Boolean))).slice(0, MAX_INTERESTS_ALLOWED);
     if ((selectedInterests || []).length > MAX_INTERESTS_ALLOWED) {
@@ -7615,6 +7841,7 @@ function openViewedProfile(id, tab) {
 let _selfieBase64 = null;
 let _selfieStream = null;
 let _selfieFacingMode = 'user'; // 'user' = old, 'environment' = orqa
+let _selfieVerified = false; // Verifikatsiya muvaffaqiyatli o'tganmi
 
 // 1. Kamera modalini ochish
 async function openSelfieCamera() {
@@ -7662,11 +7889,11 @@ async function openSelfieCamera() {
       const errText = document.getElementById('selfie-cam-error-text');
       if (errText) {
         if (err.name === 'NotAllowedError' || err.name === 'PermissionDeniedError') {
-          errText.textContent = 'Kameraga ruxsat berilmagan. Sozlamalardan ruxsat bering yoki galereyadan tanlang.';
+          errText.textContent = tr('verif_cam_no_permission');
         } else if (err.name === 'NotFoundError') {
-          errText.textContent = 'Kamera topilmadi. Galereyadan tanlang.';
+          errText.textContent = tr('verif_cam_not_found');
         } else {
-          errText.textContent = 'Kamera ishlamadi. Galereyadan tanlang.';
+          errText.textContent = tr('verif_cam_error');
         }
       }
       errorEl.style.display = 'flex';
@@ -7738,7 +7965,7 @@ function takeSelfieSnapshot() {
   if (sendBtn) sendBtn.style.display = 'flex';
   if (retakeBtn) retakeBtn.style.display = 'flex';
   if (statusEl) {
-    statusEl.textContent = '✅ Selfi tayyor! Yuborish tugmasini bosing.';
+    statusEl.textContent = tr('verif_selfie_ready');
     statusEl.style.color = '#34a853';
     statusEl.style.fontWeight = '600';
   }
@@ -7775,28 +8002,29 @@ function onSelfieSelected(input) {
     if (openBtn) openBtn.style.display = 'none';
     if (sendBtn) sendBtn.style.display = 'flex';
     if (retakeBtn) retakeBtn.style.display = 'flex';
-    if (statusEl) { statusEl.textContent = '✅ Selfi tayyor! Yuborish tugmasini bosing.'; statusEl.style.color = '#34a853'; statusEl.style.fontWeight = '600'; }
+    if (statusEl) { statusEl.textContent = tr('verif_selfie_ready'); statusEl.style.color = '#34a853'; statusEl.style.fontWeight = '600'; }
   };
   reader.readAsDataURL(file);
 }
 
 async function sendSelfieForVerification() {
-  if (!_selfieBase64) { showToast('Avval selfi oling!'); return; }
-  if (!userId) { showToast('Telegram orqali kiring!'); return; }
+  if (!_selfieBase64) { showToast(tr('verif_take_selfie_first')); return; }
+  if (!userId) { showToast(tr('verif_login_required')); return; }
 
   const sendBtn = document.getElementById('selfie-send-btn');
   const retakeBtn = document.getElementById('selfie-retake-btn');
   const statusEl = document.getElementById('selfie-status');
 
   sendBtn.disabled = true;
-  sendBtn.textContent = '⏳ Tekshirilmoqda...';
-  if (statusEl) statusEl.textContent = '🔄 Selfi yuklanmoqda, iltimos kuting...';
+  sendBtn.textContent = tr('verif_checking');
+  if (statusEl) statusEl.textContent = tr('verif_selfie_uploading');
 
   try {
     const data = await apiPost('/api/verify/upload', { telegram_id: userId, selfie_base64: _selfieBase64 });
 
     if (data.success) {
-      statusEl.textContent = '💙 Profilingiz tasdiqlandi! Ko\'k galochka qo\'yildi.';
+      _selfieVerified = true;
+      statusEl.textContent = tr('verif_success_status');
       statusEl.style.color = '#1A73E8';
       statusEl.style.fontWeight = '700';
       sendBtn.style.display = 'none';
@@ -7812,23 +8040,23 @@ async function sendSelfieForVerification() {
         openBtn.style.display = '';
         openBtn.querySelector('.verif-btn-camera-inner').innerHTML = `
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-          <span>💙 Tasdiqlangan</span>`;
+          <span>${tr('verif_confirmed')}</span>`;
         openBtn.style.background = 'linear-gradient(135deg, #34a853, #007AFF)';
         openBtn.disabled = true;
       }
 
-      showToast('💙 Verifikatsiya muvaffaqiyatli!');
+      showToast(tr('verif_success_toast'));
     } else {
-      statusEl.textContent = '❌ Xatolik: ' + (data.error || 'Qayta urinib ko\'ring');
+      statusEl.textContent = tr('verif_error_prefix') + (data.error || tr('verif_error_retry'));
       statusEl.style.color = 'var(--ios-red, #FF3B30)';
       sendBtn.disabled = false;
-      sendBtn.innerHTML = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Tasdiqlash uchun yuborish';
+      sendBtn.innerHTML = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> ${tr('verif_btn_send')}`;
     }
   } catch (err) {
-    statusEl.textContent = '❌ Server bilan bog\'lanishda xatolik.';
+    statusEl.textContent = tr('verif_server_error');
     statusEl.style.color = 'var(--ios-red, #FF3B30)';
     sendBtn.disabled = false;
-    sendBtn.innerHTML = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Tasdiqlash uchun yuborish';
+    sendBtn.innerHTML = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> ${tr('verif_btn_send')}`;
   }
 }
 
@@ -7838,6 +8066,7 @@ async function loadVerificationStatus() {
   try {
     const data = await apiPost('/api/verify/status', { telegram_id: userId });
     if (data.success && data.is_verified) {
+      _selfieVerified = true;
       // Form ichidagi badge
       const badge = document.getElementById('verified-badge-form');
       if (badge) badge.style.display = 'inline';
@@ -7848,13 +8077,13 @@ async function loadVerificationStatus() {
         const inner = openBtn.querySelector('.verif-btn-camera-inner');
         if (inner) inner.innerHTML = `
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-          <span>💙 Tasdiqlangan</span>`;
+          <span>${tr('verif_confirmed')}</span>`;
         openBtn.style.background = 'linear-gradient(135deg, #34a853, #007AFF)';
         openBtn.disabled = true;
       }
       const statusEl = document.getElementById('selfie-status');
       if (statusEl) {
-        statusEl.textContent = '💙 Profilingiz allaqachon tasdiqlangan.';
+        statusEl.textContent = tr('verif_already_verified');
         statusEl.style.color = '#1A73E8';
         statusEl.style.fontWeight = '600';
       }
@@ -7865,7 +8094,7 @@ async function loadVerificationStatus() {
 // Qidiruvda va profil kartochkasida galochka ko'rsatish uchun helper
 function verifiedBadgeHtml(isVerified) {
   if (!isVerified) return '';
-  return '<span title="Tasdiqlangan profil" style="color:#1A73E8;font-size:14px;margin-left:3px;">✔️</span>';
+  return `<span title="${tr('verif_profile_confirmed')}" style="color:#1A73E8;font-size:14px;margin-left:3px;">✔️</span>`;
 }
 
 // Profil sahifasi ochilganda verifikatsiya holatini yuklash
