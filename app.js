@@ -198,6 +198,15 @@ const tg = window.Telegram?.WebApp;
           'goal_romantika': 'Romantika',
           'goal_uchrashuv': 'Uchrashuv',
           'goal_virtual': 'Virtual muloqot',
+          'goal_jiddiy': '💍 Jiddiy (Oila)',
+          'goal_dostlik_suhbat': "💬 Do'stlik/Suhbat",
+          'goal_hamroh': '🧳 Hamroh',
+          'goal_group_main': 'Asosiy maqsad',
+          'goal_group_extra': "Qo'shimcha",
+          'goal_required_hint': '⚡ Kamida 1 ta asosiy maqsad tanlang',
+          'only_serious_men_title': "Faqat jiddiy niyatli yigirlarga ko'rinay",
+          'only_serious_men_sub': "Anketam faqat '💍 Jiddiy' maqsadli yigirlarga chiqadi",
+          'goal_required_error': 'Kamida 1 ta asosiy maqsad (💍/💬/🧳) tanlang',
           'goal_boshqa': 'Boshqa',
           'int_kino': '🍿 Kino',
           'int_musiqa': '🎵 Musiqa',
@@ -559,6 +568,15 @@ const tg = window.Telegram?.WebApp;
           'goal_romantika': 'Романтика',
           'goal_uchrashuv': 'Свидание',
           'goal_virtual': 'Виртуальное общение',
+          'goal_jiddiy': '💍 Серьёзно (Семья)',
+          'goal_dostlik_suhbat': '💬 Дружба/Общение',
+          'goal_hamroh': '🧳 Компаньон',
+          'goal_group_main': 'Основная цель',
+          'goal_group_extra': 'Дополнительно',
+          'goal_required_hint': '⚡ Выберите хотя бы 1 основную цель',
+          'only_serious_men_title': 'Показываться только серьёзным парням',
+          'only_serious_men_sub': "Моя анкета будет видна только парням с целью '💍 Серьёзно'",
+          'goal_required_error': 'Выберите хотя бы 1 основную цель (💍/💬/🧳)',
           'goal_boshqa': 'Другое',
           'int_kino': '🍿 Кино',
           'int_musiqa': '🎵 Музыка',
@@ -922,6 +940,15 @@ const tg = window.Telegram?.WebApp;
           'goal_romantika': 'Романтика',
           'goal_uchrashuv': 'Кездесу',
           'goal_virtual': 'Виртуал қарым-қатынас',
+          'goal_jiddiy': '💍 Байыпты (Отбасы)',
+          'goal_dostlik_suhbat': '💬 Достық/Сұхбат',
+          'goal_hamroh': '🧳 Серіктес',
+          'goal_group_main': 'Негізгі мақсат',
+          'goal_group_extra': 'Қосымша',
+          'goal_required_hint': '⚡ Кемінде 1 негізгі мақсат таңдаңыз',
+          'only_serious_men_title': 'Тек байыпты жігіттерге көрінейін',
+          'only_serious_men_sub': "Анкетам тек '💍 Байыпты' мақсатты жігіттерге шығады",
+          'goal_required_error': 'Кемінде 1 негізгі мақсат (💍/💬/🧳) таңдаңыз',
           'goal_boshqa': 'Басқа',
           'int_kino': '🍿 Кино',
           'int_musiqa': '🎵 Музыка',
@@ -1285,6 +1312,15 @@ const tg = window.Telegram?.WebApp;
           'goal_romantika': 'Романтика',
           'goal_uchrashuv': 'Жолугушуу',
           'goal_virtual': 'Виртуалдык байланыш',
+          'goal_jiddiy': '💍 Олуттуу (Үй-бүлө)',
+          'goal_dostlik_suhbat': '💬 Достук/Аңгеме',
+          'goal_hamroh': '🧳 Жолдош',
+          'goal_group_main': 'Негизги максат',
+          'goal_group_extra': 'Кошумча',
+          'goal_required_hint': '⚡ Жок дегенде 1 негизги максат тандаңыз',
+          'only_serious_men_title': 'Олуттуу жигиттерге гана көрүнөйүн',
+          'only_serious_men_sub': "Анкетам '💍 Олуттуу' максаттуу жигиттерге гана чыгат",
+          'goal_required_error': 'Жок дегенде 1 негизги максат (💍/💬/🧳) тандаңыз',
           'goal_boshqa': 'Башка',
           'int_kino': '🍿 Кино',
           'int_musiqa': '🎵 Музыка',
@@ -1648,6 +1684,15 @@ const tg = window.Telegram?.WebApp;
           'goal_romantika': 'Romantika',
           'goal_uchrashuv': 'Ushırasıw',
           'goal_virtual': 'Virtual muloqat',
+          'goal_jiddiy': '💍 Jiddiy (Aile)',
+          'goal_dostlik_suhbat': '💬 Doslıq/Suhbet',
+          'goal_hamroh': '🧳 Joldaslıq',
+          'goal_group_main': 'Tiykarǵı maqset',
+          'goal_group_extra': "Qosımsha",
+          'goal_required_hint': '⚡ Keminde 1 tiykarǵı maqset tańlaŋ',
+          'only_serious_men_title': 'Tek jiddiy jigitlerge körineyin',
+          'only_serious_men_sub': "Anketam tek '💍 Jiddiy' maqsetli jigitlerge shıǵadı",
+          'goal_required_error': 'Keminde 1 tiykarǵı maqset (💍/💬/🧳) tańlaŋ',
           'goal_boshqa': 'Basqa',
           'int_kino': '🍿 Kino',
           'int_musiqa': '🎵 Mızıka',
@@ -2011,6 +2056,15 @@ const tg = window.Telegram?.WebApp;
           'goal_romantika': 'Романтика',
           'goal_uchrashuv': 'Вохӯрӣ',
           'goal_virtual': 'Муоширати виртуалӣ',
+          'goal_jiddiy': '💍 Ҷиддӣ (Оила)',
+          'goal_dostlik_suhbat': '💬 Дӯстӣ/Суҳбат',
+          'goal_hamroh': '🧳 Ҳамроҳ',
+          'goal_group_main': 'Мақсади асосӣ',
+          'goal_group_extra': 'Иловагӣ',
+          'goal_required_hint': '⚡ Ҳадди ақал 1 мақсади асосӣ интихоб кунед',
+          'only_serious_men_title': 'Танҳо ба писарони ҷиддӣ намоиш дода шавам',
+          'only_serious_men_sub': "Анкетаам танҳо ба писарони бо мақсади '💍 Ҷиддӣ' нишон дода мешавад",
+          'goal_required_error': 'Ҳадди ақал 1 мақсади асосӣ (💍/💬/🧳) интихоб кунед',
           'goal_boshqa': 'Дигар',
           'int_kino': '🍿 Кино',
           'int_musiqa': '🎵 Мусиқа',
@@ -2374,6 +2428,15 @@ const tg = window.Telegram?.WebApp;
           'goal_romantika': 'Romance',
           'goal_uchrashuv': 'Meeting up',
           'goal_virtual': 'Virtual chatting',
+          'goal_jiddiy': '💍 Serious (Family)',
+          'goal_dostlik_suhbat': '💬 Friendship/Chat',
+          'goal_hamroh': '🧳 Companion',
+          'goal_group_main': 'Main goal',
+          'goal_group_extra': 'Additional',
+          'goal_required_hint': '⚡ Select at least 1 main goal',
+          'only_serious_men_title': 'Show me only to serious guys',
+          'only_serious_men_sub': "My profile will only appear to guys with '💍 Serious' goal",
+          'goal_required_error': 'Please select at least 1 main goal (💍/💬/🧳)',
           'goal_boshqa': 'Other',
           'int_kino': '🍿 Movies',
           'int_musiqa': '🎵 Music',
@@ -3506,13 +3569,18 @@ function detectTelegramLanguage() {
     // Set goals chips
     if (profile.goals && Array.isArray(profile.goals)) {
       selectedGoals = [...profile.goals];
-      document.querySelectorAll('#goals-chips .chip').forEach(chip => {
+      // Asosiy maqsadlar (goals-chips) va qo'shimcha (goals-extra-chips)
+      document.querySelectorAll('#goals-chips .chip, #goals-extra-chips .chip').forEach(chip => {
         const chipKey = chip.getAttribute('data-i18n-chip');
         if (selectedGoals.includes(chipKey)) {
           chip.classList.add('selected');
         }
       });
     }
+    // only_serious_men tiklanishi
+    const seriousToggle = document.getElementById('only-serious-toggle');
+    if (seriousToggle) seriousToggle.checked = !!profile.only_serious_men;
+    updateOnlySeriousWrap();
 
     // Set photo
     if (profile.photo_base64 || profile.photo_file_id) {
@@ -3663,6 +3731,7 @@ function detectTelegramLanguage() {
     selectedGender = g;
     document.getElementById('gender-erkak').classList.toggle('selected', g === 'erkak');
     document.getElementById('gender-ayol').classList.toggle('selected', g === 'ayol');
+    updateOnlySeriousWrap();
   }
 
   function getOppositeGender(g) {
@@ -3682,6 +3751,38 @@ function detectTelegramLanguage() {
   }
 
   // ===== CHIP TOGGLE =====
+  // Asosiy maqsad chip toggle (faqat bittasi tanlanadi — radio xatti-harakat)
+  function toggleChipMain(el, group) {
+    const container = el.closest('.chips-wrap-main');
+    if (!container) return toggleChip(el, group);
+    const wasSelected = el.classList.contains('selected');
+    // Barcha asosiy chiplarni o'chirish
+    container.querySelectorAll('.chip-main').forEach(c => {
+      c.classList.remove('selected');
+      const v = c.getAttribute('data-i18n-chip') || c.textContent.trim();
+      if (group === 'goals') selectedGoals = selectedGoals.filter(i => i !== v);
+    });
+    if (!wasSelected) {
+      el.classList.add('selected');
+      const value = el.getAttribute('data-i18n-chip') || el.textContent.trim();
+      if (group === 'goals') selectedGoals = Array.from(new Set([...selectedGoals, value]));
+    }
+    updateOnlySeriousWrap();
+  }
+
+  // Ayollar uchun 'faqat jiddiy yigirlarga ko'rinish' toggle
+  function updateOnlySeriousWrap() {
+    const wrap = document.getElementById('only-serious-wrap');
+    if (!wrap) return;
+    const isWoman = selectedGender === 'female' || selectedGender === 'Ayol';
+    const hasJiddiy = selectedGoals.includes('goal_jiddiy');
+    wrap.style.display = (isWoman && hasJiddiy) ? 'block' : 'none';
+  }
+
+  function onOnlySeriousChange() {
+    // Saqlashda profil ichiga qo'shiladi
+  }
+
   function toggleChip(el, group) {
       el.classList.toggle('selected');
       const value = el.getAttribute('data-i18n-chip') || el.textContent.trim();
@@ -5170,7 +5271,9 @@ function detectTelegramLanguage() {
     if (!name) { showToast(tr('enter_name_prompt')); return; }
     if (!age || age < 16 || age > 80) { showToast(tr('enter_age_prompt')); return; }
     if (!city) { showToast(tr('enter_city_prompt')); return; }
-    if (selectedGoals.length === 0) { showToast(tr('select_goal_prompt')); return; }
+    const MAIN_GOALS = ['goal_jiddiy', 'goal_dostlik_suhbat', 'goal_hamroh'];
+    const hasMainGoal = selectedGoals.some(g => MAIN_GOALS.includes(g));
+    if (!hasMainGoal) { showToast(tr('goal_required_error') || 'Kamida 1 ta asosiy maqsad tanlang (💍/💬/🧳)'); return; }
 
     // Verifikatsiya tekshiruvi: selfi yuborilmagan bo'lsa saqlatma
     if (!_selfieVerified) {
@@ -5203,7 +5306,8 @@ function detectTelegramLanguage() {
       zodiac: zodiac,
       interests: trimmedInterests,
       goals: selectedGoals,
-      photo_base64: photoBase64 || null
+      photo_base64: photoBase64 || null,
+      only_serious_men: !!document.getElementById('only-serious-toggle')?.checked
     };
 
     setSavedProfile(profile);
