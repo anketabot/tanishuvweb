@@ -369,6 +369,10 @@ const tg = window.Telegram?.WebApp;
           'top_btn_likes': '💙 Like TOP',
           'top_btn_superlikes': '⭐ Super TOP',
           'top_btn_champion': '🏆 Chempion',
+          'search_scope_label': '🌍 Qidiruv doirasi',
+          'scope_my_area': '📍 O\'z hududim',
+          'scope_central_asia': '🌐 Butun Markaziy Osiyo',
+          'scope_ca_hint': 'O\'zbekiston, Qozog\'iston, Qirg\'iziston, Tojikiston, Turkmaniston',
           'weekly_top_badge': '📅 Haftalik TOP',
           'weekly_reset_days': '{d}k {h}s da yangilanadi',
           'weekly_reset_hours': '{h}s {m}d da yangilanadi',
@@ -727,6 +731,10 @@ const tg = window.Telegram?.WebApp;
           'top_btn_likes': '💙 Лайки TOP',
           'top_btn_superlikes': '⭐ Супер TOP',
           'top_btn_champion': '🏆 Чемпион',
+          'search_scope_label': '🌍 Область поиска',
+          'scope_my_area': '📍 Мой регион',
+          'scope_central_asia': '🌐 Вся Центральная Азия',
+          'scope_ca_hint': 'Узбекистан, Казахстан, Кыргызстан, Таджикистан, Туркменистан',
           'weekly_top_badge': '📅 Еженедельный ТОП',
           'weekly_reset_days': 'обновится через {d}д {h}ч',
           'weekly_reset_hours': 'обновится через {h}ч {m}м',
@@ -1086,6 +1094,10 @@ const tg = window.Telegram?.WebApp;
           'top_btn_likes': '💙 Лайк TOP',
           'top_btn_superlikes': '⭐ Супер TOP',
           'top_btn_champion': '🏆 Чемпион',
+          'search_scope_label': '🌍 Іздеу аймағы',
+          'scope_my_area': '📍 Менің аймағым',
+          'scope_central_asia': '🌐 Бүкіл Орталық Азия',
+          'scope_ca_hint': 'Өзбекстан, Қазақстан, Қырғызстан, Тәжікстан, Түркіменстан',
           'weekly_top_badge': '📅 Апталық ТОП',
           'weekly_reset_days': '{d}к {h}с-та жаңарады',
           'weekly_reset_hours': '{h}с {m}м-да жаңарады',
@@ -1445,6 +1457,10 @@ const tg = window.Telegram?.WebApp;
           'top_btn_likes': '💙 Лайк TOP',
           'top_btn_superlikes': '⭐ Супер TOP',
           'top_btn_champion': '🏆 Чемпион',
+          'search_scope_label': '🌍 Издөө чөйрөсү',
+          'scope_my_area': '📍 Менин аймагым',
+          'scope_central_asia': '🌐 Бүт Борбордук Азия',
+          'scope_ca_hint': 'Өзбекстан, Казакстан, Кыргызстан, Тажикстан, Түркменстан',
           'weekly_top_badge': '📅 Жумалык ТОП',
           'weekly_reset_days': '{d}к {h}с-та жаңыртылат',
           'weekly_reset_hours': '{h}с {m}м-да жаңыртылат',
@@ -1804,6 +1820,10 @@ const tg = window.Telegram?.WebApp;
           'top_btn_likes': '💙 Layk TOP',
           'top_btn_superlikes': '⭐ Super TOP',
           'top_btn_champion': '🏆 Chempion',
+          'search_scope_label': '🌍 Izlew aymaǵı',
+          'scope_my_area': '📍 Óz aymaǵım',
+          'scope_central_asia': '🌐 Pútkil Oraylıq Aziya',
+          'scope_ca_hint': 'Ózbekstan, Qazaqstan, Qırǵızstan, Tájikstan, Túrkmenstan',
           'weekly_top_badge': '📅 Háptelig TOP',
           'weekly_reset_days': '{d}k {h}s-ta jańalanadi',
           'weekly_reset_hours': '{h}s {m}d-da jańalanadi',
@@ -2163,6 +2183,10 @@ const tg = window.Telegram?.WebApp;
           'top_btn_likes': '💙 Лайк TOP',
           'top_btn_superlikes': '⭐ Супер TOP',
           'top_btn_champion': '🏆 Чемпион',
+          'search_scope_label': '🌍 Доираи ҷустуҷӯ',
+          'scope_my_area': '📍 Минтақаи ман',
+          'scope_central_asia': '🌐 Тамоми Осиёи Марказӣ',
+          'scope_ca_hint': 'Ӯзбекистон, Қазоқистон, Қирғизистон, Тоҷикистон, Туркманистон',
           'weekly_top_badge': '📅 ТОП-и ҳафтагӣ',
           'weekly_reset_days': 'баъди {d}р {h}с навсозӣ мешавад',
           'weekly_reset_hours': 'баъди {h}с {m}д навсозӣ мешавад',
@@ -2522,6 +2546,10 @@ const tg = window.Telegram?.WebApp;
           'top_btn_likes': '💙 Likes TOP',
           'top_btn_superlikes': '⭐ Super TOP',
           'top_btn_champion': '🏆 Champion',
+          'search_scope_label': '🌍 Search scope',
+          'scope_my_area': '📍 My area',
+          'scope_central_asia': '🌐 All Central Asia',
+          'scope_ca_hint': 'Uzbekistan, Kazakhstan, Kyrgyzstan, Tajikistan, Turkmenistan',
           'weekly_top_badge': '📅 Weekly TOP',
           'weekly_reset_days': 'resets in {d}d {h}h',
           'weekly_reset_hours': 'resets in {h}h {m}m',
@@ -3051,6 +3079,8 @@ function detectTelegramLanguage() {
   let selectedGoals = [];
   let selectedSearchGoals = [];
   let selectedSearchInterests = [];
+  let _searchScope = 'my'; // 'my' | 'central_asia'
+
   let photoBase64 = '';
   let photoReady = false;
   let photoUploading = false;
@@ -3610,6 +3640,14 @@ function detectTelegramLanguage() {
   }
 
   // ===== ADVANCED FILTERS TOGGLE =====
+  function setSearchScope(scope) {
+    _searchScope = scope;
+    document.getElementById('scope-btn-my').classList.toggle('active', scope === 'my');
+    document.getElementById('scope-btn-ca').classList.toggle('active', scope === 'central_asia');
+    const locCard = document.getElementById('search-location-card');
+    if (locCard) locCard.classList.toggle('scope-hidden', scope === 'central_asia');
+  }
+
   function toggleAdvancedFilters() {
     const el = document.getElementById('advanced-filters');
     const btnText = document.getElementById('adv-filter-btn-text');
@@ -5206,23 +5244,25 @@ function detectTelegramLanguage() {
     const ageTo = document.getElementById('sf-age-to')?.value?.trim();
     if (ageTo) filters.age_to = parseInt(ageTo);
 
-    // Region bo'yicha filter (davlat → viloyat → tuman)
-    const sfCountry = document.getElementById('sf-country')?.value?.trim();
-    const sfRegion = document.getElementById('sf-region')?.value?.trim();
-    const sfDistrict = document.getElementById('sf-district')?.value?.trim();
-    const sfCityHidden = document.getElementById('sf-city')?.value?.trim();
+    // Qidiruv doirasi
+    if (_searchScope === 'central_asia') {
+      filters.central_asia = true;
+    } else {
+      // Region bo'yicha filter (davlat → viloyat → tuman)
+      const sfCountry = document.getElementById('sf-country')?.value?.trim();
+      const sfRegion = document.getElementById('sf-region')?.value?.trim();
+      const sfDistrict = document.getElementById('sf-district')?.value?.trim();
+      const sfCityHidden = document.getElementById('sf-city')?.value?.trim();
 
-    if (sfDistrict) {
-      // Eng aniq: tuman bo'yicha
-      filters.city = sfDistrict;
-    } else if (sfRegion) {
-      // Viloyat bo'yicha (barcha tumanlar)
-      filters.city = sfRegion;
-    } else if (sfCountry) {
-      // Davlat bo'yicha
-      filters.country = sfCountry;
-    } else if (sfCityHidden) {
-      filters.city = sfCityHidden;
+      if (sfDistrict) {
+        filters.city = sfDistrict;
+      } else if (sfRegion) {
+        filters.city = sfRegion;
+      } else if (sfCountry) {
+        filters.country = sfCountry;
+      } else if (sfCityHidden) {
+        filters.city = sfCityHidden;
+      }
     }
 
     // Backendga key sifatida yuborish (goal_dostlik, int_kino kabi)
