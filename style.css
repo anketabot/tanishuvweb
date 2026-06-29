@@ -6003,3 +6003,67 @@ body.pre-init .lang-modal-overlay.show {
 .ios-toggle-wrap input:checked + .ios-toggle-track::after {
   transform: translateX(20px);
 }
+
+/* ========== ZODIAC COMPATIBILITY BADGE ========== */
+.compat-badge-wrap {
+  margin: 6px 0 2px;
+  background: rgba(255,255,255,0.07);
+  border: 1px solid rgba(255,255,255,0.15);
+  border-radius: 14px;
+  padding: 10px 14px;
+  backdrop-filter: blur(8px);
+}
+
+.compat-badge-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 7px;
+}
+
+.compat-badge-emoji {
+  font-size: 18px;
+  line-height: 1;
+}
+
+.compat-badge-pct {
+  font-size: 22px;
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -0.5px;
+}
+
+.compat-badge-label {
+  font-size: 12px;
+  font-weight: 500;
+  color: rgba(255,255,255,0.75);
+  letter-spacing: 0.2px;
+}
+
+.compat-bar-track {
+  width: 100%;
+  height: 6px;
+  background: rgba(255,255,255,0.15);
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.compat-bar-fill {
+  height: 100%;
+  border-radius: 999px;
+  transition: width 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* Profil detail modali ichida (oq fon ustida) */
+.profile-detail-section .compat-badge-wrap {
+  background: linear-gradient(135deg, rgba(0,122,255,0.06), rgba(52,199,89,0.06));
+  border: 1.5px solid rgba(0,122,255,0.15);
+}
+
+.profile-detail-section .compat-badge-label {
+  color: var(--text-secondary);
+}
+
+.profile-detail-section .compat-badge-pct {
+  font-size: 28px;
+}
