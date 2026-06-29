@@ -351,6 +351,12 @@ const tg = window.Telegram?.WebApp;
           'image_size_error': '❌ Rasm 5MB dan katta.',
           'no_person_error': '❌ Rasmda inson topilmadi. Yana urining.',
           'check_error_inet': '❌ Tekshiruvda xatolik. Internet aloqasini tekshiring.',
+          'ai_checking': '🤖 AI rasm tekshirmoqda…',
+          'ai_rejected_porn': '🚫 Bu rasm qabul qilinmaydi: uy balog\'at kontenti aniqlandi.',
+          'ai_rejected_weapon': '🚫 Bu rasm qabul qilinmaydi: qurol-yarog\'lar aniqlandi.',
+          'ai_rejected_no_person': '🚫 Rasmda inson topilmadi. Iltimos, o\'z rasmingizni yuklang.',
+          'ai_rejected_other': '🚫 Rasm qabul qilinmadi. Iltimos, boshqa rasm tanlang.',
+          'ai_check_failed': '⚠️ AI tekshiruvi amalga oshmadi. Qayta urinib ko\'ring.',
           'zod_qoy': "Qo'y", 'zod_buzoq': 'Buzoq', 'zod_egizak': 'Egizak',
           'zod_qisqichbaqa': 'Qisqichbaqa', 'zod_arslon': 'Arslon',
           'zod_sunbula': 'Sunbula', 'zod_tarozi': 'Tarozi',
@@ -723,6 +729,12 @@ const tg = window.Telegram?.WebApp;
           'image_size_error': '❌ Изображение больше 5МБ.',
           'no_person_error': '❌ Человек на фото не найден. Попробуйте снова.',
           'check_error_inet': '❌ Ошибка проверки. Проверьте интернет-соединение.',
+          'ai_checking': '🤖 ИИ проверяет фото…',
+          'ai_rejected_porn': '🚫 Фото не принято: обнаружен откровенный контент.',
+          'ai_rejected_weapon': '🚫 Фото не принято: обнаружено оружие.',
+          'ai_rejected_no_person': '🚫 Человек на фото не найден. Загрузите своё фото.',
+          'ai_rejected_other': '🚫 Фото не принято. Пожалуйста, выберите другое фото.',
+          'ai_check_failed': '⚠️ Проверка ИИ не выполнена. Попробуйте снова.',
           'zod_qoy': 'Овен', 'zod_buzoq': 'Телец', 'zod_egizak': 'Близнецы',
           'zod_qisqichbaqa': 'Рак', 'zod_arslon': 'Лев',
           'zod_sunbula': 'Дева', 'zod_tarozi': 'Весы',
@@ -1096,6 +1108,12 @@ const tg = window.Telegram?.WebApp;
           'image_size_error': '❌ Сурет 5МБ-тен үлкен.',
           'no_person_error': '❌ Суретте адам табылмады. Қайта байқап көріңіз.',
           'check_error_inet': '❌ Тексеруде қате. Интернет байланысын тексеріңіз.',
+          'ai_checking': '🤖 ЖИ суретті тексеруде…',
+          'ai_rejected_porn': '🚫 Сурет қабылданбады: жыныстық мазмұн анықталды.',
+          'ai_rejected_weapon': '🚫 Сурет қабылданбады: қару-жарақ анықталды.',
+          'ai_rejected_no_person': '🚫 Суретте адам табылмады. Өз суретіңізді жүктеңіз.',
+          'ai_rejected_other': '🚫 Сурет қабылданбады. Басқа сурет таңдаңыз.',
+          'ai_check_failed': '⚠️ ЖИ тексеруі сәтсіз аяқталды. Қайта байқап көріңіз.',
           'zod_qoy': 'Қой', 'zod_buzoq': 'Бұқа', 'zod_egizak': 'Егіздер',
           'zod_qisqichbaqa': 'Шаян', 'zod_arslon': 'Арыстан',
           'zod_sunbula': 'Бикеш', 'zod_tarozi': 'Таразы',
@@ -1469,6 +1487,12 @@ const tg = window.Telegram?.WebApp;
           'image_size_error': '❌ Сүрөт 5МБдан чоң.',
           'no_person_error': '❌ Сүрөттө адам табылган жок. Кайра аракет кылыңыз.',
           'check_error_inet': '❌ Текшерүүдө ката. Интернет байланышын текшериңиз.',
+          'ai_checking': '🤖 ЖИ сүрөттү текшерүүдө…',
+          'ai_rejected_porn': '🚫 Сүрөт кабыл алынбады: жыныстык мазмун аныкталды.',
+          'ai_rejected_weapon': '🚫 Сүрөт кабыл алынбады: куралдар аныкталды.',
+          'ai_rejected_no_person': '🚫 Сүрөттө адам табылган жок. Өз сүрөтүңүздү жүктөңүз.',
+          'ai_rejected_other': '🚫 Сүрөт кабыл алынбады. Башка сүрөт тандаңыз.',
+          'ai_check_failed': '⚠️ ЖИ текшерүүсү ишке ашкан жок. Кайра аракет кылыңыз.',
           'zod_qoy': 'Кой', 'zod_buzoq': 'Бука', 'zod_egizak': 'Эгиздер',
           'zod_qisqichbaqa': 'Чаян', 'zod_arslon': 'Арстан',
           'zod_sunbula': 'Бикеш', 'zod_tarozi': 'Тараза',
@@ -1842,6 +1866,12 @@ const tg = window.Telegram?.WebApp;
           'image_size_error': '❌ Súwret 5MB dan úlken.',
           'no_person_error': '❌ Súwrette insan tabılmadı. Qayta urınıp kóriń.',
           'check_error_inet': '❌ Tekseriwde qátelik. Internet baylanısın tekseriń.',
+          'ai_checking': '🤖 AI súwretti tekserip atır…',
+          'ai_rejected_porn': '🚫 Súwret qabıl etilmedi: jınıslıq mazmun aniqlandi.',
+          'ai_rejected_weapon': '🚫 Súwret qabıl etilmedi: qurallar aniqlandi.',
+          'ai_rejected_no_person': '🚫 Súwrette insan tabılmadı. Óz súwretiñizdi júkleń.',
+          'ai_rejected_other': '🚫 Súwret qabıl etilmedi. Basqa súwret tańlań.',
+          'ai_check_failed': '⚠️ AI tekseriwi ámelge asmadı. Qayta urınıp kóriń.',
           'zod_qoy': 'Qoy', 'zod_buzoq': 'Buqa', 'zod_egizak': 'Egizler',
           'zod_qisqichbaqa': 'Shayan', 'zod_arslon': 'Arıslan',
           'zod_sunbula': 'Bikes', 'zod_tarozi': 'Tаразы',
@@ -2215,6 +2245,12 @@ const tg = window.Telegram?.WebApp;
           'image_size_error': '❌ Акс аз 5МБ калон.',
           'no_person_error': '❌ Дар акс касе ёфт нашуд. Боз кӯшиш кунед.',
           'check_error_inet': '❌ Хатогӣ дар санҷиш. Пайвасти интернетро санҷед.',
+          'ai_checking': '🤖 ЗМ акси шуморо месанҷад…',
+          'ai_rejected_porn': '🚫 Акс қабул нашуд: мӯҳтавои ҷинсӣ ошкор шуд.',
+          'ai_rejected_weapon': '🚫 Акс қабул нашуд: силоҳ ошкор шуд.',
+          'ai_rejected_no_person': '🚫 Дар акс касе ёфт нашуд. Акси худро бор кунед.',
+          'ai_rejected_other': '🚫 Акс қабул нашуд. Акси дигаре интихоб кунед.',
+          'ai_check_failed': '⚠️ Санҷиши ЗМ иҷро нашуд. Боз кӯшиш кунед.',
           'zod_qoy': 'Ҳамал', 'zod_buzoq': 'Савр', 'zod_egizak': 'Ҷавзо',
           'zod_qisqichbaqa': 'Саратон', 'zod_arslon': 'Асад',
           'zod_sunbula': 'Сунбула', 'zod_tarozi': 'Мизон',
@@ -2588,6 +2624,12 @@ const tg = window.Telegram?.WebApp;
           'image_size_error': '❌ Photo is larger than 5MB.',
           'no_person_error': '❌ No person found in the photo. Try again.',
           'check_error_inet': '❌ Error during check. Check your internet connection.',
+          'ai_checking': '🤖 AI is checking your photo…',
+          'ai_rejected_porn': '🚫 Photo rejected: explicit content detected.',
+          'ai_rejected_weapon': '🚫 Photo rejected: weapons detected.',
+          'ai_rejected_no_person': '🚫 No person found in the photo. Please upload your own photo.',
+          'ai_rejected_other': '🚫 Photo rejected. Please choose a different photo.',
+          'ai_check_failed': '⚠️ AI check failed. Please try again.',
           'zod_qoy': 'Aries', 'zod_buzoq': 'Taurus', 'zod_egizak': 'Gemini',
           'zod_qisqichbaqa': 'Cancer', 'zod_arslon': 'Leo',
           'zod_sunbula': 'Virgo', 'zod_tarozi': 'Libra',
@@ -4206,6 +4248,63 @@ function detectTelegramLanguage() {
     }
   }
 
+  // === AI (Claude) RASM TEKSHIRUVI ===
+  // Qaytaradi: { ok: true } yoki { ok: false, reason: 'porn'|'weapon'|'no_person'|'other' }
+  async function checkPhotoWithAI(file) {
+    return new Promise((resolve) => {
+      const reader = new FileReader();
+      reader.onload = async (e) => {
+        try {
+          const base64Data = e.target.result.split(',')[1];
+          const mediaType = file.type || 'image/jpeg';
+
+          const response = await fetch('https://api.anthropic.com/v1/messages', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              model: 'claude-sonnet-4-6',
+              max_tokens: 200,
+              system: `You are a strict content moderator for a dating app. 
+Analyze the image and respond ONLY with a JSON object, no markdown, no explanation.
+Rules:
+- If the image contains pornography, nudity, or sexual content → {"ok":false,"reason":"porn"}
+- If the image contains weapons (guns, knives, explosives, etc.) → {"ok":false,"reason":"weapon"}  
+- If the image does NOT contain a human person (face or body) → {"ok":false,"reason":"no_person"}
+- If the image is appropriate and contains a real human person → {"ok":true}
+Be strict. Respond ONLY with the JSON object.`,
+              messages: [{
+                role: 'user',
+                content: [{
+                  type: 'image',
+                  source: { type: 'base64', media_type: mediaType, data: base64Data }
+                }, {
+                  type: 'text',
+                  text: 'Check this image for the dating app profile. Respond only with JSON.'
+                }]
+              }]
+            })
+          });
+
+          if (!response.ok) {
+            resolve({ ok: null }); // API xatolik — COCO-SSD ga o'tamiz
+            return;
+          }
+
+          const data = await response.json();
+          const text = (data.content || []).map(c => c.text || '').join('').trim();
+          const clean = text.replace(/```json|```/g, '').trim();
+          const result = JSON.parse(clean);
+          resolve(result);
+        } catch (err) {
+          console.warn('AI check parse error:', err);
+          resolve({ ok: null }); // xatolik — COCO-SSD ga o'tamiz
+        }
+      };
+      reader.onerror = () => resolve({ ok: null });
+      reader.readAsDataURL(file);
+    });
+  }
+
   function updatePhotoUploadState(message, ready = false, uploading = photoUploading) {
     const status = document.getElementById('upload-status');
     const area = document.getElementById('photo-upload-area');
@@ -4304,6 +4403,37 @@ function detectTelegramLanguage() {
       updatePhotoUploadState(tr('image_size_error'), false, false);
       return;
     }
+
+    // === 1-QADAM: Claude AI bilan tekshiruv (pornografiya, qurol, inson) ===
+    updatePhotoUploadState(tr('ai_checking'), false, true);
+    showToast(tr('ai_checking'), 8000);
+
+    const aiResult = await checkPhotoWithAI(file);
+
+    if (aiResult.ok === false) {
+      // AI aniq rad etdi
+      let errMsg = tr('ai_rejected_other');
+      if (aiResult.reason === 'porn')      errMsg = tr('ai_rejected_porn');
+      if (aiResult.reason === 'weapon')    errMsg = tr('ai_rejected_weapon');
+      if (aiResult.reason === 'no_person') errMsg = tr('ai_rejected_no_person');
+      showToast(errMsg, 5000);
+      input.value = '';
+      photoBase64 = '';
+      photoReady = false;
+      photoUploading = false;
+      updatePhotoUploadState(errMsg, false, false);
+      return;
+    }
+
+    if (aiResult.ok === true) {
+      // AI tasdiqladi — to'g'ridan-to'g'ri yuklaymiz
+      updatePhotoUploadState(tr('person_confirmed_uploading'), false);
+      proceedWithPhotoPreview(file);
+      return;
+    }
+
+    // aiResult.ok === null → AI xatolik, zaxira: FaceDetector + COCO-SSD
+    updatePhotoUploadState(tr('checking_image'), false, true);
 
     let faceDetected = false;
     if (window.isSecureContext && 'FaceDetector' in window && typeof FaceDetector === 'function') {
