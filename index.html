@@ -386,7 +386,17 @@
 
   <div class="card">
     <div class="section-title" data-i18n="your_goal">Maqsadingiz</div>
-    <div class="chips-wrap" id="goals-chips">
+    <div class="goal-required-hint" data-i18n="goal_required_hint">⚡ Kamida 1 ta asosiy maqsad tanlang</div>
+    <!-- Asosiy (majburiy) maqsadlar -->
+    <div class="goals-group-label" data-i18n="goal_group_main">Asosiy maqsad</div>
+    <div class="chips-wrap chips-wrap-main" id="goals-chips">
+      <div class="chip chip-main" data-i18n-chip="goal_jiddiy" onclick="toggleChipMain(this,'goals')">💍 Jiddiy (Oila)</div>
+      <div class="chip chip-main" data-i18n-chip="goal_dostlik_suhbat" onclick="toggleChipMain(this,'goals')">💬 Do'stlik/Suhbat</div>
+      <div class="chip chip-main" data-i18n-chip="goal_hamroh" onclick="toggleChipMain(this,'goals')">🧳 Hamroh</div>
+    </div>
+    <!-- Qo'shimcha maqsadlar -->
+    <div class="goals-group-label" style="margin-top:10px;" data-i18n="goal_group_extra">Qo'shimcha</div>
+    <div class="chips-wrap" id="goals-extra-chips">
       <div class="chip" data-i18n-chip="goal_dostlik" onclick="toggleChip(this,'goals')">Do'stlik</div>
       <div class="chip" data-i18n-chip="goal_tanishuv" onclick="toggleChip(this,'goals')">Tanishuv</div>
       <div class="chip" data-i18n-chip="goal_oila" onclick="toggleChip(this,'goals')">Oila</div>
@@ -395,6 +405,22 @@
       <div class="chip" data-i18n-chip="goal_uchrashuv" onclick="toggleChip(this,'goals')">Uchrashuv</div>
       <div class="chip" data-i18n-chip="goal_virtual" onclick="toggleChip(this,'goals')">Virtual muloqot</div>
       <div class="chip" data-i18n-chip="goal_boshqa" onclick="toggleChip(this,'goals')">Boshqa</div>
+    </div>
+    <!-- Ayollar uchun: faqat jiddiy yigirlarga ko'rinish -->
+    <div id="only-serious-wrap" style="display:none; margin-top:16px;">
+      <label class="serious-toggle-label">
+        <div class="serious-toggle-text">
+          <span class="serious-toggle-icon">🔒</span>
+          <div>
+            <div class="serious-toggle-title" data-i18n="only_serious_men_title">Faqat jiddiy niyatli yigitlarga ko'rinay</div>
+            <div class="serious-toggle-sub" data-i18n="only_serious_men_sub">Anketam faqat "💍 Jiddiy" maqsadli yigitlarga chiqadi</div>
+          </div>
+        </div>
+        <div class="ios-toggle-wrap">
+          <input type="checkbox" id="only-serious-toggle" onchange="onOnlySeriousChange()" />
+          <span class="ios-toggle-track"></span>
+        </div>
+      </label>
     </div>
   </div>
 
@@ -655,8 +681,17 @@
           <input class="form-input" id="sf-age-to" type="number" placeholder="50" min="16" max="80" />
         </div>
       </div>
+      <!-- Qidiruv doirasi toggle -->
+      <div class="search-scope-toggle" id="search-scope-wrap" style="margin:16px 0 4px;">
+        <div class="search-scope-label" data-i18n="search_scope_label">🌍 Qidiruv doirasi</div>
+        <div class="search-scope-row">
+          <button class="scope-btn active" id="scope-btn-my" onclick="setSearchScope('my')" data-i18n="scope_my_area">📍 O'z hududim</button>
+          <button class="scope-btn" id="scope-btn-ca" onclick="setSearchScope('central_asia')" data-i18n="scope_central_asia">🌐 Butun Markaziy Osiyo</button>
+        </div>
+      </div>
+
       <!-- Qidiruv: Joylashuv — location-card -->
-      <div class="location-card" style="margin:12px 0 4px; border-radius:18px;">
+      <div class="location-card" id="search-location-card" style="margin:8px 0 4px; border-radius:18px;">
         <div class="location-card-header">
           <div class="location-card-icon">
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
@@ -685,7 +720,14 @@
         </div>
       </div>
       <div class="section-title" style="margin-top:16px;" data-i18n="goal">Maqsad</div>
-      <div class="chips-wrap" id="sf-goals-chips">
+      <div class="goals-group-label" data-i18n="goal_group_main">Asosiy</div>
+      <div class="chips-wrap chips-wrap-main" id="sf-goals-chips">
+        <div class="chip chip-main" data-i18n-chip="goal_jiddiy" onclick="toggleChip(this,'sf-goals')">💍 Jiddiy (Oila)</div>
+        <div class="chip chip-main" data-i18n-chip="goal_dostlik_suhbat" onclick="toggleChip(this,'sf-goals')">💬 Do'stlik/Suhbat</div>
+        <div class="chip chip-main" data-i18n-chip="goal_hamroh" onclick="toggleChip(this,'sf-goals')">🧳 Hamroh</div>
+      </div>
+      <div class="goals-group-label" style="margin-top:8px;" data-i18n="goal_group_extra">Qo'shimcha</div>
+      <div class="chips-wrap" id="sf-goals-extra-chips">
         <div class="chip" data-i18n-chip="goal_dostlik" onclick="toggleChip(this,'sf-goals')">Do'stlik</div>
         <div class="chip" data-i18n-chip="goal_tanishuv" onclick="toggleChip(this,'sf-goals')">Tanishuv</div>
         <div class="chip" data-i18n-chip="goal_oila" onclick="toggleChip(this,'sf-goals')">Oila</div>
