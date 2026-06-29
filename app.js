@@ -198,15 +198,6 @@ const tg = window.Telegram?.WebApp;
           'goal_romantika': 'Romantika',
           'goal_uchrashuv': 'Uchrashuv',
           'goal_virtual': 'Virtual muloqot',
-          'goal_jiddiy': '💍 Jiddiy (Oila)',
-          'goal_dostlik_suhbat': "💬 Do'stlik/Suhbat",
-          'goal_hamroh': '🧳 Hamroh',
-          'goal_group_main': 'Asosiy maqsad',
-          'goal_group_extra': "Qo'shimcha",
-          'goal_required_hint': '⚡ Kamida 1 ta asosiy maqsad tanlang',
-          'only_serious_men_title': "Faqat jiddiy niyatli yigirlarga ko'rinay",
-          'only_serious_men_sub': "Anketam faqat '💍 Jiddiy' maqsadli yigirlarga chiqadi",
-          'goal_required_error': 'Kamida 1 ta asosiy maqsad (💍/💬/🧳) tanlang',
           'goal_boshqa': 'Boshqa',
           'int_kino': '🍿 Kino',
           'int_musiqa': '🎵 Musiqa',
@@ -269,6 +260,9 @@ const tg = window.Telegram?.WebApp;
           'cannot_connect': 'Ulana olmadi',
           'compat_good': 'Mos burj',
           'compat_difficult': 'Murakkab',
+          'compat_match': 'moslik',
+          'compat_ai_title': '🤖 AI tahlili',
+          'compat_loading': 'Tahlil qilinmoqda...',
           'btn_back': 'Orqaga',
           'btn_skip': 'O\'tkazib yuborish',
           'btn_dislike': 'Yoqmadi',
@@ -378,14 +372,6 @@ const tg = window.Telegram?.WebApp;
           'top_btn_likes': '💙 Like TOP',
           'top_btn_superlikes': '⭐ Super TOP',
           'top_btn_champion': '🏆 Chempion',
-          'search_scope_label': '🌍 Qidiruv doirasi',
-          'scope_my_area': '📍 O\'z hududim',
-          'scope_central_asia': '🌐 Butun Markaziy Osiyo',
-          'scope_ca_hint': 'O\'zbekiston, Qozog\'iston, Qirg\'iziston, Tojikiston, Turkmaniston',
-          'weekly_top_badge': '📅 Haftalik TOP',
-          'weekly_reset_days': '{d}k {h}s da yangilanadi',
-          'weekly_reset_hours': '{h}s {m}d da yangilanadi',
-          'weekly_reset_mins': '{m}d da yangilanadi',
           'viewed_title': '👁 Men ko\'rganlarim',
           'nav_viewed': 'Ko\'rganlar',
           'tab_viewed_liked': '💙 Like bergan',
@@ -568,15 +554,6 @@ const tg = window.Telegram?.WebApp;
           'goal_romantika': 'Романтика',
           'goal_uchrashuv': 'Свидание',
           'goal_virtual': 'Виртуальное общение',
-          'goal_jiddiy': '💍 Серьёзно (Семья)',
-          'goal_dostlik_suhbat': '💬 Дружба/Общение',
-          'goal_hamroh': '🧳 Компаньон',
-          'goal_group_main': 'Основная цель',
-          'goal_group_extra': 'Дополнительно',
-          'goal_required_hint': '⚡ Выберите хотя бы 1 основную цель',
-          'only_serious_men_title': 'Показываться только серьёзным парням',
-          'only_serious_men_sub': "Моя анкета будет видна только парням с целью '💍 Серьёзно'",
-          'goal_required_error': 'Выберите хотя бы 1 основную цель (💍/💬/🧳)',
           'goal_boshqa': 'Другое',
           'int_kino': '🍿 Кино',
           'int_musiqa': '🎵 Музыка',
@@ -640,6 +617,9 @@ const tg = window.Telegram?.WebApp;
           'cannot_connect': 'Не удалось подключиться',
           'compat_good': 'Совместимый знак',
           'compat_difficult': 'Сложный',
+          'compat_match': 'совместимость',
+          'compat_ai_title': '🤖 ИИ анализ',
+          'compat_loading': 'Анализируется...',
           'btn_back': 'Назад',
           'btn_skip': 'Пропустить',
           'btn_dislike': 'Не нравится',
@@ -749,14 +729,6 @@ const tg = window.Telegram?.WebApp;
           'top_btn_likes': '💙 Лайки TOP',
           'top_btn_superlikes': '⭐ Супер TOP',
           'top_btn_champion': '🏆 Чемпион',
-          'search_scope_label': '🌍 Область поиска',
-          'scope_my_area': '📍 Мой регион',
-          'scope_central_asia': '🌐 Вся Центральная Азия',
-          'scope_ca_hint': 'Узбекистан, Казахстан, Кыргызстан, Таджикистан, Туркменистан',
-          'weekly_top_badge': '📅 Еженедельный ТОП',
-          'weekly_reset_days': 'обновится через {d}д {h}ч',
-          'weekly_reset_hours': 'обновится через {h}ч {m}м',
-          'weekly_reset_mins': 'обновится через {m}м',
           'viewed_title': '👁 Мои просмотры',
           'nav_viewed': 'Просмотры',
           'tab_viewed_liked': '💙 Лайкнул',
@@ -940,15 +912,6 @@ const tg = window.Telegram?.WebApp;
           'goal_romantika': 'Романтика',
           'goal_uchrashuv': 'Кездесу',
           'goal_virtual': 'Виртуал қарым-қатынас',
-          'goal_jiddiy': '💍 Байыпты (Отбасы)',
-          'goal_dostlik_suhbat': '💬 Достық/Сұхбат',
-          'goal_hamroh': '🧳 Серіктес',
-          'goal_group_main': 'Негізгі мақсат',
-          'goal_group_extra': 'Қосымша',
-          'goal_required_hint': '⚡ Кемінде 1 негізгі мақсат таңдаңыз',
-          'only_serious_men_title': 'Тек байыпты жігіттерге көрінейін',
-          'only_serious_men_sub': "Анкетам тек '💍 Байыпты' мақсатты жігіттерге шығады",
-          'goal_required_error': 'Кемінде 1 негізгі мақсат (💍/💬/🧳) таңдаңыз',
           'goal_boshqa': 'Басқа',
           'int_kino': '🍿 Кино',
           'int_musiqa': '🎵 Музыка',
@@ -1012,6 +975,9 @@ const tg = window.Telegram?.WebApp;
           'cannot_connect': 'Қосылу мүмкін емес',
           'compat_good': 'Сәйкес жұлдызнама',
           'compat_difficult': 'Қиын',
+          'compat_match': 'сәйкестік',
+          'compat_ai_title': '🤖 AI талдауы',
+          'compat_loading': 'Талдануда...',
           'btn_back': 'Артқа',
           'btn_skip': 'Өткізіп жіберу',
           'btn_dislike': 'Ұнамады',
@@ -1121,14 +1087,6 @@ const tg = window.Telegram?.WebApp;
           'top_btn_likes': '💙 Лайк TOP',
           'top_btn_superlikes': '⭐ Супер TOP',
           'top_btn_champion': '🏆 Чемпион',
-          'search_scope_label': '🌍 Іздеу аймағы',
-          'scope_my_area': '📍 Менің аймағым',
-          'scope_central_asia': '🌐 Бүкіл Орталық Азия',
-          'scope_ca_hint': 'Өзбекстан, Қазақстан, Қырғызстан, Тәжікстан, Түркіменстан',
-          'weekly_top_badge': '📅 Апталық ТОП',
-          'weekly_reset_days': '{d}к {h}с-та жаңарады',
-          'weekly_reset_hours': '{h}с {m}м-да жаңарады',
-          'weekly_reset_mins': '{m}м-да жаңарады',
           'viewed_title': '👁 Мен көргендерім',
           'nav_viewed': 'Көргендер',
           'tab_viewed_liked': '💙 Лайк басқан',
@@ -1312,15 +1270,6 @@ const tg = window.Telegram?.WebApp;
           'goal_romantika': 'Романтика',
           'goal_uchrashuv': 'Жолугушуу',
           'goal_virtual': 'Виртуалдык байланыш',
-          'goal_jiddiy': '💍 Олуттуу (Үй-бүлө)',
-          'goal_dostlik_suhbat': '💬 Достук/Аңгеме',
-          'goal_hamroh': '🧳 Жолдош',
-          'goal_group_main': 'Негизги максат',
-          'goal_group_extra': 'Кошумча',
-          'goal_required_hint': '⚡ Жок дегенде 1 негизги максат тандаңыз',
-          'only_serious_men_title': 'Олуттуу жигиттерге гана көрүнөйүн',
-          'only_serious_men_sub': "Анкетам '💍 Олуттуу' максаттуу жигиттерге гана чыгат",
-          'goal_required_error': 'Жок дегенде 1 негизги максат (💍/💬/🧳) тандаңыз',
           'goal_boshqa': 'Башка',
           'int_kino': '🍿 Кино',
           'int_musiqa': '🎵 Музыка',
@@ -1384,6 +1333,9 @@ const tg = window.Telegram?.WebApp;
           'cannot_connect': 'Туташуу мүмкүн эмес',
           'compat_good': 'Шайкеш жылдызнама',
           'compat_difficult': 'Кыйын',
+          'compat_match': 'шайкештик',
+          'compat_ai_title': '🤖 AI талдоо',
+          'compat_loading': 'Талданууда...',
           'btn_back': 'Артка',
           'btn_skip': 'Өткөрүп жиберүү',
           'btn_dislike': 'Жаккан жок',
@@ -1493,14 +1445,6 @@ const tg = window.Telegram?.WebApp;
           'top_btn_likes': '💙 Лайк TOP',
           'top_btn_superlikes': '⭐ Супер TOP',
           'top_btn_champion': '🏆 Чемпион',
-          'search_scope_label': '🌍 Издөө чөйрөсү',
-          'scope_my_area': '📍 Менин аймагым',
-          'scope_central_asia': '🌐 Бүт Борбордук Азия',
-          'scope_ca_hint': 'Өзбекстан, Казакстан, Кыргызстан, Тажикстан, Түркменстан',
-          'weekly_top_badge': '📅 Жумалык ТОП',
-          'weekly_reset_days': '{d}к {h}с-та жаңыртылат',
-          'weekly_reset_hours': '{h}с {m}м-да жаңыртылат',
-          'weekly_reset_mins': '{m}м-да жаңыртылат',
           'viewed_title': '👁 Мен көргөндөрүм',
           'nav_viewed': 'Көргөндөр',
           'tab_viewed_liked': '💙 Лайк баскан',
@@ -1684,15 +1628,6 @@ const tg = window.Telegram?.WebApp;
           'goal_romantika': 'Romantika',
           'goal_uchrashuv': 'Ushırasıw',
           'goal_virtual': 'Virtual muloqat',
-          'goal_jiddiy': '💍 Jiddiy (Aile)',
-          'goal_dostlik_suhbat': '💬 Doslıq/Suhbet',
-          'goal_hamroh': '🧳 Joldaslıq',
-          'goal_group_main': 'Tiykarǵı maqset',
-          'goal_group_extra': "Qosımsha",
-          'goal_required_hint': '⚡ Keminde 1 tiykarǵı maqset tańlaŋ',
-          'only_serious_men_title': 'Tek jiddiy jigitlerge körineyin',
-          'only_serious_men_sub': "Anketam tek '💍 Jiddiy' maqsetli jigitlerge shıǵadı",
-          'goal_required_error': 'Keminde 1 tiykarǵı maqset (💍/💬/🧳) tańlaŋ',
           'goal_boshqa': 'Basqa',
           'int_kino': '🍿 Kino',
           'int_musiqa': '🎵 Mızıka',
@@ -1756,6 +1691,9 @@ const tg = window.Telegram?.WebApp;
           'cannot_connect': 'Baylanıs ornatılmadı',
           'compat_good': 'Saykes juldıznama',
           'compat_difficult': 'Qıyın',
+          'compat_match': 'saykeslik',
+          'compat_ai_title': '🤖 AI tahlıli',
+          'compat_loading': 'Tahlıllanıwda...',
           'btn_back': 'Artqa',
           'btn_skip': 'Ótkerip jiberiw',
           'btn_dislike': 'Yaqmadı',
@@ -1865,14 +1803,6 @@ const tg = window.Telegram?.WebApp;
           'top_btn_likes': '💙 Layk TOP',
           'top_btn_superlikes': '⭐ Super TOP',
           'top_btn_champion': '🏆 Chempion',
-          'search_scope_label': '🌍 Izlew aymaǵı',
-          'scope_my_area': '📍 Óz aymaǵım',
-          'scope_central_asia': '🌐 Pútkil Oraylıq Aziya',
-          'scope_ca_hint': 'Ózbekstan, Qazaqstan, Qırǵızstan, Tájikstan, Túrkmenstan',
-          'weekly_top_badge': '📅 Háptelig TOP',
-          'weekly_reset_days': '{d}k {h}s-ta jańalanadi',
-          'weekly_reset_hours': '{h}s {m}d-da jańalanadi',
-          'weekly_reset_mins': '{m}d-da jańalanadi',
           'viewed_title': '👁 Men kórgеnim',
           'nav_viewed': 'Kórgenler',
           'tab_viewed_liked': '💙 Like basqan',
@@ -2056,15 +1986,6 @@ const tg = window.Telegram?.WebApp;
           'goal_romantika': 'Романтика',
           'goal_uchrashuv': 'Вохӯрӣ',
           'goal_virtual': 'Муоширати виртуалӣ',
-          'goal_jiddiy': '💍 Ҷиддӣ (Оила)',
-          'goal_dostlik_suhbat': '💬 Дӯстӣ/Суҳбат',
-          'goal_hamroh': '🧳 Ҳамроҳ',
-          'goal_group_main': 'Мақсади асосӣ',
-          'goal_group_extra': 'Иловагӣ',
-          'goal_required_hint': '⚡ Ҳадди ақал 1 мақсади асосӣ интихоб кунед',
-          'only_serious_men_title': 'Танҳо ба писарони ҷиддӣ намоиш дода шавам',
-          'only_serious_men_sub': "Анкетаам танҳо ба писарони бо мақсади '💍 Ҷиддӣ' нишон дода мешавад",
-          'goal_required_error': 'Ҳадди ақал 1 мақсади асосӣ (💍/💬/🧳) интихоб кунед',
           'goal_boshqa': 'Дигар',
           'int_kino': '🍿 Кино',
           'int_musiqa': '🎵 Мусиқа',
@@ -2128,6 +2049,9 @@ const tg = window.Telegram?.WebApp;
           'cannot_connect': 'Пайваст нашуд',
           'compat_good': 'Бурҷи мувофиқ',
           'compat_difficult': 'Мушкил',
+          'compat_match': 'мувофиқат',
+          'compat_ai_title': '🤖 Таҳлили AI',
+          'compat_loading': 'Таҳлил мешавад...',
           'btn_back': 'Ба қафо',
           'btn_skip': 'Гузарондан',
           'btn_dislike': 'Написандид',
@@ -2237,14 +2161,6 @@ const tg = window.Telegram?.WebApp;
           'top_btn_likes': '💙 Лайк TOP',
           'top_btn_superlikes': '⭐ Супер TOP',
           'top_btn_champion': '🏆 Чемпион',
-          'search_scope_label': '🌍 Доираи ҷустуҷӯ',
-          'scope_my_area': '📍 Минтақаи ман',
-          'scope_central_asia': '🌐 Тамоми Осиёи Марказӣ',
-          'scope_ca_hint': 'Ӯзбекистон, Қазоқистон, Қирғизистон, Тоҷикистон, Туркманистон',
-          'weekly_top_badge': '📅 ТОП-и ҳафтагӣ',
-          'weekly_reset_days': 'баъди {d}р {h}с навсозӣ мешавад',
-          'weekly_reset_hours': 'баъди {h}с {m}д навсозӣ мешавад',
-          'weekly_reset_mins': 'баъди {m}д навсозӣ мешавад',
           'viewed_title': '👁 Ман дидаам',
           'nav_viewed': 'Дидаҳо',
           'tab_viewed_liked': '💙 Лайк задаам',
@@ -2428,15 +2344,6 @@ const tg = window.Telegram?.WebApp;
           'goal_romantika': 'Romance',
           'goal_uchrashuv': 'Meeting up',
           'goal_virtual': 'Virtual chatting',
-          'goal_jiddiy': '💍 Serious (Family)',
-          'goal_dostlik_suhbat': '💬 Friendship/Chat',
-          'goal_hamroh': '🧳 Companion',
-          'goal_group_main': 'Main goal',
-          'goal_group_extra': 'Additional',
-          'goal_required_hint': '⚡ Select at least 1 main goal',
-          'only_serious_men_title': 'Show me only to serious guys',
-          'only_serious_men_sub': "My profile will only appear to guys with '💍 Serious' goal",
-          'goal_required_error': 'Please select at least 1 main goal (💍/💬/🧳)',
           'goal_boshqa': 'Other',
           'int_kino': '🍿 Movies',
           'int_musiqa': '🎵 Music',
@@ -2500,6 +2407,9 @@ const tg = window.Telegram?.WebApp;
           'cannot_connect': 'Could not connect',
           'compat_good': 'Compatible sign',
           'compat_difficult': 'Difficult',
+          'compat_match': 'match',
+          'compat_ai_title': '🤖 AI analysis',
+          'compat_loading': 'Analyzing...',
           'btn_back': 'Back',
           'btn_skip': 'Skip',
           'btn_dislike': 'Dislike',
@@ -2609,14 +2519,6 @@ const tg = window.Telegram?.WebApp;
           'top_btn_likes': '💙 Likes TOP',
           'top_btn_superlikes': '⭐ Super TOP',
           'top_btn_champion': '🏆 Champion',
-          'search_scope_label': '🌍 Search scope',
-          'scope_my_area': '📍 My area',
-          'scope_central_asia': '🌐 All Central Asia',
-          'scope_ca_hint': 'Uzbekistan, Kazakhstan, Kyrgyzstan, Tajikistan, Turkmenistan',
-          'weekly_top_badge': '📅 Weekly TOP',
-          'weekly_reset_days': 'resets in {d}d {h}h',
-          'weekly_reset_hours': 'resets in {h}h {m}m',
-          'weekly_reset_mins': 'resets in {m}m',
           'viewed_title': '👁 My Views',
           'nav_viewed': 'Viewed',
           'tab_viewed_liked': '💙 Liked',
@@ -3142,8 +3044,6 @@ function detectTelegramLanguage() {
   let selectedGoals = [];
   let selectedSearchGoals = [];
   let selectedSearchInterests = [];
-  let _searchScope = 'my'; // 'my' | 'central_asia'
-
   let photoBase64 = '';
   let photoReady = false;
   let photoUploading = false;
@@ -3569,18 +3469,13 @@ function detectTelegramLanguage() {
     // Set goals chips
     if (profile.goals && Array.isArray(profile.goals)) {
       selectedGoals = [...profile.goals];
-      // Asosiy maqsadlar (goals-chips) va qo'shimcha (goals-extra-chips)
-      document.querySelectorAll('#goals-chips .chip, #goals-extra-chips .chip').forEach(chip => {
+      document.querySelectorAll('#goals-chips .chip').forEach(chip => {
         const chipKey = chip.getAttribute('data-i18n-chip');
         if (selectedGoals.includes(chipKey)) {
           chip.classList.add('selected');
         }
       });
     }
-    // only_serious_men tiklanishi
-    const seriousToggle = document.getElementById('only-serious-toggle');
-    if (seriousToggle) seriousToggle.checked = !!profile.only_serious_men;
-    updateOnlySeriousWrap();
 
     // Set photo
     if (profile.photo_base64 || profile.photo_file_id) {
@@ -3708,14 +3603,6 @@ function detectTelegramLanguage() {
   }
 
   // ===== ADVANCED FILTERS TOGGLE =====
-  function setSearchScope(scope) {
-    _searchScope = scope;
-    document.getElementById('scope-btn-my').classList.toggle('active', scope === 'my');
-    document.getElementById('scope-btn-ca').classList.toggle('active', scope === 'central_asia');
-    const locCard = document.getElementById('search-location-card');
-    if (locCard) locCard.classList.toggle('scope-hidden', scope === 'central_asia');
-  }
-
   function toggleAdvancedFilters() {
     const el = document.getElementById('advanced-filters');
     const btnText = document.getElementById('adv-filter-btn-text');
@@ -3731,7 +3618,6 @@ function detectTelegramLanguage() {
     selectedGender = g;
     document.getElementById('gender-erkak').classList.toggle('selected', g === 'erkak');
     document.getElementById('gender-ayol').classList.toggle('selected', g === 'ayol');
-    updateOnlySeriousWrap();
   }
 
   function getOppositeGender(g) {
@@ -3751,38 +3637,6 @@ function detectTelegramLanguage() {
   }
 
   // ===== CHIP TOGGLE =====
-  // Asosiy maqsad chip toggle (faqat bittasi tanlanadi — radio xatti-harakat)
-  function toggleChipMain(el, group) {
-    const container = el.closest('.chips-wrap-main');
-    if (!container) return toggleChip(el, group);
-    const wasSelected = el.classList.contains('selected');
-    // Barcha asosiy chiplarni o'chirish
-    container.querySelectorAll('.chip-main').forEach(c => {
-      c.classList.remove('selected');
-      const v = c.getAttribute('data-i18n-chip') || c.textContent.trim();
-      if (group === 'goals') selectedGoals = selectedGoals.filter(i => i !== v);
-    });
-    if (!wasSelected) {
-      el.classList.add('selected');
-      const value = el.getAttribute('data-i18n-chip') || el.textContent.trim();
-      if (group === 'goals') selectedGoals = Array.from(new Set([...selectedGoals, value]));
-    }
-    updateOnlySeriousWrap();
-  }
-
-  // Ayollar uchun 'faqat jiddiy yigirlarga ko'rinish' toggle
-  function updateOnlySeriousWrap() {
-    const wrap = document.getElementById('only-serious-wrap');
-    if (!wrap) return;
-    const isWoman = selectedGender === 'female' || selectedGender === 'Ayol';
-    const hasJiddiy = selectedGoals.includes('goal_jiddiy');
-    wrap.style.display = (isWoman && hasJiddiy) ? 'block' : 'none';
-  }
-
-  function onOnlySeriousChange() {
-    // Saqlashda profil ichiga qo'shiladi
-  }
-
   function toggleChip(el, group) {
       el.classList.toggle('selected');
       const value = el.getAttribute('data-i18n-chip') || el.textContent.trim();
@@ -3981,6 +3835,69 @@ function detectTelegramLanguage() {
     "qovga": ("Qovg'a", "♒"),
     "baliq": ("Baliq", "♓"),
   };
+
+
+  // ===== ZODIAC COMPATIBILITY MATRIX (12x12) =====
+  // Har bir juft uchun aniq moslik foizi (0-100)
+  // Manbalar: klassik astrologiya + element/modal/polarity tahlili
+  const ZODIAC_PERCENT_MATRIX = {
+    qoy:         { qoy:50, buzoq:45, egizak:88, qisqichbaqa:32, arslon:95, sunbula:55, tarozi:78, chayon:28, oqotar:92, tog_echkisi:40, qovga:72, baliq:35 },
+    buzoq:       { qoy:45, buzoq:52, egizak:38, qisqichbaqa:91, arslon:42, sunbula:95, tarozi:60, chayon:88, oqotar:30, tog_echkisi:93, qovga:32, baliq:78 },
+    egizak:      { qoy:88, buzoq:38, egizak:55, qisqichbaqa:35, arslon:82, sunbula:48, tarozi:90, chayon:30, oqotar:75, tog_echkisi:28, qovga:95, baliq:42 },
+    qisqichbaqa: { qoy:32, buzoq:91, egizak:35, qisqichbaqa:58, arslon:38, sunbula:72, tarozi:40, chayon:93, oqotar:28, tog_echkisi:65, qovga:30, baliq:95 },
+    arslon:      { qoy:95, buzoq:42, egizak:82, qisqichbaqa:38, arslon:55, sunbula:45, tarozi:88, chayon:35, oqotar:85, tog_echkisi:32, qovga:70, baliq:28 },
+    sunbula:     { qoy:55, buzoq:95, egizak:48, qisqichbaqa:72, arslon:45, sunbula:52, tarozi:62, chayon:88, oqotar:35, tog_echkisi:92, qovga:40, baliq:68 },
+    tarozi:      { qoy:78, buzoq:60, egizak:90, qisqichbaqa:40, arslon:88, sunbula:62, tarozi:55, chayon:30, oqotar:72, tog_echkisi:35, qovga:92, baliq:45 },
+    chayon:      { qoy:28, buzoq:88, egizak:30, qisqichbaqa:93, arslon:35, sunbula:88, tarozi:30, chayon:58, oqotar:40, tog_echkisi:78, qovga:32, baliq:92 },
+    oqotar:      { qoy:92, buzoq:30, egizak:75, qisqichbaqa:28, arslon:85, sunbula:35, tarozi:72, chayon:40, oqotar:55, tog_echkisi:30, qovga:88, baliq:38 },
+    tog_echkisi: { qoy:40, buzoq:93, egizak:28, qisqichbaqa:65, arslon:32, sunbula:92, tarozi:35, chayon:78, oqotar:30, tog_echkisi:55, qovga:45, baliq:72 },
+    qovga:       { qoy:72, buzoq:32, egizak:95, qisqichbaqa:30, arslon:70, sunbula:40, tarozi:92, chayon:32, oqotar:88, tog_echkisi:45, qovga:55, baliq:48 },
+    baliq:       { qoy:35, buzoq:78, egizak:42, qisqichbaqa:95, arslon:28, sunbula:68, tarozi:45, chayon:92, oqotar:38, tog_echkisi:72, qovga:48, baliq:58 },
+  };
+
+  // Moslik foizini olish
+  function getZodiacPercent(myZodiac, theirZodiac) {
+    if (!myZodiac || !theirZodiac) return null;
+    const myKey = normalizeZodiacKey(myZodiac);
+    const theirKey = normalizeZodiacKey(theirZodiac);
+    const row = ZODIAC_PERCENT_MATRIX[myKey];
+    if (!row) return null;
+    return row[theirKey] ?? null;
+  }
+
+  // Foiz rangi
+  function getCompatColor(pct) {
+    if (pct >= 80) return '#27ae60';
+    if (pct >= 60) return '#f39c12';
+    if (pct >= 40) return '#e67e22';
+    return '#e74c3c';
+  }
+
+  // Foiz label emoji
+  function getCompatEmoji(pct) {
+    if (pct >= 85) return '💚';
+    if (pct >= 65) return '💛';
+    if (pct >= 45) return '🟠';
+    return '❤️‍🔥';
+  }
+
+  // Foiz badge HTML (karta uchun)
+  function buildCompatBadge(myZodiac, theirZodiac) {
+    const pct = getZodiacPercent(myZodiac, theirZodiac);
+    if (pct === null) return '';
+    const color = getCompatColor(pct);
+    const emoji = getCompatEmoji(pct);
+    return `<div class="compat-badge-wrap">
+      <div class="compat-badge-row">
+        <span class="compat-badge-emoji">${emoji}</span>
+        <span class="compat-badge-pct" style="color:${color}">${pct}%</span>
+        <span class="compat-badge-label">${tr('compat_match') || 'moslik'}</span>
+      </div>
+      <div class="compat-bar-track">
+        <div class="compat-bar-fill" style="width:${pct}%;background:${color};"></div>
+      </div>
+    </div>`;
+  }
 
   const ZODIAC_COMPATIBILITY = {
     "qoy": {
@@ -5271,9 +5188,7 @@ function detectTelegramLanguage() {
     if (!name) { showToast(tr('enter_name_prompt')); return; }
     if (!age || age < 16 || age > 80) { showToast(tr('enter_age_prompt')); return; }
     if (!city) { showToast(tr('enter_city_prompt')); return; }
-    const MAIN_GOALS = ['goal_jiddiy', 'goal_dostlik_suhbat', 'goal_hamroh'];
-    const hasMainGoal = selectedGoals.some(g => MAIN_GOALS.includes(g));
-    if (!hasMainGoal) { showToast(tr('goal_required_error') || 'Kamida 1 ta asosiy maqsad tanlang (💍/💬/🧳)'); return; }
+    if (selectedGoals.length === 0) { showToast(tr('select_goal_prompt')); return; }
 
     // Verifikatsiya tekshiruvi: selfi yuborilmagan bo'lsa saqlatma
     if (!_selfieVerified) {
@@ -5306,8 +5221,7 @@ function detectTelegramLanguage() {
       zodiac: zodiac,
       interests: trimmedInterests,
       goals: selectedGoals,
-      photo_base64: photoBase64 || null,
-      only_serious_men: !!document.getElementById('only-serious-toggle')?.checked
+      photo_base64: photoBase64 || null
     };
 
     setSavedProfile(profile);
@@ -5348,25 +5262,23 @@ function detectTelegramLanguage() {
     const ageTo = document.getElementById('sf-age-to')?.value?.trim();
     if (ageTo) filters.age_to = parseInt(ageTo);
 
-    // Qidiruv doirasi
-    if (_searchScope === 'central_asia') {
-      filters.central_asia = true;
-    } else {
-      // Region bo'yicha filter (davlat → viloyat → tuman)
-      const sfCountry = document.getElementById('sf-country')?.value?.trim();
-      const sfRegion = document.getElementById('sf-region')?.value?.trim();
-      const sfDistrict = document.getElementById('sf-district')?.value?.trim();
-      const sfCityHidden = document.getElementById('sf-city')?.value?.trim();
+    // Region bo'yicha filter (davlat → viloyat → tuman)
+    const sfCountry = document.getElementById('sf-country')?.value?.trim();
+    const sfRegion = document.getElementById('sf-region')?.value?.trim();
+    const sfDistrict = document.getElementById('sf-district')?.value?.trim();
+    const sfCityHidden = document.getElementById('sf-city')?.value?.trim();
 
-      if (sfDistrict) {
-        filters.city = sfDistrict;
-      } else if (sfRegion) {
-        filters.city = sfRegion;
-      } else if (sfCountry) {
-        filters.country = sfCountry;
-      } else if (sfCityHidden) {
-        filters.city = sfCityHidden;
-      }
+    if (sfDistrict) {
+      // Eng aniq: tuman bo'yicha
+      filters.city = sfDistrict;
+    } else if (sfRegion) {
+      // Viloyat bo'yicha (barcha tumanlar)
+      filters.city = sfRegion;
+    } else if (sfCountry) {
+      // Davlat bo'yicha
+      filters.country = sfCountry;
+    } else if (sfCityHidden) {
+      filters.city = sfCityHidden;
     }
 
     // Backendga key sifatida yuborish (goal_dostlik, int_kino kabi)
@@ -5472,12 +5384,7 @@ function detectTelegramLanguage() {
     const photo = u.photo_base64 || u.photo_file_id;
     const locationLabel = formatLocationLabel(u.city);
     const myZodiac = getMyZodiac();
-    const compatStatus = u.zodiac ? getZodiacCompatStatus(myZodiac, u.zodiac) : null;
-    const compatBadge = compatStatus === 'mos'
-      ? `<span style="background:#27ae60;color:#fff;border-radius:12px;padding:2px 10px;font-size:12px;font-weight:600;margin-left:6px;">💚 ${tr('compat_good')}</span>`
-      : compatStatus === 'qiyin'
-      ? `<span style="background:#e74c3c;color:#fff;border-radius:12px;padding:2px 10px;font-size:12px;font-weight:600;margin-left:6px;">⚡ ${tr('compat_difficult')}</span>`
-      : '';
+    const compatBadge = (myZodiac && u.zodiac) ? buildCompatBadge(myZodiac, u.zodiac) : '';
 
     const animClass = direction === 'left' ? 'animate-left' : direction === 'right' ? 'animate-right' : direction === 'up' ? 'animate-up' : 'animate-in';
 
@@ -5495,8 +5402,9 @@ function detectTelegramLanguage() {
           <div class="tinder-photo-gradient"></div>
           <div class="tinder-photo-info">
             <div class="tinder-photo-name">${u.full_name}, ${u.age}</div>
-            <div class="tinder-photo-meta">📍 ${locationLabel}${u.zodiac ? ' • ' + getZodiacDisplay(u.zodiac) : ''}${compatBadge}</div>
+            <div class="tinder-photo-meta">📍 ${locationLabel}${u.zodiac ? ' • ' + getZodiacDisplay(u.zodiac) : ''}</div>
             ${u.about ? `<div class="tinder-photo-about">${escapeHtml(u.about)}</div>` : ''}
+            ${compatBadge}
           </div>
         </div>
         <div class="tinder-actions">
@@ -5667,8 +5575,10 @@ function detectTelegramLanguage() {
       return `<div class="swipe-dot ${i === ci ? 'active' : ''}"></div>`;
     }).join('');
 
-    const goals = (u.goals || []).map(g => `<span class="tinder-tag">${g}</span>`).join('');
-    const interests = (u.interests || []).map(i => `<span class="tinder-tag tinder-tag-alt">${i}</span>`).join('');
+    const goals = (u.goals || []).map(g => `<span class="tinder-tag">${tr(g)||g}</span>`).join('');
+    const interests = (u.interests || []).map(i => `<span class="tinder-tag tinder-tag-alt">${tr(i)||i}</span>`).join('');
+    const myZodiac = getMyZodiac();
+    const compatBadge = (myZodiac && u.zodiac) ? buildCompatBadge(myZodiac, u.zodiac) : '';
 
     container.innerHTML = `
       <div class="swipe-counter">
@@ -5685,6 +5595,7 @@ function detectTelegramLanguage() {
           <div class="tinder-photo-info">
             <div class="tinder-photo-name">${u.full_name}, ${u.age}</div>
             <div class="tinder-photo-meta">📍 ${locationLabel}${u.zodiac ? ' &nbsp;•&nbsp; ' + getZodiacDisplay(u.zodiac) : ''}</div>
+            ${compatBadge}
           </div>
         </div>
         <div class="tinder-body">
@@ -6132,6 +6043,9 @@ function detectTelegramLanguage() {
     const photoHtml = photo
       ? `<div class="profile-detail-photo-wrap"><img src="${photo}" alt="${u.full_name}" onclick="openPhotoViewer('${escapeJs(photo)}','${escapeJs(u.full_name)}')" /></div>`
       : '';
+    // Moslik foizi
+    const myZodiacDetail = getMyZodiac();
+    const compatDetailBadge = (myZodiacDetail && u.zodiac) ? buildCompatBadge(myZodiacDetail, u.zodiac) : '';
 
     body.innerHTML = `
       <article class="profile-detail-shell">
@@ -6140,6 +6054,7 @@ function detectTelegramLanguage() {
           <div class="profile-detail-badge">${u.gender === 'erkak' ? tr('male') : tr('female')} • ${u.age} ${tr('years_old')}</div>
           <div class="profile-detail-title">${icon} ${u.full_name}</div>
           <div class="profile-detail-meta">📍 ${profileLocation}${u.zodiac ? ' • ' + getZodiacDisplay(u.zodiac) : ''}</div>
+          ${compatDetailBadge ? `<div class="profile-detail-section">${compatDetailBadge}</div>` : ''}
           ${aboutText ? `<div class="profile-detail-section"><div class="profile-detail-label">${tr('about_me')}</div><p class="profile-detail-summary">${escapeHtml(aboutText)}</p></div>` : ''}
           ${showTags ? `<div class="profile-detail-section"><div class="profile-detail-label">${tr('goals_label')}</div><div class="chip-row">${goals || `<span class="muted-chip">${tr('not_specified')}</span>`}</div></div>` : ''}
           ${showTags ? `<div class="profile-detail-section"><div class="profile-detail-label">${tr('interests_label')}</div><div class="chip-row">${interests || `<span class="muted-chip">${tr('not_specified')}</span>`}</div><div class="muted-chip" style="margin-top:6px;">${tr('max_interests_display')}</div></div>` : ''}
@@ -7522,40 +7437,15 @@ function switchTopPanelTab(tab) {
   }
 }
 
-async function loadMiniStats(forceRefresh) {
+async function loadMiniStats() {
   updateMiniStatsLabels();
   const body = document.getElementById('stats-mini-body');
   if (!body) return;
-
-  // Haftalik kesh: har dushanbada yangilanadi
-  const CACHE_KEY = 'top10_weekly_cache';
-  const CACHE_WEEK_KEY = 'top10_weekly_week';
-  const now = new Date();
-  const jan1 = new Date(now.getFullYear(), 0, 1);
-  const weekNum = Math.ceil(((now - jan1) / 86400000 + jan1.getDay() + 1) / 7);
-  const currentWeekId = now.getFullYear() + '-W' + weekNum;
-
-  if (!forceRefresh) {
-    try {
-      const cachedWeek = localStorage.getItem(CACHE_WEEK_KEY);
-      const cachedData = localStorage.getItem(CACHE_KEY);
-      if (cachedWeek === currentWeekId && cachedData) {
-        _miniStatsData = JSON.parse(cachedData);
-        renderTopPanelTab(_topPanelTab);
-        return;
-      }
-    } catch(e) {}
-  }
-
   body.innerHTML = '<div class="stats-mini-loading"><div class="spinner"></div></div>';
   try {
     const data = await apiPost('/api/stats/leaderboard', {});
     if (data.success) {
       _miniStatsData = data;
-      try {
-        localStorage.setItem(CACHE_KEY, JSON.stringify(data));
-        localStorage.setItem(CACHE_WEEK_KEY, currentWeekId);
-      } catch(e) {}
       renderTopPanelTab(_topPanelTab);
     } else {
       body.innerHTML = `<div class="stats-mini-empty">${tr('server_error') || 'Ma\'lumot yuklanmadi'}</div>`;
@@ -7620,31 +7510,8 @@ function renderTopPanelTab(tab) {
     users = Object.values(all).sort((a, b) => b.score - a.score).slice(0, 10).map(u => ({ ...u, count: u.score }));
   }
 
-  // Haftalik yangilanish info
-  let weeklyBadge = '';
-  if (_miniStatsData && _miniStatsData.weekly) {
-    const sec = _miniStatsData.seconds_until_reset || 0;
-    const days = Math.floor(sec / 86400);
-    const hours = Math.floor((sec % 86400) / 3600);
-    const mins = Math.floor((sec % 3600) / 60);
-    let timeStr = '';
-    if (days > 0) {
-      const tpl = tr('weekly_reset_days') || '{d}k {h}s da yangilanadi';
-      timeStr = tpl.replace('{d}', days).replace('{h}', hours);
-    } else if (hours > 0) {
-      const tpl = tr('weekly_reset_hours') || '{h}s {m}d da yangilanadi';
-      timeStr = tpl.replace('{h}', hours).replace('{m}', mins);
-    } else {
-      const tpl = tr('weekly_reset_mins') || '{m}d da yangilanadi';
-      timeStr = tpl.replace('{m}', mins);
-    }
-    const badgeLabel = tr('weekly_top_badge') || '📅 Haftalik TOP';
-    weeklyBadge = `<div class="top-weekly-badge">${badgeLabel} &nbsp;•&nbsp; 🔄 ${timeStr}</div>`;
-  }
-
   body.innerHTML = `
     <div class="top-panel-section-title">${cfg.title}</div>
-    ${weeklyBadge}
     ${buildRows(users, cfg.icon, cfg.label)}
   `;
 }
