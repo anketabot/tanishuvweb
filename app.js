@@ -298,6 +298,20 @@ const tg = window.Telegram?.WebApp;
           'loc_all_countries': '— Barcha davlatlar —',
           'loc_all_regions': '— Barcha viloyatlar —',
           'loc_all_districts': '— Barcha tumanlar —',
+          'report_btn_title': 'Shikoyat berish',
+          'report_modal_title': 'Shikoyat berish',
+          'report_modal_sub': 'Nima sababdan shikoyat qilmoqchisiz?',
+          'report_cat_porn': '🔞 Pornografiya',
+          'report_cat_drugs': '💊 Narkotik',
+          'report_cat_violence': '⚔️ Zo\'ravonlik',
+          'report_cat_fraud': '🎭 Firibgarlik / Soxta anketa',
+          'report_cat_spam': '📢 Spam / Reklama',
+          'report_cat_other': '❓ Boshqa sabab',
+          'report_comment_placeholder': 'Qo\'shimcha izoh (ixtiyoriy)...',
+          'report_submit': 'Yuborish',
+          'report_sent': '✅ Shikoyatingiz qabul qilindi',
+          'report_error': '❌ Shikoyat yuborishda xatolik',
+          'report_select_category': 'Iltimos, sababni tanlang',
           'no_city': 'Shahar ko\'rsatilmagan',
           'message': 'Xabar',
           'block': 'Blok',
@@ -6220,6 +6234,7 @@ function detectTelegramLanguage() {
 
     return `
     <div class="profile-card" data-user="${escapeHtmlAttr(JSON.stringify(u))}">
+      <button class="report-flag-btn" title="${tr('report_btn_title')}" onclick="event.stopPropagation(); openReportModal(${u.telegram_id}, '${escapeJs(u.full_name)}')">!</button>
       <div class="profile-photo">${photoHtml}</div>
       <div class="profile-info">
         <div class="profile-name"><span style="display:inline-flex;vertical-align:middle;margin-right:6px;">${icon}</span> ${u.full_name}</div>
@@ -6320,6 +6335,66 @@ function detectTelegramLanguage() {
     showToast(tr('blocked'));
   }
 
+  // ===== SHIKOYAT (REPORT) =====
+  let reportTargetId = null;
+  let reportSelectedCategory = null;
+  const REPORT_CATEGORIES = ['porn', 'drugs', 'violence', 'fraud', 'spam', 'other'];
+
+  function openReportModal(targetId, targetName) {
+    reportTargetId = targetId;
+    reportSelectedCategory = null;
+    const modal = document.getElementById('report-modal');
+    if (!modal) return;
+    const sub = document.getElementById('report-modal-sub');
+    if (sub) sub.textContent = tr('report_modal_sub');
+    const catsWrap = document.getElementById('report-categories');
+    if (catsWrap) {
+      catsWrap.innerHTML = REPORT_CATEGORIES.map(cat => `
+        <button type="button" class="report-cat-btn" data-cat="${cat}" onclick="selectReportCategory('${cat}')">${tr('report_cat_' + cat)}</button>
+      `).join('');
+    }
+    const commentEl = document.getElementById('report-comment-input');
+    if (commentEl) commentEl.value = '';
+    modal.style.display = 'flex';
+  }
+
+  function selectReportCategory(cat) {
+    reportSelectedCategory = cat;
+    document.querySelectorAll('.report-cat-btn').forEach(btn => {
+      btn.classList.toggle('selected', btn.dataset.cat === cat);
+    });
+  }
+
+  function closeReportModal(e) {
+    if (e && e.target !== e.currentTarget) return;
+    const modal = document.getElementById('report-modal');
+    if (modal) modal.style.display = 'none';
+    reportTargetId = null;
+    reportSelectedCategory = null;
+  }
+
+  async function submitReport() {
+    if (!userId || !reportTargetId) return;
+    if (!reportSelectedCategory) {
+      showToast(tr('report_select_category'));
+      return;
+    }
+    const commentEl = document.getElementById('report-comment-input');
+    const comment = commentEl ? commentEl.value.trim() : '';
+    const data = await apiPost('/api/report', {
+      reporter_id: userId,
+      reported_id: reportTargetId,
+      category: reportSelectedCategory,
+      comment
+    });
+    if (data && data.success) {
+      showToast(tr('report_sent'));
+      closeReportModal();
+    } else {
+      showToast(tr('report_error'));
+    }
+  }
+
   function showMatchOverlay() {
     document.getElementById('match-overlay').style.display = 'flex';
   }
@@ -6339,6 +6414,7 @@ function detectTelegramLanguage() {
 
       body.innerHTML = `
         <article class="profile-detail-minimal">
+          <button class="report-flag-btn" title="${tr('report_btn_title')}" onclick="event.stopPropagation(); openReportModal(${u.telegram_id}, '${escapeJs(u.full_name)}')">!</button>
           ${photo ? `<div class="minimal-photo-wrap"><img src="${photo}" alt="${u.full_name}" onclick="openPhotoViewer('${escapeJs(photo)}', '${escapeJs(u.full_name)}')" /></div>` : ''}
           <div class="minimal-info">
             <h2 class="minimal-name">${u.full_name}</h2>
@@ -6374,6 +6450,7 @@ function detectTelegramLanguage() {
 
     body.innerHTML = `
       <article class="profile-detail-shell">
+        <button class="report-flag-btn" title="${tr('report_btn_title')}" onclick="event.stopPropagation(); openReportModal(${u.telegram_id}, '${escapeJs(u.full_name)}')">!</button>
         ${photoHtml}
         <section class="profile-detail-card">
           <div class="profile-detail-badge">${u.gender === 'erkak' ? tr('male') : tr('female')} • ${u.age} ${tr('years_old')}</div>
