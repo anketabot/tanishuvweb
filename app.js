@@ -4270,53 +4270,31 @@ function detectTelegramLanguage() {
     }
   }
 
-  // === AI (Claude) RASM TEKSHIRUVI ===
-  // Qaytaradi: { ok: true } yoki { ok: false, reason: 'porn'|'weapon'|'no_person'|'other' }
+  // === AI RASM TEKSHIRUVI (backend orqali, OpenAI moderation) ===
+  // Qaytaradi: { ok: true } yoki { ok: false, reason: 'porn'|'weapon'|'other' } yoki { ok: null } (xatolik)
   async function checkPhotoWithAI(file) {
     return new Promise((resolve) => {
       const reader = new FileReader();
       reader.onload = async (e) => {
         try {
           const base64Data = e.target.result.split(',')[1];
-          const mediaType = file.type || 'image/jpeg';
 
-          const response = await fetch('https://api.anthropic.com/v1/messages', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              model: 'claude-sonnet-4-6',
-              max_tokens: 200,
-              system: `You are a strict content moderator for a dating app. 
-Analyze the image and respond ONLY with a JSON object, no markdown, no explanation.
-Rules:
-- If the image contains pornography, nudity, or sexual content → {"ok":false,"reason":"porn"}
-- If the image contains weapons (guns, knives, explosives, etc.) → {"ok":false,"reason":"weapon"}  
-- If the image does NOT contain a human person (face or body) → {"ok":false,"reason":"no_person"}
-- If the image is appropriate and contains a real human person → {"ok":true}
-Be strict. Respond ONLY with the JSON object.`,
-              messages: [{
-                role: 'user',
-                content: [{
-                  type: 'image',
-                  source: { type: 'base64', media_type: mediaType, data: base64Data }
-                }, {
-                  type: 'text',
-                  text: 'Check this image for the dating app profile. Respond only with JSON.'
-                }]
-              }]
-            })
-          });
+          const data = await apiPost('/api/moderate_photo', { photo_base64: base64Data });
 
-          if (!response.ok) {
-            resolve({ ok: null }); // API xatolik — COCO-SSD ga o'tamiz
+          if (!data || data.success !== true) {
+            resolve({ ok: null }); // backend xatolik — COCO-SSD ga o'tamiz
             return;
           }
 
-          const data = await response.json();
-          const text = (data.content || []).map(c => c.text || '').join('').trim();
-          const clean = text.replace(/```json|```/g, '').trim();
-          const result = JSON.parse(clean);
-          resolve(result);
+          if (data.ok === true) {
+            resolve({ ok: true });
+            return;
+          }
+
+          let reason = 'other';
+          if (data.reason === 'sexual_content') reason = 'porn';
+          else if (data.reason === 'weapon_content') reason = 'weapon';
+          resolve({ ok: false, reason });
         } catch (err) {
           console.warn('AI check parse error:', err);
           resolve({ ok: null }); // xatolik — COCO-SSD ga o'tamiz
@@ -4426,18 +4404,17 @@ Be strict. Respond ONLY with the JSON object.`,
       return;
     }
 
-    // === 1-QADAM: Claude AI bilan tekshiruv (pornografiya, qurol, inson) ===
+    // === 1-QADAM: Backend AI bilan tekshiruv (pornografiya, qurol-yarog') ===
     updatePhotoUploadState(tr('ai_checking'), false, true);
     showToast(tr('ai_checking'), 8000);
 
     const aiResult = await checkPhotoWithAI(file);
 
     if (aiResult.ok === false) {
-      // AI aniq rad etdi
+      // AI aniq rad etdi (pornografiya yoki qurol-yarog')
       let errMsg = tr('ai_rejected_other');
-      if (aiResult.reason === 'porn')      errMsg = tr('ai_rejected_porn');
-      if (aiResult.reason === 'weapon')    errMsg = tr('ai_rejected_weapon');
-      if (aiResult.reason === 'no_person') errMsg = tr('ai_rejected_no_person');
+      if (aiResult.reason === 'porn')   errMsg = tr('ai_rejected_porn');
+      if (aiResult.reason === 'weapon') errMsg = tr('ai_rejected_weapon');
       showToast(errMsg, 5000);
       input.value = '';
       photoBase64 = '';
@@ -4447,14 +4424,9 @@ Be strict. Respond ONLY with the JSON object.`,
       return;
     }
 
-    if (aiResult.ok === true) {
-      // AI tasdiqladi — to'g'ridan-to'g'ri yuklaymiz
-      updatePhotoUploadState(tr('person_confirmed_uploading'), false);
-      proceedWithPhotoPreview(file);
-      return;
-    }
-
-    // aiResult.ok === null → AI xatolik, zaxira: FaceDetector + COCO-SSD
+    // === 2-QADAM: Inson (yuz/tana) borligini tekshirish ===
+    // AI tekshiruvi muvaffaqiyatli bo'lsa (ok:true) yoki xatolik (ok:null) bo'lsa ham,
+    // rasmda haqiqiy inson borligini har doim tekshiramiz.
     updatePhotoUploadState(tr('checking_image'), false, true);
 
     let faceDetected = false;
