@@ -2149,6 +2149,7 @@ h1, h2, h3, h4, .header-title, .profile-name, .tinder-photo-name, .chat-list-nam
   display: flex;
   flex-direction: column;
   gap: 14px;
+  position: relative;
 }
 
 .profile-detail-photo-wrap {
@@ -3528,6 +3529,7 @@ h1, h2, h3, h4, .header-title, .profile-name, .tinder-photo-name, .chat-list-nam
   text-align: center;
   padding: 4px 0 20px;
   animation: cardIn 0.45s var(--ease-premium);
+  position: relative;
 }
 
 .minimal-photo-wrap {
@@ -6065,4 +6067,60 @@ body.pre-init .lang-modal-overlay.show {
   0%   { box-shadow: 0 0 0 0 rgba(52,199,89,0.5); }
   70%  { box-shadow: 0 0 0 8px rgba(52,199,89,0); }
   100% { box-shadow: 0 0 0 0 rgba(52,199,89,0); }
+}
+/* ===== SHIKOYAT (REPORT) ===== */
+.report-flag-btn {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  z-index: 5;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(255, 59, 48, 0.92);
+  color: #fff;
+  font-weight: 800;
+  font-size: 16px;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(255, 59, 48, 0.35);
+  transition: transform 0.2s var(--ease-spring), background 0.2s var(--ease-smooth);
+}
+
+.report-flag-btn:hover,
+.report-flag-btn:active {
+  transform: scale(1.08);
+  background: rgba(220, 38, 30, 0.95);
+}
+
+.report-categories {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.report-cat-btn {
+  width: 100%;
+  box-sizing: border-box;
+  text-align: left;
+  padding: 12px 16px;
+  border-radius: 16px;
+  border: 1.5px solid rgba(0, 122, 255, 0.16);
+  background: rgba(255, 255, 255, 0.7);
+  font-family: inherit;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-primary);
+  cursor: pointer;
+  transition: border-color 0.2s var(--ease-smooth), background 0.2s var(--ease-smooth);
+}
+
+.report-cat-btn.selected {
+  border-color: rgba(255, 59, 48, 0.7);
+  background: rgba(255, 59, 48, 0.1);
+  color: #DC3530;
 }
