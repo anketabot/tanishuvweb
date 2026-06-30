@@ -5469,12 +5469,31 @@ Be strict. Respond ONLY with the JSON object.`,
       only_serious_men: !!document.getElementById('only-serious-toggle')?.checked
     };
 
-    setSavedProfile(profile);
-
     let serverSaved = false;
+    let serverResult = null;
     if (userId) {
-      serverSaved = await saveProfileToServer(profile, userId);
+      serverResult = await saveProfileToServer(profile, userId);
+      serverSaved = serverResult && serverResult.success === true;
     }
+
+    // Server rasmni AI filterdan o'tmadi deb rad etgan bo'lsa — saqlashni to'xtatamiz
+    if (userId && !serverSaved && serverResult) {
+      const blockingReasons = [
+        'sexual_content',
+        'weapon_content',
+        'policy_violation',
+        'invalid_image',
+        'moderation_not_configured',
+        'moderation_api_error',
+        'moderation_parse_error',
+      ];
+      if (blockingReasons.includes(serverResult.reason)) {
+        showToast(serverResult.error || tr('photo_rejected_by_filter') || 'Rasm qabul qilinmadi');
+        return; // qidiruv sahifasiga o'tmaymiz, profil saqlanmagan holatda qoladi
+      }
+    }
+
+    setSavedProfile(profile);
 
     if (tg) {
       sendWebAppData({ action: 'save_profile', profile });
@@ -6591,7 +6610,7 @@ Be strict. Respond ONLY with the JSON object.`,
 
   async function saveProfileToServer(profile, telegramId) {
     const data = await apiPost('/api/save_profile', { telegram_id: telegramId, profile });
-    return data.success === true;
+    return data;
   }
 
   async function fetchUserProfile(telegramId) {
