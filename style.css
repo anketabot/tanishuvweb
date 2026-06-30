@@ -6124,3 +6124,20 @@ body.pre-init .lang-modal-overlay.show {
   background: rgba(255, 59, 48, 0.1);
   color: #DC3530;
 }
+/* === XAVFSIZLIK: rasmlarni saqlash/nusxalashni qiyinlashtirish ===
+   Eslatma: bu faqat qulay nusxalashning oldini oladi, tizim skrinshotini
+   bloklamaydi (veb-texnologiyalarda bu imkonsiz). Asosiy himoya - har bir
+   rasmga server tomonda kuydirilgan watermark. */
+img {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-user-drag: none;
+  user-drag: none;
+  pointer-events: auto;
+}
+
+.privacy-blur {
+  filter: blur(28px);
+  transition: filter 0.15s ease;
+}
