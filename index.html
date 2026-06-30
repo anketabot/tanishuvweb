@@ -2,7 +2,7 @@
 <html lang="uz">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="theme-color" content="#F2F2F7" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="default" />
@@ -11,9 +11,6 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <link rel="stylesheet" href="style.css" />
-<base target="_blank">
-<base target="_blank">
-<base target="_blank">
 <base target="_blank">
 </head>
 <body>
@@ -1091,6 +1088,25 @@
 
 <!-- Overlay root: backdrop-filter yo'q, z-index eng yuqori -->
 <div id="overlay-root" style="position:fixed;top:0;left:0;width:0;height:0;z-index:2147483647;pointer-events:none;"></div>
+
+<!-- SHIKOYAT (REPORT) MODAL -->
+<div id="report-modal" class="modal-overlay" style="display:none;" onclick="closeReportModal(event)">
+  <div class="modal-content" onclick="event.stopPropagation()">
+    <button class="modal-close" onclick="closeReportModal()">✕</button>
+    <div style="text-align:center; margin-bottom:16px;">
+      <div style="font-size:48px; margin-bottom:12px;">❗️</div>
+      <h2 style="font-size:22px; font-weight:800; margin-bottom:8px;" data-i18n="report_modal_title">Shikoyat berish</h2>
+      <p style="color:var(--text-secondary); font-size:15px; line-height:1.5;" id="report-modal-sub" data-i18n="report_modal_sub">
+        Nima sababdan shikoyat qilmoqchisiz?
+      </p>
+    </div>
+    <div id="report-categories" class="report-categories"></div>
+    <textarea id="report-comment-input" data-i18n-placeholder="report_comment_placeholder" placeholder="Qo'shimcha izoh (ixtiyoriy)..." maxlength="500" style="width:100%; box-sizing:border-box; min-height:80px; padding:14px 18px; border:1.5px solid rgba(0,122,255,0.18); border-radius:18px; font-family:inherit; font-size:15px; resize:none; outline:none; margin:14px 0;"></textarea>
+    <button class="btn-primary" onclick="submitReport()" style="width:100%; box-sizing:border-box; padding:16px; border-radius:999rem;">
+      <span data-i18n="report_submit">Yuborish</span>
+    </button>
+  </div>
+</div>
 
 <script src="app.js"></script>
 </body>
