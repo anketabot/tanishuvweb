@@ -156,6 +156,7 @@ const tg = window.Telegram?.WebApp;
           'cancel': 'Bekor qilish',
           'no_one_found': 'Hech kim topilmadi',
           'no_one_hint': 'Hozircha sizga mos foydalanuvchilar yo\'q. Keyinroq qayta urinib ko\'ring.',
+          'stat_users_found': 'ta foydalanuvchi sizning filtrlaringizga mos',
           'all_viewed': 'Hammasi ko\'rildi!',
           'all_viewed_hint': 'Siz barcha nomzodlarni ko\'rib chiqdingiz. Qayta qidiring.',
           'search_again': '🔍 Qayta qidirish',
@@ -533,6 +534,7 @@ const tg = window.Telegram?.WebApp;
           'cancel': 'Отмена',
           'no_one_found': 'Никого не найдено',
           'no_one_hint': 'Пока нет подходящих пользователей. Попробуйте позже.',
+          'stat_users_found': 'пользователей соответствуют вашим фильтрам',
           'all_viewed': 'Все просмотрены!',
           'all_viewed_hint': 'Вы просмотрели всех кандидатов. Поищите снова.',
           'search_again': '🔍 Искать снова',
@@ -912,6 +914,7 @@ const tg = window.Telegram?.WebApp;
           'cancel': 'Болдырмау',
           'no_one_found': 'Ешкім табылмады',
           'no_one_hint': 'Әзірше сәйкес пайдаланушылар жоқ. Кейінірек қайталаңыз.',
+          'stat_users_found': 'пайдаланушы сіздің сүзгілеріңізге сәйкес келеді',
           'all_viewed': 'Барлығы қаралды!',
           'all_viewed_hint': 'Сіз барлық кандидаттарды қарадыңыз. Қайта іздеңіз.',
           'search_again': '🔍 Қайта іздеу',
@@ -1291,6 +1294,7 @@ const tg = window.Telegram?.WebApp;
           'cancel': 'Жокко чыгаруу',
           'no_one_found': 'Эч ким табылбады',
           'no_one_hint': 'Азырынча шайкес колдонуучулар жок. Кийинчерээк кайталаңыз.',
+          'stat_users_found': 'колдонуучу сиздин чыпкаларыңызга дал келет',
           'all_viewed': 'Баары каралды!',
           'all_viewed_hint': 'Сиз бардык талапкерлерди карадыңыз. Кайта издеңиз.',
           'search_again': '🔍 Кайта издөө',
@@ -1670,6 +1674,7 @@ const tg = window.Telegram?.WebApp;
           'cancel': 'Biykar etiw',
           'no_one_found': 'Eshkim tabılmadı',
           'no_one_hint': 'Házirshe sáykes paydalanıwshılar joq. Keyinirek qaytalań.',
+          'stat_users_found': 'paydalanıwshı sizdiń filtrleriińizge sáykes',
           'all_viewed': 'Barlıǵı qaraldı!',
           'all_viewed_hint': 'Siz barlıq kandidatlarǵa qarádıńız. Qayta izleni.',
           'search_again': '🔍 Qayta izlew',
@@ -2049,6 +2054,7 @@ const tg = window.Telegram?.WebApp;
           'cancel': 'Бекор кардан',
           'no_one_found': 'Ҳеҷ кас ёфт нашуд',
           'no_one_hint': 'Ҳанӯз истифодабарандагони мувофиқ нестанд. Баъдтар боз кӯшиш кунед.',
+          'stat_users_found': 'корбар ба филтрҳои шумо мувофиқ аст',
           'all_viewed': 'Ҳама дида шуд!',
           'all_viewed_hint': 'Шумо ҳамаи номзадҳоро дидед. Боз ҷустуҷӯ кунед.',
           'search_again': '🔍 Боз ҷустуҷӯ',
@@ -2428,6 +2434,7 @@ const tg = window.Telegram?.WebApp;
           'cancel': 'Cancel',
           'no_one_found': 'No one found',
           'no_one_hint': 'There are no matching users right now. Try again later.',
+          'stat_users_found': 'users match your filters',
           'all_viewed': "You've viewed everyone!",
           'all_viewed_hint': "You've viewed all candidates. Search again.",
           'search_again': '🔍 Search again',
@@ -3738,6 +3745,18 @@ function detectTelegramLanguage() {
       syncSearchZodiacPicker();
       loadPendingLikesIndicator();
       loadLimitStatus();
+      // Statistika: search sahifasi ochilganda darhol hisoblash
+      setTimeout(fetchSearchCount, 800);
+      // Input va checkbox uchun event listener-lar (bir marta qo'shiladi)
+      if (!window._searchInputListenersAdded) {
+        window._searchInputListenersAdded = true;
+        ['sf-age-from', 'sf-age-to'].forEach(id => {
+          const el = document.getElementById(id);
+          if (el) el.addEventListener('input', scheduleSearchCount);
+        });
+        const compatCb = document.getElementById('sf-zodiac-compat');
+        if (compatCb) compatCb.addEventListener('change', scheduleSearchCount);
+      }
     }
     if (name === 'myprofile') loadMyProfile();
     if (name === 'chats') loadChats();
@@ -3763,6 +3782,7 @@ function detectTelegramLanguage() {
     document.getElementById('scope-btn-ca').classList.toggle('active', scope === 'central_asia');
     const locCard = document.getElementById('search-location-card');
     if (locCard) locCard.classList.toggle('scope-hidden', scope === 'central_asia');
+    scheduleSearchCount();
   }
 
   function toggleAdvancedFilters() {
@@ -3791,6 +3811,7 @@ function detectTelegramLanguage() {
     selectedSearchGender = g;
     document.getElementById('sf-gender-erkak').classList.toggle('selected', g === 'erkak');
     document.getElementById('sf-gender-ayol').classList.toggle('selected', g === 'ayol');
+    scheduleSearchCount();
   }
 
   function setDefaultSearchGender() {
@@ -3853,9 +3874,11 @@ function detectTelegramLanguage() {
     } else if (group === 'sf-goals') {
       if (el.classList.contains('selected')) selectedSearchGoals.push(value);
       else selectedSearchGoals = selectedSearchGoals.filter(i => i !== value);
+      scheduleSearchCount();
     } else if (group === 'sf-interests') {
       if (el.classList.contains('selected')) selectedSearchInterests.push(value);
       else selectedSearchInterests = selectedSearchInterests.filter(i => i !== value);
+      scheduleSearchCount();
     }
   }
 
@@ -4013,9 +4036,8 @@ function detectTelegramLanguage() {
     });
 
     if (menu) menu.style.display = 'none';
+    scheduleSearchCount();
   }
-
-  // ========== BURJ NOMLARI VA MOSLIK MA'LUMOTLARI ==========
   const ZODIAC_SIGNS = {
     "qoy": ("Qo'y", "♈"),
     "buzoq": ("Buzoq", "♉"),
@@ -5463,6 +5485,89 @@ Be strict. Respond ONLY with the JSON object.`,
 
     document.querySelector('.bottom-nav').style.display = 'flex';
     showPage('search');
+  }
+
+  // ===== QIDIRUV STATISTIKASI =====
+  let _searchCountTimer = null;
+
+  function scheduleSearchCount() {
+    clearTimeout(_searchCountTimer);
+    _searchCountTimer = setTimeout(fetchSearchCount, 600);
+  }
+
+  async function fetchSearchCount() {
+    if (!userId) return;
+
+    const filters = {};
+    if (selectedSearchGender) filters.gender = selectedSearchGender;
+
+    const ageFrom = document.getElementById('sf-age-from')?.value?.trim();
+    if (ageFrom) filters.age_from = parseInt(ageFrom);
+    const ageTo = document.getElementById('sf-age-to')?.value?.trim();
+    if (ageTo) filters.age_to = parseInt(ageTo);
+
+    if (_searchScope === 'central_asia') {
+      filters.central_asia = true;
+    } else {
+      const sfCountry = document.getElementById('sf-country')?.value?.trim();
+      const sfRegion = document.getElementById('sf-region')?.value?.trim();
+      const sfDistrict = document.getElementById('sf-district')?.value?.trim();
+      if (sfDistrict) filters.city = sfDistrict;
+      else if (sfRegion) filters.city = sfRegion;
+      else if (sfCountry) filters.country = sfCountry;
+    }
+
+    if (selectedSearchGoals.length > 0) filters.goals = selectedSearchGoals;
+    if (selectedSearchInterests.length > 0) filters.interests = selectedSearchInterests;
+
+    const zodiacFilterEl = document.getElementById('sf-zodiac');
+    if (zodiacFilterEl && zodiacFilterEl.value) filters.zodiac = zodiacFilterEl.value;
+
+    const zodiacCompatEl = document.getElementById('sf-zodiac-compat');
+    if (zodiacCompatEl && zodiacCompatEl.checked) {
+      const myZodiac = getMyZodiac();
+      if (myZodiac && ZODIAC_COMPATIBILITY[myZodiac]) {
+        filters.zodiac_compat_list = ZODIAC_COMPATIBILITY[myZodiac].mos;
+      }
+    }
+
+    try {
+      const data = await apiPost('/api/search/count', { telegram_id: userId, filters });
+      if (data && data.success) {
+        showSearchStatBanner(data.count);
+      }
+    } catch (e) {
+      // Xato bo'lsa bannerni yashirish
+      hideSearchStatBanner();
+    }
+  }
+
+  function showSearchStatBanner(count) {
+    const banner = document.getElementById('search-stat-banner');
+    const countEl = document.getElementById('search-stat-count');
+    const labelEl = document.getElementById('search-stat-label');
+    if (!banner || !countEl) return;
+    if (labelEl) labelEl.textContent = tr('stat_users_found');
+    // Animatsiyali raqam o'zgartirish
+    const prev = parseInt(countEl.textContent) || 0;
+    animateCounter(countEl, prev, count, 600);
+    banner.style.display = 'block';
+  }
+
+  function hideSearchStatBanner() {
+    const banner = document.getElementById('search-stat-banner');
+    if (banner) banner.style.display = 'none';
+  }
+
+  function animateCounter(el, from, to, duration) {
+    const start = performance.now();
+    function step(now) {
+      const progress = Math.min((now - start) / duration, 1);
+      const ease = 1 - Math.pow(1 - progress, 3);
+      el.textContent = Math.round(from + (to - from) * ease);
+      if (progress < 1) requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
   }
 
   function doSearch() {
