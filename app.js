@@ -86,7 +86,24 @@ const tg = window.Telegram?.WebApp;
     // Web App tarjimalari
     const WEBAPP_T = {
         'uz': {
-            'select_language': '🌍 Tilni tanlang',
+            'anon_title': 'Tungi anonim suhbatdosh',
+        'anon_invite_text': 'Sizga bugun kechqurun mos suhbatdosh topildi! Ismi va rasmi hozircha yashirin. Anonim suhbatni boshlaysizmi?',
+        'anon_accept_btn': '✅ Qabul qilaman',
+        'anon_decline_btn': '❌ Rad etaman',
+        'anon_waiting_text': 'Taklifni qabul qildingiz. Suhbatdoshingiz javobini kutmoqdamiz...',
+        'anon_active_text': 'Anonim suhbatdoshingiz bilan chat boshlandi! Ismi va rasmi hali yashirin.',
+        'anon_open_btn': '💬 Suhbatni ochish',
+        'anon_you_declined': 'Siz taklifni rad etdingiz.',
+        'anon_reveal_btn': 'Profilni ochish',
+        'anon_disconnect_btn': 'Ajratish',
+        'anon_reveal_both': '🎉 Ikkalangiz ham rozi bo\'ldingiz! Asosiy chatga o\'tkazilmoqda...',
+        'anon_reveal_waiting': '👀 Siz profilni ochishni so\'radingiz. Suhbatdoshingiz javobini kutmoqda...',
+        'anon_reveal_other_requested': '👀 Suhbatdoshingiz profilni ochishni xohlamoqda. Siz ham rozimisiz?',
+        'anon_revealed_toast': 'Profillar ochildi! Endi asosiy chatda suhbatlashasiz.',
+        'anon_reveal_sent': 'So\'rovingiz yuborildi. Suhbatdoshingiz javobini kuting.',
+        'anon_disconnect_confirm': 'Anonim suhbatni yakunlamoqchimisiz? Barcha xabarlar o\'chib ketadi.',
+        'anon_disconnected_toast': 'Anonim suhbat yakunlandi.',
+        'select_language': '🌍 Tilni tanlang',
             'language_changed': '✅ Til o\'zgartirildi: {lang}',
             'close': 'Yopish',
             'change_language': 'Tilni o\'zgartirish',
@@ -3857,7 +3874,7 @@ const tg = window.Telegram?.WebApp;
         }
       }
       if (name === 'myprofile') loadMyProfile();
-      if (name === 'chats') loadChats();
+      if (name === 'chats') { loadChats(); if (typeof checkAnonStatus === 'function') checkAnonStatus(); }
       if (name === 'viewed') loadViewed();
       if (name === 'profile') {
         // CRITICAL: Reset form state when entering profile page
@@ -7019,6 +7036,197 @@ const tg = window.Telegram?.WebApp;
       reader.readAsDataURL(file);
     }
 
+    // === TUNGI ANONIM CHAT ===
+    let currentAnonMatchId = null;
+    let anonChatRefreshInterval = null;
+    let anonStatusPollInterval = null;
+
+    function startAnonPolling() {
+      checkAnonStatus();
+      if (anonStatusPollInterval) clearInterval(anonStatusPollInterval);
+      anonStatusPollInterval = setInterval(checkAnonStatus, 20000);
+    }
+
+    async function checkAnonStatus() {
+      const telegramId = Number(userId);
+      if (!Number.isFinite(telegramId) || telegramId <= 0) return;
+      const data = await apiPost('/api/anon/status', { telegram_id: telegramId });
+      if (!data.success) return;
+      const anon = data.anon;
+      renderAnonBanner(anon);
+
+      if (currentAnonMatchId) {
+        const stillActiveHere = anon && anon.anon_match_id === currentAnonMatchId && anon.status === 'active';
+        if (!stillActiveHere) {
+          closeAnonChatRoom();
+          if (typeof loadChats === 'function') loadChats();
+        } else {
+          updateAnonRevealStatus(anon);
+        }
+      }
+    }
+
+    function renderAnonBanner(anon) {
+      const banner = document.getElementById('anon-banner');
+      if (!banner) return;
+
+      if (!anon) {
+        banner.style.display = 'none';
+        return;
+      }
+
+      banner.style.display = 'block';
+
+      if (anon.status === 'pending' && !anon.my_accepted) {
+        banner.innerHTML = `
+          <div class="anon-banner-title">🌙 ${tr('anon_title')}</div>
+          <div class="anon-banner-text">${tr('anon_invite_text')}</div>
+          <div class="anon-banner-actions">
+            <button class="anon-banner-btn anon-banner-btn-accept" onclick="respondAnonInvite(${anon.anon_match_id}, true)">${tr('anon_accept_btn')}</button>
+            <button class="anon-banner-btn anon-banner-btn-decline" onclick="respondAnonInvite(${anon.anon_match_id}, false)">${tr('anon_decline_btn')}</button>
+          </div>
+        `;
+      } else if (anon.status === 'pending' && anon.my_accepted) {
+        banner.innerHTML = `
+          <div class="anon-banner-title">🌙 ${tr('anon_title')}</div>
+          <div class="anon-banner-text">${tr('anon_waiting_text')}</div>
+        `;
+      } else if (anon.status === 'active') {
+        banner.innerHTML = `
+          <div class="anon-banner-title">🌙 ${tr('anon_title')}</div>
+          <div class="anon-banner-text">${tr('anon_active_text')}</div>
+          <div class="anon-banner-actions">
+            <button class="anon-banner-btn anon-banner-btn-open" onclick="openAnonChatRoom(${anon.anon_match_id})">${tr('anon_open_btn')}</button>
+          </div>
+        `;
+      } else {
+        banner.style.display = 'none';
+      }
+    }
+
+    async function respondAnonInvite(anonMatchId, accept) {
+      const telegramId = Number(userId);
+      const data = await apiPost('/api/anon/respond', { telegram_id: telegramId, anon_match_id: anonMatchId, accept });
+      if (data.success) {
+        if (accept && data.status === 'active') {
+          showToast('🎉 ' + tr('anon_active_text'));
+          openAnonChatRoom(anonMatchId);
+        } else if (accept) {
+          showToast(tr('anon_waiting_text'));
+        } else {
+          showToast(tr('anon_you_declined'));
+        }
+        checkAnonStatus();
+      }
+    }
+
+    function openAnonChatRoom(anonMatchId) {
+      currentAnonMatchId = anonMatchId;
+      const likesModal = document.getElementById('likes-modal');
+      if (likesModal) likesModal.style.display = 'none';
+      document.getElementById('anon-chat-modal').style.display = 'flex';
+      document.getElementById('anon-reveal-status').style.display = 'none';
+      loadAnonChatMessages();
+
+      if (anonChatRefreshInterval) clearInterval(anonChatRefreshInterval);
+      anonChatRefreshInterval = setInterval(() => {
+        loadAnonChatMessages();
+        checkAnonStatus();
+      }, 3000);
+    }
+
+    function closeAnonChatRoom() {
+      const modal = document.getElementById('anon-chat-modal');
+      if (modal) modal.style.display = 'none';
+      if (anonChatRefreshInterval) clearInterval(anonChatRefreshInterval);
+      anonChatRefreshInterval = null;
+      currentAnonMatchId = null;
+    }
+
+    async function loadAnonChatMessages() {
+      if (!currentAnonMatchId) return;
+      const data = await apiPost('/api/anon/messages', { telegram_id: Number(userId), anon_match_id: currentAnonMatchId });
+      const container = document.getElementById('anon-chat-messages');
+      if (!data.success || !container) return;
+      container.innerHTML = data.messages.map(m => {
+        const isMe = m.sender_id == userId;
+        return `<div class="chat-msg ${isMe ? 'chat-msg-me' : 'chat-msg-them'}">${escapeHtml(m.message)}</div>`;
+      }).join('');
+      container.scrollTop = container.scrollHeight;
+    }
+
+    async function sendAnonChatMessage() {
+      const input = document.getElementById('anon-chat-input');
+      const message = input.value.trim();
+      if (!message || !currentAnonMatchId) return;
+
+      const limitOk = await checkLimit('messages');
+      if (!limitOk) {
+        showLimitExceeded('messages');
+        return;
+      }
+
+      const data = await apiPost('/api/anon/send', {
+        telegram_id: Number(userId),
+        anon_match_id: currentAnonMatchId,
+        message: message
+      });
+
+      if (data.error === 'limit_exceeded') {
+        showLimitExceeded('messages');
+        return;
+      }
+
+      if (data.success) {
+        input.value = '';
+        loadAnonChatMessages();
+      }
+    }
+
+    function updateAnonRevealStatus(anon) {
+      const el = document.getElementById('anon-reveal-status');
+      const btn = document.getElementById('anon-reveal-btn');
+      if (!el) return;
+      if (anon.my_reveal_requested && anon.other_reveal_requested) {
+        el.style.display = 'block';
+        el.textContent = tr('anon_reveal_both');
+      } else if (anon.my_reveal_requested) {
+        el.style.display = 'block';
+        el.textContent = tr('anon_reveal_waiting');
+      } else if (anon.other_reveal_requested) {
+        el.style.display = 'block';
+        el.textContent = tr('anon_reveal_other_requested');
+      } else {
+        el.style.display = 'none';
+      }
+      if (btn) btn.classList.toggle('anon-header-btn-active', !!anon.my_reveal_requested);
+    }
+
+    async function requestAnonReveal() {
+      if (!currentAnonMatchId) return;
+      const data = await apiPost('/api/anon/reveal', { telegram_id: Number(userId), anon_match_id: currentAnonMatchId });
+      if (!data.success) return;
+      const result = data.result || {};
+      if (result.status === 'revealed') {
+        showToast('🎉 ' + tr('anon_revealed_toast'));
+        closeAnonChatRoom();
+        if (typeof loadChats === 'function') loadChats();
+      } else {
+        showToast(tr('anon_reveal_sent'));
+        checkAnonStatus();
+      }
+    }
+
+    async function disconnectAnonChat() {
+      if (!currentAnonMatchId) return;
+      if (!confirm(tr('anon_disconnect_confirm'))) return;
+      const data = await apiPost('/api/anon/disconnect', { telegram_id: Number(userId), anon_match_id: currentAnonMatchId });
+      if (data.success) {
+        showToast(tr('anon_disconnected_toast'));
+        closeAnonChatRoom();
+      }
+    }
+
     // === MY PROFILE ===
     async function loadMyProfile() {
       const container = document.getElementById('my-profile-content');
@@ -7127,6 +7335,7 @@ const tg = window.Telegram?.WebApp;
             document.querySelector('.bottom-nav').style.display = 'flex';
             showPage('search');
             loadLimitStatus();
+            startAnonPolling();
             // Sahifa yuklangandan so'ng tarjimalarni qayta qo'llash
             setTimeout(() => applyTranslations(), 100);
           } else {
