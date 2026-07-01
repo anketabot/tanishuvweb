@@ -86,6 +86,10 @@ const tg = window.Telegram?.WebApp;
     // Web App tarjimalari
     const WEBAPP_T = {
         'uz': {
+            'banned_title': 'Siz spamga tushirilgansiz',
+            'banned_until_label': 'Cheklov muddati:',
+            'banned_default_message': 'Qoidabuzarlik tufayli profilingiz vaqtincha cheklandi.',
+            'banned_expired': 'Muddati tugadi',
             'anon_title': 'Tungi anonim suhbatdosh',
         'anon_invite_text': 'Sizga bugun kechqurun mos suhbatdosh topildi! Ismi va rasmi hozircha yashirin. Anonim suhbatni boshlaysizmi?',
         'anon_accept_btn': '✅ Qabul qilaman',
@@ -2501,6 +2505,10 @@ const tg = window.Telegram?.WebApp;
             'horoscope_set_zodiac_btn': 'Нишон додани бурҷ'
         },
         'en': {
+            'banned_title': 'You have been flagged as spam',
+            'banned_until_label': 'Restriction until:',
+            'banned_default_message': 'Your profile has been temporarily restricted due to a policy violation.',
+            'banned_expired': 'Expired',
             'select_language': '🌍 Select language',
             'language_changed': '✅ Language changed: {lang}',
             'close': 'Close',
@@ -7037,7 +7045,74 @@ const tg = window.Telegram?.WebApp;
 
     async function fetchUserProfile(telegramId) {
       const data = await apiPost('/api/profile', { telegram_id: telegramId });
+      if (!data.success && data.error === 'banned') {
+        showBannedModal(data.banned_until, data.message);
+        return null;
+      }
       return data.success ? data.user : null;
+    }
+
+    // ===== SPAM / BAN MODAL =====
+    let bannedCountdownInterval = null;
+
+    function showBannedModal(bannedUntil, message) {
+      const modal = document.getElementById('banned-modal');
+      if (!modal) return;
+
+      const msgEl = document.getElementById('banned-modal-message');
+      if (msgEl) msgEl.textContent = message || tr('banned_default_message');
+
+      // Boshqa hamma sahifalarni yashiramiz - foydalanuvchi spamda ekan,
+      // ilova bilan ishlay olmasligi kerak.
+      document.querySelectorAll('.page').forEach(p => p.style.display = 'none');
+      const nav = document.querySelector('.bottom-nav');
+      if (nav) nav.style.display = 'none';
+
+      modal.style.display = 'flex';
+      startBannedCountdown(bannedUntil);
+    }
+
+    function startBannedCountdown(bannedUntil) {
+      const valueEl = document.getElementById('banned-until-value');
+      if (!valueEl) return;
+
+      if (bannedCountdownInterval) {
+        clearInterval(bannedCountdownInterval);
+        bannedCountdownInterval = null;
+      }
+
+      const targetDate = new Date(bannedUntil);
+      const isValidDate = !isNaN(targetDate.getTime());
+
+      const render = () => {
+        if (!isValidDate) {
+          valueEl.textContent = String(bannedUntil);
+          return;
+        }
+        const now = new Date();
+        const diffMs = targetDate - now;
+        if (diffMs <= 0) {
+          valueEl.textContent = tr('banned_expired') || '—';
+          if (bannedCountdownInterval) {
+            clearInterval(bannedCountdownInterval);
+            bannedCountdownInterval = null;
+          }
+          return;
+        }
+        const totalSec = Math.floor(diffMs / 1000);
+        const days = Math.floor(totalSec / 86400);
+        const hours = Math.floor((totalSec % 86400) / 3600);
+        const minutes = Math.floor((totalSec % 3600) / 60);
+        const seconds = totalSec % 60;
+        const dateStr = targetDate.toLocaleString();
+        const parts = [];
+        if (days > 0) parts.push(`${days}d`);
+        parts.push(`${String(hours).padStart(2,'0')}:${String(minutes).padStart(2,'0')}:${String(seconds).padStart(2,'0')}`);
+        valueEl.textContent = `${dateStr} (${parts.join(' ')})`;
+      };
+
+      render();
+      bannedCountdownInterval = setInterval(render, 1000);
     }
 
     // === CITY SUGGEST ===
