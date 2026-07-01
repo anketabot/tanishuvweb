@@ -6769,10 +6769,19 @@ const tg = window.Telegram?.WebApp;
         comment
       });
       if (data && data.success) {
+        if (data.banned) {
+          showBannedModal(data.banned_until, data.message || tr('banned_default_message'));
+          closeReportModal();
+          return;
+        }
         showToast(tr('report_sent'));
         closeReportModal();
       } else {
-        showToast(tr('report_error'));
+        if (data && data.error === 'banned') {
+          showBannedModal(data.banned_until, data.message || tr('banned_default_message'));
+        } else {
+          showToast(tr('report_error'));
+        }
       }
     }
 
@@ -7020,6 +7029,11 @@ const tg = window.Telegram?.WebApp;
         }
 
         if (!res.ok) {
+          if (data && data.error === 'banned') {
+            try {
+              showBannedModal(data.banned_until, data.message || tr('banned_default_message'));
+            } catch (e) {}
+          }
           return {
             success: false,
             error: data.error || `HTTP ${res.status}`,
@@ -7081,8 +7095,15 @@ const tg = window.Telegram?.WebApp;
         bannedCountdownInterval = null;
       }
 
-      const targetDate = new Date(bannedUntil);
-      const isValidDate = !isNaN(targetDate.getTime());
+      const targetDate = (() => {
+        if (!bannedUntil) return null;
+        if (bannedUntil instanceof Date) return bannedUntil;
+        const text = String(bannedUntil).trim();
+        const normalized = text.includes(' ') ? text.replace(' ', 'T') : text;
+        const parsed = new Date(normalized);
+        return Number.isNaN(parsed.getTime()) ? null : parsed;
+      })();
+      const isValidDate = !!targetDate;
 
       const render = () => {
         if (!isValidDate) {
