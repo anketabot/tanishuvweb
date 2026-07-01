@@ -492,7 +492,13 @@ const tg = window.Telegram?.WebApp;
             'verif_gallery_btn': 'Galereyadan tanlash',
             'verif_shutter_hint': 'Tugmani bosib selfi oling',
             'verif_selfie_title': 'Selfi olish',
-            'verif_required_to_save': '⚠️ Anketani saqlash uchun avval verifikatsiyadan o\'ting!'
+            'verif_required_to_save': '⚠️ Anketani saqlash uchun avval verifikatsiyadan o\'ting!',
+            'daily_horoscope_title': '🔮 Kunlik burjlar bashorati',
+            'horoscope_love_label': '💖 Sevgi bashorati',
+            'horoscope_luck_label': '🍀 Omad bashorati',
+            'horoscope_best_match': '✨ Bugun sizga eng mos keladigan burj vakillari',
+            'horoscope_no_zodiac_text': 'Bugungi bashoratni ko\'rish uchun anketangizda burjingizni belgilang.',
+            'horoscope_set_zodiac_btn': 'Burjni belgilash'
         },
         'ru': {
             'select_language': '🌍 Выберите язык',
@@ -886,7 +892,13 @@ const tg = window.Telegram?.WebApp;
             'verif_gallery_btn': 'Выбрать из галереи',
             'verif_shutter_hint': 'Нажмите кнопку для селфи',
             'verif_selfie_title': 'Сделать селфи',
-            'verif_required_to_save': '⚠️ Для сохранения анкеты сначала пройдите верификацию!'
+            'verif_required_to_save': '⚠️ Для сохранения анкеты сначала пройдите верификацию!',
+            'daily_horoscope_title': '🔮 Гороскоп дня',
+            'horoscope_love_label': '💖 Прогноз в любви',
+            'horoscope_luck_label': '🍀 Прогноз на удачу',
+            'horoscope_best_match': '✨ Сегодня вам больше всего подходят представители этих знаков',
+            'horoscope_no_zodiac_text': 'Укажите свой знак зодиака в анкете, чтобы увидеть сегодняшний прогноз.',
+            'horoscope_set_zodiac_btn': 'Указать знак зодиака'
         },
         'kk': {
             'select_language': '🌍 Тілді таңдаңыз',
@@ -1280,7 +1292,13 @@ const tg = window.Telegram?.WebApp;
             'verif_gallery_btn': 'Галереядан таңдау',
             'verif_shutter_hint': 'Селфи алу үшін түймені басыңыз',
             'verif_selfie_title': 'Селфи алу',
-            'verif_required_to_save': '⚠️ Анкетаны сақтау үшін алдымен верификациядан өтіңіз!'
+            'verif_required_to_save': '⚠️ Анкетаны сақтау үшін алдымен верификациядан өтіңіз!',
+            'daily_horoscope_title': '🔮 Күнделікті жұлдызнама болжамы',
+            'horoscope_love_label': '💖 Махаббат болжамы',
+            'horoscope_luck_label': '🍀 Сәттілік болжамы',
+            'horoscope_best_match': '✨ Бүгін сізге ең сәйкес келетін жұлдызнама өкілдері',
+            'horoscope_no_zodiac_text': 'Бүгінгі болжамды көру үшін анкетаңызда жұлдызнамаңызды белгілеңіз.',
+            'horoscope_set_zodiac_btn': 'Жұлдызнаманы белгілеу'
         },
         'ky': {
             'select_language': '🌍 Тилди тандаңыз',
@@ -1674,7 +1692,13 @@ const tg = window.Telegram?.WebApp;
             'verif_gallery_btn': 'Галереядан тандоо',
             'verif_shutter_hint': 'Селфи алуу үчүн баскычты басыңыз',
             'verif_selfie_title': 'Селфи алуу',
-            'verif_required_to_save': '⚠️ Анкетаны сактоо үчүн алгач верификациядан өтүңүз!'
+            'verif_required_to_save': '⚠️ Анкетаны сактоо үчүн алгач верификациядан өтүңүз!',
+            'daily_horoscope_title': '🔮 Күндөлүк жылдыздар болжолу',
+            'horoscope_love_label': '💖 Сүйүү болжолу',
+            'horoscope_luck_label': '🍀 Ийгилик болжолу',
+            'horoscope_best_match': '✨ Бүгүн сизге эң ыңгайлуу келген жылдыз топтору',
+            'horoscope_no_zodiac_text': 'Бүгүнкү болжолду көрүү үчүн анкетаңызда жылдызыңызды белгилеңиз.',
+            'horoscope_set_zodiac_btn': 'Жылдызды белгилөө'
         },
         'kaa': {
             'select_language': '🌍 Tildi tańlań',
@@ -2068,7 +2092,13 @@ const tg = window.Telegram?.WebApp;
             'verif_gallery_btn': 'Galereyadán tańlaw',
             'verif_shutter_hint': 'Selfi alıw ushın túymesin basıń',
             'verif_selfie_title': 'Selfi alıw',
-            'verif_required_to_save': '⚠️ Anketa saqlaw ushın áwweli verifikatsiyadan ótiń!'
+            'verif_required_to_save': '⚠️ Anketa saqlaw ushın áwweli verifikatsiyadan ótiń!',
+            'daily_horoscope_title': '🔮 Kúndelikli juldıznama boljamı',
+            'horoscope_love_label': '💖 Súyispenshilik boljamı',
+            'horoscope_luck_label': '🍀 Baxıt boljamı',
+            'horoscope_best_match': '✨ Búgin sizge eń sáykes keletin juldıznama wakilleri',
+            'horoscope_no_zodiac_text': 'Búgingi boljamdı kóriw ushın anketańızda juldıznamańızdı belgileń.',
+            'horoscope_set_zodiac_btn': 'Juldıznamanı belgilew'
         },
         'tg': {
             'select_language': '🌍 Забонро интихоб кунед',
@@ -2462,7 +2492,13 @@ const tg = window.Telegram?.WebApp;
             'verif_gallery_btn': 'Аз галерея интихоб кардан',
             'verif_shutter_hint': 'Барои гирифтани селфи тугмаро пахш кунед',
             'verif_selfie_title': 'Селфи гирифтан',
-            'verif_required_to_save': '⚠️ Барои захира кардани анкета аввал тасдиқро гузаред!'
+            'verif_required_to_save': '⚠️ Барои захира кардани анкета аввал тасдиқро гузаред!',
+            'daily_horoscope_title': '🔮 Пешгӯии рӯзонаи бурҷҳо',
+            'horoscope_love_label': '💖 Пешгӯии ишқ',
+            'horoscope_luck_label': '🍀 Пешгӯии бахт',
+            'horoscope_best_match': '✨ Имрӯз намояндагони ин бурҷҳо ба шумо мувофиқтаранд',
+            'horoscope_no_zodiac_text': 'Барои дидани пешгӯии имрӯза бурҷи худро дар анкета нишон диҳед.',
+            'horoscope_set_zodiac_btn': 'Нишон додани бурҷ'
         },
         'en': {
             'select_language': '🌍 Select language',
@@ -2855,7 +2891,13 @@ const tg = window.Telegram?.WebApp;
             'verif_gallery_btn': 'Choose from gallery',
             'verif_shutter_hint': 'Press the button to take a selfie',
             'verif_selfie_title': 'Take selfie',
-            'verif_required_to_save': '⚠️ Please complete verification before saving your profile!'
+            'verif_required_to_save': '⚠️ Please complete verification before saving your profile!',
+            'daily_horoscope_title': '🔮 Daily Horoscope',
+            'horoscope_love_label': '💖 Love forecast',
+            'horoscope_luck_label': '🍀 Luck forecast',
+            'horoscope_best_match': '✨ Today, people with these zodiac signs suit you best',
+            'horoscope_no_zodiac_text': 'Set your zodiac sign in your profile to see today\'s forecast.',
+            'horoscope_set_zodiac_btn': 'Set zodiac sign'
         },
     };
 
@@ -3072,6 +3114,7 @@ const tg = window.Telegram?.WebApp;
         if (pageId === 'page-search') {
             // Qidiruv sahifasidagi statik matnlar
             applyTranslations();
+            if (typeof renderDailyHoroscope === 'function') renderDailyHoroscope();
         } else if (pageId === 'page-profile') {
             applyTranslations();
         } else if (pageId === 'page-chats') {
@@ -3860,6 +3903,7 @@ const tg = window.Telegram?.WebApp;
         syncSearchZodiacPicker();
         loadPendingLikesIndicator();
         loadLimitStatus();
+        renderDailyHoroscope();
         // Statistika: search sahifasi ochilganda darhol hisoblash
         setTimeout(fetchSearchCount, 800);
         // Input va checkbox uchun event listener-lar (bir marta qo'shiladi)
@@ -4318,6 +4362,232 @@ const tg = window.Telegram?.WebApp;
 
       return 'neytral';
     }
+
+    // ======= KUNLIK BURJLAR BASHORATI (Daily Horoscope mini-content) =======
+    // Har bir til uchun sevgi va omad bashorati shablonlari. {zodiac} o'rniga
+    // foydalanuvchining burji (tarjima qilingan nomi) qo'yiladi.
+    const ZODIAC_ORDER = ['qoy','buzoq','egizak','qisqichbaqa','arslon','sunbula','tarozi','chayon','oqotar','tog_echkisi','qovga','baliq'];
+
+    const HOROSCOPE_BANK = {
+      uz: {
+        love: [
+          "Bugun {zodiac} vakillari uchun yurakni ochish davri — samimiy suhbat yangi hislarga yo'l ochadi.",
+          "{zodiac} uchun sevgi yulduzlari yonib turibdi: eski tanishuv yangi ma'no kasb etishi mumkin.",
+          "Bugun {zodiac} o'ziga ishonch bilan qarasa, e'tibor tortish oson bo'ladi.",
+          "{zodiac} uchun bugun kutilmagan xabar kunni yorqin qiladi.",
+          "Bugun {zodiac} vakillari uchun kichik e'tibor katta his-tuyg'ularga aylanadi.",
+          "{zodiac} uchun bugun sabr va mehribonlik munosabatlarni mustahkamlaydi."
+        ],
+        luck: [
+          "{zodiac} uchun bugun omad kichik, ammo aniq qadamlarda yashiringan.",
+          "Bugun {zodiac} vakillari uchun moliyaviy masalalarda ehtiyotkorlik foyda beradi.",
+          "{zodiac} uchun bugun yangi imkoniyat eshigi ochiladi — ko'zingizni ochiq tuting.",
+          "Bugun {zodiac} uchun kichik qarorlar katta natijalarga olib keladi.",
+          "{zodiac} vakillari uchun bugun ijobiy kayfiyat omadni ham jalb qiladi.",
+          "Bugun {zodiac} uchun yangi tanishuv omadli aloqaga aylanishi mumkin."
+        ]
+      },
+      ru: {
+        love: [
+          "Сегодня для {zodiac} день открытого сердца — искренний разговор может пробудить новые чувства.",
+          "Звёзды любви сияют для {zodiac}: старое знакомство может обрести новый смысл.",
+          "Если {zodiac} проявит немного уверенности, внимание придёт легко.",
+          "Неожиданное сообщение сделает день {zodiac} ярче.",
+          "Для {zodiac} сегодня маленький знак внимания превратится в большое чувство.",
+          "Терпение и теплота сегодня укрепят отношения {zodiac}."
+        ],
+        luck: [
+          "Удача сегодня прячется в маленьких, но точных шагах для {zodiac}.",
+          "Осторожность в денежных вопросах сегодня пойдёт на пользу {zodiac}.",
+          "Сегодня перед {zodiac} открывается новая возможность — не пропустите её.",
+          "Маленькие решения сегодня приведут {zodiac} к большим результатам.",
+          "Позитивный настрой сегодня притянет удачу к {zodiac}.",
+          "Новое знакомство сегодня может обернуться удачной связью для {zodiac}."
+        ]
+      },
+      kk: {
+        love: [
+          "Бүгін {zodiac} үшін жүрегін ашатын күн — шынайы сөйлесу жаңа сезімдерге жол ашады.",
+          "{zodiac} үшін махаббат жұлдыздары жанып тұр: ескі таныс жаңа мағынаға ие болуы мүмкін.",
+          "Егер {zodiac} бүгін сенімді болса, назар аудару оңай болады.",
+          "Бүгін күтпеген хабар {zodiac} күнін жарқын етеді.",
+          "{zodiac} үшін бүгін кішкентай көңіл білдіру үлкен сезімге айналады.",
+          "Бүгін шыдамдылық пен жылылық {zodiac} қарым-қатынасын нығайтады."
+        ],
+        luck: [
+          "Бүгін {zodiac} үшін сәттілік кішкентай, бірақ нақты қадамдарда жасырылған.",
+          "Бүгін қаржы мәселесінде абайлық {zodiac}-ға пайда әкеледі.",
+          "Бүгін {zodiac} алдында жаңа мүмкіндік ашылады — көзіңізді ашық ұстаңыз.",
+          "Бүгін кішкентай шешімдер {zodiac}-ды үлкен нәтижелерге жеткізеді.",
+          "Бүгін оң көзқарас {zodiac}-ға сәттілікті тартады.",
+          "Бүгін жаңа таныстық {zodiac} үшін сәтті байланысқа айналуы мүмкін."
+        ]
+      },
+      ky: {
+        love: [
+          "Бүгүн {zodiac} үчүн жүрөгүн ачкан күн — чын ыкластуу сүйлөшүү жаңы сезимдерге жол ачат.",
+          "{zodiac} үчүн сүйүү жылдыздары жанып турат: эски таанышуу жаңы маанини ачат.",
+          "Эгер {zodiac} бүгүн ишенимдүү болсо, көңүл буруу оңой болот.",
+          "Бүгүн күтүлбөгөн кабар {zodiac} күнүн жаркыратат.",
+          "{zodiac} үчүн бүгүн кичине көңүл бурулуу чоң сезимге айланат.",
+          "Бүгүн сабырдуулук жана жылуулук {zodiac} мамилелерин бекемдейт."
+        ],
+        luck: [
+          "Бүгүн {zodiac} үчүн ийгилик кичине, бирок так кадамдарда жашырылган.",
+          "Бүгүн акча маселесинде этияттык {zodiac}-га пайда алып келет.",
+          "Бүгүн {zodiac} үчүн жаңы мүмкүнчүлүк ачылат — көзүңүздү ачык кармаңыз.",
+          "Бүгүн кичине чечимдер {zodiac}-ды чоң жыйынтыктарга алып барат.",
+          "Бүгүн оң маанай {zodiac}-га ийгиликти тартат.",
+          "Бүгүн жаңы таанышуу {zodiac} үчүн ийгиликтүү байланышка айланышы мүмкүн."
+        ]
+      },
+      kaa: {
+        love: [
+          "Búgin {zodiac} ushın júrek aship, ashıq gúrrińler jańa sezimlerge jol ashadı.",
+          "{zodiac} ushın súyispenshilik juldızları jaqtı: eski tanısıw jańa mánige iye boladı.",
+          "Eger {zodiac} búgin isenimli bolsa, itibar tartıw ańsat boladı.",
+          "Búgin kútilmegen xabar {zodiac} kúnin jarqın etedi.",
+          "{zodiac} ushın búgin kishkene itibar úlken sezimge aylanadı.",
+          "Búgin sabır hám jılıwlıq {zodiac} qatnasıqların bekkemleydi."
+        ],
+        luck: [
+          "{zodiac} ushın búgin baxıt kishkene, biraq anıq qádemlerde jasırınǵan.",
+          "Búgin pul máselelerinde saqlıq {zodiac}-ǵa payda alıp keledi.",
+          "Búgin {zodiac} ushın jańa múmkinshilik ashıladı — kózińizdi ashıq tutıń.",
+          "Búgin kishkene qararlar {zodiac}-nı úlken nátiyjelerge alıp baradı.",
+          "Búgin oń kóńil-kúy {zodiac}-ǵa baxıttı tartadı.",
+          "Búgin jańa tanısıw {zodiac} ushın baxıtlı baylanısqa aylanıwı múmkin."
+        ]
+      },
+      tg: {
+        love: [
+          "Имрӯз барои {zodiac} рӯзи дили кушода аст — гуфтугӯи самимӣ ҳиссиёти нав бармеангезад.",
+          "Ситораҳои ишқ барои {zodiac} медурахшанд: шиноси кӯҳна маънои нав пайдо мекунад.",
+          "Агар {zodiac} имрӯз бо эътимод рафтор кунад, таваҷҷуҳ ба осонӣ пайдо мешавад.",
+          "Паёми ногаҳонӣ имрӯз рӯзи {zodiac}-ро дурахшон мекунад.",
+          "Барои {zodiac} имрӯз таваҷҷуҳи хурд ба эҳсоси бузург табдил меёбад.",
+          "Сабр ва гармӣ имрӯз муносибатҳои {zodiac}-ро мустаҳкам мекунад."
+        ],
+        luck: [
+          "Бахт имрӯз барои {zodiac} дар қадамҳои хурду дақиқ пинҳон аст.",
+          "Эҳтиёткорӣ дар масъалаҳои молиявӣ имрӯз ба {zodiac} фоида меорад.",
+          "Имрӯз барои {zodiac} имконияти нав кушода мешавад — ҳушёр бошед.",
+          "Қарорҳои хурд имрӯз {zodiac}-ро ба натиҷаҳои калон мебаранд.",
+          "Кайфияти мусбат имрӯз бахтро ба сӯи {zodiac} мекашад.",
+          "Шиносии нав имрӯз барои {zodiac} ба алоқаи бахтовар табдил ёфта метавонад."
+        ]
+      },
+      en: {
+        love: [
+          "Today is an open-hearted day for {zodiac} — an honest conversation could spark new feelings.",
+          "Love is glowing for {zodiac} right now: an old acquaintance may take on new meaning.",
+          "If {zodiac} shows a little confidence today, attention will follow easily.",
+          "An unexpected message brightens {zodiac}'s day today.",
+          "For {zodiac}, a small gesture today turns into a big feeling.",
+          "Patience and warmth strengthen {zodiac}'s relationships today."
+        ],
+        luck: [
+          "Luck is hiding in small, deliberate steps for {zodiac} today.",
+          "Being careful with money pays off for {zodiac} today.",
+          "A new opportunity opens up for {zodiac} today — keep your eyes open.",
+          "Small decisions lead to big results for {zodiac} today.",
+          "A positive mood also attracts luck for {zodiac} today.",
+          "A new acquaintance could turn into a lucky connection for {zodiac} today."
+        ]
+      }
+    };
+
+    function getDayOfYear(date) {
+      const d = date || new Date();
+      const start = new Date(d.getFullYear(), 0, 0);
+      const diff = d - start;
+      return Math.floor(diff / 86400000);
+    }
+
+    // Bugungi sana uchun barqaror (deterministik) sevgi/omad bashoratini qaytaradi
+    function getDailyHoroscopeText(zodiacKey, lang) {
+      const langKey = HOROSCOPE_BANK[lang] ? lang : 'uz';
+      const bank = HOROSCOPE_BANK[langKey];
+      const zIndex = Math.max(0, ZODIAC_ORDER.indexOf(zodiacKey));
+      const day = getDayOfYear();
+
+      const loveIdx = (day + zIndex) % bank.love.length;
+      const luckIdx = (day * 2 + zIndex + 3) % bank.luck.length;
+
+      const zodiacName = getZodiacDisplay(zodiacKey);
+      return {
+        love: bank.love[loveIdx].replace('{zodiac}', zodiacName),
+        luck: bank.luck[luckIdx].replace('{zodiac}', zodiacName)
+      };
+    }
+
+    // Qidiruv sahifasidagi "Kunlik burjlar bashorati" mini-kontentini chizish
+    function renderDailyHoroscope() {
+      const body = document.getElementById('horoscope-card-body');
+      const badge = document.getElementById('horoscope-zodiac-badge');
+      if (!body) return;
+
+      const myZodiac = getMyZodiac();
+
+      if (!myZodiac) {
+        if (badge) badge.style.display = 'none';
+        body.innerHTML = `
+          <div class="horoscope-empty">
+            <div class="horoscope-empty-text">${tr('horoscope_no_zodiac_text')}</div>
+            <button class="horoscope-empty-btn" onclick="showPage('profile')">${tr('horoscope_set_zodiac_btn')}</button>
+          </div>`;
+        return;
+      }
+
+      const zodiacDisplay = getZodiacDisplay(myZodiac);
+      if (badge) {
+        badge.style.display = 'inline-flex';
+        badge.textContent = zodiacDisplay;
+      }
+
+      const { love, luck } = getDailyHoroscopeText(myZodiac, currentLang || 'uz');
+
+      body.innerHTML = `
+        <div class="horoscope-section">
+          <div class="horoscope-section-icon">💖</div>
+          <div>
+            <div class="horoscope-section-label">${tr('horoscope_love_label')}</div>
+            <div class="horoscope-section-text">${love}</div>
+          </div>
+        </div>
+        <div class="horoscope-section">
+          <div class="horoscope-section-icon">🍀</div>
+          <div>
+            <div class="horoscope-section-label">${tr('horoscope_luck_label')}</div>
+            <div class="horoscope-section-text">${luck}</div>
+          </div>
+        </div>
+        <button class="horoscope-match-link" onclick="openTodayZodiacMatches()">
+          <span>${tr('horoscope_best_match')}</span>
+          <span>→</span>
+        </button>`;
+
+      try {
+        localStorage.setItem('horoscope_seen_date', new Date().toDateString());
+      } catch (e) {}
+    }
+
+    // "Bugun sizga eng mos keladigan burj vakillari" tugmasi bosilganda
+    // qidiruvni burjga mos filtr bilan ochadi (mavjud mos qidiruv mexanizmidan foydalanadi)
+    function openTodayZodiacMatches() {
+      const myZodiac = getMyZodiac();
+      if (!myZodiac || !ZODIAC_COMPATIBILITY[myZodiac]) {
+        showToast(tr('zodiac_not_set'));
+        showPage('profile');
+        return;
+      }
+
+      const compatCb = document.getElementById('sf-zodiac-compat');
+      if (compatCb) compatCb.checked = true;
+
+      doSearch();
+    }
+
     let cocoSsdModel = null;
     let cocoSsdLoadPromise = null;
 
