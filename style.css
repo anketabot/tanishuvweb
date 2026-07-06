@@ -3179,6 +3179,29 @@ h1, h2, h3, h4, .header-title, .profile-name, .tinder-photo-name, .chat-list-nam
   position: absolute;
   inset: 0;
 }
+.tinder-report-btn {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  z-index: 5;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(0, 0, 0, 0.35);
+  backdrop-filter: blur(8px);
+  color: #fff;
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+.tinder-report-btn:active {
+  background: rgba(255, 149, 0, 0.85);
+  transform: scale(0.92);
+}
 .tinder-photo-gradient {
   display: none;
 }
