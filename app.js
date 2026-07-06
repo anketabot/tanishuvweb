@@ -6115,7 +6115,7 @@ const tg = window.Telegram?.WebApp;
             <button class="tinder-report-btn" onclick="event.stopPropagation(); openReportModal(${u.telegram_id}, 'search_profile')" title="${tr('report')}">🚩</button>
             <div class="tinder-photo-gradient"></div>
             <div class="tinder-photo-info">
-              <div class="tinder-photo-name">${u.full_name}, ${u.age}</div>
+              <div class="tinder-photo-name">${u.full_name}, ${u.age}${u.is_boosted ? ` <span class="top-boost-badge" title="${tr('top_weekly_badge') || 'Haftaning TOP foydalanuvchisi'}" style="display:inline-flex;align-items:center;gap:3px;background:linear-gradient(90deg,#ff9500,#ff2d55);border-radius:20px;padding:2px 9px;font-size:12px;font-weight:700;color:#fff;vertical-align:middle;">🔥 TOP</span>` : ''}</div>
               <div class="tinder-photo-meta">📍 ${locationLabel}${u.zodiac ? ' • ' + getZodiacDisplay(u.zodiac) : ''}</div>
               ${compatBadge}
               ${u.about ? `<div class="tinder-photo-about">${escapeHtml(u.about)}</div>` : ''}
@@ -6306,7 +6306,7 @@ const tg = window.Telegram?.WebApp;
             <button class="tinder-report-btn" onclick="event.stopPropagation(); openReportModal(${u.telegram_id}, 'search_profile')" title="${tr('report')}">🚩</button>
             <div class="tinder-photo-gradient"></div>
             <div class="tinder-photo-info">
-              <div class="tinder-photo-name">${u.full_name}, ${u.age}</div>
+              <div class="tinder-photo-name">${u.full_name}, ${u.age}${u.is_boosted ? ` <span class="top-boost-badge" title="${tr('top_weekly_badge') || 'Haftaning TOP foydalanuvchisi'}" style="display:inline-flex;align-items:center;gap:3px;background:linear-gradient(90deg,#ff9500,#ff2d55);border-radius:20px;padding:2px 9px;font-size:12px;font-weight:700;color:#fff;vertical-align:middle;">🔥 TOP</span>` : ''}</div>
               <div class="tinder-photo-meta">📍 ${locationLabel}${u.zodiac ? ' &nbsp;•&nbsp; ' + getZodiacDisplay(u.zodiac) : ''}</div>
               ${u.zodiac_match_percent != null ? `<div class="zodiac-match-badge" style="display:inline-flex;align-items:center;gap:5px;margin-top:4px;background:rgba(255,255,255,0.18);backdrop-filter:blur(6px);border-radius:20px;padding:3px 10px;font-size:13px;font-weight:700;color:#fff;border:1px solid rgba(255,255,255,0.35);"><span style="font-size:15px;">⭐</span> ${u.zodiac_match_percent}% ${tr('zodiac_match_label') || 'mos'}</div>` : ''}
             </div>
