@@ -1,0 +1,1187 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#F2F2F7" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <title data-i18n="app_title">Do'stlik & Tanishuv</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <link rel="stylesheet" href="style.css" />
+<base target="_blank">
+</head>
+<body>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<!-- MATCH OVERLAY -->
+<div id="match-overlay" class="match-overlay" style="display:none;">
+  <div class="match-emoji">🎉</div>
+  <h2 class="match-title">Match!</h2>
+  <p class="match-sub" data-i18n="match_subtitle">Endi muloqot boshlashingiz mumkin</p>
+  <button class="match-btn" onclick="closeMatchOverlay(); showPage('chats');" data-i18n="match_btn">Ajoyib!</button>
+</div>
+
+<!-- PROFILE DETAIL MODAL -->
+<div id="profile-modal" class="modal-overlay" style="display:none;" onclick="closeProfileModal(event)">
+  <div class="modal-content" onclick="event.stopPropagation()">
+    <button class="modal-close" onclick="closeProfileModal()">✕</button>
+    <div id="profile-modal-body"></div>
+  </div>
+</div>
+
+<div id="likes-modal" class="modal-overlay" style="display:none;" onclick="closeLikesModal(event)">
+  <div class="modal-content" onclick="event.stopPropagation()">
+    <button class="modal-close" onclick="closeLikesModal()">✕</button>
+    <div id="likes-modal-body"></div>
+  </div>
+</div>
+
+<div id="search-results-modal" class="modal-overlay search-results-overlay" style="display:none;" onclick="closeSearchResultsModal(event)">
+  <div class="search-results-sheet" onclick="event.stopPropagation()">
+    <div class="sheet-handle"></div>
+    <div class="sheet-header">
+      <div>
+        <div class="sheet-title" data-i18n="search_results_title">Qidiruv natijalari</div>
+      </div>
+      <button class="modal-close" onclick="closeSearchResultsModal()">✕</button>
+    </div>
+    <div id="search-results-panel-body" class="search-results-panel-body"></div>
+  </div>
+</div>
+
+<div id="photo-viewer-modal" class="modal-overlay photo-viewer-overlay" style="display:none;" onclick="closePhotoViewer(event)">
+  <div class="photo-viewer-shell" onclick="event.stopPropagation()">
+    <button class="modal-close" onclick="closePhotoViewer()">✕</button>
+    <div class="photo-viewer-frame">
+      <img id="photo-viewer-img" src="" alt="" />
+    </div>
+    <div class="photo-viewer-caption" id="photo-viewer-caption" data-i18n="photo_viewer_photo">Foto</div>
+  </div>
+</div>
+
+<!-- LIMIT EXCEEDED MODAL -->
+<div id="limit-modal" class="modal-overlay" style="display:none;" onclick="closeLimitModal(event)">
+  <div class="modal-content" onclick="event.stopPropagation()">
+    <button class="modal-close" onclick="closeLimitModal()">✕</button>
+    <div style="text-align:center; margin-bottom:20px;">
+      <div style="font-size:48px; margin-bottom:12px;">⏳</div>
+      <h2 style="font-size:22px; font-weight:800; margin-bottom:8px;" data-i18n="limit_exceeded_title">Kunlik limit tugadi</h2>
+      <p style="color:var(--text-secondary); font-size:15px; line-height:1.5;" id="limit-modal-text" data-i18n="limit_exceeded_desc">
+        Sizning kunlik limitingiz tugadi.
+      </p>
+    </div>
+    <div style="background:rgba(0,122,255,0.06); border:1px solid var(--glass-border); border-radius:16px; padding:16px; margin-bottom:16px;">
+      <div style="font-weight:700; font-size:15px; margin-bottom:10px; color:var(--ios-blue);" data-i18n="daily_limits">📊 Kunlik limitlar:</div>
+      <div style="font-size:14px; color:var(--text-secondary); line-height:2;">
+        <span data-i18n="likes_limit">• Like: 25 ta</span><br>
+        <span data-i18n="messages_limit">• Xabar yuborish: 10 ta</span><br>
+        <span data-i18n="super_likes_limit">• Super Like: 10 ta</span>
+      </div>
+    </div>
+    <div style="background:rgba(255,200,0,0.06); border:1px solid rgba(255,200,0,0.2); border-radius:16px; padding:16px; margin-bottom:16px;">
+      <div style="font-weight:700; font-size:15px; margin-bottom:10px; color:#FF9500;" data-i18n="increase_limits">🎁 Limitni oshirish:</div>
+      <div style="font-size:14px; color:var(--text-secondary); line-height:2;">
+        <span data-i18n="invite_5">• Guruhga 5 ta odam qo'shing → 1 hafta limitsiz</span><br>
+        <span data-i18n="invite_10">• Guruhga 10 ta odam qo'shing → 1 oy limitsiz</span>
+      </div>
+    </div>
+    <button class="btn-primary" onclick="openReferralModal()" style="width:100%; padding:16px; border-radius:999rem; margin-bottom:10px;">
+      <span data-i18n="join_group">👥 Guruhga qo'shilish</span>
+    </button>
+    <div style="text-align:center;">
+      <button onclick="closeLimitModal()" style="background:none; border:none; color:var(--text-secondary); font-size:14px; cursor:pointer;" data-i18n="tomorrow">
+        Ertaga davom etish
+      </button>
+    </div>
+  </div>
+</div>
+
+
+<!-- Language Modal -->
+<div class="lang-modal-overlay" id="lang-modal">
+    <div class="lang-modal-content">
+        <h2 class="lang-modal-title" data-i18n="select_language">🌍 Tilni tanlang</h2>
+        <div class="language-selector" id="lang-selector">
+            <button class="lang-btn" data-lang="uz" onclick="selectLanguage('uz')">
+                <span class="lang-flag">🇺🇿</span>
+                <span class="lang-name" data-i18n="lang_uz">O'zbekcha</span>
+            </button>
+            <button class="lang-btn" data-lang="ru" onclick="selectLanguage('ru')">
+                <span class="lang-flag">🇷🇺</span>
+                <span class="lang-name" data-i18n="lang_ru">Русский</span>
+            </button>
+            <button class="lang-btn" data-lang="kk" onclick="selectLanguage('kk')">
+                <span class="lang-flag">🇰🇿</span>
+                <span class="lang-name" data-i18n="lang_kk">Қазақша</span>
+            </button>
+            <button class="lang-btn" data-lang="ky" onclick="selectLanguage('ky')">
+                <span class="lang-flag">🇰🇬</span>
+                <span class="lang-name" data-i18n="lang_ky">Кыргызча</span>
+            </button>
+            <button class="lang-btn" data-lang="kaa" onclick="selectLanguage('kaa')">
+                <span class="lang-flag">🇺🇿</span>
+                <span class="lang-name" data-i18n="lang_kaa">Qaraqalpaqsha</span>
+            </button>
+            <button class="lang-btn" data-lang="tg" onclick="selectLanguage('tg')">
+                <span class="lang-flag">🇹🇯</span>
+                <span class="lang-name" data-i18n="lang_tg">Тоҷикӣ</span>
+            </button>
+            <button class="lang-btn" data-lang="en" onclick="selectLanguage('en')">
+                <span class="lang-flag">🇬🇧</span>
+                <span class="lang-name" data-i18n="lang_en">English</span>
+            </button>
+        </div>
+        <button class="lang-modal-close" onclick="closeLangModal()" data-i18n="close">Yopish</button>
+    </div>
+</div>
+
+<!-- REFERRAL MODAL (YANGILANGAN) -->
+<div id="referral-modal" class="modal-overlay" style="display:none;" onclick="closeReferralModal(event)">
+  <div class="modal-content" onclick="event.stopPropagation()">
+    <button class="modal-close" onclick="closeReferralModal()">✕</button>
+    <div style="text-align:center; margin-bottom:20px;">
+      <div style="font-size:48px; margin-bottom:12px;">👥</div>
+      <h2 style="font-size:22px; font-weight:800; margin-bottom:8px;" data-i18n="join_group_title">Guruhga qo'shiling</h2>
+      <p style="color:var(--text-secondary); font-size:15px; line-height:1.5;" data-i18n="join_group_desc">
+        Do'stlaringizni guruhga taklif qiling va limitsiz foydalanish imkoniyatiga ega bo'ling!
+      </p>
+    </div>
+    <div style="background:rgba(0,122,255,0.06); border:1px solid var(--glass-border); border-radius:16px; padding:16px; margin-bottom:16px;">
+      <div style="font-weight:700; font-size:15px; margin-bottom:10px; color:var(--ios-blue);" data-i18n="rewards">🎁 Mukofotlar:</div>
+      <div style="font-size:14px; color:var(--text-secondary); line-height:2;">
+        <span data-i18n="reward_5">• 5 ta do'st → 1 hafta limitsiz</span><br>
+        <span data-i18n="reward_10">• 10 ta do'st → 1 oy limitsiz</span>
+      </div>
+    </div>
+    <div id="referral-stats" style="font-size:14px; color:var(--text-secondary); margin-bottom:16px; text-align:center;"></div>
+    <div style="display:flex; gap:10px;">
+      <input type="text" id="referral-link-input" readonly style="flex:1; padding:14px 18px; border:1.5px solid rgba(0,122,255,0.18); border-radius:18px; font-size:14px; background:rgba(255,255,255,0.8);" />
+      <button onclick="copyReferralLink()" style="padding:14px 20px; background:var(--ios-blue); color:white; border:none; border-radius:18px; font-weight:600; cursor:pointer;" data-i18n="copy">
+        Nusxa
+      </button>
+    </div>
+    <div style="margin-top:16px; text-align:center;">
+      <a id="referral-share-link" href="#" target="_blank" style="display:inline-flex; align-items:center; gap:8px; color:var(--ios-blue); font-size:14px; font-weight:600; text-decoration:none;">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+        <span data-i18n="share_telegram">Telegramda ulashish</span>
+      </a>
+    </div>
+  </div>
+</div>
+
+<!-- CHAT ROOM MODAL -->
+<div id="chat-modal" class="chat-modal" style="display:none;">
+  <div class="chat-header">
+    <button class="chat-back" onclick="closeChatRoom()">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+    </button>
+    <div class="chat-user-info">
+      <img id="chat-user-photo" src="" alt="" />
+      <span id="chat-user-name" data-i18n="chat_user_default">Foydalanuvchi</span>
+    </div>
+    <div class="anon-header-actions">
+      <button class="anon-header-btn anon-header-btn-danger" onclick="openReportModal(currentChatPartner && currentChatPartner.user ? currentChatPartner.user.telegram_id : null, 'chat')" data-i18n-title="report_btn_title" title="Shikoyat">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/></svg>
+      </button>
+    </div>
+  </div>
+  <div class="chat-messages" id="chat-messages"></div>
+  <div id="emoji-panel" class="emoji-panel" style="display:none;">
+    <div class="emoji-grid">
+      <span onclick="insertEmoji('😊')">😊</span><span onclick="insertEmoji('😂')">😂</span><span onclick="insertEmoji('❤️')">❤️</span><span onclick="insertEmoji('🥰')">🥰</span><span onclick="insertEmoji('😍')">😍</span><span onclick="insertEmoji('🔥')">🔥</span>
+      <span onclick="insertEmoji('👋')">👋</span><span onclick="insertEmoji('👍')">👍</span><span onclick="insertEmoji('🙏')">🙏</span><span onclick="insertEmoji('😘')">😘</span><span onclick="insertEmoji('💋')">💋</span><span onclick="insertEmoji('🌹')">🌹</span>
+      <span onclick="insertEmoji('😎')">😎</span><span onclick="insertEmoji('🤔')">🤔</span><span onclick="insertEmoji('😅')">😅</span><span onclick="insertEmoji('😭')">😭</span><span onclick="insertEmoji('🥺')">🥺</span><span onclick="insertEmoji('😜')">😜</span>
+      <span onclick="insertEmoji('✨')">✨</span><span onclick="insertEmoji('🎉')">🎉</span><span onclick="insertEmoji('💯')">💯</span><span onclick="insertEmoji('😇')">😇</span><span onclick="insertEmoji('🤗')">🤗</span><span onclick="insertEmoji('💪')">💪</span>
+    </div>
+  </div>
+  <div class="chat-input-area">
+    <button class="chat-emoji-btn" onclick="toggleEmojiPanel()" title="Emoji">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg>
+    </button>
+    <label class="chat-img-btn" data-i18n-title="chat_image_btn" title="Rasm yuborish">
+      <input type="file" accept="image/*" style="display:none;" onchange="sendImageMessage(this)" />
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+    </label>
+    <div class="chat-input-wrap">
+      <input type="text" id="chat-input" class="chat-input-field" data-i18n-placeholder="chat_input_placeholder" placeholder="Xabar yozing..." maxlength="500" onkeypress="if(event.key==='Enter')sendChatMessage()" />
+    </div>
+    <button class="chat-send-btn" onclick="sendChatMessage()">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+    </button>
+  </div>
+</div>
+
+
+<!-- ANONIM TUNGI CHAT MODAL -->
+<div id="anon-chat-modal" class="chat-modal" style="display:none;">
+  <div class="chat-header">
+    <button class="chat-back" onclick="closeAnonChatRoom()">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+    </button>
+    <div class="chat-user-info">
+      <div class="anon-avatar">🕶️</div>
+      <span data-i18n="anon_title">Anonim suhbatdosh</span>
+    </div>
+    <div class="anon-header-actions">
+      <button class="anon-header-btn" id="anon-reveal-btn" onclick="requestAnonReveal()" data-i18n-title="anon_reveal_btn" title="Profilni ochish">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+      </button>
+      <button class="anon-header-btn anon-header-btn-danger" onclick="openReportModal(null, 'anon_chat')" data-i18n-title="report_btn_title" title="Shikoyat">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/></svg>
+      </button>
+      <button class="anon-header-btn anon-header-btn-danger" onclick="disconnectAnonChat()" data-i18n-title="anon_disconnect_btn" title="Ajratish">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+  </div>
+  <div id="anon-reveal-status" class="anon-reveal-status" style="display:none;"></div>
+  <div class="chat-messages" id="anon-chat-messages"></div>
+  <div id="anon-emoji-panel" class="emoji-panel" style="display:none;">
+    <div class="emoji-grid">
+      <span onclick="insertEmoji('😊','anon-chat-input')">😊</span><span onclick="insertEmoji('😂','anon-chat-input')">😂</span><span onclick="insertEmoji('❤️','anon-chat-input')">❤️</span><span onclick="insertEmoji('🥰','anon-chat-input')">🥰</span><span onclick="insertEmoji('😍','anon-chat-input')">😍</span><span onclick="insertEmoji('🔥','anon-chat-input')">🔥</span>
+      <span onclick="insertEmoji('👋','anon-chat-input')">👋</span><span onclick="insertEmoji('👍','anon-chat-input')">👍</span><span onclick="insertEmoji('🙏','anon-chat-input')">🙏</span><span onclick="insertEmoji('😘','anon-chat-input')">😘</span><span onclick="insertEmoji('💋','anon-chat-input')">💋</span><span onclick="insertEmoji('🌹','anon-chat-input')">🌹</span>
+      <span onclick="insertEmoji('😎','anon-chat-input')">😎</span><span onclick="insertEmoji('🤔','anon-chat-input')">🤔</span><span onclick="insertEmoji('😅','anon-chat-input')">😅</span><span onclick="insertEmoji('😭','anon-chat-input')">😭</span><span onclick="insertEmoji('🥺','anon-chat-input')">🥺</span><span onclick="insertEmoji('😜','anon-chat-input')">😜</span>
+      <span onclick="insertEmoji('✨','anon-chat-input')">✨</span><span onclick="insertEmoji('🎉','anon-chat-input')">🎉</span><span onclick="insertEmoji('💯','anon-chat-input')">💯</span><span onclick="insertEmoji('😇','anon-chat-input')">😇</span><span onclick="insertEmoji('🤗','anon-chat-input')">🤗</span><span onclick="insertEmoji('💪','anon-chat-input')">💪</span>
+    </div>
+  </div>
+  <div class="chat-input-area">
+    <button class="chat-emoji-btn" onclick="toggleEmojiPanel('anon-emoji-panel')" title="Emoji">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg>
+    </button>
+    <label class="chat-img-btn" data-i18n-title="chat_image_btn" title="Rasm yuborish">
+      <input type="file" accept="image/*" style="display:none;" onchange="sendAnonImageMessage(this)" />
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+    </label>
+    <div class="chat-input-wrap">
+      <input type="text" id="anon-chat-input" class="chat-input-field" data-i18n-placeholder="chat_input_placeholder" placeholder="Xabar yozing..." maxlength="500" onkeypress="if(event.key==='Enter')sendAnonChatMessage()" />
+    </div>
+    <button class="chat-send-btn" onclick="sendAnonChatMessage()">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+    </button>
+  </div>
+</div>
+
+
+<!-- ======= PAGE: PROFILE ======= -->
+<div class="page" id="page-profile">
+  <div class="header">
+    <div class="header-title">
+      <span class="header-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></svg></span>
+      <span data-i18n="fill_profile">Anketa to'ldirish</span>
+    </div>
+    <div class="header-sub" data-i18n="about_yourself">O'zingiz haqingizda ma'lumot bering</div>
+  </div>
+
+  <div class="card">
+    <div class="section-title" data-i18n="gender">Jins</div>
+    <div class="gender-selector">
+      <div class="gender-btn gender-male-btn" id="gender-erkak" onclick="selectGender('erkak')" data-i18n-title="male" data-i18n-title="male" title="Erkak">
+        <span class="g-icon g-icon-male">
+          <svg class="neon-gender-svg" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="34" cy="38" r="18" stroke="#5AC8FA" stroke-width="5" stroke-linecap="round"/>
+            <line x1="47" y1="25" x2="66" y2="14" stroke="#5AC8FA" stroke-width="5" stroke-linecap="round"/>
+            <line x1="53" y1="14" x2="66" y2="14" stroke="#5AC8FA" stroke-width="5" stroke-linecap="round"/>
+            <line x1="66" y1="14" x2="66" y2="27" stroke="#5AC8FA" stroke-width="5" stroke-linecap="round"/>
+          </svg>
+        </span>
+        <span class="gender-label" data-i18n="male">Erkak</span>
+        <span class="gender-note" data-i18n="select_gender">Jinsni tanlang</span>
+      </div>
+      <div class="gender-btn gender-female-btn" id="gender-ayol" onclick="selectGender('ayol')" data-i18n-title="female" data-i18n-title="female" title="Ayol">
+        <span class="g-icon g-icon-female">
+          <svg class="neon-gender-svg" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="40" cy="30" r="18" stroke="#FF6EB4" stroke-width="5" stroke-linecap="round"/>
+            <line x1="40" y1="48" x2="40" y2="66" stroke="#FF6EB4" stroke-width="5" stroke-linecap="round"/>
+            <line x1="28" y1="58" x2="52" y2="58" stroke="#FF6EB4" stroke-width="5" stroke-linecap="round"/>
+          </svg>
+        </span>
+        <span class="gender-label" data-i18n="female">Ayol</span>
+        <span class="gender-note" data-i18n="select_gender">Jinsni tanlang</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="section-title" data-i18n="main_info">Asosiy ma'lumotlar</div>
+    <div class="form-group">
+      <label class="form-label" data-i18n="your_name">Ismingiz</label>
+      <input class="form-input" id="inp-name" type="text" data-i18n-placeholder="name_placeholder" placeholder="To'liq ismingiz" maxlength="50" />
+    </div>
+    <div class="form-group">
+      <label class="form-label" data-i18n="your_age">Yoshingiz</label>
+      <input class="form-input" id="inp-age" type="number" data-i18n-placeholder="age_placeholder" placeholder="Masalan: 22" min="16" max="80" />
+    </div>
+    <div class="form-group">
+      <label class="form-label" data-i18n="about_short">O'zingiz haqingizda qisqacha</label>
+      <textarea class="form-input" id="inp-about" rows="3" maxlength="220" data-i18n-placeholder="about_placeholder" placeholder="Kim bo'lishni xohlaysiz..."></textarea>
+    </div>
+  </div>
+
+  <!-- Joylashuv — alohida card, overflow:visible -->
+  <div class="card location-card">
+    <div class="location-card-header">
+      <div class="location-card-icon">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+      </div>
+      <div class="location-card-titles">
+        <div class="location-card-title" data-i18n="city_district">Joylashuv</div>
+        <div class="location-card-sub" data-i18n="loc_step_hint">Davlat → Viloyat → Tuman</div>
+      </div>
+      <div class="location-steps-inline" id="inp-location-steps">
+        <div class="location-step-dot active" id="inp-step-1"></div>
+        <div class="location-step-dot" id="inp-step-2"></div>
+        <div class="location-step-dot" id="inp-step-3"></div>
+      </div>
+    </div>
+
+    <div class="location-selects">
+      <div class="location-select-wrap" id="inp-country-wrap">
+        <input type="hidden" id="inp-country" />
+      </div>
+      <div class="location-select-wrap" id="inp-region-wrap" style="display:none;">
+        <input type="hidden" id="inp-region" />
+      </div>
+      <div class="location-select-wrap" id="inp-district-wrap" style="display:none;">
+        <input type="hidden" id="inp-district" />
+      </div>
+      <input type="hidden" id="inp-city" />
+      <div id="geo-status" class="geo-status" style="display:none;"></div>
+      <button type="button" id="geo-direct-btn" class="geo-direct-btn" onclick="useGpsDirectFill()">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M1 12h4M19 12h4"/></svg>
+        <span data-i18n="use_my_location">GPS joylashuv</span>
+      </button>
+    </div>
+  </div>
+
+  <div class="card zodiac-card">
+    <div class="section-title" data-i18n="your_zodiac">Burjingiz</div>
+    <div class="zodiac-shell">
+      <div class="zodiac-icon">♒</div>
+      <div class="zodiac-lead">
+        <div class="zodiac-title" data-i18n="select_zodiac">Burjni tanlang</div>
+        <div class="zodiac-caption" data-i18n="zodiac_hint">Yaxshi moslik uchun burjingizni belgilang.</div>
+      </div>
+    </div>
+
+    <button type="button" class="zodiac-picker-toggle" id="zodiac-picker-toggle" onclick="toggleZodiacMenu()" data-i18n="zodiac_select_btn">
+      Burj tanlang...
+    </button>
+
+    <div class="zodiac-options" id="zodiac-options" style="display:none;">
+      <button type="button" class="zodiac-option" data-zodiac="Qo'y" data-i18n-chip="zod_qoy" onclick="selectZodiac('Qo\'y', '♈ Qo\'y')">♈ Qo'y</button>
+      <button type="button" class="zodiac-option" data-zodiac="Buzoq" data-i18n-chip="zod_buzoq" onclick="selectZodiac('Buzoq', '♉ Buzoq')">♉ Buzoq</button>
+      <button type="button" class="zodiac-option" data-zodiac="Egizak" data-i18n-chip="zod_egizak" onclick="selectZodiac('Egizak', '♊ Egizak')">♊ Egizak</button>
+      <button type="button" class="zodiac-option" data-zodiac="Qisqichbaqa" data-i18n-chip="zod_qisqichbaqa" onclick="selectZodiac('Qisqichbaqa', '♋ Qisqichbaqa')">♋ Qisqichbaqa</button>
+      <button type="button" class="zodiac-option" data-zodiac="Arslon" data-i18n-chip="zod_arslon" onclick="selectZodiac('Arslon', '♌ Arslon')">♌ Arslon</button>
+      <button type="button" class="zodiac-option" data-zodiac="Sunbula" data-i18n-chip="zod_sunbula" onclick="selectZodiac('Sunbula', '♍ Sunbula')">♍ Sunbula</button>
+      <button type="button" class="zodiac-option" data-zodiac="Tarozi" data-i18n-chip="zod_tarozi" onclick="selectZodiac('Tarozi', '♎ Tarozi')">♎ Tarozi</button>
+      <button type="button" class="zodiac-option" data-zodiac="Chayon" data-i18n-chip="zod_chayon" onclick="selectZodiac('Chayon', '♏ Chayon')">♏ Chayon</button>
+      <button type="button" class="zodiac-option" data-zodiac="O'qotar" data-i18n-chip="zod_oqotar" onclick="selectZodiac('O\'qotar', '♐ O\'qotar')">♐ O'qotar</button>
+      <button type="button" class="zodiac-option" data-zodiac="Tog' echkisi" data-i18n-chip="zod_tog_echkisi" onclick="selectZodiac('Tog\' echkisi', '♑ Tog\' echkisi')">♑ Tog' echkisi</button>
+      <button type="button" class="zodiac-option" data-zodiac="Qovg'a" data-i18n-chip="zod_qovga" onclick="selectZodiac('Qovg\'a', '♒ Qovg\'a')">♒ Qovg'a</button>
+      <button type="button" class="zodiac-option" data-zodiac="Baliq" data-i18n-chip="zod_baliq" onclick="selectZodiac('Baliq', '♓ Baliq')">♓ Baliq</button>
+    </div>
+
+    <select class="form-select zodiac-select" id="sel-zodiac" style="display:none;">
+      <option value="">Tanlang...</option>
+      <option>Qo'y</option>
+      <option>Buzoq</option>
+      <option>Egizak</option>
+      <option>Qisqichbaqa</option>
+      <option>Arslon</option>
+      <option>Sunbula</option>
+      <option>Tarozi</option>
+      <option>Chayon</option>
+      <option>O'qotar</option>
+      <option>Tog' echkisi</option>
+      <option>Qovg'a</option>
+      <option>Baliq</option>
+    </select>
+  </div>
+
+  <div class="card">
+    <div class="section-title" data-i18n="interests">Qiziqishlar</div>
+    <div class="chips-wrap" id="interests-chips">
+      <div class="chip" data-i18n-chip="int_kino" onclick="toggleChip(this,'interests')">🍿 Kino</div>
+      <div class="chip" data-i18n-chip="int_musiqa" onclick="toggleChip(this,'interests')">🎵 Musiqa</div>
+      <div class="chip" data-i18n-chip="int_kitob" onclick="toggleChip(this,'interests')">📚 Kitob oʻqish</div>
+      <div class="chip" data-i18n-chip="int_oyinlar" onclick="toggleChip(this,'interests')">🎮 Oʻyinlar</div>
+      <div class="chip" data-i18n-chip="int_teatr" onclick="toggleChip(this,'interests')">🎭 Teatr</div>
+      <div class="chip" data-i18n-chip="int_muzey" onclick="toggleChip(this,'interests')">🏛️ Muzeylar</div>
+      <div class="chip" data-i18n-chip="int_sanat" onclick="toggleChip(this,'interests')">🎨 San'at</div>
+      <div class="chip" data-i18n-chip="int_foto" onclick="toggleChip(this,'interests')">📸 Foto</div>
+      <div class="chip" data-i18n-chip="int_sheeriyat" onclick="toggleChip(this,'interests')">📜 She'riyat</div>
+      <div class="chip" data-i18n-chip="int_raqs" onclick="toggleChip(this,'interests')">💃 Raqs</div>
+      <div class="chip" data-i18n-chip="int_sport" onclick="toggleChip(this,'interests')">⚽ Sport</div>
+      <div class="chip" data-i18n-chip="int_yoga" onclick="toggleChip(this,'interests')">🧘‍♂️ Yoga</div>
+      <div class="chip" data-i18n-chip="int_sayr" onclick="toggleChip(this,'interests')">🚶‍♂️ Sayr</div>
+      <div class="chip" data-i18n-chip="int_tennis" onclick="toggleChip(this,'interests')">🏓 Stol tennisi</div>
+      <div class="chip" data-i18n-chip="int_sayohat" onclick="toggleChip(this,'interests')">✈️ Sayohat</div>
+      <div class="chip" data-i18n-chip="int_plyaj" onclick="toggleChip(this,'interests')">🏖️ Plyaj</div>
+      <div class="chip" data-i18n-chip="int_shopping" onclick="toggleChip(this,'interests')">🛍️ Shopping</div>
+      <div class="chip" data-i18n-chip="int_moda" onclick="toggleChip(this,'interests')">👗 Moda</div>
+      <div class="chip" data-i18n-chip="int_qahva" onclick="toggleChip(this,'interests')">☕ Qahva</div>
+      <div class="chip" data-i18n-chip="int_vino" onclick="toggleChip(this,'interests')">🍷 Vino</div>
+      <div class="chip" data-i18n-chip="int_pivo" onclick="toggleChip(this,'interests')">🍺 Pivo</div>
+      <div class="chip" data-i18n-chip="int_blog" onclick="toggleChip(this,'interests')">✍️ Blog yuritish</div>
+      <div class="chip" data-i18n-chip="int_dasturlash" onclick="toggleChip(this,'interests')">💻 Dasturlash</div>
+      <div class="chip" data-i18n-chip="int_shaxmat" onclick="toggleChip(this,'interests')">♟️ Shaxmat</div>
+      <div class="chip" data-i18n-chip="int_rasm" onclick="toggleChip(this,'interests')">🎨 Rasm chizish</div>
+      <div class="chip" data-i18n-chip="int_tillar" onclick="toggleChip(this,'interests')">🗣️ Tillar oʻrganish</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="section-title" data-i18n="your_goal">Maqsadingiz</div>
+    <div class="goal-required-hint" data-i18n="goal_required_hint">⚡ Kamida 1 ta asosiy maqsad tanlang</div>
+    <!-- Asosiy (majburiy) maqsadlar -->
+    <div class="goals-group-label" data-i18n="goal_group_main">Asosiy maqsad</div>
+    <div class="chips-wrap chips-wrap-main" id="goals-chips">
+      <div class="chip chip-main" data-i18n-chip="goal_jiddiy" onclick="toggleChipMain(this,'goals')">💍 Jiddiy (Oila)</div>
+      <div class="chip chip-main" data-i18n-chip="goal_dostlik_suhbat" onclick="toggleChipMain(this,'goals')">💬 Do'stlik/Suhbat</div>
+      <div class="chip chip-main" data-i18n-chip="goal_hamroh" onclick="toggleChipMain(this,'goals')">🧳 Hamroh</div>
+    </div>
+    <!-- Qo'shimcha maqsadlar -->
+    <div class="goals-group-label" style="margin-top:10px;" data-i18n="goal_group_extra">Qo'shimcha</div>
+    <div class="chips-wrap" id="goals-extra-chips">
+      <div class="chip" data-i18n-chip="goal_dostlik" onclick="toggleChip(this,'goals')">Do'stlik</div>
+      <div class="chip" data-i18n-chip="goal_tanishuv" onclick="toggleChip(this,'goals')">Tanishuv</div>
+      <div class="chip" data-i18n-chip="goal_oila" onclick="toggleChip(this,'goals')">Oila</div>
+      <div class="chip" data-i18n-chip="goal_sevgi" onclick="toggleChip(this,'goals')">Sevgi</div>
+      <div class="chip" data-i18n-chip="goal_romantika" onclick="toggleChip(this,'goals')">Romantika</div>
+      <div class="chip" data-i18n-chip="goal_uchrashuv" onclick="toggleChip(this,'goals')">Uchrashuv</div>
+      <div class="chip" data-i18n-chip="goal_virtual" onclick="toggleChip(this,'goals')">Virtual muloqot</div>
+      <div class="chip" data-i18n-chip="goal_boshqa" onclick="toggleChip(this,'goals')">Boshqa</div>
+    </div>
+    <!-- Ayollar uchun: faqat jiddiy yigirlarga ko'rinish -->
+    <div id="only-serious-wrap" style="display:none; margin-top:16px;">
+      <label class="serious-toggle-label">
+        <div class="serious-toggle-text">
+          <span class="serious-toggle-icon">🔒</span>
+          <div>
+            <div class="serious-toggle-title" data-i18n="only_serious_men_title">Faqat jiddiy niyatli yigitlarga ko'rinay</div>
+            <div class="serious-toggle-sub" data-i18n="only_serious_men_sub">Anketam faqat "💍 Jiddiy" maqsadli yigitlarga chiqadi</div>
+          </div>
+        </div>
+        <div class="ios-toggle-wrap">
+          <input type="checkbox" id="only-serious-toggle" onchange="onOnlySeriousChange()" />
+          <span class="ios-toggle-track"></span>
+        </div>
+      </label>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="section-title" data-i18n="photo">Fotosurat</div>
+    <div class="photo-upload" id="photo-upload-area" onclick="document.getElementById('photo-input').click()">
+      <img id="photo-preview" alt="preview" />
+      <span class="upload-icon" id="upload-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg></span>
+      <span class="upload-text" id="upload-text" data-i18n="upload_photo">Rasm yuklash</span>
+      <span class="upload-sub" id="upload-sub" data-i18n="photo_format">PNG, JPG • max 5MB</span>
+      <span class="upload-status" id="upload-status" aria-live="polite" data-i18n="photo_hint">Rasm yuklangandan so'ng saqlash mumkin.</span>
+    </div>
+    <input type="file" id="photo-input" accept="image/*" style="display:none" onchange="previewPhoto(this)" />
+  </div>
+
+  <!-- ======= VERIFIKATSIYA BO'LIMI ======= -->
+  <div class="card verif-card" id="verification-card">
+    <div class="verif-header">
+      <div class="verif-header-left">
+        <div class="verif-icon-wrap">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        </div>
+        <div>
+          <div class="verif-title" data-i18n="verif_title">Verifikatsiya</div>
+          <div class="verif-sub" data-i18n="verif_sub">Ko'k galochka olish</div>
+        </div>
+      </div>
+      <span id="verified-badge-form" class="verif-badge-pill" style="display:none;">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+        <span data-i18n="verif_confirmed">Tasdiqlangan</span>
+      </span>
+    </div>
+
+    <div class="verif-steps-row">
+      <div class="verif-step">
+        <div class="verif-step-num">1</div>
+        <div class="verif-step-text" data-i18n="verif_step1">Kamera ochiladi</div>
+      </div>
+      <div class="verif-step-arrow">→</div>
+      <div class="verif-step">
+        <div class="verif-step-num">2</div>
+        <div class="verif-step-text" data-i18n="verif_step2">Selfi olasiz</div>
+      </div>
+      <div class="verif-step-arrow">→</div>
+      <div class="verif-step">
+        <div class="verif-step-num">3</div>
+        <div class="verif-step-text" data-i18n="verif_step3">💙 Galochka</div>
+      </div>
+    </div>
+
+    <!-- Preview (selfi olingach ko'rinadi) -->
+    <div id="selfie-preview-wrap" class="verif-preview-wrap" style="display:none;">
+      <div class="verif-preview-ring">
+        <img id="selfie-preview-img" alt="selfie" class="verif-preview-img" />
+        <div class="verif-preview-checkmark">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+        </div>
+      </div>
+      <div class="verif-preview-label" data-i18n="verif_selfie_ready_label">Selfi tayyor ✓</div>
+    </div>
+
+    <!-- Holat xabari -->
+    <div id="selfie-status" class="verif-status"></div>
+
+    <!-- Tugmalar -->
+    <div class="verif-btn-group">
+      <button id="selfie-open-btn" class="verif-btn-camera" onclick="openSelfieCamera()">
+        <span class="verif-btn-camera-inner">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+          <span data-i18n="verif_btn_camera">Kamera orqali selfi olish</span>
+        </span>
+        <span class="verif-btn-shimmer"></span>
+      </button>
+
+      <button id="selfie-send-btn" onclick="sendSelfieForVerification()" class="verif-btn-send" style="display:none;">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+        <span data-i18n="verif_btn_send">Tasdiqlash uchun yuborish</span>
+      </button>
+
+      <button id="selfie-retake-btn" onclick="openSelfieCamera()" class="verif-btn-retake" style="display:none;">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-4.5"/></svg>
+        <span data-i18n="verif_btn_retake">Qayta tushirish</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- ======= IN-APP KAMERA MODAL ======= -->
+  <div id="selfie-camera-modal" class="selfie-cam-overlay" style="display:none;">
+    <div class="selfie-cam-shell">
+      <!-- Yuqori panel -->
+      <div class="selfie-cam-topbar">
+        <button class="selfie-cam-close-btn" onclick="closeSelfieCamera()">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+        <div class="selfie-cam-title" data-i18n="verif_selfie_title">Selfi olish</div>
+        <button class="selfie-cam-flip-btn" onclick="flipSelfieCamera()" id="selfie-flip-btn">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 4v6h6"/><path d="M23 20v-6h-6"/><path d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 0 1 3.51 15"/></svg>
+        </button>
+      </div>
+
+      <!-- Video oynasi -->
+      <div class="selfie-cam-viewport">
+        <video id="selfie-video" class="selfie-cam-video" autoplay playsinline muted></video>
+        <!-- Yuz oval ko'rsatkichi -->
+        <div class="selfie-face-guide">
+          <div class="selfie-face-oval"></div>
+          <div class="selfie-face-hint" data-i18n="verif_face_hint">Yuzingizni doira ichiga joylashtiring</div>
+        </div>
+        <!-- Yuklash overlay -->
+        <div class="selfie-cam-loading" id="selfie-cam-loading">
+          <div class="selfie-cam-spinner"></div>
+          <div class="selfie-cam-loading-text" data-i18n="verif_cam_loading">Kamera yoqilmoqda...</div>
+        </div>
+        <!-- Xato overlay -->
+        <div class="selfie-cam-error" id="selfie-cam-error" style="display:none;">
+          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.7)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+          <div class="selfie-cam-error-text" id="selfie-cam-error-text" data-i18n="verif_cam_no_permission">Kameraga ruxsat bering</div>
+          <button class="selfie-cam-fallback-btn" onclick="triggerFallbackInput()" data-i18n="verif_gallery_btn">Galereyadan tanlash</button>
+        </div>
+      </div>
+
+      <!-- Pastki panel: suratga tushirish tugmasi -->
+      <div class="selfie-cam-bottom">
+        <div class="selfie-cam-bottom-inner">
+          <div style="width:48px;"></div>
+          <button class="selfie-shutter-btn" id="selfie-shutter-btn" onclick="takeSelfieSnapshot()">
+            <div class="selfie-shutter-outer">
+              <div class="selfie-shutter-inner"></div>
+            </div>
+          </button>
+          <div style="width:48px;"></div>
+        </div>
+        <div class="selfie-cam-hint" data-i18n="verif_shutter_hint">Tugmani bosib selfi oling</div>
+      </div>
+
+      <!-- Canvas (ko'rinmas, rasm olish uchun) -->
+      <canvas id="selfie-canvas" style="display:none;"></canvas>
+    </div>
+  </div>
+
+  <!-- Fallback: eski file input (getUserMedia ishlamasa) -->
+  <input type="file" id="selfie-input-fallback" accept="image/*" capture="user"
+    style="display:none;" onchange="onSelfieSelected(this)" />
+
+  <div style="padding: 8px 16px 12px;">
+      <div class="btn-primary-wrap">
+      <div class="btn-primary-shadow"></div>
+      <button id="save-profile-btn" class="btn-primary" onclick="saveProfile()" disabled>
+          <span>
+              <span class="btn-icon">  <!-- style="display:inline-flex;vertical-align:middle;margin-right:6px;" olib tashlandi -->
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+              </span>
+              <span data-i18n="save_profile">Anketani saqlash</span>
+          </span>
+      </button>
+    </div>
+  </div>
+</div>
+
+
+<!-- ======= PAGE: SEARCH (YANGILANGAN) ======= -->
+<div class="page active" id="page-search">
+  <div class="header header--compact">
+    <div class="header-left">
+      <div class="header-title-row">
+        <span class="header-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg></span>
+        <span class="header-title-text" data-i18n="search">Qidirish</span>
+      </div>
+    </div>
+    <div class="header-actions">
+      <button class="stats-toggle-btn" id="stats-toggle-btn" onclick="toggleMiniStats()" title="Reyting">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9H4.5a2.5 2.5 0 0 0 0 5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2z"/></svg>
+        <span id="stats-toggle-label" data-i18n="top_label">TOP</span>
+      </button>
+      <button class="icon-btn icon-btn--sm" id="search-likes-btn" onclick="openIncomingLikesModal()" data-i18n-title="people_who_liked_you" title="Sizga like yuborganlar">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        <span class="icon-badge" id="search-likes-badge" style="display:none;">0</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- ======= STATISTIKA MINI-PANEL (collapsible) ======= -->
+  <div class="stats-mini-panel" id="stats-mini-panel" style="display:none;">
+    <!-- 4 ta tugma -->
+    <div class="top-panel-tabs">
+      <button class="top-panel-btn active" id="tpbtn-active" onclick="switchTopPanelTab('active')">
+        <span class="top-panel-btn-icon">🔥</span>
+        <span class="top-panel-btn-label" data-i18n="top_btn_active">Faollar</span>
+      </button>
+      <button class="top-panel-btn" id="tpbtn-likes" onclick="switchTopPanelTab('likes')">
+        <span class="top-panel-btn-icon">💙</span>
+        <span class="top-panel-btn-label" data-i18n="top_btn_likes">Like TOP</span>
+      </button>
+      <button class="top-panel-btn" id="tpbtn-superlikes" onclick="switchTopPanelTab('superlikes')">
+        <span class="top-panel-btn-icon">⭐</span>
+        <span class="top-panel-btn-label" data-i18n="top_btn_superlikes">Super TOP</span>
+      </button>
+      <button class="top-panel-btn" id="tpbtn-champion" onclick="switchTopPanelTab('champion')">
+        <span class="top-panel-btn-icon">🏆</span>
+        <span class="top-panel-btn-label" data-i18n="top_btn_champion">Chempion</span>
+      </button>
+    </div>
+    <!-- Tanlangan bo'lim kontent -->
+    <div class="stats-mini-body" id="stats-mini-body">
+      <div class="stats-mini-loading"><div class="spinner"></div></div>
+    </div>
+  </div>
+
+  <!-- Asosiy qidirish -->
+  <div class="card">
+    <div class="section-title" data-i18n="search">Qidirish</div>
+    <div class="form-group">
+      <label class="form-label" data-i18n="search_by_name">Ism bo'yicha</label>
+      <input class="form-input" id="sf-name" type="text" data-i18n-placeholder="name_search_placeholder" placeholder="Ism kiriting..." maxlength="50" />
+    </div>
+    <div class="section-title" style="margin-top:16px;" data-i18n="gender">Jins</div>
+    <div class="gender-selector">
+      <div class="gender-btn gender-male-btn" id="sf-gender-erkak" onclick="selectSearchGender('erkak')" data-i18n-title="male" data-i18n-title="male" title="Erkak">
+        <span class="g-icon g-icon-male">
+          <svg class="neon-gender-svg" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="34" cy="38" r="18" stroke="#5AC8FA" stroke-width="5" stroke-linecap="round"/>
+            <line x1="47" y1="25" x2="66" y2="14" stroke="#5AC8FA" stroke-width="5" stroke-linecap="round"/>
+            <line x1="53" y1="14" x2="66" y2="14" stroke="#5AC8FA" stroke-width="5" stroke-linecap="round"/>
+            <line x1="66" y1="14" x2="66" y2="27" stroke="#5AC8FA" stroke-width="5" stroke-linecap="round"/>
+          </svg>
+        </span>
+        <span class="gender-label" data-i18n="male">Erkak</span>
+        <span class="gender-note" data-i18n="gender_filter_hint">Jins bo'yicha filtr</span>
+      </div>
+      <div class="gender-btn gender-female-btn" id="sf-gender-ayol" onclick="selectSearchGender('ayol')" data-i18n-title="female" data-i18n-title="female" title="Ayol">
+        <span class="g-icon g-icon-female">
+          <svg class="neon-gender-svg" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="40" cy="30" r="18" stroke="#FF6EB4" stroke-width="5" stroke-linecap="round"/>
+            <line x1="40" y1="48" x2="40" y2="66" stroke="#FF6EB4" stroke-width="5" stroke-linecap="round"/>
+            <line x1="28" y1="58" x2="52" y2="58" stroke="#FF6EB4" stroke-width="5" stroke-linecap="round"/>
+          </svg>
+        </span>
+        <span class="gender-label" data-i18n="female">Ayol</span>
+        <span class="gender-note" data-i18n="gender_filter_hint">Jins bo'yicha filtr</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ======= KUNLIK BURJLAR BASHORATI (mini-kontent) ======= -->
+  <div class="card horoscope-card" id="horoscope-card">
+    <div class="horoscope-card-header">
+      <div class="horoscope-card-title" data-i18n="daily_horoscope_title">🔮 Kunlik burjlar bashorati</div>
+      <div class="horoscope-zodiac-badge" id="horoscope-zodiac-badge"></div>
+    </div>
+    <div id="horoscope-card-body">
+      <!-- JS orqali to'ldiriladi: renderDailyHoroscope() -->
+    </div>
+  </div>
+
+  <!-- Kengaytirilgan filtrlar (ixtiyoriy) -->
+  <div class="card" style="padding:16px;">
+    <button class="btn-secondary" onclick="toggleAdvancedFilters()" style="width:100%; justify-content:center;">
+      <span id="adv-filter-btn-text" data-i18n="advanced_filters">🔍 Kengaytirilgan filtrlar</span>
+    </button>
+    <div id="advanced-filters" style="display:none; margin-top:16px;">
+      <div class="section-title" data-i18n="age">Yoshi</div>
+      <div class="age-range-wrap">
+        <div class="form-group" style="margin:0">
+          <label class="form-label" data-i18n="age_from">Dan</label>
+          <input class="form-input" id="sf-age-from" type="number" placeholder="16" min="16" max="80" />
+        </div>
+        <div class="form-group" style="margin:0">
+          <label class="form-label" data-i18n="age_to">Gacha</label>
+          <input class="form-input" id="sf-age-to" type="number" placeholder="50" min="16" max="80" />
+        </div>
+      </div>
+      <!-- Qidiruv doirasi toggle -->
+      <div class="search-scope-toggle" id="search-scope-wrap" style="margin:16px 0 4px;">
+        <div class="search-scope-label" data-i18n="search_scope_label">🌍 Qidiruv doirasi</div>
+        <div class="search-scope-row">
+          <button class="scope-btn active" id="scope-btn-my" onclick="setSearchScope('my')" data-i18n="scope_my_area">📍 O'z hududim</button>
+          <button class="scope-btn" id="scope-btn-ca" onclick="setSearchScope('central_asia')" data-i18n="scope_central_asia">🌐 Butun Markaziy Osiyo</button>
+        </div>
+      </div>
+
+      <!-- Qidiruv: Joylashuv — location-card -->
+      <div class="location-card" id="search-location-card" style="margin:8px 0 4px; border-radius:18px;">
+        <div class="location-card-header">
+          <div class="location-card-icon">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          </div>
+          <div class="location-card-titles">
+            <div class="location-card-title" data-i18n="city_label">📍 Joylashuv bo'yicha qidirish</div>
+            <div class="location-card-sub" data-i18n="loc_step_hint">Davlat → Viloyat → Tuman</div>
+          </div>
+          <div class="location-steps-inline" id="sf-location-steps">
+            <div class="location-step-dot active" id="sf-step-1"></div>
+            <div class="location-step-dot" id="sf-step-2"></div>
+            <div class="location-step-dot" id="sf-step-3"></div>
+          </div>
+        </div>
+        <div class="location-selects">
+          <div class="location-select-wrap" id="sf-country-wrap">
+            <input type="hidden" id="sf-country" />
+          </div>
+          <div class="location-select-wrap" id="sf-region-wrap" style="display:none;">
+            <input type="hidden" id="sf-region" />
+          </div>
+          <div class="location-select-wrap" id="sf-district-wrap" style="display:none;">
+            <input type="hidden" id="sf-district" />
+          </div>
+          <input type="hidden" id="sf-city" />
+        </div>
+      </div>
+      <div class="section-title" style="margin-top:16px;" data-i18n="goal">Maqsad</div>
+      <div class="goals-group-label" data-i18n="goal_group_main">Asosiy</div>
+      <div class="chips-wrap chips-wrap-main" id="sf-goals-chips">
+        <div class="chip chip-main" data-i18n-chip="goal_jiddiy" onclick="toggleChip(this,'sf-goals')">💍 Jiddiy (Oila)</div>
+        <div class="chip chip-main" data-i18n-chip="goal_dostlik_suhbat" onclick="toggleChip(this,'sf-goals')">💬 Do'stlik/Suhbat</div>
+        <div class="chip chip-main" data-i18n-chip="goal_hamroh" onclick="toggleChip(this,'sf-goals')">🧳 Hamroh</div>
+      </div>
+      <div class="goals-group-label" style="margin-top:8px;" data-i18n="goal_group_extra">Qo'shimcha</div>
+      <div class="chips-wrap" id="sf-goals-extra-chips">
+        <div class="chip" data-i18n-chip="goal_dostlik" onclick="toggleChip(this,'sf-goals')">Do'stlik</div>
+        <div class="chip" data-i18n-chip="goal_tanishuv" onclick="toggleChip(this,'sf-goals')">Tanishuv</div>
+        <div class="chip" data-i18n-chip="goal_oila" onclick="toggleChip(this,'sf-goals')">Oila</div>
+        <div class="chip" data-i18n-chip="goal_sevgi" onclick="toggleChip(this,'sf-goals')">Sevgi</div>
+        <div class="chip" data-i18n-chip="goal_romantika" onclick="toggleChip(this,'sf-goals')">Romantika</div>
+        <div class="chip" data-i18n-chip="goal_uchrashuv" onclick="toggleChip(this,'sf-goals')">Uchrashuv</div>
+        <div class="chip" data-i18n-chip="goal_virtual" onclick="toggleChip(this,'sf-goals')">Virtual muloqot</div>
+        <div class="chip" data-i18n-chip="goal_boshqa" onclick="toggleChip(this,'sf-goals')">Boshqa</div>
+      </div>
+      <div class="section-title" style="margin-top:16px;" data-i18n="zodiac_search">⭐ Burj bo'yicha qidirish</div>
+      <div class="zodiac-card" style="padding:14px; margin-bottom:10px;">
+        <div class="zodiac-shell" style="margin-bottom:10px;">
+          <div class="zodiac-icon">♒</div>
+          <div class="zodiac-lead">
+            <div class="zodiac-title" style="font-size:14px;" data-i18n="select_zodiac_search">Burj tanlang</div>
+            <div class="zodiac-caption" style="font-size:12px;" data-i18n="zodiac_filter_hint">Qidiruvda burj bo'yicha filtr qo'llang.</div>
+          </div>
+        </div>
+
+        <button type="button" class="zodiac-picker-toggle" id="sf-zodiac-toggle" onclick="toggleSearchZodiacMenu()" data-i18n="all_zodiacs">
+          Barcha burjlar
+        </button>
+
+        <div class="zodiac-options" id="sf-zodiac-options" style="display:none;">
+          <button type="button" class="zodiac-option" data-zodiac="" onclick="selectSearchZodiac('', 'Barcha burjlar')" data-i18n="all_zodiacs">📋 Barcha burjlar</button>
+          <button type="button" class="zodiac-option" data-zodiac="Qo'y" data-i18n-chip="zod_qoy" onclick="selectSearchZodiac('Qo\'y', '♈ Qo\'y')">♈ Qo'y</button>
+          <button type="button" class="zodiac-option" data-zodiac="Buzoq" data-i18n-chip="zod_buzoq" onclick="selectSearchZodiac('Buzoq', '♉ Buzoq')">♉ Buzoq</button>
+          <button type="button" class="zodiac-option" data-zodiac="Egizak" data-i18n-chip="zod_egizak" onclick="selectSearchZodiac('Egizak', '♊ Egizak')">♊ Egizak</button>
+          <button type="button" class="zodiac-option" data-zodiac="Qisqichbaqa" data-i18n-chip="zod_qisqichbaqa" onclick="selectSearchZodiac('Qisqichbaqa', '♋ Qisqichbaqa')">♋ Qisqichbaqa</button>
+          <button type="button" class="zodiac-option" data-zodiac="Arslon" data-i18n-chip="zod_arslon" onclick="selectSearchZodiac('Arslon', '♌ Arslon')">♌ Arslon</button>
+          <button type="button" class="zodiac-option" data-zodiac="Sunbula" data-i18n-chip="zod_sunbula" onclick="selectSearchZodiac('Sunbula', '♍ Sunbula')">♍ Sunbula</button>
+          <button type="button" class="zodiac-option" data-zodiac="Tarozi" data-i18n-chip="zod_tarozi" onclick="selectSearchZodiac('Tarozi', '♎ Tarozi')">♎ Tarozi</button>
+          <button type="button" class="zodiac-option" data-zodiac="Chayon" data-i18n-chip="zod_chayon" onclick="selectSearchZodiac('Chayon', '♏ Chayon')">♏ Chayon</button>
+          <button type="button" class="zodiac-option" data-zodiac="O'qotar" data-i18n-chip="zod_oqotar" onclick="selectSearchZodiac('O\'qotar', '♐ O\'qotar')">♐ O'qotar</button>
+          <button type="button" class="zodiac-option" data-zodiac="Tog' echkisi" data-i18n-chip="zod_tog_echkisi" onclick="selectSearchZodiac('Tog\' echkisi', '♑ Tog\' echkisi')">♑ Tog' echkisi</button>
+          <button type="button" class="zodiac-option" data-zodiac="Qovg'a" data-i18n-chip="zod_qovga" onclick="selectSearchZodiac('Qovg\'a', '♒ Qovg\'a')">♒ Qovg'a</button>
+          <button type="button" class="zodiac-option" data-zodiac="Baliq" data-i18n-chip="zod_baliq" onclick="selectSearchZodiac('Baliq', '♓ Baliq')">♓ Baliq</button>
+        </div>
+
+        <select class="form-select zodiac-select" id="sf-zodiac" style="display:none;">
+          <option value="" data-i18n="all_zodiacs">Barcha burjlar</option>
+          <option value="Qo'y">Qo'y</option>
+          <option value="Buzoq">Buzoq</option>
+          <option value="Egizak">Egizak</option>
+          <option value="Qisqichbaqa">Qisqichbaqa</option>
+          <option value="Arslon">Arslon</option>
+          <option value="Sunbula">Sunbula</option>
+          <option value="Tarozi">Tarozi</option>
+          <option value="Chayon">Chayon</option>
+          <option value="O'qotar">O'qotar</option>
+          <option value="Tog' echkisi">Tog' echkisi</option>
+          <option value="Qovg'a">Qovg'a</option>
+          <option value="Baliq">Baliq</option>
+        </select>
+      </div>
+      <label style="display:flex;align-items:center;gap:8px;font-size:14px;cursor:pointer;margin-bottom:14px;">
+        <input type="checkbox" id="sf-zodiac-compat" style="width:18px;height:18px;cursor:pointer;" />
+        <span data-i18n="only_my_zodiac">Faqat burjimga mos odamlarni ko'rsat ⭐</span>
+      </label>
+      <div class="section-title" style="margin-top:16px;" data-i18n="interests">Qiziqishlar</div>
+      <div class="chips-wrap" id="sf-interests-chips">
+        <div class="chip" data-i18n-chip="int_kino" onclick="toggleChip(this,'sf-interests')">🍿 Kino</div>
+        <div class="chip" data-i18n-chip="int_musiqa" onclick="toggleChip(this,'sf-interests')">🎵 Musiqa</div>
+        <div class="chip" data-i18n-chip="int_kitob" onclick="toggleChip(this,'sf-interests')">📚 Kitob oʻqish</div>
+        <div class="chip" data-i18n-chip="int_oyinlar" onclick="toggleChip(this,'sf-interests')">🎮 Oʻyinlar</div>
+        <div class="chip" data-i18n-chip="int_teatr" onclick="toggleChip(this,'sf-interests')">🎭 Teatr</div>
+        <div class="chip" data-i18n-chip="int_muzey" onclick="toggleChip(this,'sf-interests')">🏛️ Muzeylar</div>
+        <div class="chip" data-i18n-chip="int_sanat" onclick="toggleChip(this,'sf-interests')">🎨 San'at</div>
+        <div class="chip" data-i18n-chip="int_foto" onclick="toggleChip(this,'sf-interests')">📸 Foto</div>
+        <div class="chip" data-i18n-chip="int_sheeriyat" onclick="toggleChip(this,'sf-interests')">📜 She'riyat</div>
+        <div class="chip" data-i18n-chip="int_raqs" onclick="toggleChip(this,'sf-interests')">💃 Raqs</div>
+        <div class="chip" data-i18n-chip="int_sport" onclick="toggleChip(this,'sf-interests')">⚽ Sport</div>
+        <div class="chip" data-i18n-chip="int_yoga" onclick="toggleChip(this,'sf-interests')">🧘‍♂️ Yoga</div>
+        <div class="chip" data-i18n-chip="int_sayr" onclick="toggleChip(this,'sf-interests')">🚶‍♂️ Sayr</div>
+        <div class="chip" data-i18n-chip="int_tennis" onclick="toggleChip(this,'sf-interests')">🏓 Stol tennisi</div>
+        <div class="chip" data-i18n-chip="int_sayohat" onclick="toggleChip(this,'sf-interests')">✈️ Sayohat</div>
+        <div class="chip" data-i18n-chip="int_plyaj" onclick="toggleChip(this,'sf-interests')">🏖️ Plyaj</div>
+        <div class="chip" data-i18n-chip="int_shopping" onclick="toggleChip(this,'sf-interests')">🛍️ Shopping</div>
+        <div class="chip" data-i18n-chip="int_moda" onclick="toggleChip(this,'sf-interests')">👗 Moda</div>
+        <div class="chip" data-i18n-chip="int_qahva" onclick="toggleChip(this,'sf-interests')">☕ Qahva</div>
+        <div class="chip" data-i18n-chip="int_vino" onclick="toggleChip(this,'sf-interests')">🍷 Vino</div>
+        <div class="chip" data-i18n-chip="int_pivo" onclick="toggleChip(this,'sf-interests')">🍺 Pivo</div>
+        <div class="chip" data-i18n-chip="int_blog" onclick="toggleChip(this,'sf-interests')">✍️ Blog yuritish</div>
+        <div class="chip" data-i18n-chip="int_dasturlash" onclick="toggleChip(this,'sf-interests')">💻 Dasturlash</div>
+        <div class="chip" data-i18n-chip="int_shaxmat" onclick="toggleChip(this,'sf-interests')">♟️ Shaxmat</div>
+        <div class="chip" data-i18n-chip="int_rasm" onclick="toggleChip(this,'sf-interests')">🎨 Rasm chizish</div>
+        <div class="chip" data-i18n-chip="int_tillar" onclick="toggleChip(this,'sf-interests')">🗣️ Tillar oʻrganish</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Qidiruv statistikasi banneri -->
+  <div id="search-stat-banner" style="display:none; margin:0 16px 8px;">
+    <div class="search-stat-card">
+      <div class="search-stat-icon">👥</div>
+      <div class="search-stat-text">
+        <span id="search-stat-count" class="search-stat-num">0</span>
+        <span class="search-stat-label" id="search-stat-label" data-i18n="stat_users_found">ta foydalanuvchi sizning filtrlaringizga mos</span>
+      </div>
+      <div class="search-stat-pulse"></div>
+    </div>
+  </div>
+
+  <div style="padding: 8px 16px 12px;">
+     <div class="btn-primary-wrap">
+      <div class="btn-primary-shadow"></div>
+      <button class="btn-primary" onclick="doSearch()">
+          <span>
+              <span class="btn-icon">  <!-- style="display:inline-flex;vertical-align:middle;margin-right:6px;" olib tashlandi -->
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+              </span>
+              <span data-i18n="search">Qidirish</span>
+          </span>
+      </button>
+    </div>
+  </div>
+  <div id="search-results" style="display:none; width:100%;">
+    <div class="swipe-container" id="swipe-container" style="padding:0; width:100%;"></div>
+  </div>
+
+  <!-- limit-status-bar olib tashlandi: faqat profil bo'limida ko'rsatiladi -->
+</div>
+
+
+<!-- ======= PAGE: CHATS ======= -->
+<div class="page" id="page-chats">
+  <div class="header">
+    <div class="header-title">
+      <span class="header-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></span>
+      <span data-i18n="chats">Muloqot</span>
+    </div>
+    <div class="header-sub" data-i18n="likes_and_chats">Like lar va suhbatingiz</div>
+  </div>
+
+  <div id="anon-banner" class="anon-banner" style="display:none;"></div>
+
+  <div id="incoming-likes-section" style="display:none;">
+    <div class="section-title" style="margin: 16px 16px 8px;" data-i18n="liked_you">💖 Sizga Like bosganlar</div>
+    <div id="incoming-likes-list"></div>
+  </div>
+
+  <div class="section-title" style="margin: 16px 16px 8px;" data-i18n="conversations">💬 Muloqotlar</div>
+  <div id="chat-list"></div>
+
+  <div id="chats-empty" class="empty-state" style="display:none;">
+    <div class="empty-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></div>
+    <h3 data-i18n="no_chats">Hali suhbatingiz yo'q</h3>
+    <p data-i18n="no_chats_hint">Qidirish bo'limidan yangi do'stlar toping va like bosing!</p>
+  </div>
+</div>
+
+
+<!-- ======= PAGE: MY PROFILE ======= -->
+<div class="page" id="page-myprofile">
+
+  <!-- Header -->
+  <div class="header">
+    <div class="header-title">
+      <span class="header-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span>
+      <span data-i18n="my_profile">Mening anketam</span>
+    </div>
+    <div class="header-sub" data-i18n="profile_info">Profilingiz ma'lumotlari</div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════ -->
+  <!-- LIMIT KARTOCHKASI (faqat erkaklar uchun)      -->
+  <!-- ══════════════════════════════════════════════ -->
+  <div id="mp-limit-card" class="mp-limit-card" style="display:none;" onclick="openReferralModal()">
+    <div class="mp-limit-card-title">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      <span data-i18n="daily_limits">Kunlik limitlar</span>
+    </div>
+    <div class="mp-limit-card-items">
+      <div class="mp-limit-chip">
+        <span class="mp-limit-chip-icon">❤️</span>
+        <span class="mp-limit-chip-val" id="mp-limit-likes">—</span>
+        <span class="mp-limit-chip-label" data-i18n="like">Like</span>
+      </div>
+      <div class="mp-limit-chip">
+        <span class="mp-limit-chip-icon">💬</span>
+        <span class="mp-limit-chip-val" id="mp-limit-messages">—</span>
+        <span class="mp-limit-chip-label" data-i18n="message">Xabar</span>
+      </div>
+      <div class="mp-limit-chip">
+        <span class="mp-limit-chip-icon">⭐</span>
+        <span class="mp-limit-chip-val" id="mp-limit-superlikes">—</span>
+        <span class="mp-limit-chip-label" data-i18n="super_like">Super Like</span>
+      </div>
+    </div>
+    <div class="mp-limit-card-hint" data-i18n="increase_limits">🎁 Ko'paytirish uchun bosing</div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════ -->
+  <!-- BO'LIM 1: ANKETA MA'LUMOTLARI                 -->
+  <!-- ══════════════════════════════════════════════ -->
+  <div class="mp-section-block" id="mp-block-anketa">
+    <button class="mp-section-toggle" onclick="toggleMpSection('anketa')">
+      <div class="mp-section-toggle-left">
+        <div class="mp-section-toggle-icon" style="background:linear-gradient(135deg,#007AFF,#5AC8FA);">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        </div>
+        <div class="mp-section-toggle-text">
+          <div class="mp-section-toggle-title" data-i18n="my_profile">Mening anketam</div>
+          <div class="mp-section-toggle-sub" data-i18n="mp_anketa_sub">Shaxsiy ma'lumotlar va fotosurat</div>
+        </div>
+      </div>
+      <svg class="mp-section-chevron" id="mp-chevron-anketa" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+    </button>
+
+    <div class="mp-section-body" id="mp-body-anketa">
+      <!-- Profil kartasi -->
+      <div id="my-profile-content">
+        <div class="loading"><div class="spinner"></div><span data-i18n="loading">Yuklanmoqda...</span></div>
+      </div>
+      <!-- Tahrirlash tugmasi -->
+      <div style="padding: 4px 16px 16px;">
+        <button class="btn-secondary mp-edit-btn" onclick="showPage('profile')">
+          <span class="btn-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></span>
+          <span data-i18n="edit_profile">Anketani tahrirlash</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════ -->
+  <!-- BO'LIM 2: MAQSADLAR + MEN KO'RGANLARIM       -->
+  <!-- ══════════════════════════════════════════════ -->
+  <div class="mp-section-block" id="mp-block-goals">
+    <button class="mp-section-toggle" onclick="toggleMpSection('viewed')">
+      <div class="mp-section-toggle-left">
+        <div class="mp-section-toggle-icon" style="background:linear-gradient(135deg,#5856D6,#AF52DE);">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+        </div>
+        <div class="mp-section-toggle-text">
+          <div class="mp-section-toggle-title" data-i18n="viewed_title">Men ko'rganlarim</div>
+          <div class="mp-section-toggle-sub" data-i18n="mp_viewed_sub">Like bergan va xabar yozgan anketalar</div>
+        </div>
+      </div>
+      <svg class="mp-section-chevron" id="mp-chevron-viewed" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+    </button>
+
+    <div class="mp-section-body" id="mp-body-viewed" style="display:none;">
+      <div class="mp-subsection">
+        <!-- Tab tugmalar -->
+        <div style="display:flex;gap:8px;padding:8px 12px 4px;">
+          <button class="mp-tab-btn active" id="mp-viewed-tab-liked" onclick="switchMpViewedTab('liked')" style="flex:1;" data-i18n="tab_viewed_liked">
+            💙 Like bergan
+          </button>
+          <button class="mp-tab-btn" id="mp-viewed-tab-messaged" onclick="switchMpViewedTab('messaged')" style="flex:1;" data-i18n="tab_viewed_messaged">
+            💬 Xabar yozgan
+          </button>
+        </div>
+        <div id="mp-viewed-body" style="padding:8px 12px 12px;">
+          <div class="loading"><div class="spinner"></div><span data-i18n="loading">Yuklanmoqda...</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════ -->
+  <!-- TIL TANLASH (pastki)                          -->
+  <!-- ══════════════════════════════════════════════ -->
+  <div class="profile-lang-section" style="margin:0 16px 24px;">
+    <button class="profile-lang-row" onclick="openLangModal()">
+      <div class="profile-lang-left">
+        <div class="profile-lang-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+        </div>
+        <div class="profile-lang-info">
+          <div class="profile-lang-name" data-i18n="change_language">Tilni o'zgartirish</div>
+          <div class="profile-lang-current" id="profile-lang-current-text">O'zbekcha</div>
+        </div>
+      </div>
+      <div class="profile-lang-arrow">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>
+      </div>
+    </button>
+  </div>
+
+</div>
+
+
+
+<!-- ======= BOTTOM NAV (5 tabs) ======= -->
+<nav class="bottom-nav" style="display:none;">
+  <button class="nav-btn" id="nav-search" onclick="showPage('search')">
+    <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+    <span data-i18n="search">Qidirish</span>
+  </button>
+  <button class="nav-btn" id="nav-chats" onclick="showPage('chats')" style="position:relative;">
+    <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+    <span data-i18n="nav_chat">Chat</span>
+    <span class="nav-badge" id="chat-badge" style="display:none;">0</span>
+  </button>
+  <button class="nav-btn" id="nav-myprofile" onclick="showPage('myprofile')">
+    <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+    <span data-i18n="nav_profile">Profil</span>
+  </button>
+</nav>
+
+<!-- STICKER MODAL -->
+<div id="sticker-overlay" class="sticker-overlay" style="display:none;" onclick="closeStickerModal(event)">
+  <div class="sticker-sheet" onclick="event.stopPropagation()">
+    <div class="sticker-handle"></div>
+    <div class="sticker-title" data-i18n="super_like_sticker">⭐ Super Like — Sticker yuborish</div>
+    <div class="sticker-grid" id="sticker-grid"></div>
+    <button class="sticker-close" onclick="closeStickerModal()" data-i18n="cancel">Bekor qilish</button>
+  </div>
+</div>
+
+<!-- MESSAGE INPUT MODAL -->
+<div id="message-modal" class="modal-overlay" style="display:none;" onclick="closeMessageModal(event)">
+  <div class="modal-content" onclick="event.stopPropagation()">
+    <button class="modal-close" onclick="closeMessageModal()">✕</button>
+    <div style="text-align:center; margin-bottom:20px;">
+      <div style="font-size:48px; margin-bottom:12px;">💬</div>
+      <h2 style="font-size:22px; font-weight:800; margin-bottom:8px;" data-i18n="send_message">Xabar yuborish</h2>
+      <p style="color:var(--text-secondary); font-size:15px; line-height:1.5;" id="message-modal-sub" data-i18n="write_first_message">
+        Foydalanuvchiga birinchi xabaringizni yozing.
+      </p>
+    </div>
+    <textarea id="first-message-input" data-i18n-placeholder="message_placeholder" placeholder="Salom! Qalaysiz?..." maxlength="500" style="width:100%; box-sizing:border-box; min-height:100px; padding:14px 18px; border:1.5px solid rgba(0,122,255,0.18); border-radius:18px; font-family:inherit; font-size:15px; resize:none; outline:none; margin-bottom:16px;"></textarea>
+    <button class="btn-primary" onclick="sendFirstMessage()" style="width:100%; box-sizing:border-box; padding:16px; border-radius:999rem;">
+      <span data-i18n="send">📨 Xabar yuborish</span>
+    </button>
+  </div>
+</div>
+
+<!-- SHIKOYAT (REPORT) MODAL -->
+<div id="report-modal" class="modal-overlay" style="display:none;" onclick="closeReportModal(event)">
+  <div class="modal-content" onclick="event.stopPropagation()">
+    <button class="modal-close" onclick="closeReportModal()">✕</button>
+    <div style="text-align:center; margin-bottom:16px;">
+      <div style="font-size:40px; margin-bottom:8px;">🚩</div>
+      <h2 style="font-size:20px; font-weight:800; margin-bottom:4px;" data-i18n="report_title">Shikoyat qilish</h2>
+      <p style="color:var(--text-secondary); font-size:14px; line-height:1.4;" data-i18n="report_sub">Sababni tanlang. Shikoyatingiz maxfiy qoladi.</p>
+    </div>
+    <div id="report-category-list" style="display:flex; flex-direction:column; gap:8px; margin-bottom:14px;"></div>
+    <textarea id="report-description-input" data-i18n-placeholder="report_description_placeholder" placeholder="Qo'shimcha izoh (ixtiyoriy)..." maxlength="500" style="width:100%; box-sizing:border-box; min-height:70px; padding:12px 16px; border:1.5px solid rgba(0,122,255,0.18); border-radius:16px; font-family:inherit; font-size:14px; resize:none; outline:none; margin-bottom:14px;"></textarea>
+    <button class="btn-primary" id="report-submit-btn" onclick="submitReport()" style="width:100%; box-sizing:border-box; padding:16px; border-radius:999rem;" disabled>
+      <span data-i18n="report_submit">Shikoyat yuborish</span>
+    </button>
+  </div>
+</div>
+
+<!-- BAN OVERLAY (banlangan foydalanuvchi uchun to'liq ekran) -->
+<div id="ban-overlay" style="display:none; position:fixed; inset:0; z-index:99999; background:rgba(10,10,15,0.96); color:#fff; flex-direction:column; align-items:center; justify-content:center; text-align:center; padding:32px;">
+  <div style="font-size:56px; margin-bottom:16px;">🚫</div>
+  <h2 style="font-size:22px; font-weight:800; margin-bottom:10px;" data-i18n="ban_overlay_title">Akkauntingiz vaqtincha cheklangan</h2>
+  <p id="ban-overlay-reason" style="font-size:15px; opacity:0.85; margin-bottom:6px;"></p>
+  <p id="ban-overlay-until" style="font-size:15px; opacity:0.85;"></p>
+</div>
+
+
+<!-- ======= XARITA MODAL (Leaflet.js - Tekin) ======= -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+<div id="map-picker-modal" class="modal-overlay" style="display:none;" onclick="closeMapPicker(event)">
+  <div class="map-picker-sheet" onclick="event.stopPropagation()">
+    <div class="map-picker-header">
+      <div class="map-picker-title">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+        <span data-i18n="map_pick_location">Joylashuvni belgilang</span>
+      </div>
+      <button class="modal-close" onclick="closeMapPicker()">✕</button>
+    </div>
+    <div class="map-picker-hint" id="map-hint" data-i18n="map_hint_text">📍 Xaritaga bosing yoki GPS tugmasini bosing</div>
+    <div class="map-format-hint" id="map-format-hint" style="display:none;"></div>
+    <div id="map-container" style="width:100%; height:400px; border-radius:16px; overflow:hidden; position:relative;"></div>
+    <div class="map-picker-result" id="map-result" style="display:none;">
+      <div class="map-result-icon">📍</div>
+      <div class="map-result-text" id="map-result-text" data-i18n="geo_detecting">Aniqlanmoqda...</div>
+    </div>
+    <div class="map-picker-actions">
+      <button class="map-gps-btn" id="map-gps-btn" onclick="useMyLocation()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M1 12h4M19 12h4"/></svg>
+        <span data-i18n="use_my_location">GPS joylashuv</span>
+      </button>
+      <button class="map-confirm-btn" id="map-confirm-btn" onclick="confirmMapLocation()" disabled>
+        <span data-i18n="confirm_location">Tasdiqlash</span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== STATISTIKA MODALI ===== -->
+
+<!-- Overlay root: backdrop-filter yo'q, z-index eng yuqori -->
+<div id="overlay-root" style="position:fixed;top:0;left:0;width:0;height:0;z-index:2147483647;pointer-events:none;"></div>
+
+<script src="app.js?v=4"></script>
+</body>
+</html>
