@@ -6112,6 +6112,7 @@ const tg = window.Telegram?.WebApp;
           <div class="stamp superlike">⭐ SUPER</div>
           <div class="tinder-photo">
             ${photo ? `<img src="${photo}" alt="${u.full_name}" onclick="openPhotoViewer('${escapeJs(photo)}','${escapeJs(u.full_name)}')" />` : `<div style="display:flex;align-items:center;justify-content:center;width:100%;height:100%;font-size:100px;">${u.gender==='erkak'?'👨':'👩'}</div>`}
+            <button class="tinder-report-btn" onclick="event.stopPropagation(); openReportModal(${u.telegram_id}, 'search_profile')" title="${tr('report')}">🚩</button>
             <div class="tinder-photo-gradient"></div>
             <div class="tinder-photo-info">
               <div class="tinder-photo-name">${u.full_name}, ${u.age}</div>
@@ -6302,6 +6303,7 @@ const tg = window.Telegram?.WebApp;
           <span class="stamp superlike" id="stamp-super">SUPER ⭐</span>
           <div class="tinder-photo">
             ${photoHtml}
+            <button class="tinder-report-btn" onclick="event.stopPropagation(); openReportModal(${u.telegram_id}, 'search_profile')" title="${tr('report')}">🚩</button>
             <div class="tinder-photo-gradient"></div>
             <div class="tinder-photo-info">
               <div class="tinder-photo-name">${u.full_name}, ${u.age}</div>
