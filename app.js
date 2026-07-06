@@ -155,6 +155,9 @@ const tg = window.Telegram?.WebApp;
             'language_changed': '✅ Til o\'zgartirildi: {lang}',
             'close': 'Yopish',
             'change_language': 'Tilni o\'zgartirish',
+            'theme_toggle_title': 'Tungi rejim',
+            'theme_mode_light': 'Kunduzgi',
+            'theme_mode_dark': 'Tungi',
             'fill_profile': 'Anketa to\'ldirish',
             'about_yourself': 'O\'zingiz haqingizda ma\'lumot bering',
             'gender': 'Jins',
@@ -557,6 +560,9 @@ const tg = window.Telegram?.WebApp;
             'language_changed': '✅ Язык изменён: {lang}',
             'close': 'Закрыть',
             'change_language': 'Сменить язык',
+            'theme_toggle_title': 'Ночной режим',
+            'theme_mode_light': 'Дневной',
+            'theme_mode_dark': 'Ночной',
             'fill_profile': 'Заполнить анкету',
             'about_yourself': 'Расскажите о себе',
             'gender': 'Пол',
@@ -944,6 +950,9 @@ const tg = window.Telegram?.WebApp;
             'language_changed': '✅ Тіл өзгертілді: {lang}',
             'close': 'Жабу',
             'change_language': 'Тілді ауыстыру',
+            'theme_toggle_title': 'Түнгі режим',
+            'theme_mode_light': 'Күндізгі',
+            'theme_mode_dark': 'Түнгі',
             'fill_profile': 'Анкета толтыру',
             'about_yourself': 'Өзіңіз туралы айтыңыз',
             'gender': 'Жыныс',
@@ -1331,6 +1340,9 @@ const tg = window.Telegram?.WebApp;
             'language_changed': '✅ Тил өзгөртүлдү: {lang}',
             'close': 'Жабуу',
             'change_language': 'Тилди алмаштыруу',
+            'theme_toggle_title': 'Түнкү режим',
+            'theme_mode_light': 'Күндүзгү',
+            'theme_mode_dark': 'Түнкү',
             'fill_profile': 'Анкета толтуруу',
             'about_yourself': 'Өзүңүз жөнүндө айтыңыз',
             'gender': 'Жыныс',
@@ -1718,6 +1730,9 @@ const tg = window.Telegram?.WebApp;
             'language_changed': '✅ Til ózgeritildi: {lang}',
             'close': 'Jabıw',
             'change_language': 'Til almastırıw',
+            'theme_toggle_title': 'Túngi rejim',
+            'theme_mode_light': 'Kúndizgi',
+            'theme_mode_dark': 'Túngi',
             'fill_profile': 'Anketa toldırıw',
             'about_yourself': 'Ózińiz haqqında aytıń',
             'gender': 'Jınıs',
@@ -2105,6 +2120,9 @@ const tg = window.Telegram?.WebApp;
             'language_changed': '✅ Забон иваз шуд: {lang}',
             'close': 'Пӯшидан',
             'change_language': 'Ивази забон',
+            'theme_toggle_title': 'Реҷаи шабона',
+            'theme_mode_light': 'Рӯзона',
+            'theme_mode_dark': 'Шабона',
             'fill_profile': 'Анкетаро пур кунед',
             'about_yourself': 'Дар бораи худатон нақл кунед',
             'gender': 'Ҷинс',
@@ -2492,6 +2510,9 @@ const tg = window.Telegram?.WebApp;
             'language_changed': '✅ Language changed: {lang}',
             'close': 'Close',
             'change_language': 'Change language',
+            'theme_toggle_title': 'Dark mode',
+            'theme_mode_light': 'Light',
+            'theme_mode_dark': 'Dark',
             'fill_profile': 'Fill out profile',
             'about_yourself': 'Tell us about yourself',
             'gender': 'Gender',
@@ -3257,7 +3278,77 @@ const tg = window.Telegram?.WebApp;
         applyTranslations();
     }
 
+    // ========== KO'RINISH REJIMI (KUNDUZGI/TUNGI) ==========
+    const THEME_STORAGE_KEY = 'app_theme';
+    const SUN_ICON_SVG = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>';
+    const MOON_ICON_SVG = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>';
+
+    // Ekranga chiqarish (DOM'ni yangilash), backendga saqlamaydi
+    function applyTheme(theme) {
+        const isDark = theme === 'dark';
+        document.body.classList.toggle('dark-theme', isDark);
+
+        const toggleEl = document.getElementById('theme-toggle');
+        if (toggleEl) toggleEl.checked = isDark;
+
+        const iconEl = document.getElementById('theme-row-icon');
+        if (iconEl) iconEl.innerHTML = isDark ? MOON_ICON_SVG : SUN_ICON_SVG;
+
+        const labelEl = document.getElementById('theme-row-current-text');
+        if (labelEl) {
+            labelEl.setAttribute('data-i18n', isDark ? 'theme_mode_dark' : 'theme_mode_light');
+            labelEl.textContent = tr(isDark ? 'theme_mode_dark' : 'theme_mode_light') || (isDark ? 'Tungi' : 'Kunduzgi');
+        }
+
+        // Telegram WebApp header/background rangini ham moslashtirish (agar mavjud bo'lsa)
+        try {
+            if (tg && tg.setBackgroundColor) tg.setBackgroundColor(isDark ? '#121212' : '#F2F2F7');
+            if (tg && tg.setHeaderColor) tg.setHeaderColor(isDark ? '#121212' : '#F2F2F7');
+        } catch (e) {}
+    }
+
+    // Foydalanuvchi profil bo'limidagi tumblerni bosganda chaqiriladi
+    async function onThemeToggleChange() {
+        const toggleEl = document.getElementById('theme-toggle');
+        const theme = toggleEl && toggleEl.checked ? 'dark' : 'light';
+        applyTheme(theme);
+        localStorage.setItem(THEME_STORAGE_KEY, theme);
+        if (userId) {
+            try {
+                await apiPost('/api/theme', { telegram_id: userId, theme });
+            } catch (e) {
+                console.warn('Failed to save theme to backend:', e);
+            }
+        }
+    }
+
+    // Backend'dan foydalanuvchi rejimini yuklash (boshqa qurilmada o'zgargan bo'lishi mumkin)
+    async function loadUserTheme() {
+        if (!userId) return;
+        try {
+            const data = await apiPost('/api/theme', { telegram_id: userId });
+            if (data.success && data.theme) {
+                applyTheme(data.theme);
+                localStorage.setItem(THEME_STORAGE_KEY, data.theme);
+            }
+        } catch (e) {
+            console.warn('Failed to load theme from backend:', e);
+        }
+    }
+
+    // initTheme - sahifa ko'rsatilishidan oldin, "yorqinlik chaqnashi"ni oldini olish uchun
+    // avval localStorage'dan darhol qo'llanadi, keyin backend bilan sinxronlanadi
+    async function initTheme() {
+        const savedTheme = localStorage.getItem(THEME_STORAGE_KEY);
+        applyTheme(savedTheme === 'dark' ? 'dark' : 'light');
+        if (userId) {
+            await loadUserTheme();
+        }
+    }
+
     const PROFILE_STORAGE_PREFIX = 'dating_profile_';
+
+
 
     function getProfileStorageKey(targetId = userId) {
       if (targetId && Number.isFinite(Number(targetId))) {
@@ -7763,6 +7854,9 @@ const tg = window.Telegram?.WebApp;
     // === INIT ===
     document.addEventListener('DOMContentLoaded', async () => {
         removeLegacyProfileStorage();
+
+        // Rejimni (kunduzgi/tungi) darhol qo'llash - "chaqnash"ni oldini olish uchun
+        await initTheme();
 
         // Tilni AVVAL yuklash - sahifa ko'rsatilishidan oldin (await!)
         await initLanguage();
