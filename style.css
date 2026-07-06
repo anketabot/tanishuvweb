@@ -6170,6 +6170,10 @@ body.pre-init .lang-modal-overlay.show {
 .ios-toggle-wrap input:checked + .ios-toggle-track::after {
   transform: translateX(20px);
 }
+
+.ios-toggle-wrap input:checked + .ios-toggle-track.theme-toggle-track {
+  background: #4DA3FF;
+}
 /* ===== QIDIRUV STATISTIKA BANNERI ===== */
 .search-stat-card {
   display: flex;
@@ -6380,4 +6384,72 @@ img {
   font-size: 13px;
   font-weight: 700;
   cursor: pointer;
+}
+/* ========== TUNGI REJIM (DARK MODE) ========== */
+/* Sof qora (#000000) o'rniga to'q kulrang/qora-kulrang fon ishlatiladi -
+   bu ko'z charchashini kamaytiradi va WhatsApp/Telegram/Discord kabi
+   messenjerlarda qo'llanilgan tavsiya etilgan yondashuv. */
+body.dark-theme {
+  --bg: #121212;
+  --bg-gradient-start: #121212;
+  --bg-gradient-end: #181818;
+
+  --glass-bg: rgba(30, 30, 30, 0.65);
+  --glass-bg-light: rgba(42, 42, 42, 0.85);
+  --glass-bg-strong: rgba(30, 30, 30, 0.92);
+  --glass-border: rgba(255, 255, 255, 0.08);
+  --glass-border-strong: rgba(255, 255, 255, 0.16);
+  --glass-border-blue: rgba(77, 163, 255, 0.28);
+  --glass-shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 10px 30px rgba(0, 0, 0, 0.35);
+  --glass-shadow-blue: 0 1px 2px rgba(0, 0, 0, 0.3), 0 10px 32px rgba(77, 163, 255, 0.18);
+
+  --text-primary: #EAEAEA;
+  --text-secondary: rgba(234, 234, 234, 0.65);
+  --text-tertiary: rgba(234, 234, 234, 0.4);
+  --text-blue: #4DA3FF;
+  --text-blue-bright: #4DA3FF;
+
+  --elevation-1:
+    0 1px 1px rgba(0, 0, 0, 0.3),
+    0 4px 10px rgba(0, 0, 0, 0.28),
+    0 10px 24px rgba(0, 0, 0, 0.22);
+  --elevation-2:
+    0 1px 2px rgba(0, 0, 0, 0.32),
+    0 8px 18px rgba(0, 0, 0, 0.3),
+    0 20px 44px rgba(0, 0, 0, 0.28);
+  --elevation-3:
+    0 2px 4px rgba(0, 0, 0, 0.34),
+    0 14px 28px rgba(0, 0, 0, 0.32),
+    0 32px 64px rgba(0, 0, 0, 0.3);
+  --elevation-press:
+    0 1px 1px rgba(0, 0, 0, 0.25),
+    0 2px 6px rgba(0, 0, 0, 0.2);
+  --inner-sheen: inset 0 1px 1px rgba(255, 255, 255, 0.06);
+}
+
+/* Chat oynasi va xabar pufakchalari - WhatsApp/Telegram uslubidagi
+   tavsiya etilgan tungi palitra (kiruvchi #2A2A2A, chiquvchi yashil tonlar) */
+body.dark-theme .chat-bubble.them,
+body.dark-theme .chat-msg-them {
+  background: #2A2A2A;
+  border-color: rgba(255, 255, 255, 0.06);
+}
+
+body.dark-theme .chat-bubble.me,
+body.dark-theme .chat-msg-me {
+  background: linear-gradient(135deg, #0B6E4F, #0F8A63);
+  box-shadow: 0 6px 18px rgba(11, 110, 79, 0.3);
+}
+
+/* Sahifalar va modallar fonini ham yangi --bg qiymatiga moslashtirish */
+body.dark-theme .page,
+body.dark-theme .modal-overlay {
+  background: var(--bg);
+}
+
+/* Tungi rejimda quyosh/oy ikonkasi va matnining ko'k urg'usi */
+body.dark-theme #theme-row-icon {
+  color: #4DA3FF;
+  background: linear-gradient(135deg, rgba(77,163,255,0.16), rgba(77,163,255,0.08));
+  border-color: rgba(77,163,255,0.2);
 }
