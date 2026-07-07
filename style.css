@@ -6656,3 +6656,11 @@ body.dark-theme .stats-uname,
 body.dark-theme .stats-umeta {
   color: var(--text-primary);
 }
+
+/* Ensure modal full-width buttons don't overflow the modal edges
+   and keep equal spacing on both sides. Inline styles are overridden */
+.modal-content .btn-primary {
+  box-sizing: border-box;
+  width: calc(100% - 36px) !important; /* account for modal horizontal padding (18px each side) */
+  margin: 0 18px 10px !important;
+}
