@@ -7021,7 +7021,7 @@ const tg = window.Telegram?.WebApp;
 
       list.innerHTML = REPORT_CATEGORIES.map(cat => `
         <button type="button" class="report-cat-btn" data-cat="${cat}" onclick="selectReportCategory('${cat}')"
-          style="text-align:left; padding:12px 16px; border-radius:14px; border:1.5px solid rgba(23,166,115,0.18); background:var(--card-bg,#fff); cursor:pointer; font-size:14px;">
+          style="text-align:left; padding:12px 16px; border-radius:14px; border:1.5px solid var(--accent-tint-18); background:var(--card-bg,#fff); cursor:pointer; font-size:14px;">
           ${tr('report_cat_' + cat)}
         </button>
       `).join('');
@@ -7033,8 +7033,8 @@ const tg = window.Telegram?.WebApp;
       reportContext.category = cat;
       document.querySelectorAll('.report-cat-btn').forEach(btn => {
         const active = btn.dataset.cat === cat;
-        btn.style.borderColor = active ? 'var(--primary)' : 'rgba(23,166,115,0.18)';
-        btn.style.background = active ? 'rgba(23,166,115,0.08)' : 'var(--card-bg,#fff)';
+        btn.style.borderColor = active ? 'var(--primary)' : 'var(--accent-tint-18)';
+        btn.style.background = active ? 'var(--accent-tint-08)' : 'var(--card-bg,#fff)';
       });
       const submitBtn = document.getElementById('report-submit-btn');
       if (submitBtn) submitBtn.disabled = false;
@@ -7160,7 +7160,7 @@ const tg = window.Telegram?.WebApp;
       const profileLocation = locationLabel || (u.city ? translateCityLabel(u.city) : tr('no_city'));
       const goals = (u.goals || []).map(g => `<span class="tag">${tr(g) || g}</span>`).join('');
       const visibleInterests = (u.interests || []).slice(0, MAX_INTERESTS_ALLOWED);
-      const interests = (u.interests || []).slice(0, MAX_INTERESTS_ALLOWED).map(i => `<span class="tag" style="background:rgba(23,166,115,0.10);color:var(--ios-blue);">${tr(i) || i}</span>`).join('');
+      const interests = (u.interests || []).slice(0, MAX_INTERESTS_ALLOWED).map(i => `<span class="tag" style="background:var(--accent-tint-10);color:var(--ios-blue);">${tr(i) || i}</span>`).join('');
       const aboutText = (u.about || '').trim();
       const photoHtml = photo
         ? `<div class="profile-detail-photo-wrap"><img src="${photo}" alt="${u.full_name}" onclick="openPhotoViewer('${escapeJs(photo)}','${escapeJs(u.full_name)}')" /></div>`
