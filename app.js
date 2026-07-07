@@ -6817,7 +6817,7 @@ const tg = window.Telegram?.WebApp;
 
       list.innerHTML = REPORT_CATEGORIES.map(cat => `
         <button type="button" class="report-cat-btn" data-cat="${cat}" onclick="selectReportCategory('${cat}')"
-          style="text-align:left; padding:12px 16px; border-radius:14px; border:1.5px solid rgba(0,122,255,0.18); background:var(--card-bg,#fff); cursor:pointer; font-size:14px;">
+          style="text-align:left; padding:12px 16px; border-radius:14px; border:1.5px solid rgba(23,166,115,0.18); background:var(--card-bg,#fff); cursor:pointer; font-size:14px;">
           ${tr('report_cat_' + cat)}
         </button>
       `).join('');
@@ -6829,8 +6829,8 @@ const tg = window.Telegram?.WebApp;
       reportContext.category = cat;
       document.querySelectorAll('.report-cat-btn').forEach(btn => {
         const active = btn.dataset.cat === cat;
-        btn.style.borderColor = active ? 'var(--primary)' : 'rgba(0,122,255,0.18)';
-        btn.style.background = active ? 'rgba(0,122,255,0.08)' : 'var(--card-bg,#fff)';
+        btn.style.borderColor = active ? 'var(--primary)' : 'rgba(23,166,115,0.18)';
+        btn.style.background = active ? 'rgba(23,166,115,0.08)' : 'var(--card-bg,#fff)';
       });
       const submitBtn = document.getElementById('report-submit-btn');
       if (submitBtn) submitBtn.disabled = false;
@@ -6956,7 +6956,7 @@ const tg = window.Telegram?.WebApp;
       const profileLocation = locationLabel || (u.city ? translateCityLabel(u.city) : tr('no_city'));
       const goals = (u.goals || []).map(g => `<span class="tag">${tr(g) || g}</span>`).join('');
       const visibleInterests = (u.interests || []).slice(0, MAX_INTERESTS_ALLOWED);
-      const interests = (u.interests || []).slice(0, MAX_INTERESTS_ALLOWED).map(i => `<span class="tag" style="background:rgba(0,122,255,0.10);color:var(--ios-blue);">${tr(i) || i}</span>`).join('');
+      const interests = (u.interests || []).slice(0, MAX_INTERESTS_ALLOWED).map(i => `<span class="tag" style="background:rgba(23,166,115,0.10);color:var(--ios-blue);">${tr(i) || i}</span>`).join('');
       const aboutText = (u.about || '').trim();
       const photoHtml = photo
         ? `<div class="profile-detail-photo-wrap"><img src="${photo}" alt="${u.full_name}" onclick="openPhotoViewer('${escapeJs(photo)}','${escapeJs(u.full_name)}')" /></div>`
@@ -9448,7 +9448,7 @@ const tg = window.Telegram?.WebApp;
           openBtn.querySelector('.verif-btn-camera-inner').innerHTML = `
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
             <span>${tr('verif_confirmed')}</span>`;
-          openBtn.style.background = 'linear-gradient(135deg, #34a853, #007AFF)';
+          openBtn.style.background = 'linear-gradient(135deg, #34a853, #17A673)';
           openBtn.disabled = true;
         }
 
@@ -9485,7 +9485,7 @@ const tg = window.Telegram?.WebApp;
           if (inner) inner.innerHTML = `
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
             <span>${tr('verif_confirmed')}</span>`;
-          openBtn.style.background = 'linear-gradient(135deg, #34a853, #007AFF)';
+          openBtn.style.background = 'linear-gradient(135deg, #34a853, #17A673)';
           openBtn.disabled = true;
         }
         const statusEl = document.getElementById('selfie-status');
