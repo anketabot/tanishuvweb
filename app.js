@@ -220,6 +220,7 @@ const tg = window.Telegram?.WebApp;
             'reward_10': '• 10 ta do\'st → 1 oy limitsiz',
             'copy': 'Nusxa',
             'share_telegram': 'Telegramda ulashish',
+            'open_group': 'Guruhni ochish',
             'super_like_sticker': '⭐ Super Like — Sticker yuborish',
             'cancel': 'Bekor qilish',
             'no_one_found': 'Hech kim topilmadi',
@@ -625,6 +626,7 @@ const tg = window.Telegram?.WebApp;
             'reward_10': '• 10 друзей → 1 месяц без лимитов',
             'copy': 'Копировать',
             'share_telegram': 'Поделиться в Telegram',
+            'open_group': 'Открыть группу',
             'super_like_sticker': '⭐ Супер Лайк — Отправить стикер',
             'cancel': 'Отмена',
             'no_one_found': 'Никого не найдено',
@@ -1049,6 +1051,7 @@ const tg = window.Telegram?.WebApp;
             'reward_10': '• 10 дос → 1 ай лимитсіз',
             'copy': 'Көшіру',
             'share_telegram': 'Telegram-да бөлісу',
+            'open_group': 'Топты ашу',
             'super_like_sticker': '⭐ Супер Лайк — Стикер жіберу',
             'cancel': 'Болдырмау',
             'no_one_found': 'Ешкім табылмады',
@@ -1473,6 +1476,7 @@ const tg = window.Telegram?.WebApp;
             'reward_10': '• 10 дос → 1 ай лимитсиз',
             'copy': 'Көчүрүү',
             'share_telegram': 'Telegram-да бөлүшүү',
+            'open_group': 'Топту ачуу',
             'super_like_sticker': '⭐ Супер Лайк — Стикер жөнөтүү',
             'cancel': 'Жокко чыгаруу',
             'no_one_found': 'Эч ким табылбады',
@@ -1897,6 +1901,7 @@ const tg = window.Telegram?.WebApp;
             'reward_10': '• 10 dos → 1 ay limitsiz',
             'copy': 'Nusqa',
             'share_telegram': 'Telegramda bólisıw',
+            'open_group': 'Toptı ashıw',
             'super_like_sticker': '⭐ Super Layk — Stiker jiberiw',
             'cancel': 'Biykar etiw',
             'no_one_found': 'Eshkim tabılmadı',
@@ -2321,6 +2326,7 @@ const tg = window.Telegram?.WebApp;
             'reward_10': '• 10 дӯст → 1 моҳ бе лимит',
             'copy': 'Нусха',
             'share_telegram': 'Дар Telegram мубодила кардан',
+            'open_group': 'Кушодани гурӯҳ',
             'super_like_sticker': '⭐ Супер Лайк — Стикер фиристодан',
             'cancel': 'Бекор кардан',
             'no_one_found': 'Ҳеҷ кас ёфт нашуд',
@@ -2745,6 +2751,7 @@ const tg = window.Telegram?.WebApp;
             'reward_10': '• 10 friends → 1 month unlimited',
             'copy': 'Copy',
             'share_telegram': 'Share on Telegram',
+            'open_group': 'Open group',
             'super_like_sticker': '⭐ Super Like — Send a sticker',
             'cancel': 'Cancel',
             'no_one_found': 'No one found',
@@ -3792,15 +3799,17 @@ const tg = window.Telegram?.WebApp;
     }
 
     // ===== REFERRAL MODAL (YANGILANGAN - Guruhga odam qo'shish) =====
+    let currentGroupInviteLink = DEFAULT_GROUP_INVITE_LINK;
     function applyGroupInviteLink(groupLink = DEFAULT_GROUP_INVITE_LINK) {
-      const linkInput = document.getElementById('referral-link-input');
-      const shareLink = document.getElementById('referral-share-link');
+      currentGroupInviteLink = groupLink;
+    }
 
-      if (linkInput) linkInput.value = groupLink;
-      if (shareLink) {
-        const text = encodeURIComponent('Tanishuv guruhiga qo\'shiling! Yangi do\'stlarni toping.');
-        const url = encodeURIComponent(groupLink);
-        shareLink.href = `https://t.me/share/url?url=${url}&text=${text}`;
+    function openGroupLink() {
+      const link = currentGroupInviteLink || DEFAULT_GROUP_INVITE_LINK;
+      if (tg && typeof tg.openTelegramLink === 'function') {
+        tg.openTelegramLink(link);
+      } else {
+        window.open(link, '_blank');
       }
     }
 
@@ -3849,16 +3858,6 @@ const tg = window.Telegram?.WebApp;
     function closeReferralModal(e) {
       if (e && e.target !== e.currentTarget && e.target !== document.getElementById('referral-modal')) return;
       document.getElementById('referral-modal').style.display = 'none';
-    }
-
-    function copyReferralLink() {
-      const input = document.getElementById('referral-link-input');
-      if (input) {
-        input.select();
-        navigator.clipboard.writeText(input.value).then(() => {
-          showToast(tr('link_copied'));
-        });
-      }
     }
 
     // ===== MESSAGE MODAL =====
