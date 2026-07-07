@@ -2139,7 +2139,7 @@ h1, h2, h3, h4, .header-title, .profile-name, .tinder-photo-name, .chat-list-nam
   width: min(100%, 460px);
   max-height: 92vh;
   border-radius: 34px 34px 20px 20px;
-  padding: 20px 18px 20px;
+  padding: 20px 18px calc(20px + var(--safe-bottom));
   box-sizing: border-box;
   overflow-y: auto;
   overflow-x: hidden;
