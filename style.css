@@ -6598,6 +6598,32 @@ body.dark-theme .location-card {
   border-color: rgba(52,211,153,0.18) !important;
 }
 
+/* Kunlik burjlar bashorati kartasi - tepasi oq/yorug' bo'lib qolmasligi uchun */
+body.dark-theme .horoscope-card {
+  background: linear-gradient(135deg, rgba(88, 86, 214, 0.16), rgba(23,166,115, 0.12)) !important;
+  border-color: rgba(88, 86, 214, 0.3) !important;
+}
+
+/* Har bir bashorat bo'limi (Sevgi, Omad) - oq fon o'rniga to'q kulrang */
+body.dark-theme .horoscope-section {
+  background: rgba(255,255,255,0.06) !important;
+}
+
+/* Kartalardagi dekorativ oq porlash (glow) doiralarini tungi rejimda olib tashlash */
+body.dark-theme .horoscope-card::after,
+body.dark-theme .zodiac-card::after {
+  display: none;
+}
+
+/* ASOSIY TUZATISH: har bir .card elementining yuqori yarmiga surtilgan
+   oq "shisha yaltirashi" (::before) - bu BARCHA kartalarda (qidiruv,
+   burj, bashorat va h.k.) tepasi oq bo'lib ko'rinishiga sabab bo'lardi.
+   Tungi rejimda bu effekt juda xira, deyarli sezilmas qilib qo'yiladi. */
+body.dark-theme .card::before,
+body.dark-theme .profile-card::before {
+  background: linear-gradient(180deg, rgba(255,255,255,0.03) 0%, transparent 100%);
+}
+
 body.dark-theme .header,
 body.dark-theme .bottom-nav {
   border-bottom: 1px solid rgba(255,255,255,0.06);
