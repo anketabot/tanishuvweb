@@ -30,6 +30,10 @@
   --text-blue: #007AFF;
   --text-blue-bright: #5AC8FA;
 
+  /* Umumiy sirt (surface) rangi - kartalar, qatorlar uchun */
+  --surface: rgba(255, 255, 255, 0.9);
+  --card-bg: rgba(255, 255, 255, 0.9);
+
   /* iOS Radius — softer, more "continuous corner" premium scale */
   --ios-radius-sm: 14px;
   --ios-radius: 22px;
@@ -513,7 +517,7 @@ h1, h2, h3, h4, .header-title, .profile-name, .tinder-photo-name, .chat-list-nam
 
 .form-select option {
   color: var(--text-primary);
-  background: rgba(255, 255, 255, 0.98);
+  background: var(--surface);
 }
 
 /* Region selector */
@@ -547,7 +551,7 @@ h1, h2, h3, h4, .header-title, .profile-name, .tinder-photo-name, .chat-list-nam
 }
 .region-select option {
   color: var(--text-primary);
-  background: #fff;
+  background: var(--surface);
 }
 
 /* ========== ZODIAC GLASS SELECTOR ========== */
@@ -2869,7 +2873,7 @@ h1, h2, h3, h4, .header-title, .profile-name, .tinder-photo-name, .chat-list-nam
 .chat-input-field:focus {
   border-color: var(--ios-blue);
   box-shadow: 0 0 0 3.5px rgba(0, 122, 255, 0.12), inset 0 1px 2px rgba(0,0,0,0.04);
-  background: #fff;
+  background: var(--surface);
 }
 
 .chat-input-field::placeholder {
@@ -3899,7 +3903,7 @@ h1, h2, h3, h4, .header-title, .profile-name, .tinder-photo-name, .chat-list-nam
   font-weight: 600;
   font-size: 14px;
   padding: 10px;
-  background: #fff;
+  background: var(--surface);
   color: var(--text-primary);
 }
 
@@ -4374,7 +4378,7 @@ body.pre-init .lang-modal-overlay.show {
   align-items: center;
   gap: 10px;
   padding: 10px 12px;
-  background: var(--surface,#fff);
+  background: var(--surface);
   border-radius: 16px;
   margin-bottom: 8px;
   box-shadow: 0 1px 6px rgba(0,0,0,.06);
@@ -6409,6 +6413,10 @@ body.dark-theme {
   --text-blue: #4DA3FF;
   --text-blue-bright: #4DA3FF;
 
+  /* Kartalar/qatorlar uchun sirt rangi - endi to'q kulrang, oq emas */
+  --surface: #1E1E1E;
+  --card-bg: #1E1E1E;
+
   --elevation-1:
     0 1px 1px rgba(0, 0, 0, 0.3),
     0 4px 10px rgba(0, 0, 0, 0.28),
@@ -6452,4 +6460,146 @@ body.dark-theme #theme-row-icon {
   color: #4DA3FF;
   background: linear-gradient(135deg, rgba(77,163,255,0.16), rgba(77,163,255,0.08));
   border-color: rgba(77,163,255,0.2);
+}
+
+/* ========================================================================
+   TUNGI REJIM - QO'SHIMCHA TOZALASH VA CHIROYLILASHTIRISH
+   Barcha "oq shisha" (glass-white) fonlar to'q kulrangga almashtiriladi,
+   shuningdek nafis hairline chegaralar va yumshoq porlash (glow) effektlari
+   qo'shiladi - bu WhatsApp/Telegram/Discord uslubidagi zamonaviy tungi
+   ko'rinishni beradi.
+   ======================================================================== */
+
+/* Umumiy fon gradienti - biroz boyroq, ko'kroq soya bilan */
+body.dark-theme {
+  background: radial-gradient(ellipse 120% 60% at 50% -10%, rgba(77,163,255,0.06), transparent 60%),
+              linear-gradient(180deg, #101010 0%, #121212 50%, #151515 100%);
+}
+
+/* Header, pastki navigatsiya, chat va sheet sarlavhalari */
+body.dark-theme .header,
+body.dark-theme .bottom-nav,
+body.dark-theme .chat-header,
+body.dark-theme .sheet-header,
+body.dark-theme .chat-input-area,
+body.dark-theme .limit-status-bar {
+  background: rgba(24, 24, 24, 0.9) !important;
+  border-color: rgba(255,255,255,0.07);
+}
+
+/* Modal, toast, dropdown, panel kabi "qalqib chiquvchi" elementlar */
+body.dark-theme .toast,
+body.dark-theme .suggestions-box,
+body.dark-theme .modal-content,
+body.dark-theme .lang-modal-content,
+body.dark-theme .emoji-panel,
+body.dark-theme .sticker-sheet,
+body.dark-theme .loc-dropdown {
+  background: rgba(28, 28, 28, 0.97) !important;
+  border-color: rgba(255,255,255,0.08);
+  box-shadow: 0 12px 40px rgba(0,0,0,0.5);
+}
+
+/* Input, select va tanlov elementlari */
+body.dark-theme .form-input,
+body.dark-theme .form-select,
+body.dark-theme .region-select,
+body.dark-theme .zodiac-select,
+body.dark-theme .zodiac-picker-toggle,
+body.dark-theme .zodiac-options,
+body.dark-theme .zodiac-option,
+body.dark-theme .gender-btn,
+body.dark-theme .loc-trigger,
+body.dark-theme #sf-zodiac,
+body.dark-theme .chat-input-field,
+body.dark-theme .mp-tab-btn,
+body.dark-theme .mp-limit-chip,
+body.dark-theme .verif-card,
+body.dark-theme .stats-row {
+  background: linear-gradient(135deg, #232323, #1B1B1B) !important;
+  border-color: rgba(255,255,255,0.1) !important;
+  box-shadow: inset 0 1px 1px rgba(255,255,255,0.04);
+}
+
+body.dark-theme .chat-input-field:focus,
+body.dark-theme .form-input:focus,
+body.dark-theme .form-select:focus,
+body.dark-theme .zodiac-select:focus,
+body.dark-theme .loc-trigger:focus,
+body.dark-theme #sf-zodiac:focus {
+  background: #262626 !important;
+  box-shadow: 0 0 0 3.5px rgba(77,163,255,0.18), inset 0 1px 1px rgba(255,255,255,0.05) !important;
+}
+
+/* Native <option> elementlari - brauzer oq fon bilan ko'rsatmasligi uchun */
+body.dark-theme option,
+body.dark-theme select option {
+  background: #1E1E1E !important;
+  color: var(--text-primary) !important;
+}
+
+/* Tanlangan / bosilgan holatlar (jins tugmalari, zodiak, va h.k.) */
+body.dark-theme .zodiac-card,
+body.dark-theme .zodiac-shell,
+body.dark-theme .zodiac-icon {
+  background: linear-gradient(145deg, #202020, #171717) !important;
+}
+
+body.dark-theme .gender-btn:active,
+body.dark-theme .gender-btn.selected,
+body.dark-theme .gender-male-btn:active,
+body.dark-theme .gender-female-btn:active {
+  background: linear-gradient(145deg, #1D2B33, #171717) !important;
+}
+
+body.dark-theme .zodiac-option.selected,
+body.dark-theme .zodiac-picker-toggle.selected {
+  background: linear-gradient(135deg, #22303A, #1B1B1B) !important;
+}
+
+/* Rasm joy-tutuvchilari (surat yuklanmagunча) */
+body.dark-theme .photo-upload,
+body.dark-theme #photo-preview,
+body.dark-theme .profile-photo img,
+body.dark-theme .my-profile-photo img,
+body.dark-theme .tinder-photo img,
+body.dark-theme .minimal-photo-wrap,
+body.dark-theme .profile-detail-photo-wrap,
+body.dark-theme .champion-item,
+body.dark-theme .viewed-item {
+  background: linear-gradient(135deg, #202020, #171717) !important;
+}
+
+/* Tinder-uslubidagi kartalar */
+body.dark-theme .tinder-body {
+  background: rgba(24,24,24,0.92) !important;
+}
+
+body.dark-theme .tinder-actions {
+  background: linear-gradient(to bottom, rgba(18,18,18,0), rgba(18,18,18,0.94) 30%) !important;
+}
+
+body.dark-theme .tinder-btn-nope,
+body.dark-theme .tinder-btn-superlike,
+body.dark-theme .tinder-btn-like,
+body.dark-theme .tinder-btn-msg {
+  background: linear-gradient(150deg, #232323, #1B1B1B) !important;
+}
+
+/* iOS-uslubidagi tumbler - trekni tungi rejimda ko'kroq/porloqroq qilish,
+   dumaloq tugma esa an'anaviy oq holicha qoladi (Apple uslubi) */
+body.dark-theme .ios-toggle-track {
+  background: #3A3A3C;
+}
+
+/* Nafis hairline ajratuvchilar - flat qora fonlarga chuqurlik beradi */
+body.dark-theme .header,
+body.dark-theme .bottom-nav {
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+
+/* Ikkilamchi qo'ng'iroq/nishon (badge) fonlari */
+body.dark-theme .stats-uname,
+body.dark-theme .stats-umeta {
+  color: var(--text-primary);
 }
