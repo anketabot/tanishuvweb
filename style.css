@@ -6592,7 +6592,12 @@ body.dark-theme .ios-toggle-track {
   background: #3A3A3C;
 }
 
-/* Nafis hairline ajratuvchilar - flat qora fonlarga chuqurlik beradi */
+/* "Joylashuv bo'yicha qidirish" kartasi - anketa/qidiruv sahifasida */
+body.dark-theme .location-card {
+  background: linear-gradient(145deg, rgba(30,30,30,0.98), rgba(24,24,24,0.99)) !important;
+  border-color: rgba(52,211,153,0.18) !important;
+}
+
 body.dark-theme .header,
 body.dark-theme .bottom-nav {
   border-bottom: 1px solid rgba(255,255,255,0.06);
