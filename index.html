@@ -431,21 +431,17 @@
 
   <div class="card">
     <div class="section-title" data-i18n="your_goal">Maqsadingiz</div>
-    <!-- Jiddiy niyat: ixtiyoriy, yoqilsa "faqat jiddiy niyatlilar" sozlamasini yoqqan foydalanuvchilarga yozish imkoni beradi -->
-    <label class="serious-toggle-label">
-      <div class="serious-toggle-text">
-        <span class="serious-toggle-icon">💍</span>
-        <div>
-          <div class="serious-toggle-title" data-i18n="serious_intent_title">Jiddiy niyatdaman (oila qurish uchun)</div>
-          <div class="serious-toggle-sub" data-i18n="serious_intent_sub">Yoqsangiz, "faqat jiddiy niyatlilar" sozlamasini yoqqan foydalanuvchilarga yoza olasiz</div>
-        </div>
-      </div>
-      <div class="ios-toggle-wrap">
-        <input type="checkbox" id="serious-intent-toggle" onchange="onSeriousIntentChange()" />
-        <span class="ios-toggle-track"></span>
-      </div>
-    </label>
-    <!-- Ayollar uchun: faqat jiddiy niyatlilarga ko'rinish -->
+    <div class="chips-wrap" id="goals-chips">
+      <div class="chip" data-i18n-chip="goal_jiddiy" onclick="toggleChip(this,'goals')">💍 Jiddiy</div>
+      <div class="chip" data-i18n-chip="goal_dostlik" onclick="toggleChip(this,'goals')">Do'stlik</div>
+      <div class="chip" data-i18n-chip="goal_tanishuv" onclick="toggleChip(this,'goals')">Tanishuv</div>
+      <div class="chip" data-i18n-chip="goal_oila" onclick="toggleChip(this,'goals')">Oila</div>
+      <div class="chip" data-i18n-chip="goal_sevgi" onclick="toggleChip(this,'goals')">Sevgi</div>
+      <div class="chip" data-i18n-chip="goal_romantika" onclick="toggleChip(this,'goals')">Romantika</div>
+      <div class="chip" data-i18n-chip="goal_uchrashuv" onclick="toggleChip(this,'goals')">Uchrashuv</div>
+      <div class="chip" data-i18n-chip="goal_virtual" onclick="toggleChip(this,'goals')">Virtual muloqot</div>
+    </div>
+    <!-- Ayollar uchun qo'shimcha sozlama: faqat jiddiy niyatlilarga ko'rinish -->
     <div id="only-serious-wrap" style="display:none; margin-top:16px;">
       <label class="serious-toggle-label">
         <div class="serious-toggle-text">
