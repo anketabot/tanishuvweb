@@ -237,6 +237,7 @@ const tg = window.Telegram?.WebApp;
             'photo_viewer_photo': 'Foto',
             'chat_image_btn': 'Rasm yuborish',
             'chat_input_placeholder': 'Xabar yozing...',
+            'you_prefix': 'Siz: ',
             'name_placeholder': 'To\'liq ismingiz',
             'age_placeholder': 'Masalan: 22',
             'city_placeholder': 'Yashash joyingiz',
@@ -644,6 +645,7 @@ const tg = window.Telegram?.WebApp;
             'photo_viewer_photo': 'Фото',
             'chat_image_btn': 'Отправить фото',
             'chat_input_placeholder': 'Напишите сообщение...',
+            'you_prefix': 'Вы: ',
             'name_placeholder': 'Ваше полное имя',
             'age_placeholder': 'Например: 22',
             'city_placeholder': 'Ваше место жительства',
@@ -1069,6 +1071,7 @@ const tg = window.Telegram?.WebApp;
             'photo_viewer_photo': 'Фото',
             'chat_image_btn': 'Фото жіберу',
             'chat_input_placeholder': 'Хабар жазыңыз...',
+            'you_prefix': 'Сіз: ',
             'name_placeholder': 'Толық атыңыз',
             'age_placeholder': 'Мысалы: 22',
             'city_placeholder': 'Өмір сүру орныңыз',
@@ -1494,6 +1497,7 @@ const tg = window.Telegram?.WebApp;
             'photo_viewer_photo': 'Сүрөт',
             'chat_image_btn': 'Сүрөт жөнөтүү',
             'chat_input_placeholder': 'Билдирүү жазыңыз...',
+            'you_prefix': 'Сиз: ',
             'name_placeholder': 'Толук ат-жөнүңүз',
             'age_placeholder': 'Мисалы: 22',
             'city_placeholder': 'Жашаган жериңиз',
@@ -1919,6 +1923,7 @@ const tg = window.Telegram?.WebApp;
             'photo_viewer_photo': 'Súwret',
             'chat_image_btn': 'Súwret jiberiw',
             'chat_input_placeholder': 'Xabar jazıń...',
+            'you_prefix': 'Siz: ',
             'name_placeholder': 'Tolyq atıńız',
             'age_placeholder': 'Meselen: 22',
             'city_placeholder': 'Ornıńız',
@@ -2344,6 +2349,7 @@ const tg = window.Telegram?.WebApp;
             'photo_viewer_photo': 'Сурат',
             'chat_image_btn': 'Сурат фиристодан',
             'chat_input_placeholder': 'Паём ёддошт кунед...',
+            'you_prefix': 'Шумо: ',
             'name_placeholder': 'Номи пурра шумо',
             'age_placeholder': 'Масалан: 22',
             'city_placeholder': 'Ҷойи сукунатан',
@@ -2769,6 +2775,7 @@ const tg = window.Telegram?.WebApp;
             'photo_viewer_photo': 'Photo',
             'chat_image_btn': 'Send photo',
             'chat_input_placeholder': 'Type a message...',
+            'you_prefix': 'You: ',
             'name_placeholder': 'Your full name',
             'age_placeholder': 'E.g.: 22',
             'city_placeholder': 'Where you live',
@@ -7484,9 +7491,22 @@ const tg = window.Telegram?.WebApp;
       chatList.innerHTML = data.matches.map(m => {
         const photo = m.photo_base64 || m.photo_file_id || '';
         const partnerData = escapeHtmlAttr(JSON.stringify(m));
+        const unread = Number(m.unread_count || 0);
+        const isUnread = unread > 0;
+        const isImageMsg = typeof m.last_message === 'string' && m.last_message.startsWith('[RASM]');
+        let preview;
+        if (isImageMsg) {
+          preview = '📷 ' + tr('chat_image_btn');
+        } else if (m.last_message) {
+          const iSentIt = m.last_sender_id != null && Number(m.last_sender_id) === telegramId;
+          const prefix = iSentIt ? tr('you_prefix') : '';
+          preview = escapeHtml(prefix + String(m.last_message).slice(0, 60));
+        } else {
+          preview = tr('open_chat');
+        }
         return `
           <div
-            class="chat-item"
+            class="chat-item${isUnread ? ' chat-item-unread' : ''}"
             data-match-id="${m.match_id}"
             data-name="${escapeHtmlAttr(m.full_name || '')}"
             data-photo="${escapeHtmlAttr(photo)}"
@@ -7497,11 +7517,16 @@ const tg = window.Telegram?.WebApp;
             </div>
             <div class="chat-item-info">
               <div class="chat-item-name">${m.full_name}</div>
-              <div class="chat-item-preview">${tr('open_chat')}</div>
+              <div class="chat-item-preview">${preview}</div>
             </div>
+            ${isUnread ? `<span class="chat-item-badge">${unread > 9 ? '9+' : unread}</span>` : ''}
           </div>
         `;
       }).join('');
+
+      // Pastki navigatsiyadagi "Chat" bo'limi ustidagi belgi (badge) ni
+      // shu foydalanuvchining barcha o'qilmagan xabarlari soniga moslab yangilaymiz.
+      updateChatNavBadge(data.matches.reduce((sum, m) => sum + Number(m.unread_count || 0), 0));
 
       chatList.querySelectorAll('.chat-item').forEach(item => {
         item.addEventListener('click', () => {
@@ -7513,6 +7538,39 @@ const tg = window.Telegram?.WebApp;
           );
         });
       });
+    }
+
+    // Pastki navigatsiyadagi Chat belgisini (badge) yangilaydi.
+    // 0 bo'lsa belgi butunlay yashiriladi.
+    function updateChatNavBadge(count) {
+      const badge = document.getElementById('chat-badge');
+      if (!badge) return;
+      const n = Number(count || 0);
+      if (n > 0) {
+        badge.textContent = n > 99 ? '99+' : String(n);
+        badge.style.display = 'inline-block';
+      } else {
+        badge.style.display = 'none';
+      }
+    }
+
+    let chatBadgePollInterval = null;
+    // Foydalanuvchi Chat bo'limida bo'lmasa ham, yangi xabar kelganini
+    // pastki navigatsiyadagi belgi orqali bilib turishi uchun fonda tekshirib turamiz.
+    async function refreshChatBadge() {
+      try {
+        const telegramId = Number(userId);
+        if (!Number.isFinite(telegramId) || telegramId <= 0) return;
+        const data = await apiPost('/api/matches', { telegram_id: telegramId });
+        if (!data.success || !data.matches) return;
+        updateChatNavBadge(data.matches.reduce((sum, m) => sum + Number(m.unread_count || 0), 0));
+      } catch (e) { /* jimgina o'tkazib yuboramiz - fon jarayoni */ }
+    }
+
+    function startChatBadgePolling() {
+      refreshChatBadge();
+      if (chatBadgePollInterval) clearInterval(chatBadgePollInterval);
+      chatBadgePollInterval = setInterval(refreshChatBadge, 15000);
     }
 
     function openChatRoom(matchId, name, photo, partnerData = null) {
@@ -7584,6 +7642,14 @@ const tg = window.Telegram?.WebApp;
       lastLoadedChatMessages = data.messages || [];
       container.innerHTML = data.messages.map(m => renderChatBubbleHTML(m, m.sender_id == userId)).join('');
       container.scrollTop = container.scrollHeight;
+
+      // Suhbat ochiq turgan payt kelgan xabarlarni "o'qildi" deb belgilaymiz,
+      // shunda chat ro'yxatidagi va pastki navigatsiyadagi yangi xabar
+      // belgisi (badge) darhol yo'qoladi.
+      try {
+        await apiPost('/api/chat/mark_read', { match_id: matchId, telegram_id: userId });
+        refreshChatBadge();
+      } catch (e) { /* jimgina o'tkazib yuboramiz */ }
     }
 
     let isSendingChatMessage = false;
@@ -8130,6 +8196,7 @@ const tg = window.Telegram?.WebApp;
             showPage('search');
             loadLimitStatus();
             startAnonPolling();
+            startChatBadgePolling();
             // Sahifa yuklangandan so'ng tarjimalarni qayta qo'llash
             setTimeout(() => applyTranslations(), 100);
           } else {
