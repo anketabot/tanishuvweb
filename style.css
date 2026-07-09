@@ -3180,10 +3180,11 @@ h1, h2, h3, h4, .header-title, .profile-name, .tinder-photo-name, .chat-list-nam
   background: rgba(0,122,255,0.12);
 }
 
-/* Photo area - FLEX GROW TO FILL ALL SPACE */
+/* Photo area - fixed proportion, info panel now lives below it */
 .tinder-photo {
   width: 100%;
-  flex: 1 1 0;
+  flex: 0 0 56%;
+  height: 56%;
   min-height: 0;
   object-fit: cover;
   background: linear-gradient(135deg, rgba(0,122,255,0.07), rgba(0,0,0,0.07));
@@ -3193,6 +3194,41 @@ h1, h2, h3, h4, .header-title, .profile-name, .tinder-photo-name, .chat-list-nam
   position: relative;
   overflow: hidden;
 }
+
+/* Top-right circular icon buttons over the photo (report / block) */
+.tinder-photo-topbar {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  z-index: 5;
+  display: flex;
+  gap: 8px;
+}
+.tinder-icon-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  transition: background 0.2s ease, transform 0.2s ease;
+  padding: 0;
+}
+.tinder-icon-btn svg { width: 17px; height: 17px; display: block; pointer-events: none; }
+.tinder-icon-btn-warn {
+  background: rgba(255, 149, 0, 0.85);
+  color: #fff;
+}
+.tinder-icon-btn-warn:active { transform: scale(0.9); background: rgba(255, 149, 0, 1); }
+.tinder-icon-btn-more {
+  background: rgba(0, 0, 0, 0.35);
+  color: #fff;
+}
+.tinder-icon-btn-more:active { transform: scale(0.9); background: rgba(0, 0, 0, 0.55); }
 .tinder-photo img {
   width: 100%;
   height: 100%;
@@ -3228,26 +3264,15 @@ h1, h2, h3, h4, .header-title, .profile-name, .tinder-photo-name, .chat-list-nam
 .tinder-photo-gradient {
   display: none;
 }
+/* Kept for backwards compatibility; the name/meta/about block now renders
+   inside .tinder-body below the photo instead of overlaid on top of it. */
 .tinder-photo-info {
-  position: absolute;
-  bottom: 0; left: 0; right: 0;
-  padding: 48px 20px 16px;
-  z-index: 3;
-  color: white;
-  background: linear-gradient(
-    to top,
-    rgba(0,0,0,0.82) 0%,
-    rgba(0,0,0,0.55) 40%,
-    rgba(0,0,0,0.12) 72%,
-    transparent 100%
-  );
-  border-radius: 0 0 28px 28px;
+  display: none;
 }
 .tinder-photo-name {
   font-size: 24px;
   font-weight: 800;
   letter-spacing: -0.5px;
-  text-shadow: 0 2px 12px rgba(0,0,0,0.45);
   line-height: 1.15;
 }
 .tinder-photo-meta {
@@ -3255,28 +3280,68 @@ h1, h2, h3, h4, .header-title, .profile-name, .tinder-photo-name, .chat-list-nam
   font-weight: 600;
   opacity: 0.95;
   margin-top: 5px;
-  text-shadow: 0 1px 5px rgba(0,0,0,0.35);
   display: flex;
   align-items: center;
   flex-wrap: wrap;
   gap: 4px;
   line-height: 1.4;
 }
-
-/* Nomzod "O'zingiz haqingizda" matni — foto ustida */
 .tinder-photo-about {
   font-size: 12px;
   font-weight: 500;
   opacity: 0.92;
   margin-top: 5px;
-  text-shadow: 0 1px 5px rgba(0,0,0,0.45);
   line-height: 1.35;
   display: -webkit-box;
   -webkit-line-clamp: 2;
   line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
-  color: rgba(255,255,255,0.93);
+}
+
+/* ===== New below-photo info panel (name / location / job) ===== */
+.tinder-name-row {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  font-size: 21px;
+  font-weight: 800;
+  letter-spacing: -0.3px;
+  color: var(--text-primary);
+}
+.tinder-location-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  width: fit-content;
+  max-width: 100%;
+  background: var(--accent-tint-08);
+  color: var(--text-secondary);
+  border: 1px solid var(--accent-tint-18);
+  border-radius: 14px;
+  padding: 7px 12px;
+  font-size: 13px;
+  font-weight: 700;
+  margin-top: 8px;
+}
+.tinder-location-pill svg {
+  width: 15px;
+  height: 15px;
+  flex-shrink: 0;
+  color: var(--ios-blue);
+}
+.tinder-job-text {
+  margin-top: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary);
+  line-height: 1.4;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
 /* Nomzod "O'zingiz haqingizda" matni — card body */
@@ -3292,11 +3357,12 @@ h1, h2, h3, h4, .header-title, .profile-name, .tinder-photo-name, .chat-list-nam
   overflow: hidden;
 }
 
-/* Card body (tags) - COMPACT */
+/* Card body — name, location, job/about, tags. Fills the space below the photo. */
 .tinder-body {
-  padding: 6px 14px 2px;
+  padding: 14px 16px 4px;
   min-height: 0;
-  flex-shrink: 0;
+  flex: 1 1 auto;
+  overflow-y: auto;
   background: rgba(255,255,255,0.97);
 }
 
@@ -3354,8 +3420,7 @@ h1, h2, h3, h4, .header-title, .profile-name, .tinder-photo-name, .chat-list-nam
   width: 100%;
   box-sizing: border-box;
   flex-shrink: 0;
-  margin-top: auto;
-  background: linear-gradient(to bottom, rgba(255,255,255,0.0), rgba(255,255,255,0.96) 30%);
+  background: rgba(255,255,255,0.97);
   border-radius: 0 0 28px 28px;
 }
 
@@ -3408,10 +3473,10 @@ h1, h2, h3, h4, .header-title, .profile-name, .tinder-photo-name, .chat-list-nam
 
 .tinder-btn-superlike {
   width: 50px; height: 50px;
-  background: linear-gradient(150deg, rgba(255,255,255,0.96), rgba(0,122,255,0.08));
-  border: 2px solid rgba(0,122,255,0.3);
-  box-shadow: 0 1px 1px rgba(255,255,255,0.7) inset, 0 10px 26px rgba(0,122,255,0.18);
-  color: var(--ios-blue);
+  background: linear-gradient(150deg, rgba(255,255,255,0.96), rgba(255,149,0,0.08));
+  border: 2px solid rgba(255,149,0,0.32);
+  box-shadow: 0 1px 1px rgba(255,255,255,0.7) inset, 0 10px 26px rgba(255,149,0,0.2);
+  color: #FF9500;
 }
 
 .tinder-btn-like {
