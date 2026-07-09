@@ -412,6 +412,8 @@ const tg = window.Telegram?.WebApp;
             'profile_not_found': 'Anketa topilmadi',
             'please_fill_profile': 'Iltimos, avval anketa to\'ldiring.',
             'upload_valid_photo': 'Avval to\'g\'ri rasm yuklang va tekshirilgan bo\'lsin.',
+            'spoken_language': "So'zlashuv tili",
+            'select_spoken_language_prompt': "So'zlashuv tilini tanlang!",
             'select_gender_prompt': 'Jinsni tanlang!',
             'enter_name_prompt': 'Ismingizni kiriting!',
             'enter_age_prompt': 'Yoshingizni to\'g\'ri kiriting! (16-80)',
@@ -807,6 +809,8 @@ const tg = window.Telegram?.WebApp;
             'profile_not_found': 'Анкета не найдена',
             'please_fill_profile': 'Пожалуйста, сначала заполните анкету.',
             'upload_valid_photo': 'Сначала загрузите правильное фото и дождитесь проверки.',
+            'spoken_language': 'Язык общения',
+            'select_spoken_language_prompt': 'Выберите язык общения!',
             'select_gender_prompt': 'Выберите пол!',
             'enter_name_prompt': 'Введите ваше имя!',
             'enter_age_prompt': 'Введите правильный возраст! (16-80)',
@@ -1237,6 +1241,8 @@ const tg = window.Telegram?.WebApp;
             'profile_not_found': 'Анкета табылмады',
             'please_fill_profile': 'Өтінеміз, алдымен анкетаны толтырыңыз.',
             'upload_valid_photo': 'Алдымен дұрыс фото жүктеп, тексеруден өткізіңіз.',
+            'spoken_language': 'Сөйлесу тілі',
+            'select_spoken_language_prompt': 'Сөйлесу тілін таңдаңыз!',
             'select_gender_prompt': 'Жынысты таңдаңыз!',
             'enter_name_prompt': 'Атыңызды енгізіңіз!',
             'enter_age_prompt': 'Жасыңызды дұрыс енгізіңіз! (16-80)',
@@ -1667,6 +1673,8 @@ const tg = window.Telegram?.WebApp;
             'profile_not_found': 'Анкета табылган жок',
             'please_fill_profile': 'Сураныч, алдын ала анкетаны толтуруңуз.',
             'upload_valid_photo': 'Алдын ала туура сүрөт жүктөп, текшерилген болсун.',
+            'spoken_language': 'Баарлашуу тили',
+            'select_spoken_language_prompt': 'Баарлашуу тилин тандаңыз!',
             'select_gender_prompt': 'Жынысты тандаңыз!',
             'enter_name_prompt': 'Атыңызды киргизиңиз!',
             'enter_age_prompt': 'Жашыңызды туура киргизиңиз! (16-80)',
@@ -2097,6 +2105,8 @@ const tg = window.Telegram?.WebApp;
             'profile_not_found': 'Anketa tabılmadı',
             'please_fill_profile': 'Ótinem, aldın anketa toltırıń.',
             'upload_valid_photo': 'Aldın tuwrı súwret júklep, tekseriliwge daǵızlantırıń.',
+            'spoken_language': 'Sóylesiw tili',
+            'select_spoken_language_prompt': 'Sóylesiw tildi saylań!',
             'select_gender_prompt': 'Jınıstı saylań!',
             'enter_name_prompt': 'Atıńızdı kiritiń!',
             'enter_age_prompt': 'Jasıńızdı tuwrı kiritiń! (16-80)',
@@ -2527,6 +2537,8 @@ const tg = window.Telegram?.WebApp;
             'profile_not_found': 'Анкета ёфт нашуд',
             'please_fill_profile': 'Лутфан, аввал анкетаро пур кунед.',
             'upload_valid_photo': 'Аввал акси дуруст бор кунед ва аз санҷиш гузаред.',
+            'spoken_language': 'Забони муошират',
+            'select_spoken_language_prompt': 'Забони муоширатро интихоб кунед!',
             'select_gender_prompt': 'Ҷинсро интихоб кунед!',
             'enter_name_prompt': 'Номи худро ворид кунед!',
             'enter_age_prompt': 'Синни дурусти худро ворид кунед! (16-80)',
@@ -2957,6 +2969,8 @@ const tg = window.Telegram?.WebApp;
             'profile_not_found': 'Profile not found',
             'please_fill_profile': 'Please fill out your profile first.',
             'upload_valid_photo': 'Upload a valid photo first and make sure it passes the check.',
+            'spoken_language': 'Spoken language',
+            'select_spoken_language_prompt': 'Select your spoken language!',
             'select_gender_prompt': 'Select your gender!',
             'enter_name_prompt': 'Enter your name!',
             'enter_age_prompt': 'Enter a valid age! (16-80)',
@@ -3664,6 +3678,8 @@ const tg = window.Telegram?.WebApp;
 
     let selectedGender = '';
     let selectedSearchGender = '';
+    let selectedSpokenLanguage = '';
+    let selectedSearchSpokenLanguage = '';
     let selectedInterests = [];
     let selectedGoals = [];
     let selectedSearchGoals = [];
@@ -4076,6 +4092,11 @@ const tg = window.Telegram?.WebApp;
         selectGender(profile.gender);
       }
 
+      // Set spoken language
+      if (profile.spoken_language) {
+        selectSpokenLanguage(profile.spoken_language);
+      }
+
       // Set text inputs
       const nameInput = document.getElementById('inp-name');
       const ageInput = document.getElementById('inp-age');
@@ -4146,11 +4167,15 @@ const tg = window.Telegram?.WebApp;
     function resetProfileFormState() {
       // Clear all form state so previous user's data doesn't leak
       selectedGender = '';
+      selectedSpokenLanguage = '';
       selectedInterests = [];
       selectedGoals = [];
       photoBase64 = '';
       photoReady = false;
       photoUploading = false;
+
+      // Chip UI'ni ham tozalash
+      document.querySelectorAll('#spoken-lang-chips .chip').forEach(chip => chip.classList.remove('selected'));
 
       // Clear form inputs
       const nameInput = document.getElementById('inp-name');
@@ -4291,6 +4316,28 @@ const tg = window.Telegram?.WebApp;
       document.getElementById('gender-erkak').classList.toggle('selected', g === 'erkak');
       document.getElementById('gender-ayol').classList.toggle('selected', g === 'ayol');
       updateOnlySeriousWrap();
+    }
+
+    function selectSpokenLanguage(code) {
+      selectedSpokenLanguage = code;
+      document.querySelectorAll('#spoken-lang-chips .chip').forEach(chip => {
+        chip.classList.toggle('selected', chip.getAttribute('data-lang') === code);
+      });
+    }
+
+    function selectSearchSpokenLanguage(code) {
+      // Qayta bosilsa - filtrni tozalash (ixtiyoriy filtr)
+      selectedSearchSpokenLanguage = (selectedSearchSpokenLanguage === code) ? '' : code;
+      document.querySelectorAll('#sf-spoken-lang-chips .chip').forEach(chip => {
+        chip.classList.toggle('selected', chip.getAttribute('data-lang') === selectedSearchSpokenLanguage);
+      });
+      scheduleSearchCount();
+    }
+
+    // Foydalanuvchi tanlagan so'zlashuv tili kodini chiroyli ko'rinishga (bayroq + nom) o'giradi
+    function spokenLanguageLabel(code) {
+      const l = SUPPORTED_LANGUAGES[code];
+      return l ? `${l.flag} ${l.name}` : '';
     }
 
     function getOppositeGender(g) {
@@ -6117,6 +6164,7 @@ const tg = window.Telegram?.WebApp;
       const zodiac = document.getElementById('sel-zodiac').value;
 
       if (!selectedGender) { showToast(tr('select_gender_prompt')); return; }
+      if (!selectedSpokenLanguage) { showToast(tr('select_spoken_language_prompt')); return; }
       if (!name) { showToast(tr('enter_name_prompt')); return; }
       if (!age || age < 16 || age > 80) { showToast(tr('enter_age_prompt')); return; }
       if (!city) { showToast(tr('enter_city_prompt')); return; }
@@ -6146,6 +6194,7 @@ const tg = window.Telegram?.WebApp;
         zodiac: zodiac,
         interests: trimmedInterests,
         goals: selectedGoals,
+        spoken_language: selectedSpokenLanguage,
         photo_base64: photoBase64 || null,
         only_serious_men: !!document.getElementById('only-serious-toggle')?.checked
       };
@@ -6219,6 +6268,7 @@ const tg = window.Telegram?.WebApp;
 
       if (selectedSearchGoals.length > 0) filters.goals = selectedSearchGoals;
       if (selectedSearchInterests.length > 0) filters.interests = selectedSearchInterests;
+      if (selectedSearchSpokenLanguage) filters.spoken_language = selectedSearchSpokenLanguage;
 
       const zodiacFilterEl = document.getElementById('sf-zodiac');
       if (zodiacFilterEl && zodiacFilterEl.value) filters.zodiac = zodiacFilterEl.value;
@@ -6317,6 +6367,10 @@ const tg = window.Telegram?.WebApp;
       }
       if (selectedSearchInterests.length > 0) {
         filters.interests = selectedSearchInterests;
+      }
+      // So'zlashuv tili bo'yicha qidirish
+      if (selectedSearchSpokenLanguage) {
+        filters.spoken_language = selectedSearchSpokenLanguage;
       }
 
       // Burj bo'yicha qidirish
@@ -6650,7 +6704,7 @@ const tg = window.Telegram?.WebApp;
                 <div class="tinder-location-pill">${ICONS.mapPin}<span>${locationLabel}${u.zodiac ? ' &nbsp;•&nbsp; ' + getZodiacDisplay(u.zodiac) : ''}</span></div>
                 ${u.zodiac_match_percent != null ? renderZodiacMatchBadge(u.zodiac_match_percent, '8px') : ''}
                 ${u.about ? `<div class="tinder-job-text">${escapeHtml(u.about)}</div>` : ''}
-                <div class="tinder-tags-wrap" style="margin-top:8px;">${goals}${interests}</div>
+                <div class="tinder-tags-wrap" style="margin-top:8px;">${u.spoken_language ? `<span class="tinder-tag tinder-tag-alt">${spokenLanguageLabel(u.spoken_language)}</span>` : ''}${goals}${interests}</div>
               </div>
               <div class="tinder-actions" onclick="event.stopPropagation()">
                 <button class="tinder-btn tinder-btn-back" onclick="tinderBack()" title="${tr('btn_back')}">
@@ -6949,7 +7003,7 @@ const tg = window.Telegram?.WebApp;
           <div class="profile-name"><span style="display:inline-flex;vertical-align:middle;margin-right:6px;">${icon}</span> ${u.full_name}</div>
           <div class="profile-age-city">${tr('age')}: ${u.age} &nbsp;•&nbsp; ${locationLabel || tr('no_city')}${u.zodiac ? ' • ' + getZodiacDisplay(u.zodiac) : ''}</div>
           ${u.about ? `<div class="profile-bio" style="margin-top:6px;color:var(--text-secondary);font-size:13px;line-height:1.4;">${escapeHtml(u.about)}</div>` : ''}
-          <div class="profile-tags" style="margin-top:8px;">${goals}${interests}</div>
+          <div class="profile-tags" style="margin-top:8px;">${u.spoken_language ? `<span class="tinder-tag tinder-tag-alt">${spokenLanguageLabel(u.spoken_language)}</span>` : ''}${goals}${interests}</div>
         </div>
         <div class="profile-actions">
           <button class="action-btn btn-like" onclick="event.stopPropagation(); sendLike(${u.telegram_id})">
@@ -7218,6 +7272,7 @@ const tg = window.Telegram?.WebApp;
             <div class="profile-detail-title">${icon} ${u.full_name}</div>
             <div class="profile-detail-meta">📍 ${profileLocation}${u.zodiac ? ' • ' + getZodiacDisplay(u.zodiac) : ''}</div>
             ${aboutText ? `<div class="profile-detail-section"><div class="profile-detail-label">${tr('about_me')}</div><p class="profile-detail-summary">${escapeHtml(aboutText)}</p></div>` : ''}
+            ${u.spoken_language ? `<div class="profile-detail-section"><div class="profile-detail-label">${tr('spoken_language')}</div><div class="chip-row"><span class="tag">${spokenLanguageLabel(u.spoken_language)}</span></div></div>` : ''}
             ${showTags ? `<div class="profile-detail-section"><div class="profile-detail-label">${tr('goals_label')}</div><div class="chip-row">${goals || `<span class="muted-chip">${tr('not_specified')}</span>`}</div></div>` : ''}
             ${showTags ? `<div class="profile-detail-section"><div class="profile-detail-label">${tr('interests_label')}</div><div class="chip-row">${interests || `<span class="muted-chip">${tr('not_specified')}</span>`}</div><div class="muted-chip" style="margin-top:6px;">${tr('max_interests_display')}</div></div>` : ''}
           </section>
@@ -8245,6 +8300,10 @@ const tg = window.Telegram?.WebApp;
           <h2 style="font-size:22px; font-weight:800;">${user.full_name}, ${user.age}</h2>
           <p style="color:var(--text-secondary);">📍 ${locationLabel || user.city || tr('no_city')}${user.zodiac ? ' • ' + getZodiacDisplay(user.zodiac) : ''}</p>
           ${user.about ? `<p style="color:var(--text-secondary);font-size:14px;line-height:1.4;margin-top:8px;">${escapeHtml(user.about)}</p>` : ''}
+        </div>
+        <div class="card">
+          <div class="section-title">${tr('spoken_language')}</div>
+          <div class="chips-wrap">${user.spoken_language ? `<span class="chip selected" style="pointer-events:none;">${spokenLanguageLabel(user.spoken_language)}</span>` : `<span style="color:var(--text-tertiary);font-size:14px;">${tr('not_specified')}</span>`}</div>
         </div>
         <div class="card">
           <div class="section-title">${tr('goal')}</div>
