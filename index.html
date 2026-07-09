@@ -43,13 +43,7 @@
 
 <div id="search-results-modal" class="modal-overlay search-results-overlay" style="display:none;" onclick="closeSearchResultsModal(event)">
   <div class="search-results-sheet" onclick="event.stopPropagation()">
-    <div class="sheet-handle"></div>
-    <div class="sheet-header">
-      <div>
-        <div class="sheet-title" data-i18n="search_results_title">Qidiruv natijalari</div>
-      </div>
-      <button class="modal-close" onclick="closeSearchResultsModal()">✕</button>
-    </div>
+    <button class="results-close-btn" onclick="closeSearchResultsModal()" aria-label="Yopish">✕</button>
     <div id="search-results-panel-body" class="search-results-panel-body"></div>
   </div>
 </div>
