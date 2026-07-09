@@ -528,6 +528,8 @@ const tg = window.Telegram?.WebApp;
             'all_countries': '— Barcha davlatlar —',
             'verif_title': 'Verifikatsiya',
             'verif_sub': 'Ko\'k galochka olish',
+            'verif_optional_badge': 'Ixtiyoriy',
+            'verif_optional_note': "Bu bosqich ixtiyoriy — majburiy emas. Verifikatsiyasiz ham anketangizni saqlab, qidiruvdan foydalanishingiz mumkin.",
             'verif_step1': 'Kamera ochiladi',
             'verif_step2': 'Selfi olasiz',
             'verif_step3': '💙 Galochka',
@@ -926,6 +928,8 @@ const tg = window.Telegram?.WebApp;
             'all_countries': '— Все страны —',
             'verif_title': 'Верификация',
             'verif_sub': 'Получить синюю галочку',
+            'verif_optional_badge': 'Необязательно',
+            'verif_optional_note': 'Этот шаг необязателен — он не является обязательным. Вы можете сохранить анкету и пользоваться поиском без верификации.',
             'verif_step1': 'Открывается камера',
             'verif_step2': 'Делаете селфи',
             'verif_step3': '💙 Галочка',
@@ -1358,6 +1362,8 @@ const tg = window.Telegram?.WebApp;
             'all_countries': '— Барлық елдер —',
             'verif_title': 'Верификация',
             'verif_sub': 'Көк белгі алу',
+            'verif_optional_badge': 'Міндетті емес',
+            'verif_optional_note': 'Бұл қадам міндетті емес. Верификациясыз да анкетаңызды сақтап, іздеуден пайдалана аласыз.',
             'verif_step1': 'Камера ашылады',
             'verif_step2': 'Селфи аласыз',
             'verif_step3': '💙 Белгі',
@@ -1790,6 +1796,8 @@ const tg = window.Telegram?.WebApp;
             'all_countries': '— Бардык өлкөлөр —',
             'verif_title': 'Верификация',
             'verif_sub': 'Көк белги алуу',
+            'verif_optional_badge': 'Милдеттүү эмес',
+            'verif_optional_note': 'Бул кадам милдеттүү эмес. Верификациясыз да анкетаңызды сактап, издөөнү колдоно аласыз.',
             'verif_step1': 'Камера ачылат',
             'verif_step2': 'Селфи аласыз',
             'verif_step3': '💙 Белги',
@@ -2222,6 +2230,8 @@ const tg = window.Telegram?.WebApp;
             'all_countries': '— Barlıq mámleketler —',
             'verif_title': 'Verifikatsiya',
             'verif_sub': 'Kók belgini alıw',
+            'verif_optional_badge': 'Májbúriy emes',
+            'verif_optional_note': "Bul basqısh májbúriy emes. Verifikatsiyasız da anketańızdi saqlap, izlewden paydalanıwıńız múmkin.",
             'verif_step1': 'Kamera ashıladi',
             'verif_step2': 'Selfi alasız',
             'verif_step3': '💙 Belgi',
@@ -2654,6 +2664,8 @@ const tg = window.Telegram?.WebApp;
             'all_countries': '— Ҳама кишварҳо —',
             'verif_title': 'Тасдиқ',
             'verif_sub': 'Гирифтани аломати кабуд',
+            'verif_optional_badge': 'Ихтиёрӣ',
+            'verif_optional_note': 'Ин марҳила ихтиёрӣ аст — ҳатмӣ нест. Шумо метавонед анкетаро бе тасдиқ низ нигоҳ доред ва аз ҷустуҷӯ истифода баред.',
             'verif_step1': 'Камера кушода мешавад',
             'verif_step2': 'Селфи мегиред',
             'verif_step3': '💙 Аломат',
@@ -3085,6 +3097,8 @@ const tg = window.Telegram?.WebApp;
             'all_countries': '— All countries —',
             'verif_title': 'Verification',
             'verif_sub': 'Get a blue checkmark',
+            'verif_optional_badge': 'Optional',
+            'verif_optional_note': "This step is optional — it's not required. You can save your profile and use search without verification.",
             'verif_step1': 'Camera opens',
             'verif_step2': 'Take a selfie',
             'verif_step3': '💙 Checkmark',
@@ -6497,6 +6511,7 @@ const tg = window.Telegram?.WebApp;
               <div class="tinder-body">
                 <div class="tinder-name-row">${u.full_name}, ${u.age}${u.is_boosted ? ` <span class="top-boost-badge" title="${tr('top_weekly_badge') || 'Haftaning TOP foydalanuvchisi'}" style="display:inline-flex;align-items:center;gap:3px;background:linear-gradient(90deg,#ff9500,#ff2d55);border-radius:20px;padding:2px 9px;font-size:12px;font-weight:700;color:#fff;vertical-align:middle;">🔥 TOP</span>` : ''}</div>
                 <div class="tinder-location-pill">${ICONS.mapPin}<span>${locationLabel}${u.zodiac ? ' &nbsp;•&nbsp; ' + getZodiacDisplay(u.zodiac) : ''}</span></div>
+                ${u.spoken_language ? `<div class="tinder-location-pill" style="margin-top:4px;">🗣️<span>${spokenLanguageLabel(u.spoken_language)}</span></div>` : ''}
                 ${compatBadge}
                 ${u.about ? `<div class="tinder-job-text">${escapeHtml(u.about)}</div>` : ''}
               </div>
@@ -6702,9 +6717,10 @@ const tg = window.Telegram?.WebApp;
               <div class="tinder-body">
                 <div class="tinder-name-row">${u.full_name}, ${u.age}${u.is_boosted ? ` <span class="top-boost-badge" title="${tr('top_weekly_badge') || 'Haftaning TOP foydalanuvchisi'}" style="display:inline-flex;align-items:center;gap:3px;background:linear-gradient(90deg,#ff9500,#ff2d55);border-radius:20px;padding:2px 9px;font-size:12px;font-weight:700;color:#fff;vertical-align:middle;">🔥 TOP</span>` : ''}</div>
                 <div class="tinder-location-pill">${ICONS.mapPin}<span>${locationLabel}${u.zodiac ? ' &nbsp;•&nbsp; ' + getZodiacDisplay(u.zodiac) : ''}</span></div>
+                ${u.spoken_language ? `<div class="tinder-location-pill" style="margin-top:4px;">🗣️<span>${spokenLanguageLabel(u.spoken_language)}</span></div>` : ''}
                 ${u.zodiac_match_percent != null ? renderZodiacMatchBadge(u.zodiac_match_percent, '8px') : ''}
                 ${u.about ? `<div class="tinder-job-text">${escapeHtml(u.about)}</div>` : ''}
-                <div class="tinder-tags-wrap" style="margin-top:8px;">${u.spoken_language ? `<span class="tinder-tag tinder-tag-alt">${spokenLanguageLabel(u.spoken_language)}</span>` : ''}${goals}${interests}</div>
+                <div class="tinder-tags-wrap" style="margin-top:8px;">${goals}${interests}</div>
               </div>
               <div class="tinder-actions" onclick="event.stopPropagation()">
                 <button class="tinder-btn tinder-btn-back" onclick="tinderBack()" title="${tr('btn_back')}">
@@ -9960,6 +9976,8 @@ const tg = window.Telegram?.WebApp;
         // Badge ko'rsatish (form ichida)
         const badge = document.getElementById('verified-badge-form');
         if (badge) badge.style.display = 'inline';
+        const optBadge = document.getElementById('verif-optional-badge');
+        if (optBadge) optBadge.style.display = 'none';
 
         // Open btn'ni tasdiqlangan holatga o'tkazish
         const openBtn = document.getElementById('selfie-open-btn');
@@ -9997,6 +10015,8 @@ const tg = window.Telegram?.WebApp;
         // Form ichidagi badge
         const badge = document.getElementById('verified-badge-form');
         if (badge) badge.style.display = 'inline';
+        const optBadge = document.getElementById('verif-optional-badge');
+        if (optBadge) optBadge.style.display = 'none';
 
         // Selfi tugmasini yangilash
         const openBtn = document.getElementById('selfie-open-btn');
