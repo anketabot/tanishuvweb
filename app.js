@@ -6388,16 +6388,20 @@ const tg = window.Telegram?.WebApp;
       const animClass = direction === 'left' ? 'animate-left' : direction === 'right' ? 'animate-right' : direction === 'up' ? 'animate-up' : 'animate-in';
 
       container.innerHTML = `
-        <div class="swipe-counter">
-          <div class="swipe-dots">${tinderUsers.map((_,i)=>`<div class="swipe-dot${i===tinderIndex?' active':''}"></div>`).join('')}</div>
-          <span>${tinderIndex+1} / ${total}</span>
-        </div>
         <div class="tinder-card ${animClass}" id="tinder-card-el">
           <div class="stamp like">❤️ LIKE</div>
           <div class="stamp nope">✕ NOPE</div>
           <div class="stamp superlike">⭐ SUPER</div>
           <div class="tinder-photo">
             ${photo ? `<img src="${photo}" alt="${u.full_name}" onclick="openPhotoViewer('${escapeJs(photo)}','${escapeJs(u.full_name)}')" />` : `<div style="display:flex;align-items:center;justify-content:center;width:100%;height:100%;font-size:100px;">${u.gender==='erkak'?'👨':'👩'}</div>`}
+            <div class="tinder-photo-controls">
+              <button class="tinder-overlay-btn tinder-overlay-btn-close" onclick="event.stopPropagation(); tinderSwipeModal('left')" title="O'tkazib yuborish">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+              </button>
+              <button class="tinder-overlay-btn tinder-overlay-btn-report" onclick="event.stopPropagation(); openReportModal(${u.telegram_id}, 'search_profile')" title="${tr('report')}">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+              </button>
+            </div>
             <div class="tinder-photo-gradient"></div>
             <div class="tinder-photo-info">
               <div class="tinder-body">
@@ -6405,23 +6409,6 @@ const tg = window.Telegram?.WebApp;
                 <div class="tinder-location-pill">${ICONS.mapPin}<span>${locationLabel}${u.zodiac ? ' &nbsp;•&nbsp; ' + getZodiacDisplay(u.zodiac) : ''}</span></div>
                 ${compatBadge}
                 ${u.about ? `<div class="tinder-job-text">${escapeHtml(u.about)}</div>` : ''}
-              </div>
-              <div class="tinder-actions" onclick="event.stopPropagation()">
-                <button class="tinder-btn tinder-btn-back" onclick="tinderBackModal()" title="${tr('btn_back')}">
-                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h18M3 12l6-6M3 12l6 6"/></svg>
-                </button>
-                <button class="tinder-btn tinder-btn-nope" onclick="tinderSwipeModal('left')" title="O'tkazib yuborish">
-                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-                </button>
-                <button class="tinder-btn tinder-btn-msg" onclick="openMessageModalFromTinder(${u.telegram_id},'${escapeJs(u.full_name)}')" title="Xabar">
-                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-                </button>
-                <button class="tinder-btn tinder-btn-like" onclick="tinderSwipeModal('right')" title="${tr('like')}">
-                  <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
-                </button>
-                <button class="tinder-btn tinder-btn-superlike" onclick="tinderSuperLikeModal()" title="${tr('super_like')}">
-                  <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M12 2c1 3-2 4-2 7a4 4 0 0 0 8 0c0-1-.3-1.9-.8-2.7.6.3 1.8 1.4 1.8 4.2a5.5 5.5 0 1 1-11 0c0-4.2 3-6 4-8.5z"/></svg>
-                </button>
               </div>
             </div>
           </div>
@@ -6590,19 +6577,20 @@ const tg = window.Telegram?.WebApp;
       const interests = (u.interests || []).map(i => `<span class="tinder-tag tinder-tag-alt">${tr(i) || i}</span>`).join('');
 
       container.innerHTML = `
-        <div class="swipe-counter">
-          <div class="swipe-dots">${dots}</div>
-          <span style="margin-left:6px;">${tinderIndex+1} / ${total}</span>
-        </div>
         <div class="tinder-card animate-in" id="tinder-card" data-user="${escapeHtmlAttr(JSON.stringify(u))}" style="height:calc(100vh - 80px);">
           <span class="stamp like" id="stamp-like">LIKE 💚</span>
           <span class="stamp nope" id="stamp-nope">NOPE ✗</span>
           <span class="stamp superlike" id="stamp-super">SUPER ⭐</span>
           <div class="tinder-photo">
             ${photoHtml}
-            <button class="tinder-report-btn" onclick="event.stopPropagation(); openReportModal(${u.telegram_id}, 'search_profile')" title="${tr('report')}">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
-            </button>
+            <div class="tinder-photo-controls">
+              <button class="tinder-overlay-btn tinder-overlay-btn-close" onclick="event.stopPropagation(); tinderDislike()" title="${tr('btn_dislike')}">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+              </button>
+              <button class="tinder-overlay-btn tinder-overlay-btn-report" onclick="event.stopPropagation(); openReportModal(${u.telegram_id}, 'search_profile')" title="${tr('report')}">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+              </button>
+            </div>
             <div class="tinder-photo-gradient"></div>
             <div class="tinder-photo-info">
               <div class="tinder-body">
@@ -6611,23 +6599,6 @@ const tg = window.Telegram?.WebApp;
                 ${u.zodiac_match_percent != null ? `<div class="zodiac-match-badge" style="display:inline-flex;align-items:center;gap:5px;margin-top:8px;background:rgba(255,255,255,0.18);backdrop-filter:blur(6px);border-radius:20px;padding:3px 10px;font-size:13px;font-weight:700;color:#fff;border:1px solid rgba(255,255,255,0.35);"><span style="font-size:15px;">⭐</span> ${u.zodiac_match_percent}% ${tr('zodiac_match_label') || 'mos'}</div>` : ''}
                 ${u.about ? `<div class="tinder-job-text">${escapeHtml(u.about)}</div>` : ''}
                 <div class="tinder-tags-wrap" style="margin-top:8px;">${goals}${interests}</div>
-              </div>
-              <div class="tinder-actions" onclick="event.stopPropagation()">
-                <button class="tinder-btn tinder-btn-back" onclick="tinderBack()" title="${tr('btn_back')}">
-                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h18M3 12l6-6M3 12l6 6"/></svg>
-                </button>
-                <button class="tinder-btn tinder-btn-nope" onclick="tinderDislike()" title="${tr('btn_dislike')}">
-                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-                </button>
-                <button class="tinder-btn tinder-btn-msg" onclick="event.stopPropagation(); openMessageModal(${u.telegram_id},'${escapeJs(u.full_name)}','${escapeJs(photo||'')}', ${u.can_write});" title="${tr('send_message_btn')}">
-                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-                </button>
-                <button class="tinder-btn tinder-btn-like" onclick="tinderLike()" title="${tr('like')}">
-                  <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
-                </button>
-                <button class="tinder-btn tinder-btn-superlike" id="superlike-btn" onclick="openStickerModal(${u.telegram_id})" title="${tr('super_like')}">
-                  <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M12 2c1 3-2 4-2 7a4 4 0 0 0 8 0c0-1-.3-1.9-.8-2.7.6.3 1.8 1.4 1.8 4.2a5.5 5.5 0 1 1-11 0c0-4.2 3-6 4-8.5z"/></svg>
-                </button>
               </div>
             </div>
           </div>
