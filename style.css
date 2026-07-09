@@ -3821,6 +3821,37 @@ h1, h2, h3, h4, .header-title, .profile-name, .tinder-photo-name, .chat-list-nam
   margin-top: 4px;
 }
 
+/* Yangi (o'qilmagan) xabar kelgan suhbatlar uchun ajratib ko'rsatish */
+.chat-item-unread {
+  border-color: rgba(0,122,255,0.35);
+  box-shadow: 0 4px 16px rgba(0,122,255,0.14), var(--glass-shadow);
+}
+
+.chat-item-unread .chat-item-photo {
+  border-color: var(--ios-blue);
+}
+
+.chat-item-unread .chat-item-preview {
+  color: var(--text-primary);
+  font-weight: 700;
+}
+
+.chat-item-badge {
+  flex-shrink: 0;
+  min-width: 22px;
+  height: 22px;
+  padding: 0 6px;
+  border-radius: 11px;
+  background: linear-gradient(135deg, #FF2D55, #FF6B9D);
+  color: white;
+  font-size: 12px;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 8px rgba(255, 45, 85, 0.25);
+}
+
 /* ========== CHAT MESSAGE BUBBLES ========== */
 .chat-msg {
   max-width: 75%;
