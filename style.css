@@ -3261,14 +3261,17 @@ h1, h2, h3, h4, .header-title, .profile-name, .tinder-photo-name, .chat-list-nam
 }
 
 /* Photo area - fills the ENTIRE card. Everything (name, location, about,
-   tags, action buttons) is overlaid on top of it. */
+   tags, action buttons) is overlaid on top of it.
+   Rasm o'zining haqiqiy o'lchamida (kesilmasdan, to'liq) ko'rinishi uchun
+   object-fit: contain ishlatiladi; ortiqcha (bo'sh) joy kunduzgi rejimda
+   oq, tungi rejimda esa qora fon bilan to'ldiriladi (pastdagi dark-theme
+   qoidasiga qarang). */
 .tinder-photo {
   width: 100%;
   flex: 1 1 auto;
   height: 100%;
   min-height: 0;
-  object-fit: cover;
-  background: linear-gradient(135deg, rgba(0,122,255,0.07), rgba(0,0,0,0.07));
+  background: #ffffff;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -3279,9 +3282,9 @@ h1, h2, h3, h4, .header-title, .profile-name, .tinder-photo-name, .chat-list-nam
 .tinder-photo img {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain;
   object-position: center center;
-  background: linear-gradient(135deg, rgba(255,255,255,0.96), rgba(245,248,255,0.98));
+  background: #ffffff;
   position: absolute;
   inset: 0;
 }
@@ -6767,12 +6770,22 @@ body.dark-theme .photo-upload,
 body.dark-theme #photo-preview,
 body.dark-theme .profile-photo img,
 body.dark-theme .my-profile-photo img,
-body.dark-theme .tinder-photo img,
 body.dark-theme .minimal-photo-wrap,
 body.dark-theme .profile-detail-photo-wrap,
 body.dark-theme .champion-item,
 body.dark-theme .viewed-item {
   background: linear-gradient(135deg, #202020, #171717) !important;
+}
+
+/* Qidiruv kartasidagi rasm endi to'liq (kesilmasdan) ko'rsatiladi (object-fit: contain),
+   shuning uchun ortiqcha qolgan joy kunduzgi rejimda oq, tungi rejimda esa qora bo'lishi kerak. */
+.tinder-photo,
+.tinder-photo img {
+  background: #ffffff;
+}
+body.dark-theme .tinder-photo,
+body.dark-theme .tinder-photo img {
+  background: #000000 !important;
 }
 
 /* Tinder-uslubidagi kartalar — endi tinder-body/actions rasm ustidagi shaffof overlay,
