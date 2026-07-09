@@ -6288,7 +6288,6 @@ const tg = window.Telegram?.WebApp;
         if (myZodiac && ZODIAC_COMPATIBILITY[myZodiac]) {
           filters.zodiac_compat_list = ZODIAC_COMPATIBILITY[myZodiac].mos;
         } else {
-          toggleResultsReportBtn(false);
           if (panelBody) {
             panelBody.innerHTML = `<div class="empty-state"><div class="empty-icon">⭐</div><h3>${tr('zodiac_not_set')}</h3><p>${tr('zodiac_not_set_hint')}</p><button class="btn-primary" style="margin-top:16px;padding:12px 24px;border-radius:999rem;" onclick="closeSearchResultsModal();showPage('profile')">${tr('fill_profile')}</button></div>`;
           }
@@ -6300,7 +6299,6 @@ const tg = window.Telegram?.WebApp;
       // Open modal immediately with loading
       const modal = document.getElementById('search-results-modal');
       const panelBody = document.getElementById('search-results-panel-body');
-      toggleResultsReportBtn(false);
       if (panelBody) panelBody.innerHTML = `<div class="loading"><div class="spinner"></div> ${tr('searching')}</div>`;
       if (modal) modal.style.display = 'flex';
 
@@ -6322,7 +6320,6 @@ const tg = window.Telegram?.WebApp;
       tinderUsers = [];
       tinderIndex = 0;
       tinderHistory = [];
-      toggleResultsReportBtn(false);
 
       try {
         const data = await apiPost('/api/search', { telegram_id: telegramId || 0, filters });
@@ -6358,7 +6355,6 @@ const tg = window.Telegram?.WebApp;
       if (!container) { renderTinderCard(direction); return; }
 
       if (tinderIndex >= tinderUsers.length) {
-        toggleResultsReportBtn(false);
         container.innerHTML = `
           <div class="no-more-wrap">
             <div class="no-more-emoji">✨</div>
@@ -6388,12 +6384,19 @@ const tg = window.Telegram?.WebApp;
       const animClass = direction === 'left' ? 'animate-left' : direction === 'right' ? 'animate-right' : direction === 'up' ? 'animate-up' : 'animate-in';
 
       container.innerHTML = `
+        <div class="swipe-counter">
+          <div class="swipe-dots">${tinderUsers.map((_,i)=>`<div class="swipe-dot${i===tinderIndex?' active':''}"></div>`).join('')}</div>
+          <span>${tinderIndex+1} / ${total}</span>
+        </div>
         <div class="tinder-card ${animClass}" id="tinder-card-el">
           <div class="stamp like">❤️ LIKE</div>
           <div class="stamp nope">✕ NOPE</div>
           <div class="stamp superlike">⭐ SUPER</div>
           <div class="tinder-photo">
             ${photo ? `<img src="${photo}" alt="${u.full_name}" onclick="openPhotoViewer('${escapeJs(photo)}','${escapeJs(u.full_name)}')" />` : `<div style="display:flex;align-items:center;justify-content:center;width:100%;height:100%;font-size:100px;">${u.gender==='erkak'?'👨':'👩'}</div>`}
+            <button class="tinder-report-btn" onclick="event.stopPropagation(); openReportModal(${u.telegram_id}, 'search_profile')" title="${tr('report')}">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+            </button>
             <div class="tinder-photo-gradient"></div>
             <div class="tinder-photo-info">
               <div class="tinder-body">
@@ -6431,20 +6434,6 @@ const tg = window.Telegram?.WebApp;
           showProfileDetail(u);
         });
       }
-      toggleResultsReportBtn(true);
-    }
-
-    // Floating "shikoyat" tugmasini ko'rsatish/yashirish (natijalar oynasi tepasida)
-    function toggleResultsReportBtn(show) {
-      const btn = document.getElementById('results-report-btn');
-      if (btn) btn.style.display = show ? 'flex' : 'none';
-    }
-
-    // Joriy ko'rsatilayotgan nomzod uchun shikoyat oynasini ochish
-    function reportCurrentSearchCandidate() {
-      const u = tinderUsers[tinderIndex];
-      if (!u) return;
-      openReportModal(u.telegram_id, 'search_profile');
     }
 
     function tinderSwipeModal(direction) {
@@ -6586,8 +6575,8 @@ const tg = window.Telegram?.WebApp;
         return `<div class="swipe-dot ${i === ci ? 'active' : ''}"></div>`;
       }).join('');
 
-      const goals = (u.goals || []).map(g => `<span class="tinder-tag">${g}</span>`).join('');
-      const interests = (u.interests || []).map(i => `<span class="tinder-tag tinder-tag-alt">${i}</span>`).join('');
+      const goals = (u.goals || []).map(g => `<span class="tinder-tag">${tr(g) || g}</span>`).join('');
+      const interests = (u.interests || []).map(i => `<span class="tinder-tag tinder-tag-alt">${tr(i) || i}</span>`).join('');
 
       container.innerHTML = `
         <div class="swipe-counter">
@@ -8021,7 +8010,6 @@ const tg = window.Telegram?.WebApp;
     function closeSearchResultsModal(e) {
       if (e && e.target !== e.currentTarget) return;
       document.getElementById('search-results-modal').style.display = 'none';
-      toggleResultsReportBtn(false);
     }
 
     function closePhotoViewer(e) {
