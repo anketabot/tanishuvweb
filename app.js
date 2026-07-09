@@ -15,7 +15,7 @@ const tg = window.Telegram?.WebApp;
         'tg': { name: 'Тоҷикӣ', flag: '🇹🇯' },
         'en': { name: 'English', flag: '🇬🇧' },
     };
-
+a
     let userId = null;
     let userName = '';
     let userFirstName = '';
