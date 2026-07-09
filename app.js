@@ -7586,32 +7586,51 @@ const tg = window.Telegram?.WebApp;
       container.scrollTop = container.scrollHeight;
     }
 
+    let isSendingChatMessage = false;
     async function sendChatMessage() {
       const input = document.getElementById('chat-input');
+      const sendBtn = document.getElementById('chat-send-btn');
       const message = input.value.trim();
+      // Ikki marta bosilishi yoki Enter+klik bir vaqtda tushishi natijasida
+      // xabar 2-3 marta yuborilib ketmasligi uchun qulf (lock) qo'yamiz.
+      if (isSendingChatMessage) return;
       if (!message || !currentChatMatchId) return;
 
-      // Xabar limit tekshirish
-      const limitOk = await checkLimit('messages');
-      if (!limitOk) {
-        showLimitExceeded('messages');
-        return;
-      }
+      isSendingChatMessage = true;
+      if (sendBtn) sendBtn.disabled = true;
+      // Inputni darhol tozalaymiz - shu bilan foydalanuvchi tugmani yana
+      // bossa ham bo'sh xabar jo'natilmaydi va matn ikki marta ketmaydi.
+      input.value = '';
 
-      const data = await apiPost('/api/chat/send', {
-        match_id: currentChatMatchId,
-        sender_id: userId,
-        message: message
-      });
+      try {
+        // Xabar limit tekshirish
+        const limitOk = await checkLimit('messages');
+        if (!limitOk) {
+          showLimitExceeded('messages');
+          input.value = message; // xabarni foydalanuvchiga qaytaramiz
+          return;
+        }
 
-      if (data.error === 'limit_exceeded') {
-        showLimitExceeded('messages');
-        return;
-      }
+        const data = await apiPost('/api/chat/send', {
+          match_id: currentChatMatchId,
+          sender_id: userId,
+          message: message
+        });
 
-      if (data.success) {
-        input.value = '';
-        loadChatMessages(currentChatMatchId);
+        if (data.error === 'limit_exceeded') {
+          showLimitExceeded('messages');
+          input.value = message;
+          return;
+        }
+
+        if (data.success) {
+          await loadChatMessages(currentChatMatchId);
+        } else {
+          input.value = message; // yuborilmasa, matnni qaytaramiz
+        }
+      } finally {
+        isSendingChatMessage = false;
+        if (sendBtn) sendBtn.disabled = false;
       }
     }
 
@@ -7868,31 +7887,46 @@ const tg = window.Telegram?.WebApp;
       container.scrollTop = container.scrollHeight;
     }
 
+    let isSendingAnonChatMessage = false;
     async function sendAnonChatMessage() {
       const input = document.getElementById('anon-chat-input');
+      const sendBtn = document.getElementById('anon-chat-send-btn');
       const message = input.value.trim();
+      if (isSendingAnonChatMessage) return;
       if (!message || !currentAnonMatchId) return;
 
-      const limitOk = await checkLimit('messages');
-      if (!limitOk) {
-        showLimitExceeded('messages');
-        return;
-      }
+      isSendingAnonChatMessage = true;
+      if (sendBtn) sendBtn.disabled = true;
+      input.value = '';
 
-      const data = await apiPost('/api/anon/send', {
-        telegram_id: Number(userId),
-        anon_match_id: currentAnonMatchId,
-        message: message
-      });
+      try {
+        const limitOk = await checkLimit('messages');
+        if (!limitOk) {
+          showLimitExceeded('messages');
+          input.value = message;
+          return;
+        }
 
-      if (data.error === 'limit_exceeded') {
-        showLimitExceeded('messages');
-        return;
-      }
+        const data = await apiPost('/api/anon/send', {
+          telegram_id: Number(userId),
+          anon_match_id: currentAnonMatchId,
+          message: message
+        });
 
-      if (data.success) {
-        input.value = '';
-        loadAnonChatMessages();
+        if (data.error === 'limit_exceeded') {
+          showLimitExceeded('messages');
+          input.value = message;
+          return;
+        }
+
+        if (data.success) {
+          await loadAnonChatMessages();
+        } else {
+          input.value = message;
+        }
+      } finally {
+        isSendingAnonChatMessage = false;
+        if (sendBtn) sendBtn.disabled = false;
       }
     }
 
