@@ -6397,7 +6397,7 @@ const tg = window.Telegram?.WebApp;
           <div class="swipe-dots">${tinderUsers.map((_,i)=>`<div class="swipe-dot${i===tinderIndex?' active':''}"></div>`).join('')}</div>
           <span>${tinderIndex+1} / ${total}</span>
         </div>
-        <div class="tinder-card ${animClass}" id="tinder-card-el" style="height:calc(100vh - 80px);">
+        <div class="tinder-card ${animClass}" id="tinder-card-el">
           <div class="stamp like">❤️ LIKE</div>
           <div class="stamp nope">✕ NOPE</div>
           <div class="stamp superlike">⭐ SUPER</div>
