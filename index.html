@@ -43,43 +43,13 @@
 
 <div id="search-results-modal" class="modal-overlay search-results-overlay" style="display:none;" onclick="closeSearchResultsModal(event)">
   <div class="search-results-sheet" onclick="event.stopPropagation()">
-    <div class="sheet-handle"></div>
-    <div class="sheet-header">
-      <div class="search-results-hero" aria-hidden="true">
-        <div class="search-results-hero-art">
-          <svg viewBox="0 0 140 96" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <rect x="12" y="18" width="116" height="60" rx="24" fill="url(#heroGradient)"/>
-            <circle cx="46" cy="48" r="18" fill="rgba(255,255,255,0.9)"/>
-            <circle cx="92" cy="48" r="18" fill="rgba(255,255,255,0.84)"/>
-            <path d="M38 72C43.5 58.5 59 54 72 58C85 62 95 74 104 72" stroke="white" stroke-width="4.5" stroke-linecap="round"/>
-            <circle cx="108" cy="30" r="10" fill="#FFCA28"/>
-            <path d="M108 24V36" stroke="white" stroke-width="3" stroke-linecap="round"/>
-            <path d="M102 30H114" stroke="white" stroke-width="3" stroke-linecap="round"/>
-            <defs>
-              <linearGradient id="heroGradient" x1="20" y1="22" x2="120" y2="76" gradientUnits="userSpaceOnUse">
-                <stop stop-color="#4DA3FF"/>
-                <stop offset="1" stop-color="#7C5CFF"/>
-              </linearGradient>
-            </defs>
-          </svg>
-        </div>
-      </div>
-      <div class="sheet-header-actions">
-        <button id="search-results-report-btn" type="button" class="sheet-action-btn sheet-action-btn-report" style="display:none;" onclick="event.stopPropagation();" title="Shikoyat">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
-            <line x1="12" y1="9" x2="12" y2="13"/>
-            <line x1="12" y1="17" x2="12.01" y2="17"/>
-          </svg>
-          <span>Shikoyat</span>
-        </button>
-        <button type="button" class="sheet-action-btn sheet-action-btn-close" onclick="closeSearchResultsModal()" title="Yopish">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-            <line x1="18" y1="6" x2="6" y2="18"/>
-            <line x1="6" y1="6" x2="18" y2="18"/>
-          </svg>
-        </button>
-      </div>
+    <div class="results-float-controls">
+      <button class="results-float-btn results-float-report" id="results-report-btn" onclick="event.stopPropagation(); reportCurrentSearchCandidate()" title="Shikoyat" style="display:none;">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+      </button>
+      <button class="results-float-btn results-float-close" onclick="event.stopPropagation(); closeSearchResultsModal()" title="Yopish">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
     </div>
     <div id="search-results-panel-body" class="search-results-panel-body"></div>
   </div>
