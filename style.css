@@ -2103,7 +2103,11 @@ h1, h2, h3, h4, .header-title, .profile-name, .tinder-photo-name, .chat-list-nam
 /* ── Tinder card inside results modal ── */
 .search-results-panel-body .swipe-container {
   background: transparent;
-  padding: 10px 12px 0;
+  padding: 0;
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
 }
 
 .search-results-panel-body .tinder-card {
@@ -2112,10 +2116,18 @@ h1, h2, h3, h4, .header-title, .profile-name, .tinder-photo-name, .chat-list-nam
     0 2px 8px rgba(15,23,42,0.06),
     0 20px 48px rgba(0,122,255,0.13),
     inset 0 1px 1px rgba(255,255,255,0.7);
+  height: auto !important;
+  min-height: 0 !important;
+  max-height: none !important;
+  flex: 1 1 auto !important;
 }
 
 .search-results-panel-body .tinder-photo img {
   border-radius: 24px 24px 0 0;
+}
+
+.search-results-panel-body .tinder-actions {
+  border-radius: 0 0 24px 24px;
 }
 
 /* ========== MODAL - WHITE GLASS ========== */
