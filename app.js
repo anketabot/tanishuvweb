@@ -342,6 +342,10 @@ const tg = window.Telegram?.WebApp;
             'cannot_connect': 'Ulana olmadi',
             'compat_good': 'Mos burj',
             'compat_difficult': 'Murakkab',
+            'compat_tier_excellent': 'Ajoyib moslik',
+            'compat_tier_good': 'Yaxshi moslik',
+            'compat_tier_average': "O'rtacha moslik",
+            'compat_tier_difficult': 'Murakkab moslik',
             'btn_back': 'Orqaga',
             'btn_skip': 'O\'tkazib yuborish',
             'btn_dislike': 'Yoqmadi',
@@ -750,6 +754,10 @@ const tg = window.Telegram?.WebApp;
             'cannot_connect': 'Не удалось подключиться',
             'compat_good': 'Совместимый знак',
             'compat_difficult': 'Сложный',
+            'compat_tier_excellent': 'Отличная совместимость',
+            'compat_tier_good': 'Хорошая совместимость',
+            'compat_tier_average': 'Средняя совместимость',
+            'compat_tier_difficult': 'Сложная совместимость',
             'btn_back': 'Назад',
             'btn_skip': 'Пропустить',
             'btn_dislike': 'Не нравится',
@@ -1176,6 +1184,10 @@ const tg = window.Telegram?.WebApp;
             'cannot_connect': 'Қосылу мүмкін емес',
             'compat_good': 'Сәйкес жұлдызнама',
             'compat_difficult': 'Қиын',
+            'compat_tier_excellent': 'Тамаша сәйкестік',
+            'compat_tier_good': 'Жақсы сәйкестік',
+            'compat_tier_average': 'Орташа сәйкестік',
+            'compat_tier_difficult': 'Қиын сәйкестік',
             'btn_back': 'Артқа',
             'btn_skip': 'Өткізіп жіберу',
             'btn_dislike': 'Ұнамады',
@@ -1602,6 +1614,10 @@ const tg = window.Telegram?.WebApp;
             'cannot_connect': 'Туташуу мүмкүн эмес',
             'compat_good': 'Шайкеш жылдызнама',
             'compat_difficult': 'Кыйын',
+            'compat_tier_excellent': 'Мыкты шайкештик',
+            'compat_tier_good': 'Жакшы шайкештик',
+            'compat_tier_average': 'Орточо шайкештик',
+            'compat_tier_difficult': 'Кыйын шайкештик',
             'btn_back': 'Артка',
             'btn_skip': 'Өткөрүп жиберүү',
             'btn_dislike': 'Жаккан жок',
@@ -2028,6 +2044,10 @@ const tg = window.Telegram?.WebApp;
             'cannot_connect': 'Baylanıs ornatılmadı',
             'compat_good': 'Saykes juldıznama',
             'compat_difficult': 'Qıyın',
+            'compat_tier_excellent': 'Ajayıp sáykeslik',
+            'compat_tier_good': 'Jaqsı sáykeslik',
+            'compat_tier_average': 'Ortasha sáykeslik',
+            'compat_tier_difficult': 'Qıyın sáykeslik',
             'btn_back': 'Artqa',
             'btn_skip': 'Ótkerip jiberiw',
             'btn_dislike': 'Yaqmadı',
@@ -2454,6 +2474,10 @@ const tg = window.Telegram?.WebApp;
             'cannot_connect': 'Пайваст нашуд',
             'compat_good': 'Бурҷи мувофиқ',
             'compat_difficult': 'Мушкил',
+            'compat_tier_excellent': 'Мувофиқати аъло',
+            'compat_tier_good': 'Мувофиқати хуб',
+            'compat_tier_average': 'Мувофиқати миёна',
+            'compat_tier_difficult': 'Мувофиқати душвор',
             'btn_back': 'Ба қафо',
             'btn_skip': 'Гузарондан',
             'btn_dislike': 'Написандид',
@@ -2880,6 +2904,10 @@ const tg = window.Telegram?.WebApp;
             'cannot_connect': 'Could not connect',
             'compat_good': 'Compatible sign',
             'compat_difficult': 'Difficult',
+            'compat_tier_excellent': 'Excellent match',
+            'compat_tier_good': 'Good match',
+            'compat_tier_average': 'Average match',
+            'compat_tier_difficult': 'Difficult match',
             'btn_back': 'Back',
             'btn_skip': 'Skip',
             'btn_dislike': 'Dislike',
@@ -4646,6 +4674,22 @@ const tg = window.Telegram?.WebApp;
       return 'neytral';
     }
 
+    // Burj moslik foizini tushunarli darajaga (emoji + so'z + rang) aylantirish
+    function getZodiacCompatTier(pct) {
+      if (pct == null) return null;
+      if (pct >= 90) return { key: 'excellent', emoji: '🔥', color: '#ff9500', labelKey: 'compat_tier_excellent' };
+      if (pct >= 80) return { key: 'good',      emoji: '💚', color: '#27ae60', labelKey: 'compat_tier_good' };
+      if (pct >= 70) return { key: 'average',   emoji: '🙂', color: '#f1c40f', labelKey: 'compat_tier_average' };
+      return               { key: 'difficult', emoji: '⚡', color: '#e74c3c', labelKey: 'compat_tier_difficult' };
+    }
+
+    function renderZodiacMatchBadge(pct, marginTop) {
+      if (pct == null) return '';
+      const tier = getZodiacCompatTier(pct);
+      const label = tr(tier.labelKey) || tier.key;
+      return `<div class="zodiac-match-badge" style="display:inline-flex;align-items:center;gap:6px;margin-top:${marginTop};background:rgba(255,255,255,0.18);backdrop-filter:blur(6px);border-radius:20px;padding:3px 10px 3px 8px;font-size:13px;font-weight:700;color:#fff;border:1px solid rgba(255,255,255,0.35);"><span style="font-size:15px;">${tier.emoji}</span><span>${pct}%</span><span style="width:1px;height:12px;background:rgba(255,255,255,0.4);"></span><span style="background:${tier.color};color:#fff;border-radius:10px;padding:1px 7px;font-size:11px;font-weight:700;">${label}</span></div>`;
+    }
+
     // ======= KUNLIK BURJLAR BASHORATI (Daily Horoscope mini-content) =======
     // Har bir til uchun sevgi va omad bashorati shablonlari. {zodiac} o'rniga
     // foydalanuvchining burji (tarjima qilingan nomi) qo'yiladi.
@@ -6378,7 +6422,7 @@ const tg = window.Telegram?.WebApp;
       // Foizli moslik badge — backend dan kelsa uni ishlatamiz, aks holda eski status
       const matchPct = u.zodiac_match_percent;
       const compatBadge = matchPct != null
-        ? `<div class="zodiac-match-badge" style="display:inline-flex;align-items:center;gap:5px;margin-top:4px;background:rgba(255,255,255,0.18);backdrop-filter:blur(6px);border-radius:20px;padding:3px 10px;font-size:13px;font-weight:700;color:#fff;border:1px solid rgba(255,255,255,0.35);"><span style="font-size:15px;">⭐</span> ${matchPct}% ${tr('zodiac_match_label') || 'mos'}</div>`
+        ? renderZodiacMatchBadge(matchPct, '4px')
         : compatStatus === 'mos'
         ? `<span style="background:#27ae60;color:#fff;border-radius:12px;padding:2px 10px;font-size:12px;font-weight:600;margin-left:6px;">💚 ${tr('compat_good')}</span>`
         : compatStatus === 'qiyin'
@@ -6604,7 +6648,7 @@ const tg = window.Telegram?.WebApp;
               <div class="tinder-body">
                 <div class="tinder-name-row">${u.full_name}, ${u.age}${u.is_boosted ? ` <span class="top-boost-badge" title="${tr('top_weekly_badge') || 'Haftaning TOP foydalanuvchisi'}" style="display:inline-flex;align-items:center;gap:3px;background:linear-gradient(90deg,#ff9500,#ff2d55);border-radius:20px;padding:2px 9px;font-size:12px;font-weight:700;color:#fff;vertical-align:middle;">🔥 TOP</span>` : ''}</div>
                 <div class="tinder-location-pill">${ICONS.mapPin}<span>${locationLabel}${u.zodiac ? ' &nbsp;•&nbsp; ' + getZodiacDisplay(u.zodiac) : ''}</span></div>
-                ${u.zodiac_match_percent != null ? `<div class="zodiac-match-badge" style="display:inline-flex;align-items:center;gap:5px;margin-top:8px;background:rgba(255,255,255,0.18);backdrop-filter:blur(6px);border-radius:20px;padding:3px 10px;font-size:13px;font-weight:700;color:#fff;border:1px solid rgba(255,255,255,0.35);"><span style="font-size:15px;">⭐</span> ${u.zodiac_match_percent}% ${tr('zodiac_match_label') || 'mos'}</div>` : ''}
+                ${u.zodiac_match_percent != null ? renderZodiacMatchBadge(u.zodiac_match_percent, '8px') : ''}
                 ${u.about ? `<div class="tinder-job-text">${escapeHtml(u.about)}</div>` : ''}
                 <div class="tinder-tags-wrap" style="margin-top:8px;">${goals}${interests}</div>
               </div>
