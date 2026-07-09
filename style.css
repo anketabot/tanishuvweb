@@ -2122,14 +2122,6 @@ h1, h2, h3, h4, .header-title, .profile-name, .tinder-photo-name, .chat-list-nam
   flex: 1 1 auto !important;
 }
 
-.search-results-panel-body .tinder-photo img {
-  border-radius: 24px 24px 0 0;
-}
-
-.search-results-panel-body .tinder-actions {
-  border-radius: 0 0 24px 24px;
-}
-
 /* ========== MODAL - WHITE GLASS ========== */
 .modal-overlay {
   position: fixed;
@@ -3180,11 +3172,12 @@ h1, h2, h3, h4, .header-title, .profile-name, .tinder-photo-name, .chat-list-nam
   background: rgba(0,122,255,0.12);
 }
 
-/* Photo area - fixed proportion, info panel now lives below it */
+/* Photo area - fills the ENTIRE card. Everything (name, location, about,
+   tags, action buttons) is overlaid on top of it. */
 .tinder-photo {
   width: 100%;
-  flex: 0 0 56%;
-  height: 56%;
+  flex: 1 1 auto;
+  height: 100%;
   min-height: 0;
   object-fit: cover;
   background: linear-gradient(135deg, rgba(0,122,255,0.07), rgba(0,0,0,0.07));
@@ -3195,40 +3188,6 @@ h1, h2, h3, h4, .header-title, .profile-name, .tinder-photo-name, .chat-list-nam
   overflow: hidden;
 }
 
-/* Top-right circular icon buttons over the photo (report / block) */
-.tinder-photo-topbar {
-  position: absolute;
-  top: 14px;
-  right: 14px;
-  z-index: 5;
-  display: flex;
-  gap: 8px;
-}
-.tinder-icon-btn {
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  border: none;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  -webkit-backdrop-filter: blur(8px);
-  backdrop-filter: blur(8px);
-  transition: background 0.2s ease, transform 0.2s ease;
-  padding: 0;
-}
-.tinder-icon-btn svg { width: 17px; height: 17px; display: block; pointer-events: none; }
-.tinder-icon-btn-warn {
-  background: rgba(255, 149, 0, 0.85);
-  color: #fff;
-}
-.tinder-icon-btn-warn:active { transform: scale(0.9); background: rgba(255, 149, 0, 1); }
-.tinder-icon-btn-more {
-  background: rgba(0, 0, 0, 0.35);
-  color: #fff;
-}
-.tinder-icon-btn-more:active { transform: scale(0.9); background: rgba(0, 0, 0, 0.55); }
 .tinder-photo img {
   width: 100%;
   height: 100%;
@@ -3238,48 +3197,73 @@ h1, h2, h3, h4, .header-title, .profile-name, .tinder-photo-name, .chat-list-nam
   position: absolute;
   inset: 0;
 }
+
+/* Single report button, top-right, SVG icon */
 .tinder-report-btn {
   position: absolute;
   top: 14px;
   right: 14px;
-  z-index: 5;
-  width: 36px;
-  height: 36px;
+  z-index: 6;
+  width: 38px;
+  height: 38px;
   border-radius: 50%;
   border: none;
-  background: rgba(0, 0, 0, 0.35);
+  background: rgba(0, 0, 0, 0.38);
+  -webkit-backdrop-filter: blur(8px);
   backdrop-filter: blur(8px);
   color: #fff;
-  font-size: 16px;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
   transition: background 0.2s ease, transform 0.2s ease;
+  padding: 0;
 }
+.tinder-report-btn svg { width: 18px; height: 18px; display: block; pointer-events: none; }
 .tinder-report-btn:active {
   background: rgba(255, 149, 0, 0.85);
   transform: scale(0.92);
 }
+
 .tinder-photo-gradient {
-  display: none;
+  position: absolute;
+  left: 0; right: 0; bottom: 0;
+  height: 62%;
+  z-index: 2;
+  pointer-events: none;
+  background: linear-gradient(
+    to top,
+    rgba(0,0,0,0.88) 0%,
+    rgba(0,0,0,0.72) 32%,
+    rgba(0,0,0,0.38) 60%,
+    rgba(0,0,0,0.05) 88%,
+    transparent 100%
+  );
 }
-/* Kept for backwards compatibility; the name/meta/about block now renders
-   inside .tinder-body below the photo instead of overlaid on top of it. */
+
+/* Everything below the top of the name sits INSIDE the photo, overlaid on the gradient */
 .tinder-photo-info {
-  display: none;
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  z-index: 3;
+  color: #fff;
+  padding: 20px 16px calc(12px + var(--safe-bottom, 0px));
+  display: flex;
+  flex-direction: column;
 }
 .tinder-photo-name {
   font-size: 24px;
   font-weight: 800;
   letter-spacing: -0.5px;
   line-height: 1.15;
+  text-shadow: 0 2px 12px rgba(0,0,0,0.45);
 }
 .tinder-photo-meta {
   font-size: 13px;
   font-weight: 600;
   opacity: 0.95;
   margin-top: 5px;
+  text-shadow: 0 1px 5px rgba(0,0,0,0.35);
   display: flex;
   align-items: center;
   flex-wrap: wrap;
@@ -3299,16 +3283,17 @@ h1, h2, h3, h4, .header-title, .profile-name, .tinder-photo-name, .chat-list-nam
   overflow: hidden;
 }
 
-/* ===== New below-photo info panel (name / location / job) ===== */
+/* ===== Overlay info block (name / location / job) — sits on the photo ===== */
 .tinder-name-row {
   display: flex;
   align-items: center;
   flex-wrap: wrap;
   gap: 8px;
-  font-size: 21px;
+  font-size: 22px;
   font-weight: 800;
   letter-spacing: -0.3px;
-  color: var(--text-primary);
+  color: #fff;
+  text-shadow: 0 2px 12px rgba(0,0,0,0.45);
 }
 .tinder-location-pill {
   display: inline-flex;
@@ -3316,26 +3301,29 @@ h1, h2, h3, h4, .header-title, .profile-name, .tinder-photo-name, .chat-list-nam
   gap: 6px;
   width: fit-content;
   max-width: 100%;
-  background: var(--accent-tint-08);
-  color: var(--text-secondary);
-  border: 1px solid var(--accent-tint-18);
+  background: rgba(255,255,255,0.18);
+  color: #fff;
+  border: 1px solid rgba(255,255,255,0.32);
   border-radius: 14px;
-  padding: 7px 12px;
+  padding: 6px 12px;
   font-size: 13px;
   font-weight: 700;
   margin-top: 8px;
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
 }
 .tinder-location-pill svg {
   width: 15px;
   height: 15px;
   flex-shrink: 0;
-  color: var(--ios-blue);
+  color: #fff;
 }
 .tinder-job-text {
   margin-top: 8px;
   font-size: 14px;
   font-weight: 600;
-  color: var(--text-primary);
+  color: rgba(255,255,255,0.94);
+  text-shadow: 0 1px 5px rgba(0,0,0,0.4);
   line-height: 1.4;
   display: -webkit-box;
   -webkit-line-clamp: 2;
@@ -3347,7 +3335,7 @@ h1, h2, h3, h4, .header-title, .profile-name, .tinder-photo-name, .chat-list-nam
 /* Nomzod "O'zingiz haqingizda" matni — card body */
 .tinder-about-text {
   font-size: 13px;
-  color: var(--text-secondary);
+  color: rgba(255,255,255,0.9);
   line-height: 1.4;
   margin-bottom: 6px;
   display: -webkit-box;
@@ -3357,13 +3345,11 @@ h1, h2, h3, h4, .header-title, .profile-name, .tinder-photo-name, .chat-list-nam
   overflow: hidden;
 }
 
-/* Card body — name, location, job/about, tags. Fills the space below the photo. */
+/* Card body is now just a transparent wrapper living inside the photo overlay */
 .tinder-body {
-  padding: 14px 16px 4px;
+  padding: 0;
   min-height: 0;
-  flex: 1 1 auto;
-  overflow-y: auto;
-  background: rgba(255,255,255,0.97);
+  background: transparent;
 }
 
 .tinder-mini-meta {
@@ -3400,28 +3386,29 @@ h1, h2, h3, h4, .header-title, .profile-name, .tinder-photo-name, .chat-list-nam
   border-radius: 999rem;
   font-size: 12px;
   font-weight: 700;
-  background: rgba(0,122,255,0.08);
-  color: var(--ios-blue);
-  border: 1px solid rgba(0,122,255,0.15);
+  background: rgba(255,255,255,0.16);
+  color: #fff;
+  border: 1px solid rgba(255,255,255,0.3);
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
 }
 .tinder-tag.tinder-tag-alt {
-  background: rgba(255,45,85,0.07);
-  color: #FF2D55;
-  border-color: rgba(255,45,85,0.15);
+  background: rgba(255,45,85,0.22);
+  color: #fff;
+  border-color: rgba(255,45,85,0.4);
 }
 
-/* 5 action buttons at bottom - FIXED AT BOTTOM */
+/* 5 action buttons — now overlaid at the very bottom of the photo, inside the overlay */
 .tinder-actions {
   display: flex;
   justify-content: space-evenly;
   align-items: center;
   gap: 6px;
-  padding: 10px 10px calc(14px + var(--safe-bottom, 0px));
+  padding: 14px 4px 0;
   width: 100%;
   box-sizing: border-box;
   flex-shrink: 0;
-  background: rgba(255,255,255,0.97);
-  border-radius: 0 0 28px 28px;
+  background: transparent;
 }
 
 .tinder-btn {
@@ -6669,14 +6656,8 @@ body.dark-theme .viewed-item {
   background: linear-gradient(135deg, #202020, #171717) !important;
 }
 
-/* Tinder-uslubidagi kartalar */
-body.dark-theme .tinder-body {
-  background: rgba(24,24,24,0.92) !important;
-}
-
-body.dark-theme .tinder-actions {
-  background: linear-gradient(to bottom, rgba(18,18,18,0), rgba(18,18,18,0.94) 30%) !important;
-}
+/* Tinder-uslubidagi kartalar — endi tinder-body/actions rasm ustidagi shaffof overlay,
+   shuning uchun qorong'i rejimda alohida fon berilmaydi (gradient rasm ustida turadi) */
 
 body.dark-theme .tinder-btn-nope,
 body.dark-theme .tinder-btn-superlike,
