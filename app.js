@@ -7573,6 +7573,113 @@ const tg = window.Telegram?.WebApp;
       chatBadgePollInterval = setInterval(refreshChatBadge, 15000);
     }
 
+    // === REAL-TIME CHAT (WebSocket) ===
+    // Chatdagi hamma narsa (kelgan xabar, badge, ro'yxatdagi preview) real-time
+    // yangilanishi uchun serverga doimiy WebSocket ulanish o'rnatiladi.
+    // Agar ulanish uzilib qolsa, avtomatik qayta ulanishga harakat qilinadi -
+    // shu bilan birga eski 3/15 soniyalik so'rovlar zaxira (fallback) sifatida qoladi.
+    let chatSocket = null;
+    let chatSocketReconnectTimer = null;
+    let chatSocketReconnectDelay = 2000;
+    let chatSocketManualClose = false;
+
+    function getWsBaseUrl() {
+      const urlParams = new URLSearchParams(window.location.search);
+      const override = (urlParams.get('api_base') || window.__API_BASE_URL || '').trim();
+      const httpBase = override
+        ? override.replace(/\/$/, '')
+        : (API_BASE_URL ? API_BASE_URL.replace(/\/$/, '') : `${window.location.protocol}//${window.location.host}`);
+      return httpBase.replace(/^http/, 'ws');
+    }
+
+    function isChatsPageActive() {
+      const el = document.getElementById('page-chats');
+      return !!(el && el.classList.contains('active'));
+    }
+
+    function connectChatSocket() {
+      const telegramId = Number(userId);
+      if (!Number.isFinite(telegramId) || telegramId <= 0) return;
+
+      try {
+        if (chatSocket) {
+          chatSocketManualClose = true;
+          chatSocket.close();
+        }
+        chatSocketManualClose = false;
+
+        const wsUrl = `${getWsBaseUrl()}/ws/chat?telegram_id=${telegramId}`;
+        chatSocket = new WebSocket(wsUrl);
+
+        chatSocket.onopen = () => {
+          chatSocketReconnectDelay = 2000; // muvaffaqiyatli ulanishdan so'ng backoff'ni tiklaymiz
+        };
+
+        chatSocket.onmessage = (event) => {
+          let payload;
+          try {
+            payload = JSON.parse(event.data);
+          } catch (e) { return; }
+          handleChatSocketMessage(payload);
+        };
+
+        chatSocket.onclose = () => {
+          if (chatSocketManualClose) return;
+          if (chatSocketReconnectTimer) clearTimeout(chatSocketReconnectTimer);
+          chatSocketReconnectTimer = setTimeout(() => {
+            connectChatSocket();
+          }, chatSocketReconnectDelay);
+          // Backoff: har safar biroz uzunroq kutamiz, 15 soniyadan oshmaydi
+          chatSocketReconnectDelay = Math.min(chatSocketReconnectDelay * 1.5, 15000);
+        };
+
+        chatSocket.onerror = () => {
+          try { chatSocket.close(); } catch (e) {}
+        };
+      } catch (e) {
+        console.warn('Chat WebSocket ulanish xatosi:', e);
+      }
+    }
+
+    async function handleChatSocketMessage(payload) {
+      if (!payload || !payload.type) return;
+
+      if (payload.type === 'chat_message') {
+        const isThisChatOpen = document.getElementById('chat-modal').style.display === 'flex'
+          && Number(currentChatMatchId) === Number(payload.match_id);
+
+        if (isThisChatOpen) {
+          // Suhbat hozir ochiq - xabarni darhol (kutmasdan) ko'rsatamiz
+          const container = document.getElementById('chat-messages');
+          const m = payload.message;
+          if (container && m) {
+            container.insertAdjacentHTML('beforeend', renderChatBubbleHTML(m, m.sender_id == userId));
+            container.scrollTop = container.scrollHeight;
+          }
+          try {
+            await apiPost('/api/chat/mark_read', { match_id: payload.match_id, telegram_id: userId });
+          } catch (e) {}
+          refreshChatBadge();
+        } else {
+          // Boshqa joyda turibdi - belgi (badge) va ro'yxatni real-time yangilaymiz
+          refreshChatBadge();
+          if (isChatsPageActive()) loadChats();
+        }
+      } else if (payload.type === 'anon_chat_message') {
+        const isAnonChatOpen = document.getElementById('anon-chat-modal').style.display === 'flex'
+          && Number(currentAnonMatchId) === Number(payload.anon_match_id);
+
+        if (isAnonChatOpen) {
+          const container = document.getElementById('anon-chat-messages');
+          const m = payload.message;
+          if (container && m) {
+            container.insertAdjacentHTML('beforeend', renderChatBubbleHTML(m, m.sender_id == userId));
+            container.scrollTop = container.scrollHeight;
+          }
+        }
+      }
+    }
+
     function openChatRoom(matchId, name, photo, partnerData = null) {
       currentChatMatchId = matchId;
       let decodedPartner = null;
@@ -8197,6 +8304,7 @@ const tg = window.Telegram?.WebApp;
             loadLimitStatus();
             startAnonPolling();
             startChatBadgePolling();
+            connectChatSocket();
             // Sahifa yuklangandan so'ng tarjimalarni qayta qo'llash
             setTimeout(() => applyTranslations(), 100);
           } else {
