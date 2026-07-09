@@ -275,10 +275,13 @@ const tg = window.Telegram?.WebApp;
             'goal_group_main': 'Asosiy maqsad',
             'goal_group_extra': "Qo'shimcha",
             'goal_required_hint': '⚡ Kamida 1 ta asosiy maqsad tanlang',
-            'only_serious_men_title': "Faqat jiddiy niyatli yigirlarga ko'rinay",
-            'only_serious_men_sub': "Anketam faqat '💍 Jiddiy' maqsadli yigirlarga chiqadi",
+            'only_serious_men_title': "Faqat jiddiy niyatli yigitlarga ko'rinay",
+            'only_serious_men_sub': "Anketam faqat '💍 Jiddiy' maqsadli yigitlarga chiqadi",
             'goal_required_error': 'Kamida 1 ta asosiy maqsad (💍/💬/🧳) tanlang',
             'goal_boshqa': 'Boshqa',
+            'serious_intent_title': 'Jiddiy niyatdaman (oila qurish uchun)',
+            'serious_intent_sub': "Yoqsangiz, \"faqat jiddiy niyatlilar\" sozlamasini yoqqan foydalanuvchilarga yoza olasiz",
+            'filter_only_serious': "Faqat jiddiy niyatlilarni ko'rsat",
             'int_kino': '🍿 Kino',
             'int_musiqa': '🎵 Musiqa',
             'int_kitob': "📚 Kitob o'qish",
@@ -4073,16 +4076,11 @@ const tg = window.Telegram?.WebApp;
         });
       }
 
-      // Set goals chips
+      // Jiddiy niyat toggle tiklanishi
       if (profile.goals && Array.isArray(profile.goals)) {
         selectedGoals = [...profile.goals];
-        // Asosiy maqsadlar (goals-chips) va qo'shimcha (goals-extra-chips)
-        document.querySelectorAll('#goals-chips .chip, #goals-extra-chips .chip').forEach(chip => {
-          const chipKey = chip.getAttribute('data-i18n-chip');
-          if (selectedGoals.includes(chipKey)) {
-            chip.classList.add('selected');
-          }
-        });
+        const seriousIntentToggle = document.getElementById('serious-intent-toggle');
+        if (seriousIntentToggle) seriousIntentToggle.checked = selectedGoals.includes('goal_jiddiy');
       }
       // only_serious_men tiklanishi
       const seriousToggle = document.getElementById('only-serious-toggle');
@@ -4148,6 +4146,13 @@ const tg = window.Telegram?.WebApp;
 
       // Clear chips
       document.querySelectorAll('.chip.selected').forEach(chip => chip.classList.remove('selected'));
+
+      // Clear jiddiy niyat / only-serious toggles
+      const seriousIntentToggle = document.getElementById('serious-intent-toggle');
+      if (seriousIntentToggle) seriousIntentToggle.checked = false;
+      const onlySeriousToggle = document.getElementById('only-serious-toggle');
+      if (onlySeriousToggle) onlySeriousToggle.checked = false;
+      updateOnlySeriousWrap();
 
       // Clear photo preview
       const preview = document.getElementById('photo-preview');
@@ -4273,32 +4278,26 @@ const tg = window.Telegram?.WebApp;
     }
 
     // ===== CHIP TOGGLE =====
-    // Asosiy maqsad chip toggle (faqat bittasi tanlanadi — radio xatti-harakat)
-    function toggleChipMain(el, group) {
-      const container = el.closest('.chips-wrap-main');
-      if (!container) return toggleChip(el, group);
-      const wasSelected = el.classList.contains('selected');
-      // Barcha asosiy chiplarni o'chirish
-      container.querySelectorAll('.chip-main').forEach(c => {
-        c.classList.remove('selected');
-        const v = c.getAttribute('data-i18n-chip') || c.textContent.trim();
-        if (group === 'goals') selectedGoals = selectedGoals.filter(i => i !== v);
-      });
-      if (!wasSelected) {
-        el.classList.add('selected');
-        const value = el.getAttribute('data-i18n-chip') || el.textContent.trim();
-        if (group === 'goals') selectedGoals = Array.from(new Set([...selectedGoals, value]));
-      }
+    // "Jiddiy niyatdaman" toggle — profilga oid yagona maqsad belgisi
+    function onSeriousIntentChange() {
+      const checked = !!document.getElementById('serious-intent-toggle')?.checked;
+      selectedGoals = checked ? ['goal_jiddiy'] : [];
       updateOnlySeriousWrap();
     }
 
-    // Ayollar uchun 'faqat jiddiy yigirlarga ko'rinish' toggle
+    // Qidiruv filtrida "faqat jiddiy niyatlilarni ko'rsat" toggle
+    function onSfOnlySeriousChange() {
+      const checked = !!document.getElementById('sf-only-serious')?.checked;
+      selectedSearchGoals = checked ? ['goal_jiddiy'] : [];
+      scheduleSearchCount();
+    }
+
+    // Ayollar uchun 'faqat jiddiy niyatlilarga ko'rinish' toggle
     function updateOnlySeriousWrap() {
       const wrap = document.getElementById('only-serious-wrap');
       if (!wrap) return;
-      const isWoman = selectedGender === 'female' || selectedGender === 'Ayol';
-      const hasJiddiy = selectedGoals.includes('goal_jiddiy');
-      wrap.style.display = (isWoman && hasJiddiy) ? 'block' : 'none';
+      const isWoman = selectedGender === 'ayol';
+      wrap.style.display = isWoman ? 'block' : 'none';
     }
 
     function onOnlySeriousChange() {
@@ -6086,9 +6085,7 @@ const tg = window.Telegram?.WebApp;
       if (!name) { showToast(tr('enter_name_prompt')); return; }
       if (!age || age < 16 || age > 80) { showToast(tr('enter_age_prompt')); return; }
       if (!city) { showToast(tr('enter_city_prompt')); return; }
-      const MAIN_GOALS = ['goal_jiddiy', 'goal_dostlik_suhbat', 'goal_hamroh'];
-      const hasMainGoal = selectedGoals.some(g => MAIN_GOALS.includes(g));
-      if (!hasMainGoal) { showToast(tr('goal_required_error') || 'Kamida 1 ta asosiy maqsad tanlang (💍/💬/🧳)'); return; }
+      // "Jiddiy niyatdaman" endi ixtiyoriy — majburiy maqsad tanlash talab qilinmaydi
 
       // Verifikatsiya endi ixtiyoriy: foydalanuvchi selfi yubormasa ham anketa saqlanadi
 
