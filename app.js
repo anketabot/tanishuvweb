@@ -6301,6 +6301,8 @@ const tg = window.Telegram?.WebApp;
       const panelBody = document.getElementById('search-results-panel-body');
       if (panelBody) panelBody.innerHTML = `<div class="loading"><div class="spinner"></div> ${tr('searching')}</div>`;
       if (modal) modal.style.display = 'flex';
+      const headerReportBtnLoading = document.getElementById('search-modal-report-btn');
+      if (headerReportBtnLoading) headerReportBtnLoading.style.display = 'none';
 
       if (!userId) {
         if (panelBody) panelBody.innerHTML = `<div class="empty-state"><div class="empty-icon"></div><h3>${tr('login_via_telegram')}</h3><p>${tr('open_in_telegram')}</p></div>`;
@@ -6355,6 +6357,8 @@ const tg = window.Telegram?.WebApp;
       if (!container) { renderTinderCard(direction); return; }
 
       if (tinderIndex >= tinderUsers.length) {
+        const headerReportBtnEnd = document.getElementById('search-modal-report-btn');
+        if (headerReportBtnEnd) headerReportBtnEnd.style.display = 'none';
         container.innerHTML = `
           <div class="no-more-wrap">
             <div class="no-more-emoji">✨</div>
@@ -6394,9 +6398,6 @@ const tg = window.Telegram?.WebApp;
           <div class="stamp superlike">⭐ SUPER</div>
           <div class="tinder-photo">
             ${photo ? `<img src="${photo}" alt="${u.full_name}" onclick="openPhotoViewer('${escapeJs(photo)}','${escapeJs(u.full_name)}')" />` : `<div style="display:flex;align-items:center;justify-content:center;width:100%;height:100%;font-size:100px;">${u.gender==='erkak'?'👨':'👩'}</div>`}
-            <button class="tinder-report-btn" onclick="event.stopPropagation(); openReportModal(${u.telegram_id}, 'search_profile')" title="${tr('report')}">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
-            </button>
             <div class="tinder-photo-gradient"></div>
             <div class="tinder-photo-info">
               <div class="tinder-body">
@@ -6433,6 +6434,16 @@ const tg = window.Telegram?.WebApp;
           if (e.target.closest('.tinder-actions')) return;
           showProfileDetail(u);
         });
+      }
+
+      const headerReportBtn = document.getElementById('search-modal-report-btn');
+      if (headerReportBtn) {
+        headerReportBtn.style.display = 'flex';
+        headerReportBtn.title = tr('report');
+        headerReportBtn.onclick = function(e) {
+          e.stopPropagation();
+          openReportModal(u.telegram_id, 'search_profile');
+        };
       }
     }
 
@@ -8010,6 +8021,8 @@ const tg = window.Telegram?.WebApp;
     function closeSearchResultsModal(e) {
       if (e && e.target !== e.currentTarget) return;
       document.getElementById('search-results-modal').style.display = 'none';
+      const headerReportBtn = document.getElementById('search-modal-report-btn');
+      if (headerReportBtn) headerReportBtn.style.display = 'none';
     }
 
     function closePhotoViewer(e) {
