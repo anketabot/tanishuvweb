@@ -2076,6 +2076,34 @@ h1, h2, h3, h4, .header-title, .profile-name, .tinder-photo-name, .chat-list-nam
   flex-shrink: 0;
 }
 
+/* Immersive full-photo results sheet: no title bar, just a floating close button */
+.results-close-btn {
+  position: fixed;
+  top: calc(var(--safe-top, 0px) + 14px);
+  right: 14px;
+  z-index: 60;
+  width: 38px;
+  height: 38px;
+  border: none;
+  border-radius: 50%;
+  background: rgba(0,0,0,0.4);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  color: #fff;
+  font-size: 15px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.22), 0 1px 1px rgba(255,255,255,0.12) inset;
+  transition: transform 0.2s var(--ease-spring), background 0.2s ease;
+}
+.results-close-btn:active {
+  transform: scale(0.88);
+  background: rgba(0,0,0,0.6);
+}
+
 .sheet-title {
   font-size: 18px;
   font-weight: 800;
@@ -3072,6 +3100,65 @@ h1, h2, h3, h4, .header-title, .profile-name, .tinder-photo-name, .chat-list-nam
   box-shadow: 0 0 8px var(--ios-blue-glow);
 }
 
+/* Thin story-style progress bar overlaid on the photo — replaces the old text counter */
+.tinder-progress-bar {
+  position: absolute;
+  top: calc(12px + var(--safe-top, 0px));
+  left: 14px;
+  right: 14px;
+  z-index: 6;
+  display: flex;
+  gap: 4px;
+  pointer-events: none;
+}
+.tinder-progress-seg {
+  flex: 1 1 0;
+  height: 3px;
+  border-radius: 3px;
+  background: rgba(255,255,255,0.32);
+  overflow: hidden;
+  transition: background 0.3s var(--ease-premium);
+}
+.tinder-progress-seg.done {
+  background: rgba(255,255,255,0.92);
+}
+.tinder-progress-seg.active {
+  background: linear-gradient(90deg, var(--ios-blue), #5AC8FA);
+  box-shadow: 0 0 6px var(--ios-blue-glow);
+}
+
+/* Top-right icon pair: skip (X) and report, side by side on the photo */
+.tinder-top-actions {
+  position: absolute;
+  top: calc(26px + var(--safe-top, 0px));
+  right: 14px;
+  z-index: 6;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.tinder-icon-btn {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(0, 0, 0, 0.38);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  padding: 0;
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+.tinder-icon-btn svg { width: 18px; height: 18px; display: block; pointer-events: none; }
+.tinder-icon-btn:active { transform: scale(0.9); }
+.tinder-icon-btn.tinder-nope-btn:active { background: rgba(255, 59, 48, 0.85); }
+.tinder-icon-btn.tinder-report-btn:active { background: rgba(255, 149, 0, 0.85); }
+
 /* Big Tinder-style card - FULL SCREEN HEIGHT */
 .tinder-card {
   background: var(--glass-bg-strong);
@@ -3198,32 +3285,8 @@ h1, h2, h3, h4, .header-title, .profile-name, .tinder-photo-name, .chat-list-nam
   inset: 0;
 }
 
-/* Single report button, top-right, SVG icon */
-.tinder-report-btn {
-  position: absolute;
-  top: 14px;
-  right: 14px;
-  z-index: 6;
-  width: 38px;
-  height: 38px;
-  border-radius: 50%;
-  border: none;
-  background: rgba(0, 0, 0, 0.38);
-  -webkit-backdrop-filter: blur(8px);
-  backdrop-filter: blur(8px);
-  color: #fff;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  transition: background 0.2s ease, transform 0.2s ease;
-  padding: 0;
-}
-.tinder-report-btn svg { width: 18px; height: 18px; display: block; pointer-events: none; }
-.tinder-report-btn:active {
-  background: rgba(255, 149, 0, 0.85);
-  transform: scale(0.92);
-}
+/* Report + skip(X) buttons now live together inside .tinder-top-actions (see above),
+   styled via the shared .tinder-icon-btn rule. */
 
 .tinder-photo-gradient {
   position: absolute;
