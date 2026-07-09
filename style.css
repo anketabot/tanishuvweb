@@ -3240,31 +3240,50 @@ h1, h2, h3, h4, .header-title, .profile-name, .tinder-photo-name, .chat-list-nam
   inset: 0;
 }
 
-/* Single report button, top-right, SVG icon */
-.tinder-report-btn {
+/* Two overlay buttons: report and skip/close */
+.tinder-photo-controls {
   position: absolute;
   top: 14px;
+  left: 14px;
   right: 14px;
   z-index: 6;
-  width: 38px;
-  height: 38px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  pointer-events: none;
+}
+.tinder-overlay-btn {
+  width: 42px;
+  height: 42px;
   border-radius: 50%;
   border: none;
-  background: rgba(0, 0, 0, 0.38);
-  -webkit-backdrop-filter: blur(8px);
-  backdrop-filter: blur(8px);
+  background: rgba(0, 0, 0, 0.36);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
   color: #fff;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  transition: background 0.2s ease, transform 0.2s ease;
+  transition: background 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
   padding: 0;
+  pointer-events: auto;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.16);
 }
-.tinder-report-btn svg { width: 18px; height: 18px; display: block; pointer-events: none; }
-.tinder-report-btn:active {
-  background: rgba(255, 149, 0, 0.85);
+.tinder-overlay-btn svg {
+  width: 20px;
+  height: 20px;
+  display: block;
+  pointer-events: none;
+}
+.tinder-overlay-btn:active {
   transform: scale(0.92);
+}
+.tinder-overlay-btn-close {
+  background: rgba(255,59,48,0.72);
+}
+.tinder-overlay-btn-report {
+  background: rgba(255,149,0,0.78);
 }
 
 .tinder-photo-gradient {
