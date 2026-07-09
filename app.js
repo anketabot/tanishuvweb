@@ -6962,7 +6962,7 @@ const tg = window.Telegram?.WebApp;
             <span class="btn-icon">${ICONS.ban}</span> ${tr('block')}
           </button>
           <button class="action-btn btn-report" onclick="event.stopPropagation(); openReportModal(${u.telegram_id}, 'search_profile')">
-            <span class="btn-icon">🚩</span> ${tr('report')}
+            <span class="btn-icon">${ICONS.alert}</span> ${tr('report')}
           </button>
         </div>
       </div>`;
