@@ -4283,13 +4283,6 @@ const tg = window.Telegram?.WebApp;
     }
 
     // ===== CHIP TOGGLE =====
-    // Qidiruv filtrida "faqat jiddiy niyatlilarni ko'rsat" toggle
-    function onSfOnlySeriousChange() {
-      const checked = !!document.getElementById('sf-only-serious')?.checked;
-      selectedSearchGoals = checked ? ['goal_jiddiy'] : [];
-      scheduleSearchCount();
-    }
-
     // Ayollar uchun 'faqat jiddiy niyatlilarga ko'rinish' toggle
     function updateOnlySeriousWrap() {
       const wrap = document.getElementById('only-serious-wrap');
