@@ -15,7 +15,7 @@ const tg = window.Telegram?.WebApp;
         'tg': { name: 'Тоҷикӣ', flag: '🇹🇯' },
         'en': { name: 'English', flag: '🇬🇧' },
     };
-a
+
     let userId = null;
     let userName = '';
     let userFirstName = '';
@@ -6288,6 +6288,7 @@ a
         if (myZodiac && ZODIAC_COMPATIBILITY[myZodiac]) {
           filters.zodiac_compat_list = ZODIAC_COMPATIBILITY[myZodiac].mos;
         } else {
+          toggleResultsReportBtn(false);
           if (panelBody) {
             panelBody.innerHTML = `<div class="empty-state"><div class="empty-icon">⭐</div><h3>${tr('zodiac_not_set')}</h3><p>${tr('zodiac_not_set_hint')}</p><button class="btn-primary" style="margin-top:16px;padding:12px 24px;border-radius:999rem;" onclick="closeSearchResultsModal();showPage('profile')">${tr('fill_profile')}</button></div>`;
           }
@@ -6299,6 +6300,7 @@ a
       // Open modal immediately with loading
       const modal = document.getElementById('search-results-modal');
       const panelBody = document.getElementById('search-results-panel-body');
+      toggleResultsReportBtn(false);
       if (panelBody) panelBody.innerHTML = `<div class="loading"><div class="spinner"></div> ${tr('searching')}</div>`;
       if (modal) modal.style.display = 'flex';
 
@@ -6320,6 +6322,7 @@ a
       tinderUsers = [];
       tinderIndex = 0;
       tinderHistory = [];
+      toggleResultsReportBtn(false);
 
       try {
         const data = await apiPost('/api/search', { telegram_id: telegramId || 0, filters });
@@ -6355,6 +6358,7 @@ a
       if (!container) { renderTinderCard(direction); return; }
 
       if (tinderIndex >= tinderUsers.length) {
+        toggleResultsReportBtn(false);
         container.innerHTML = `
           <div class="no-more-wrap">
             <div class="no-more-emoji">✨</div>
@@ -6389,16 +6393,7 @@ a
           <div class="stamp nope">✕ NOPE</div>
           <div class="stamp superlike">⭐ SUPER</div>
           <div class="tinder-photo">
-            <div class="tinder-progress-bar">${tinderUsers.map((_,i)=>`<div class="tinder-progress-seg${i<tinderIndex?' done':''}${i===tinderIndex?' active':''}"></div>`).join('')}</div>
             ${photo ? `<img src="${photo}" alt="${u.full_name}" onclick="openPhotoViewer('${escapeJs(photo)}','${escapeJs(u.full_name)}')" />` : `<div style="display:flex;align-items:center;justify-content:center;width:100%;height:100%;font-size:100px;">${u.gender==='erkak'?'👨':'👩'}</div>`}
-            <div class="tinder-top-actions" onclick="event.stopPropagation()">
-              <button class="tinder-icon-btn tinder-nope-btn" onclick="tinderSwipeModal('left')" title="O'tkazib yuborish">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-              </button>
-              <button class="tinder-icon-btn tinder-report-btn" onclick="openReportModal(${u.telegram_id}, 'search_profile')" title="${tr('report')}">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
-              </button>
-            </div>
             <div class="tinder-photo-gradient"></div>
             <div class="tinder-photo-info">
               <div class="tinder-body">
@@ -6410,6 +6405,9 @@ a
               <div class="tinder-actions" onclick="event.stopPropagation()">
                 <button class="tinder-btn tinder-btn-back" onclick="tinderBackModal()" title="${tr('btn_back')}">
                   <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h18M3 12l6-6M3 12l6 6"/></svg>
+                </button>
+                <button class="tinder-btn tinder-btn-nope" onclick="tinderSwipeModal('left')" title="O'tkazib yuborish">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
                 </button>
                 <button class="tinder-btn tinder-btn-msg" onclick="openMessageModalFromTinder(${u.telegram_id},'${escapeJs(u.full_name)}')" title="Xabar">
                   <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
@@ -6433,6 +6431,20 @@ a
           showProfileDetail(u);
         });
       }
+      toggleResultsReportBtn(true);
+    }
+
+    // Floating "shikoyat" tugmasini ko'rsatish/yashirish (natijalar oynasi tepasida)
+    function toggleResultsReportBtn(show) {
+      const btn = document.getElementById('results-report-btn');
+      if (btn) btn.style.display = show ? 'flex' : 'none';
+    }
+
+    // Joriy ko'rsatilayotgan nomzod uchun shikoyat oynasini ochish
+    function reportCurrentSearchCandidate() {
+      const u = tinderUsers[tinderIndex];
+      if (!u) return;
+      openReportModal(u.telegram_id, 'search_profile');
     }
 
     function tinderSwipeModal(direction) {
@@ -6569,29 +6581,28 @@ a
         ? `<img src="${photo}" alt="${u.full_name}" loading="lazy" />`
         : `<div style="display:flex;align-items:center;justify-content:center;width:100%;height:100%;color:var(--ios-blue);opacity:0.4;">${icon}</div>`;
 
-      const goals = (u.goals || []).map(g => `<span class="tinder-tag">${g}</span>`).join('');
-      const interests = (u.interests || []).map(i => `<span class="tinder-tag tinder-tag-alt">${i}</span>`).join('');
-      const progressSegs = Array.from({length: Math.min(total, 12)}, (_, i) => {
-        const ci = Math.min(tinderIndex, 11);
-        return `<div class="tinder-progress-seg${i<ci?' done':''}${i===ci?' active':''}"></div>`;
+      const dots = Array.from({length: Math.min(total, 7)}, (_, i) => {
+        const ci = Math.min(tinderIndex, 6);
+        return `<div class="swipe-dot ${i === ci ? 'active' : ''}"></div>`;
       }).join('');
 
+      const goals = (u.goals || []).map(g => `<span class="tinder-tag">${g}</span>`).join('');
+      const interests = (u.interests || []).map(i => `<span class="tinder-tag tinder-tag-alt">${i}</span>`).join('');
+
       container.innerHTML = `
+        <div class="swipe-counter">
+          <div class="swipe-dots">${dots}</div>
+          <span style="margin-left:6px;">${tinderIndex+1} / ${total}</span>
+        </div>
         <div class="tinder-card animate-in" id="tinder-card" data-user="${escapeHtmlAttr(JSON.stringify(u))}" style="height:calc(100vh - 80px);">
           <span class="stamp like" id="stamp-like">LIKE 💚</span>
           <span class="stamp nope" id="stamp-nope">NOPE ✗</span>
           <span class="stamp superlike" id="stamp-super">SUPER ⭐</span>
           <div class="tinder-photo">
-            <div class="tinder-progress-bar">${progressSegs}</div>
             ${photoHtml}
-            <div class="tinder-top-actions" onclick="event.stopPropagation()">
-              <button class="tinder-icon-btn tinder-nope-btn" onclick="tinderDislike()" title="${tr('btn_dislike')}">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-              </button>
-              <button class="tinder-icon-btn tinder-report-btn" onclick="openReportModal(${u.telegram_id}, 'search_profile')" title="${tr('report')}">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
-              </button>
-            </div>
+            <button class="tinder-report-btn" onclick="event.stopPropagation(); openReportModal(${u.telegram_id}, 'search_profile')" title="${tr('report')}">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+            </button>
             <div class="tinder-photo-gradient"></div>
             <div class="tinder-photo-info">
               <div class="tinder-body">
@@ -6604,6 +6615,9 @@ a
               <div class="tinder-actions" onclick="event.stopPropagation()">
                 <button class="tinder-btn tinder-btn-back" onclick="tinderBack()" title="${tr('btn_back')}">
                   <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h18M3 12l6-6M3 12l6 6"/></svg>
+                </button>
+                <button class="tinder-btn tinder-btn-nope" onclick="tinderDislike()" title="${tr('btn_dislike')}">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
                 </button>
                 <button class="tinder-btn tinder-btn-msg" onclick="event.stopPropagation(); openMessageModal(${u.telegram_id},'${escapeJs(u.full_name)}','${escapeJs(photo||'')}', ${u.can_write});" title="${tr('send_message_btn')}">
                   <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
@@ -8007,6 +8021,7 @@ a
     function closeSearchResultsModal(e) {
       if (e && e.target !== e.currentTarget) return;
       document.getElementById('search-results-modal').style.display = 'none';
+      toggleResultsReportBtn(false);
     }
 
     function closePhotoViewer(e) {
