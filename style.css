@@ -2142,6 +2142,47 @@ h1, h2, h3, h4, .header-title, .profile-name, .tinder-photo-name, .chat-list-nam
   background: var(--bg);
 }
 
+/* Report + exit (chiqib ketish) buttons — floating together, top-right,
+   directly over the full-screen candidate photo. Same glass-circle
+   language as .modal-close / .tinder-report-btn elsewhere in the app. */
+.results-float-controls {
+  position: fixed;
+  top: calc(14px + var(--safe-top));
+  right: 14px;
+  z-index: 60;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.results-float-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 1.5px solid rgba(255,255,255,0.24);
+  background: rgba(0,0,0,0.42);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  padding: 0;
+  -webkit-backdrop-filter: blur(14px) saturate(160%);
+  backdrop-filter: blur(14px) saturate(160%);
+  box-shadow: 0 4px 14px rgba(0,0,0,0.18);
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+.results-float-btn svg { width: 19px; height: 19px; display: block; pointer-events: none; }
+
+.results-float-report:active {
+  background: rgba(255, 149, 0, 0.88);
+  transform: scale(0.92);
+}
+.results-float-close:active {
+  background: rgba(255, 59, 48, 0.85);
+  transform: scale(0.92);
+}
+
 /* ── Tinder card inside results modal ── */
 .search-results-panel-body .swipe-container {
   background: transparent;
@@ -2152,13 +2193,18 @@ h1, h2, h3, h4, .header-title, .profile-name, .tinder-photo-name, .chat-list-nam
   flex-direction: column;
 }
 
+/* Full-bleed fullscreen card — the faux stacked-deck peek behind it (used
+   in the old padded card layout) would look out of place here, so it's
+   switched off in this context. */
+.search-results-panel-body .swipe-container::before,
+.search-results-panel-body .swipe-container::after {
+  display: none;
+}
+
 .search-results-panel-body .tinder-card {
-  border-radius: 24px;
-  box-shadow:
-    0 2px 8px rgba(15,23,42,0.06),
-    0 20px 48px rgba(0,122,255,0.13),
-    inset 0 1px 1px rgba(255,255,255,0.7);
-  height: auto !important;
+  border-radius: 0;
+  box-shadow: none;
+  height: 100% !important;
   min-height: 0 !important;
   max-height: none !important;
   flex: 1 1 auto !important;
@@ -3240,50 +3286,31 @@ h1, h2, h3, h4, .header-title, .profile-name, .tinder-photo-name, .chat-list-nam
   inset: 0;
 }
 
-/* Two overlay buttons: report and skip/close */
-.tinder-photo-controls {
+/* Single report button, top-right, SVG icon */
+.tinder-report-btn {
   position: absolute;
   top: 14px;
-  left: 14px;
   right: 14px;
   z-index: 6;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  pointer-events: none;
-}
-.tinder-overlay-btn {
-  width: 42px;
-  height: 42px;
+  width: 38px;
+  height: 38px;
   border-radius: 50%;
   border: none;
-  background: rgba(0, 0, 0, 0.36);
-  -webkit-backdrop-filter: blur(10px);
-  backdrop-filter: blur(10px);
+  background: rgba(0, 0, 0, 0.38);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
   color: #fff;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  transition: background 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+  transition: background 0.2s ease, transform 0.2s ease;
   padding: 0;
-  pointer-events: auto;
-  box-shadow: 0 8px 20px rgba(0,0,0,0.16);
 }
-.tinder-overlay-btn svg {
-  width: 20px;
-  height: 20px;
-  display: block;
-  pointer-events: none;
-}
-.tinder-overlay-btn:active {
+.tinder-report-btn svg { width: 18px; height: 18px; display: block; pointer-events: none; }
+.tinder-report-btn:active {
+  background: rgba(255, 149, 0, 0.85);
   transform: scale(0.92);
-}
-.tinder-overlay-btn-close {
-  background: rgba(255,59,48,0.72);
-}
-.tinder-overlay-btn-report {
-  background: rgba(255,149,0,0.78);
 }
 
 .tinder-photo-gradient {
