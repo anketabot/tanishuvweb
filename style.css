@@ -2023,7 +2023,10 @@ h1, h2, h3, h4, .header-title, .profile-name, .tinder-photo-name, .chat-list-nam
   align-items: stretch;
   justify-content: center;
   padding: 0;
-  background: var(--bg);
+  /* Kunduzgi rejimda umumiy fon oq bo'lishi kerak (avval --bg ishlatilgan,
+     u kulrang #F2F2F7 bo'lgani uchun rasmning bo'sh joylarida kulrang
+     ko'rinib qolar edi) */
+  background: #ffffff;
   -webkit-backdrop-filter: none;
   backdrop-filter: none;
   position: fixed;
@@ -2038,7 +2041,8 @@ h1, h2, h3, h4, .header-title, .profile-name, .tinder-photo-name, .chat-list-nam
   max-height: 100vh;
   min-height: 100vh;
   border-radius: 0;
-  background: var(--bg);
+  /* Xuddi shu sababdan bu yerda ham oq fon */
+  background: #ffffff;
   -webkit-backdrop-filter: none;
   backdrop-filter: none;
   border: none;
@@ -3521,6 +3525,15 @@ body.dark-theme .search-results-panel-body {
   -webkit-tap-highlight-color: transparent;
   padding: 0;
   backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  /* backdrop-filter + border-radius:50% birgalikda ishlatilganda ba'zi
+     brauzerlarda (ayniqsa mobil Chrome/Safari) dumaloq tugmaning 4
+     tomonida (tepa/past/chap/o'ng) ingichka oq chiziq artefaktlari paydo
+     bo'ladi - buning sababi filter noto'g'ri klip qilinishi. mask-image
+     bilan shaklni majburan qayta klip qilib, artefaktni yo'q qilamiz. */
+  -webkit-mask-image: -webkit-radial-gradient(circle, #fff 100%, #000 100%);
+  mask-image: radial-gradient(circle, #fff 100%, #000 100%);
+  isolation: isolate;
 }
 
 .tinder-btn:hover {
@@ -6697,6 +6710,12 @@ body.dark-theme .chat-input-area,
 body.dark-theme .limit-status-bar {
   background: rgba(24, 24, 24, 0.9) !important;
   border-color: rgba(255,255,255,0.07);
+}
+
+/* Qidiruv natijalari sheeti - tungi rejimda oq emas, qora fon */
+body.dark-theme .search-results-overlay,
+body.dark-theme .search-results-sheet {
+  background: var(--bg) !important;
 }
 
 /* Modal, toast, dropdown, panel kabi "qalqib chiquvchi" elementlar */
