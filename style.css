@@ -3531,7 +3531,7 @@ h1, h2, h3, h4, .header-title, .profile-name, .tinder-photo-name, .chat-list-nam
 }
 
 .tinder-btn-back {
-  width: 46px; height: 46px;
+  width: 50px; height: 50px;
   background: rgba(255,200,0,0.12);
   border: 2px solid rgba(255,200,0,0.35);
   font-size: 18px;
@@ -3541,7 +3541,7 @@ h1, h2, h3, h4, .header-title, .profile-name, .tinder-photo-name, .chat-list-nam
 .tinder-btn-back:active { transform: scale(0.88); }
 
 .tinder-btn-nope {
-  width: 58px; height: 58px;
+  width: 62px; height: 62px;
   background: linear-gradient(150deg, rgba(255,255,255,0.96), rgba(255,59,48,0.06));
   border: 2px solid rgba(255,59,48,0.32);
   box-shadow: 0 1px 1px rgba(255,255,255,0.7) inset, 0 10px 28px rgba(255,59,48,0.18);
@@ -3550,7 +3550,7 @@ h1, h2, h3, h4, .header-title, .profile-name, .tinder-photo-name, .chat-list-nam
 .tinder-btn-nope:active { transform: scale(0.88); box-shadow: 0 2px 8px rgba(255,59,48,0.12); }
 
 .tinder-btn-superlike {
-  width: 50px; height: 50px;
+  width: 56px; height: 56px;
   background: linear-gradient(150deg, rgba(255,255,255,0.96), rgba(255,149,0,0.08));
   border: 2px solid rgba(255,149,0,0.32);
   box-shadow: 0 1px 1px rgba(255,255,255,0.7) inset, 0 10px 26px rgba(255,149,0,0.2);
@@ -3558,7 +3558,7 @@ h1, h2, h3, h4, .header-title, .profile-name, .tinder-photo-name, .chat-list-nam
 }
 
 .tinder-btn-like {
-  width: 58px; height: 58px;
+  width: 62px; height: 62px;
   background: linear-gradient(150deg, rgba(255,255,255,0.96), rgba(76,217,100,0.08));
   border: 2px solid rgba(76,217,100,0.38);
   box-shadow: 0 1px 1px rgba(255,255,255,0.7) inset, 0 10px 28px rgba(76,217,100,0.2);
@@ -3566,7 +3566,7 @@ h1, h2, h3, h4, .header-title, .profile-name, .tinder-photo-name, .chat-list-nam
 }
 
 .tinder-btn-msg {
-  width: 46px; height: 46px;
+  width: 50px; height: 50px;
   background: linear-gradient(150deg, rgba(255,255,255,0.96), rgba(0,122,255,0.06));
   border: 2px solid rgba(0,122,255,0.25);
   font-size: 18px;
