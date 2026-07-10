@@ -2139,6 +2139,11 @@ h1, h2, h3, h4, .header-title, .profile-name, .tinder-photo-name, .chat-list-nam
   flex-direction: column;
   height: 100%;
   min-height: 0;
+  /* Kunduzgi rejimda pastki tarafda kulrang (--bg) ko'rinib qolmasligi
+     uchun, karta atrofidagi bo'sh joylar bilan bir xil - toza oq bo'lsin */
+  background: #ffffff;
+}
+body.dark-theme .search-results-panel-body {
   background: var(--bg);
 }
 
@@ -3525,6 +3530,9 @@ h1, h2, h3, h4, .header-title, .profile-name, .tinder-photo-name, .chat-list-nam
 .tinder-btn svg {
   display: block;
   pointer-events: none;
+  /* Ikonka tungi va kundizgi rejimda yorqinroq va aniqroq ko'rinishi uchun
+     o'zining rangiga mos yumshoq porlash (glow) qo'shiladi */
+  filter: drop-shadow(0 0 4px currentColor) drop-shadow(0 1px 2px rgba(0,0,0,0.15));
 }
 .tinder-btn:active {
   transform: scale(0.88) !important;
