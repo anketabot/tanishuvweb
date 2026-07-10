@@ -3341,6 +3341,92 @@ body.dark-theme .search-results-panel-body {
   );
 }
 
+/* Rasmi bo'lmagan (faqat emoji-avatar ko'rsatiladigan) nomzod kartalarida
+   fon allaqachon oq (kunduzgi) yoki qora (tungi), shuning uchun pastdagi
+   knopkalar/matn ostidagi standart QORA gradient kunduzgi rejimda g'alati,
+   kulrangsimon dog' bo'lib ko'rinardi. Bunday holatda gradient va matn
+   ranglari fonga mos moslashtiriladi. */
+.tinder-photo.no-photo .tinder-photo-gradient {
+  background: linear-gradient(
+    to top,
+    rgba(255,255,255,0.97) 0%,
+    rgba(255,255,255,0.9) 32%,
+    rgba(255,255,255,0.65) 60%,
+    rgba(255,255,255,0.2) 88%,
+    transparent 100%
+  );
+}
+.tinder-photo.no-photo .tinder-name-row,
+.tinder-photo.no-photo .tinder-photo-name {
+  color: var(--text-primary);
+  text-shadow: none;
+}
+.tinder-photo.no-photo .tinder-photo-meta,
+.tinder-photo.no-photo .tinder-job-text,
+.tinder-photo.no-photo .tinder-about-text,
+.tinder-photo.no-photo .tinder-photo-about {
+  color: var(--text-secondary);
+  text-shadow: none;
+}
+.tinder-photo.no-photo .tinder-location-pill {
+  background: rgba(0,122,255,0.08);
+  color: var(--ios-blue);
+  border-color: rgba(0,122,255,0.18);
+}
+.tinder-photo.no-photo .tinder-location-pill svg {
+  color: var(--ios-blue);
+}
+.tinder-photo.no-photo .tinder-tag {
+  background: rgba(0,122,255,0.08);
+  color: var(--text-primary);
+  border-color: rgba(0,122,255,0.16);
+}
+.tinder-photo.no-photo .tinder-tag.tinder-tag-alt {
+  background: rgba(255,45,85,0.1);
+  color: #FF2D55;
+  border-color: rgba(255,45,85,0.22);
+}
+
+/* Tungi rejimda esa qora fon ustida asl (oq matnli, qora gradientli)
+   ko'rinish tabiiy va o'qilishi oson bo'lganidan, shu yerda qaytariladi */
+body.dark-theme .tinder-photo.no-photo .tinder-photo-gradient {
+  background: linear-gradient(
+    to top,
+    rgba(0,0,0,0.88) 0%,
+    rgba(0,0,0,0.72) 32%,
+    rgba(0,0,0,0.38) 60%,
+    rgba(0,0,0,0.05) 88%,
+    transparent 100%
+  );
+}
+body.dark-theme .tinder-photo.no-photo .tinder-name-row,
+body.dark-theme .tinder-photo.no-photo .tinder-photo-name,
+body.dark-theme .tinder-photo.no-photo .tinder-photo-meta,
+body.dark-theme .tinder-photo.no-photo .tinder-job-text,
+body.dark-theme .tinder-photo.no-photo .tinder-about-text,
+body.dark-theme .tinder-photo.no-photo .tinder-photo-about {
+  color: #fff;
+  text-shadow: 0 2px 12px rgba(0,0,0,0.45);
+}
+body.dark-theme .tinder-photo.no-photo .tinder-location-pill {
+  background: rgba(255,255,255,0.18);
+  color: #fff;
+  border-color: rgba(255,255,255,0.32);
+}
+body.dark-theme .tinder-photo.no-photo .tinder-location-pill svg {
+  color: #fff;
+}
+body.dark-theme .tinder-photo.no-photo .tinder-tag {
+  background: rgba(255,255,255,0.16);
+  color: #fff;
+  border-color: rgba(255,255,255,0.3);
+}
+body.dark-theme .tinder-photo.no-photo .tinder-tag.tinder-tag-alt {
+  background: rgba(255,45,85,0.22);
+  color: #fff;
+  border-color: rgba(255,45,85,0.4);
+}
+
 /* Everything below the top of the name sits INSIDE the photo, overlaid on the gradient */
 .tinder-photo-info {
   position: absolute;
