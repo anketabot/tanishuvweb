@@ -6557,7 +6557,7 @@ const tg = window.Telegram?.WebApp;
           <div class="stamp nope">✕ NOPE</div>
           <div class="stamp superlike">⭐ SUPER</div>
           <div class="tinder-photo${photo ? '' : ' no-photo'}">
-            ${photo ? `<img src="${photo}" alt="${u.full_name}" onclick="openPhotoViewer('${escapeJs(photo)}','${escapeJs(u.full_name)}')" />` : `<div style="display:flex;align-items:center;justify-content:center;width:100%;height:100%;font-size:100px;">${u.gender==='erkak'?'👨':'👩'}</div>`}
+            ${photo ? `<div class="tinder-photo-bg" style="background-image:url('${escapeJs(photo)}')"></div><img src="${photo}" alt="${u.full_name}" onclick="openPhotoViewer('${escapeJs(photo)}','${escapeJs(u.full_name)}')" />` : `<div style="display:flex;align-items:center;justify-content:center;width:100%;height:100%;font-size:100px;">${u.gender==='erkak'?'👨':'👩'}</div>`}
             <div class="tinder-photo-gradient"></div>
             <div class="tinder-photo-info">
               <div class="tinder-body">
@@ -6739,7 +6739,7 @@ const tg = window.Telegram?.WebApp;
       const locationLabel = formatLocationLabel(u.city);
 
       const photoHtml = photo
-        ? `<img src="${photo}" alt="${u.full_name}" loading="lazy" />`
+        ? `<div class="tinder-photo-bg" style="background-image:url('${escapeJs(photo)}')"></div><img src="${photo}" alt="${u.full_name}" loading="lazy" />`
         : `<div style="display:flex;align-items:center;justify-content:center;width:100%;height:100%;color:var(--ios-blue);opacity:0.4;">${icon}</div>`;
 
       const dots = Array.from({length: Math.min(total, 7)}, (_, i) => {
