@@ -3741,8 +3741,8 @@ const tg = window.Telegram?.WebApp;
 
     let selectedGender = '';
     let selectedSearchGender = '';
-    let selectedSpokenLanguage = '';
-    let selectedSearchSpokenLanguage = '';
+    let selectedSpokenLanguage = [];
+    let selectedSearchSpokenLanguage = [];
     let selectedInterests = [];
     let selectedGoals = [];
     let selectedSearchGoals = [];
@@ -4155,9 +4155,11 @@ const tg = window.Telegram?.WebApp;
         selectGender(profile.gender);
       }
 
-      // Set spoken language
+      // Set spoken language(s) - qo'llab-quvvatlanadigan formatlar: array (yangi) yoki string (eski)
       if (profile.spoken_language) {
-        selectSpokenLanguage(profile.spoken_language);
+        const langs = Array.isArray(profile.spoken_language) ? profile.spoken_language : [profile.spoken_language];
+        selectedSpokenLanguage = [];
+        langs.filter(Boolean).forEach(code => selectSpokenLanguage(code));
       }
 
       // Set text inputs
@@ -4230,7 +4232,7 @@ const tg = window.Telegram?.WebApp;
     function resetProfileFormState() {
       // Clear all form state so previous user's data doesn't leak
       selectedGender = '';
-      selectedSpokenLanguage = '';
+      selectedSpokenLanguage = [];
       selectedInterests = [];
       selectedGoals = [];
       photoBase64 = '';
@@ -4381,29 +4383,50 @@ const tg = window.Telegram?.WebApp;
       updateOnlySeriousWrap();
     }
 
+    // Anketa uchun so'zlashuv tili - endi bir nechta til tanlash mumkin.
+    // Chip bosilganda ro'yxatga qo'shiladi/olib tashlanadi (multi-select).
     function selectSpokenLanguage(code) {
-      selectedSpokenLanguage = code;
+      if (selectedSpokenLanguage.includes(code)) {
+        selectedSpokenLanguage = selectedSpokenLanguage.filter(c => c !== code);
+      } else {
+        selectedSpokenLanguage = [...selectedSpokenLanguage, code];
+      }
       document.querySelectorAll('#spoken-lang-chips .chip').forEach(chip => {
-        chip.classList.toggle('selected', chip.getAttribute('data-lang') === code);
+        chip.classList.toggle('selected', selectedSpokenLanguage.includes(chip.getAttribute('data-lang')));
       });
     }
 
+    // Qidiruv filtridagi so'zlashuv tili ham bir nechta bo'lishi mumkin -
+    // tanlangan tillardan istalganida gaplashadigan foydalanuvchilar topiladi.
     function selectSearchSpokenLanguage(code) {
-      // Qayta bosilsa - filtrni tozalash (ixtiyoriy filtr)
-      selectedSearchSpokenLanguage = (selectedSearchSpokenLanguage === code) ? '' : code;
+      if (selectedSearchSpokenLanguage.includes(code)) {
+        selectedSearchSpokenLanguage = selectedSearchSpokenLanguage.filter(c => c !== code);
+      } else {
+        selectedSearchSpokenLanguage = [...selectedSearchSpokenLanguage, code];
+      }
       document.querySelectorAll('#sf-spoken-lang-chips .chip').forEach(chip => {
-        chip.classList.toggle('selected', chip.getAttribute('data-lang') === selectedSearchSpokenLanguage);
+        chip.classList.toggle('selected', selectedSearchSpokenLanguage.includes(chip.getAttribute('data-lang')));
       });
       scheduleSearchCount();
     }
 
-    // Foydalanuvchi tanlagan so'zlashuv tili kodini chiroyli ko'rinishga (bayroq + nom) o'giradi
-    function spokenLanguageLabel(code) {
-      const l = SUPPORTED_LANGUAGES[code];
-      if (!l) return '';
-      const translatedName = tr('lang_name_' + code);
-      const name = (translatedName && translatedName !== 'lang_name_' + code) ? translatedName : l.name;
-      return `${l.flag} ${name}`;
+    // Foydalanuvchi tanlagan so'zlashuv til(lar)ini chiroyli ko'rinishga (bayroq + nom) o'giradi.
+    // Eski profillarda bitta til string sifatida saqlangan bo'lishi mumkin - shuni ham qo'llab-quvvatlaymiz.
+    function spokenLanguageLabel(codes) {
+      const list = Array.isArray(codes) ? codes : (codes ? [codes] : []);
+      return list.map(code => {
+        const l = SUPPORTED_LANGUAGES[code];
+        if (!l) return '';
+        const translatedName = tr('lang_name_' + code);
+        const name = (translatedName && translatedName !== 'lang_name_' + code) ? translatedName : l.name;
+        return `${l.flag} ${name}`;
+      }).filter(Boolean).join(', ');
+    }
+
+    // spoken_language endi array bo'lishi mumkin - bo'sh array ham JS'da "truthy",
+    // shuning uchun ko'rsatishdan oldin haqiqatan ham til tanlanganini tekshiramiz.
+    function hasSpokenLanguage(v) {
+      return Array.isArray(v) ? v.length > 0 : !!v;
     }
 
     function getOppositeGender(g) {
@@ -6230,7 +6253,7 @@ const tg = window.Telegram?.WebApp;
       const zodiac = document.getElementById('sel-zodiac').value;
 
       if (!selectedGender) { showToast(tr('select_gender_prompt')); return; }
-      if (!selectedSpokenLanguage) { showToast(tr('select_spoken_language_prompt')); return; }
+      if (!selectedSpokenLanguage || selectedSpokenLanguage.length === 0) { showToast(tr('select_spoken_language_prompt')); return; }
       if (!name) { showToast(tr('enter_name_prompt')); return; }
       if (!age || age < 16 || age > 80) { showToast(tr('enter_age_prompt')); return; }
       if (!city) { showToast(tr('enter_city_prompt')); return; }
@@ -6334,7 +6357,7 @@ const tg = window.Telegram?.WebApp;
 
       if (selectedSearchGoals.length > 0) filters.goals = selectedSearchGoals;
       if (selectedSearchInterests.length > 0) filters.interests = selectedSearchInterests;
-      if (selectedSearchSpokenLanguage) filters.spoken_language = selectedSearchSpokenLanguage;
+      if (selectedSearchSpokenLanguage.length > 0) filters.spoken_language = selectedSearchSpokenLanguage;
 
       const zodiacFilterEl = document.getElementById('sf-zodiac');
       if (zodiacFilterEl && zodiacFilterEl.value) filters.zodiac = zodiacFilterEl.value;
@@ -6434,8 +6457,8 @@ const tg = window.Telegram?.WebApp;
       if (selectedSearchInterests.length > 0) {
         filters.interests = selectedSearchInterests;
       }
-      // So'zlashuv tili bo'yicha qidirish
-      if (selectedSearchSpokenLanguage) {
+      // So'zlashuv tili bo'yicha qidirish - bir nechta til tanlangan bo'lishi mumkin
+      if (selectedSearchSpokenLanguage.length > 0) {
         filters.spoken_language = selectedSearchSpokenLanguage;
       }
 
@@ -6563,7 +6586,7 @@ const tg = window.Telegram?.WebApp;
               <div class="tinder-body">
                 <div class="tinder-name-row">${u.full_name}, ${u.age}${u.is_boosted ? ` <span class="top-boost-badge" title="${tr('top_weekly_badge') || 'Haftaning TOP foydalanuvchisi'}" style="display:inline-flex;align-items:center;gap:3px;background:linear-gradient(90deg,#ff9500,#ff2d55);border-radius:20px;padding:2px 9px;font-size:12px;font-weight:700;color:#fff;vertical-align:middle;">🔥 TOP</span>` : ''}</div>
                 <div class="tinder-location-pill">${ICONS.mapPin}<span>${locationLabel}${u.zodiac ? ' &nbsp;•&nbsp; ' + getZodiacDisplay(u.zodiac) : ''}</span></div>
-                ${u.spoken_language ? `<div class="tinder-location-pill" style="margin-top:4px;">🗣️<span>${spokenLanguageLabel(u.spoken_language)}</span></div>` : ''}
+                ${hasSpokenLanguage(u.spoken_language) ? `<div class="tinder-location-pill" style="margin-top:4px;">🗣️<span>${spokenLanguageLabel(u.spoken_language)}</span></div>` : ''}
                 ${compatBadge}
                 ${u.about ? `<div class="tinder-job-text">${escapeHtml(u.about)}</div>` : ''}
               </div>
@@ -6769,7 +6792,7 @@ const tg = window.Telegram?.WebApp;
               <div class="tinder-body">
                 <div class="tinder-name-row">${u.full_name}, ${u.age}${u.is_boosted ? ` <span class="top-boost-badge" title="${tr('top_weekly_badge') || 'Haftaning TOP foydalanuvchisi'}" style="display:inline-flex;align-items:center;gap:3px;background:linear-gradient(90deg,#ff9500,#ff2d55);border-radius:20px;padding:2px 9px;font-size:12px;font-weight:700;color:#fff;vertical-align:middle;">🔥 TOP</span>` : ''}</div>
                 <div class="tinder-location-pill">${ICONS.mapPin}<span>${locationLabel}${u.zodiac ? ' &nbsp;•&nbsp; ' + getZodiacDisplay(u.zodiac) : ''}</span></div>
-                ${u.spoken_language ? `<div class="tinder-location-pill" style="margin-top:4px;">🗣️<span>${spokenLanguageLabel(u.spoken_language)}</span></div>` : ''}
+                ${hasSpokenLanguage(u.spoken_language) ? `<div class="tinder-location-pill" style="margin-top:4px;">🗣️<span>${spokenLanguageLabel(u.spoken_language)}</span></div>` : ''}
                 ${u.zodiac_match_percent != null ? renderZodiacMatchBadge(u.zodiac_match_percent, '8px') : ''}
                 ${u.about ? `<div class="tinder-job-text">${escapeHtml(u.about)}</div>` : ''}
                 <div class="tinder-tags-wrap" style="margin-top:8px;">${goals}${interests}</div>
@@ -7071,7 +7094,7 @@ const tg = window.Telegram?.WebApp;
           <div class="profile-name"><span style="display:inline-flex;vertical-align:middle;margin-right:6px;">${icon}</span> ${u.full_name}</div>
           <div class="profile-age-city">${tr('age')}: ${u.age} &nbsp;•&nbsp; ${locationLabel || tr('no_city')}${u.zodiac ? ' • ' + getZodiacDisplay(u.zodiac) : ''}</div>
           ${u.about ? `<div class="profile-bio" style="margin-top:6px;color:var(--text-secondary);font-size:13px;line-height:1.4;">${escapeHtml(u.about)}</div>` : ''}
-          <div class="profile-tags" style="margin-top:8px;">${u.spoken_language ? `<span class="tinder-tag tinder-tag-alt">${spokenLanguageLabel(u.spoken_language)}</span>` : ''}${goals}${interests}</div>
+          <div class="profile-tags" style="margin-top:8px;">${hasSpokenLanguage(u.spoken_language) ? `<span class="tinder-tag tinder-tag-alt">${spokenLanguageLabel(u.spoken_language)}</span>` : ''}${goals}${interests}</div>
         </div>
         <div class="profile-actions">
           <button class="action-btn btn-like" onclick="event.stopPropagation(); sendLike(${u.telegram_id})">
@@ -7341,7 +7364,7 @@ const tg = window.Telegram?.WebApp;
             <div class="profile-detail-title">${icon} ${u.full_name}</div>
             <div class="profile-detail-meta">📍 ${profileLocation}${u.zodiac ? ' • ' + getZodiacDisplay(u.zodiac) : ''}</div>
             ${aboutText ? `<div class="profile-detail-section"><div class="profile-detail-label">${tr('about_me')}</div><p class="profile-detail-summary">${escapeHtml(aboutText)}</p></div>` : ''}
-            ${u.spoken_language ? `<div class="profile-detail-section"><div class="profile-detail-label">${tr('spoken_language')}</div><div class="chip-row"><span class="tag">${spokenLanguageLabel(u.spoken_language)}</span></div></div>` : ''}
+            ${hasSpokenLanguage(u.spoken_language) ? `<div class="profile-detail-section"><div class="profile-detail-label">${tr('spoken_language')}</div><div class="chip-row"><span class="tag">${spokenLanguageLabel(u.spoken_language)}</span></div></div>` : ''}
             ${showTags ? `<div class="profile-detail-section"><div class="profile-detail-label">${tr('goals_label')}</div><div class="chip-row">${goals || `<span class="muted-chip">${tr('not_specified')}</span>`}</div></div>` : ''}
             ${showTags ? `<div class="profile-detail-section"><div class="profile-detail-label">${tr('interests_label')}</div><div class="chip-row">${interests || `<span class="muted-chip">${tr('not_specified')}</span>`}</div><div class="muted-chip" style="margin-top:6px;">${tr('max_interests_display')}</div></div>` : ''}
           </section>
@@ -7843,6 +7866,27 @@ const tg = window.Telegram?.WebApp;
 
     function openChatRoom(matchId, name, photo, partnerData = null) {
       currentChatMatchId = matchId;
+
+      // Chat ochilgan zahoti (server javobini kutmasdan) ro'yxatdagi shu
+      // suhbatning "unread" belgisini darhol olib tashlaymiz va pastdagi
+      // navigatsiya belgisini ham mos ravishda kamaytiramiz - foydalanuvchi
+      // uchun bu haqiqiy real-time (bir zumda) tuyg'usini beradi. Server
+      // tomondagi haqiqiy "o'qildi" holati loadChatMessages() ichida
+      // mark_read chaqiruvi orqali alohida tasdiqlanadi.
+      try {
+        const item = document.querySelector(`.chat-item[data-match-id="${matchId}"]`);
+        if (item && item.classList.contains('chat-item-unread')) {
+          const badgeEl = item.querySelector('.chat-item-badge');
+          const prevCount = badgeEl ? (parseInt(badgeEl.textContent, 10) || 0) : 0;
+          item.classList.remove('chat-item-unread');
+          if (badgeEl) badgeEl.remove();
+          const navBadge = document.getElementById('chat-badge');
+          if (navBadge) {
+            const navCount = parseInt(navBadge.textContent, 10) || 0;
+            updateChatNavBadge(Math.max(0, navCount - prevCount));
+          }
+        }
+      } catch (e) {}
       let decodedPartner = null;
 
       try {
@@ -7890,6 +7934,10 @@ const tg = window.Telegram?.WebApp;
       if (chatRefreshInterval) clearInterval(chatRefreshInterval);
       chatRefreshInterval = null;
       currentChatMatchId = null;
+      // Chat yopilganda ro'yxatni qayta yuklaymiz - shu orqali endi o'qilgan
+      // xabarning "unread" belgisi (badge) chat ro'yxatidan ham darhol
+      // yo'qoladi, aks holda eski (o'qilmagan) holat ekranda qolib ketardi.
+      if (isChatsPageActive()) loadChats();
     }
 
     function renderChatBubbleHTML(m, isMe) {
@@ -8372,7 +8420,7 @@ const tg = window.Telegram?.WebApp;
         </div>
         <div class="card">
           <div class="section-title">${tr('spoken_language')}</div>
-          <div class="chips-wrap">${user.spoken_language ? `<span class="chip selected" style="pointer-events:none;">${spokenLanguageLabel(user.spoken_language)}</span>` : `<span style="color:var(--text-tertiary);font-size:14px;">${tr('not_specified')}</span>`}</div>
+          <div class="chips-wrap">${hasSpokenLanguage(user.spoken_language) ? `<span class="chip selected" style="pointer-events:none;">${spokenLanguageLabel(user.spoken_language)}</span>` : `<span style="color:var(--text-tertiary);font-size:14px;">${tr('not_specified')}</span>`}</div>
         </div>
         <div class="card">
           <div class="section-title">${tr('goal')}</div>
