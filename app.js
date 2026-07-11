@@ -7061,7 +7061,7 @@ const tg = window.Telegram?.WebApp;
       const photo = u.photo || u.photo_file_id || u.photo_base64;
       const photoHtml = photo
         ? `<img src="${photo}" alt="${u.full_name}" loading="lazy" />`
-        : `<div style="display:flex;align-items:center;justify-content:center;width:100%;height:100%;color:var(--primary);">${icon}</div>`;
+        : `<div style="display:flex;align-items:center;justify-content:center;width:100%;height:100%;color:var(--ios-blue);">${icon}</div>`;
       const locationLabel = formatLocationLabel(u.city || '');
 
       return `
@@ -7187,7 +7187,7 @@ const tg = window.Telegram?.WebApp;
 
       list.innerHTML = REPORT_CATEGORIES.map(cat => `
         <button type="button" class="report-cat-btn" data-cat="${cat}" onclick="selectReportCategory('${cat}')"
-          style="text-align:left; padding:12px 16px; border-radius:14px; border:1.5px solid var(--accent-tint-18); background:var(--card-bg,#fff); cursor:pointer; font-size:14px;">
+          style="text-align:left; padding:12px 16px; border-radius:14px; border:1.5px solid var(--accent-tint-18); background:var(--card-bg,#fff); color:var(--text-primary); cursor:pointer; font-size:14px;">
           ${tr('report_cat_' + cat)}
         </button>
       `).join('');
@@ -7199,8 +7199,9 @@ const tg = window.Telegram?.WebApp;
       reportContext.category = cat;
       document.querySelectorAll('.report-cat-btn').forEach(btn => {
         const active = btn.dataset.cat === cat;
-        btn.style.borderColor = active ? 'var(--primary)' : 'var(--accent-tint-18)';
+        btn.style.borderColor = active ? 'var(--ios-blue)' : 'var(--accent-tint-18)';
         btn.style.background = active ? 'var(--accent-tint-08)' : 'var(--card-bg,#fff)';
+        btn.style.color = 'var(--text-primary)';
       });
       const submitBtn = document.getElementById('report-submit-btn');
       if (submitBtn) submitBtn.disabled = false;
@@ -9631,7 +9632,7 @@ const tg = window.Telegram?.WebApp;
 
         const photoHtml = u.photo
           ? `<img src="${u.photo}" alt="${escapeHtml(u.name)}" style="width:100%;max-height:320px;object-fit:cover;border-radius:16px 16px 0 0;" />`
-          : `<div style="width:100%;height:180px;border-radius:16px 16px 0 0;background:var(--bg-secondary);display:flex;align-items:center;justify-content:center;font-size:80px;">${u.gender==='ayol'?'👩':'👨'}</div>`;
+          : `<div style="width:100%;height:180px;border-radius:16px 16px 0 0;background:var(--surface);display:flex;align-items:center;justify-content:center;font-size:80px;">${u.gender==='ayol'?'👩':'👨'}</div>`;
 
         body.innerHTML = `
           ${photoHtml}
@@ -9765,7 +9766,7 @@ const tg = window.Telegram?.WebApp;
     items.slice(0, 50).forEach((u) => {
       const photoHtml = u.photo
         ? `<img src="${u.photo}" alt="" style="width:48px;height:48px;border-radius:50%;object-fit:cover;flex-shrink:0;border:2px solid var(--glass-border);" />`
-        : `<div style="width:48px;height:48px;border-radius:50%;background:var(--bg-secondary);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;">${u.gender==='ayol'?'👩':'👨'}</div>`;
+        : `<div style="width:48px;height:48px;border-radius:50%;background:var(--surface);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;">${u.gender==='ayol'?'👩':'👨'}</div>`;
       const zodiacStr = u.zodiac ? ` • ${getZodiacDisplay(u.zodiac)}` : '';
       const locationParts = u.city ? formatLocationLabel(u.city) : '';
       const meta = [u.age ? u.age + ' ' + tr('years_old') : '', locationParts].filter(Boolean).join(' • ') + zodiacStr;
@@ -9808,7 +9809,7 @@ const tg = window.Telegram?.WebApp;
 
     const photoHtml = u.photo
       ? `<img src="${u.photo}" alt="" style="width:100%;max-height:300px;object-fit:cover;border-radius:16px 16px 0 0;cursor:zoom-in;" onclick="openPhotoViewer('${escapeJs(u.photo)}','${escapeJs(u.name||'')}')" />`
-      : `<div style="width:100%;height:180px;border-radius:16px 16px 0 0;background:var(--bg-secondary);display:flex;align-items:center;justify-content:center;font-size:80px;">${u.gender==='ayol'?'👩':'👨'}</div>`;
+      : `<div style="width:100%;height:180px;border-radius:16px 16px 0 0;background:var(--surface);display:flex;align-items:center;justify-content:center;font-size:80px;">${u.gender==='ayol'?'👩':'👨'}</div>`;
 
     body.innerHTML = `
       ${photoHtml}
