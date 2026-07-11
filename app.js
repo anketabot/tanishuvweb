@@ -488,8 +488,10 @@ const tg = window.Telegram?.WebApp;
             'top_btn_superlikes': '⭐ Super TOP',
             'top_btn_champion': '🏆 Chempion',
             'search_scope_label': '🌍 Qidiruv doirasi',
-            'scope_my_area': '📍 O\'z hududim',
+            'scope_my_area': '📍 Hudud bo\'yicha',
             'scope_central_asia': '🌐 Butun Markaziy Osiyo',
+            'use_my_location_btn': '📍 O\'z hududim',
+            'no_profile_location_msg': 'Avval profilingizda hududingizni kiriting',
             'scope_ca_hint': 'O\'zbekiston, Qozog\'iston, Qirg\'iziston, Tojikiston, Turkmaniston',
             'weekly_top_badge': '📅 Haftalik TOP',
             'weekly_reset_days': '{d}k {h}s da yangilanadi',
@@ -894,8 +896,10 @@ const tg = window.Telegram?.WebApp;
             'top_btn_superlikes': '⭐ Супер TOP',
             'top_btn_champion': '🏆 Чемпион',
             'search_scope_label': '🌍 Область поиска',
-            'scope_my_area': '📍 Мой регион',
+            'scope_my_area': '📍 По региону',
             'scope_central_asia': '🌐 Вся Центральная Азия',
+            'use_my_location_btn': '📍 Мой регион',
+            'no_profile_location_msg': 'Сначала укажите свой регион в профиле',
             'scope_ca_hint': 'Узбекистан, Казахстан, Кыргызстан, Таджикистан, Туркменистан',
             'weekly_top_badge': '📅 Еженедельный ТОП',
             'weekly_reset_days': 'обновится через {d}д {h}ч',
@@ -1335,8 +1339,10 @@ const tg = window.Telegram?.WebApp;
             'top_btn_superlikes': '⭐ Супер TOP',
             'top_btn_champion': '🏆 Чемпион',
             'search_scope_label': '🌍 Іздеу аймағы',
-            'scope_my_area': '📍 Менің аймағым',
+            'scope_my_area': '📍 Аймақ бойынша',
             'scope_central_asia': '🌐 Бүкіл Орталық Азия',
+            'use_my_location_btn': '📍 Менің аймағым',
+            'no_profile_location_msg': 'Алдымен профиліңізде аймағыңызды көрсетіңіз',
             'scope_ca_hint': 'Өзбекстан, Қазақстан, Қырғызстан, Тәжікстан, Түркіменстан',
             'weekly_top_badge': '📅 Апталық ТОП',
             'weekly_reset_days': '{d}к {h}с-та жаңарады',
@@ -1776,8 +1782,10 @@ const tg = window.Telegram?.WebApp;
             'top_btn_superlikes': '⭐ Супер TOP',
             'top_btn_champion': '🏆 Чемпион',
             'search_scope_label': '🌍 Издөө чөйрөсү',
-            'scope_my_area': '📍 Менин аймагым',
+            'scope_my_area': '📍 Аймак боюнча',
             'scope_central_asia': '🌐 Бүт Борбордук Азия',
+            'use_my_location_btn': '📍 Менин аймагым',
+            'no_profile_location_msg': 'Алгач профилиңизде аймагыңызды көрсөтүңүз',
             'scope_ca_hint': 'Өзбекстан, Казакстан, Кыргызстан, Тажикстан, Түркменстан',
             'weekly_top_badge': '📅 Жумалык ТОП',
             'weekly_reset_days': '{d}к {h}с-та жаңыртылат',
@@ -2217,8 +2225,10 @@ const tg = window.Telegram?.WebApp;
             'top_btn_superlikes': '⭐ Super TOP',
             'top_btn_champion': '🏆 Chempion',
             'search_scope_label': '🌍 Izlew aymaǵı',
-            'scope_my_area': '📍 Óz aymaǵım',
+            'scope_my_area': '📍 Aymaq boyınsha',
             'scope_central_asia': '🌐 Pútkil Oraylıq Aziya',
+            'use_my_location_btn': '📍 Óz aymaǵım',
+            'no_profile_location_msg': 'Aldın profilińizde aymaǵıńızdı kirsetiń',
             'scope_ca_hint': 'Ózbekstan, Qazaqstan, Qırǵızstan, Tájikstan, Túrkmenstan',
             'weekly_top_badge': '📅 Háptelig TOP',
             'weekly_reset_days': '{d}k {h}s-ta jańalanadi',
@@ -2658,8 +2668,10 @@ const tg = window.Telegram?.WebApp;
             'top_btn_superlikes': '⭐ Супер TOP',
             'top_btn_champion': '🏆 Чемпион',
             'search_scope_label': '🌍 Доираи ҷустуҷӯ',
-            'scope_my_area': '📍 Минтақаи ман',
+            'scope_my_area': '📍 Аз рӯи минтақа',
             'scope_central_asia': '🌐 Тамоми Осиёи Марказӣ',
+            'use_my_location_btn': '📍 Минтақаи ман',
+            'no_profile_location_msg': 'Аввал дар профили худ минтақаро ворид кунед',
             'scope_ca_hint': 'Ӯзбекистон, Қазоқистон, Қирғизистон, Тоҷикистон, Туркманистон',
             'weekly_top_badge': '📅 ТОП-и ҳафтагӣ',
             'weekly_reset_days': 'баъди {d}р {h}с навсозӣ мешавад',
@@ -3099,8 +3111,10 @@ const tg = window.Telegram?.WebApp;
             'top_btn_superlikes': '⭐ Super TOP',
             'top_btn_champion': '🏆 Champion',
             'search_scope_label': '🌍 Search scope',
-            'scope_my_area': '📍 My area',
+            'scope_my_area': '📍 By region',
             'scope_central_asia': '🌐 All Central Asia',
+            'use_my_location_btn': '📍 My area',
+            'no_profile_location_msg': 'Please set your location in your profile first',
             'scope_ca_hint': 'Uzbekistan, Kazakhstan, Kyrgyzstan, Tajikistan, Turkmenistan',
             'weekly_top_badge': '📅 Weekly TOP',
             'weekly_reset_days': 'resets in {d}d {h}h',
@@ -6120,7 +6134,9 @@ const tg = window.Telegram?.WebApp;
     }
 
     // Anketa formini regionlardan to'ldirish (mavjud profil uchun)
-    function populateRegionFromCityString(cityStr) {
+    // prefix: 'inp' (anketa) yoki 'sf' (qidiruv filtri) — ikkalasi ham bir xil DOM strukturasini ishlatadi
+    function populateRegionFromCityString(cityStr, prefix) {
+      prefix = prefix || 'inp';
       if (!cityStr) return;
       loadRegionsData().then(() => {
         let country = '', region = '', district = '';
@@ -6158,14 +6174,14 @@ const tg = window.Telegram?.WebApp;
 
         // Davlatni o'rnating
         if (country) {
-          const cSel = document.getElementById('inp-country');
+          const cSel = document.getElementById(prefix + '-country');
           if (cSel) cSel.value = country;
-          const cValEl = document.getElementById('inp-country-trigger-val');
+          const cValEl = document.getElementById(prefix + '-country-trigger-val');
           if (cValEl) {
             cValEl.textContent = _translateCountryValue(country, currentLang || 'uz');
             cValEl.classList.remove('placeholder');
           }
-          const cTrigger = document.getElementById('inp-country-trigger');
+          const cTrigger = document.getElementById(prefix + '-country-trigger');
           if (cTrigger) cTrigger.classList.add('filled');
         }
 
@@ -6174,18 +6190,18 @@ const tg = window.Telegram?.WebApp;
           const ds = _getDatasetForCountry(country);
           if (ds) {
             const opts = Object.keys(ds);
-            rebuildLocOptions('inp-region', opts, true);
-            showLocationWrap('inp-region');
-            const rSel = document.getElementById('inp-region');
+            rebuildLocOptions(prefix + '-region', opts, true);
+            showLocationWrap(prefix + '-region');
+            const rSel = document.getElementById(prefix + '-region');
             if (rSel) rSel.value = region;
-            const rValEl = document.getElementById('inp-region-trigger-val');
+            const rValEl = document.getElementById(prefix + '-region-trigger-val');
             if (rValEl) {
               rValEl.textContent = _translateGenericRegion(region, currentLang || 'uz') || region;
               rValEl.classList.remove('placeholder');
             }
-            const rTrigger = document.getElementById('inp-region-trigger');
+            const rTrigger = document.getElementById(prefix + '-region-trigger');
             if (rTrigger) rTrigger.classList.add('filled');
-            document.querySelectorAll('#inp-region-opts .loc-option').forEach(o => o.classList.toggle('selected', o.dataset.value === region));
+            document.querySelectorAll('#' + prefix + '-region-opts .loc-option').forEach(o => o.classList.toggle('selected', o.dataset.value === region));
           }
         }
 
@@ -6194,33 +6210,57 @@ const tg = window.Telegram?.WebApp;
           const ds = _getDatasetForCountry(country);
           const districts = ds ? (ds[region] || []) : [];
           if (districts.length) {
-            rebuildLocOptions('inp-district', districts, false);
-            showLocationWrap('inp-district');
-            const dSel = document.getElementById('inp-district');
+            rebuildLocOptions(prefix + '-district', districts, false);
+            showLocationWrap(prefix + '-district');
+            const dSel = document.getElementById(prefix + '-district');
             if (dSel) dSel.value = district;
-            const dValEl = document.getElementById('inp-district-trigger-val');
+            const dValEl = document.getElementById(prefix + '-district-trigger-val');
             if (dValEl) {
               dValEl.textContent = _translateGenericDistrict(district, currentLang || 'uz') || district;
               dValEl.classList.remove('placeholder');
             }
-            const dTrigger = document.getElementById('inp-district-trigger');
+            const dTrigger = document.getElementById(prefix + '-district-trigger');
             if (dTrigger) dTrigger.classList.add('filled');
-            document.querySelectorAll('#inp-district-opts .loc-option').forEach(o => o.classList.toggle('selected', o.dataset.value === district));
-            updateLocationSteps('inp', 4);
+            document.querySelectorAll('#' + prefix + '-district-opts .loc-option').forEach(o => o.classList.toggle('selected', o.dataset.value === district));
+            updateLocationSteps(prefix, 4);
           } else {
-            hideLocationWrap('inp-district');
-            updateLocationSteps('inp', 3);
+            hideLocationWrap(prefix + '-district');
+            updateLocationSteps(prefix, 3);
           }
         } else if (region) {
-          hideLocationWrap('inp-district');
-          updateLocationSteps('inp', 3);
+          hideLocationWrap(prefix + '-district');
+          updateLocationSteps(prefix, 3);
         } else {
-          updateLocationSteps('inp', country ? 2 : 1);
+          updateLocationSteps(prefix, country ? 2 : 1);
         }
 
         // city hidden inputni yangi formatda yangilash
-        updateHiddenCityField('inp-city', country, region, district);
+        updateHiddenCityField(prefix + '-city', country, region, district);
+
+        // Agar qidiruv filtri (sf) to'ldirilayotgan bo'lsa — natijalar sonini yangilaymiz
+        if (prefix === 'sf') scheduleSearchCount();
       });
+    }
+
+    // Qidiruv joylashuv filtrini foydalanuvchining o'z profilidagi hududi bilan to'ldirish.
+    function populateSearchLocationFromProfile(force) {
+      const alreadyFilled = document.getElementById('sf-country')?.value;
+      if (alreadyFilled && !force) return; // foydalanuvchi allaqachon qo'lda tanlagan — ustidan yozmaymiz
+      const profile = getProfile();
+      if (profile && profile.city) {
+        populateRegionFromCityString(profile.city, 'sf');
+      }
+    }
+
+    // "📍 O'z hududim" tugmasi bosilganda — davlat/viloyat/tuman maydonlarini
+    // foydalanuvchining profilidagi joylashuvi bilan majburan (mavjud tanlovni ham almashtirib) to'ldiradi.
+    function fillMyLocationFilter() {
+      const profile = getProfile();
+      if (!profile || !profile.city) {
+        showToast(tr('no_profile_location_msg') || 'Avval profilingizda hududingizni kiriting');
+        return;
+      }
+      populateSearchLocationFromProfile(true);
     }
 
     // Davlat uchun joriy tildagi datastet
