@@ -3280,7 +3280,7 @@ body.dark-theme .search-results-panel-body {
   flex: 1 1 auto;
   height: 100%;
   min-height: 0;
-  background: #ffffff;
+  background: linear-gradient(160deg, #eef1f6, #dfe4ec);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -3288,13 +3288,29 @@ body.dark-theme .search-results-panel-body {
   overflow: hidden;
 }
 
+/* Rasm to'liq to'ldirmagan joylarni (letterbox) chiroyli qilish uchun -
+   xuddi shu rasmning xiralashtirilgan (blur) nusxasi fon sifatida
+   qo'yiladi, shunda kunduzgi ham, tungi rejimda ham qattiq oq/qora
+   "bo'sh joy" ko'rinmaydi, balki rasmning o'zidan olingan uyg'un fon bo'ladi */
+.tinder-photo-bg {
+  position: absolute;
+  inset: -24px;
+  background-size: cover;
+  background-position: center;
+  filter: blur(34px) saturate(160%) brightness(0.88);
+  transform: scale(1.15);
+  z-index: 0;
+  pointer-events: none;
+}
+
 .tinder-photo img {
   width: 100%;
   height: 100%;
   object-fit: contain;
   object-position: center center;
-  background: #ffffff;
-  position: absolute;
+  background: transparent;
+  position: relative;
+  z-index: 1;
   inset: 0;
 }
 
@@ -6895,15 +6911,18 @@ body.dark-theme .viewed-item {
   background: linear-gradient(135deg, #202020, #171717) !important;
 }
 
-/* Qidiruv kartasidagi rasm endi to'liq (kesilmasdan) ko'rsatiladi (object-fit: contain),
-   shuning uchun ortiqcha qolgan joy kunduzgi rejimda oq, tungi rejimda esa qora bo'lishi kerak. */
-.tinder-photo,
+/* Qidiruv kartasidagi rasm to'liq (kesilmasdan) ko'rsatiladi (object-fit: contain).
+   Ortiqcha qolgan joy endi rasmning o'zidan olingan xiralashtirilgan (blur)
+   fon bilan to'ldiriladi (.tinder-photo-bg), shuning uchun bu yerda faqat
+   yumshoq zaxira (fallback) fon beriladi, qattiq oq/qora emas. */
 .tinder-photo img {
-  background: #ffffff;
+  background: transparent;
 }
-body.dark-theme .tinder-photo,
-body.dark-theme .tinder-photo img {
-  background: #000000 !important;
+body.dark-theme .tinder-photo {
+  background: linear-gradient(160deg, #1c1c1c, #101010);
+}
+body.dark-theme .tinder-photo-bg {
+  filter: blur(34px) saturate(140%) brightness(0.55);
 }
 
 /* Tinder-uslubidagi kartalar — endi tinder-body/actions rasm ustidagi shaffof overlay,
