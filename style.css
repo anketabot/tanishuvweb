@@ -3640,8 +3640,13 @@ body.dark-theme .tinder-photo.no-photo .tinder-tag.tinder-tag-alt {
   /* backdrop-filter + border-radius:50% birgalikda ishlatilganda ba'zi
      brauzerlarda (ayniqsa mobil Chrome/Safari) dumaloq tugmaning 4
      tomonida (tepa/past/chap/o'ng) ingichka oq chiziq artefaktlari paydo
-     bo'ladi - buning sababi filter noto'g'ri klip qilinishi. mask-image
-     bilan shaklni majburan qayta klip qilib, artefaktni yo'q qilamiz. */
+     bo'ladi - buning asosiy sababi haqiqiy CSS `border` bilan blur-klip
+     noto'g'ri kesishishi. Shu sabab har bir variantda haqiqiy `border`
+     ishlatilmaydi, o'rniga inset box-shadow bilan "chegara" chiziladi
+     (pastdagi .tinder-btn-* qoidalariga qarang), bu esa klip xatosidan
+     butunlay xoli. overflow:hidden va mask-image esa qo'shimcha
+     xavfsizlik uchun saqlanadi. */
+  overflow: hidden;
   -webkit-mask-image: -webkit-radial-gradient(circle, #fff 100%, #000 100%);
   mask-image: radial-gradient(circle, #fff 100%, #000 100%);
   isolation: isolate;
@@ -3665,9 +3670,9 @@ body.dark-theme .tinder-photo.no-photo .tinder-tag.tinder-tag-alt {
 .tinder-btn-back {
   width: 50px; height: 50px;
   background: rgba(255,200,0,0.12);
-  border: 2px solid rgba(255,200,0,0.35);
+  border: none;
   font-size: 18px;
-  box-shadow: 0 1px 1px rgba(255,255,255,0.6) inset, 0 6px 18px rgba(255,200,0,0.18);
+  box-shadow: inset 0 0 0 2px rgba(255,200,0,0.35), 0 1px 1px rgba(255,255,255,0.6) inset, 0 6px 18px rgba(255,200,0,0.18);
   color: #FFCC00;
 }
 .tinder-btn-back:active { transform: scale(0.88); }
@@ -3675,34 +3680,34 @@ body.dark-theme .tinder-photo.no-photo .tinder-tag.tinder-tag-alt {
 .tinder-btn-nope {
   width: 62px; height: 62px;
   background: linear-gradient(150deg, rgba(255,255,255,0.96), rgba(255,59,48,0.06));
-  border: 2px solid rgba(255,59,48,0.32);
-  box-shadow: 0 1px 1px rgba(255,255,255,0.7) inset, 0 10px 28px rgba(255,59,48,0.18);
+  border: none;
+  box-shadow: inset 0 0 0 2px rgba(255,59,48,0.32), 0 1px 1px rgba(255,255,255,0.7) inset, 0 10px 28px rgba(255,59,48,0.18);
   color: #FF3B30;
 }
-.tinder-btn-nope:active { transform: scale(0.88); box-shadow: 0 2px 8px rgba(255,59,48,0.12); }
+.tinder-btn-nope:active { transform: scale(0.88); box-shadow: inset 0 0 0 2px rgba(255,59,48,0.32), 0 2px 8px rgba(255,59,48,0.12); }
 
 .tinder-btn-superlike {
   width: 56px; height: 56px;
   background: linear-gradient(150deg, rgba(255,255,255,0.96), rgba(255,149,0,0.08));
-  border: 2px solid rgba(255,149,0,0.32);
-  box-shadow: 0 1px 1px rgba(255,255,255,0.7) inset, 0 10px 26px rgba(255,149,0,0.2);
+  border: none;
+  box-shadow: inset 0 0 0 2px rgba(255,149,0,0.32), 0 1px 1px rgba(255,255,255,0.7) inset, 0 10px 26px rgba(255,149,0,0.2);
   color: #FF9500;
 }
 
 .tinder-btn-like {
   width: 62px; height: 62px;
   background: linear-gradient(150deg, rgba(255,255,255,0.96), rgba(76,217,100,0.08));
-  border: 2px solid rgba(76,217,100,0.38);
-  box-shadow: 0 1px 1px rgba(255,255,255,0.7) inset, 0 10px 28px rgba(76,217,100,0.2);
+  border: none;
+  box-shadow: inset 0 0 0 2px rgba(76,217,100,0.38), 0 1px 1px rgba(255,255,255,0.7) inset, 0 10px 28px rgba(76,217,100,0.2);
   color: #4CD964;
 }
 
 .tinder-btn-msg {
   width: 50px; height: 50px;
   background: linear-gradient(150deg, rgba(255,255,255,0.96), rgba(0,122,255,0.06));
-  border: 2px solid rgba(0,122,255,0.25);
+  border: none;
   font-size: 18px;
-  box-shadow: 0 1px 1px rgba(255,255,255,0.7) inset, 0 6px 18px rgba(0,122,255,0.14);
+  box-shadow: inset 0 0 0 2px rgba(0,122,255,0.25), 0 1px 1px rgba(255,255,255,0.7) inset, 0 6px 18px rgba(0,122,255,0.14);
   color: var(--ios-blue);
 }
 
