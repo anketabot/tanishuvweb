@@ -3331,16 +3331,7 @@ body.dark-theme .search-results-panel-body {
   height: 62%;
   z-index: 2;
   pointer-events: none;
-  /* Light/day mode: soft white-to-transparent gradient so card bottom
-     appears bright instead of dark (fixes black band in day theme) */
-  background: linear-gradient(
-    to top,
-    rgba(255,255,255,0.98) 0%,
-    rgba(255,255,255,0.92) 28%,
-    rgba(255,255,255,0.75) 56%,
-    rgba(255,255,255,0.28) 84%,
-    transparent 100%
-  );
+  background: transparent;
 }
 
 /* Preserve dark gradient in night/dark theme */
