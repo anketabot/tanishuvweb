@@ -6048,16 +6048,18 @@ const tg = window.Telegram?.WebApp;
       const country = document.getElementById('inp-country')?.value || '';
       // Erkin matn maydonlarini har doim yashirish (manual tanlash rejimi)
       _hideFreeLocationFields();
+      // Davlat o'zgarganda eski tanlangan viloyat/tuman qiymati (masalan avvalgi
+      // davlatdan qolgan "Toshkent shahri") saqlanib qolmasligi kerak - aks holda
+      // anketa bu eski qiymat bilan yuboriladi va noto'g'ri saqlanadi.
+      hideLocationWrap('inp-region');
+      hideLocationWrap('inp-district');
       loadRegionsData().then(() => {
         const regionOpts = _getLocOptsForCountry(country);
         if (regionOpts && regionOpts.length > 0) {
           rebuildLocOptions('inp-region', regionOpts, true);
           showLocationWrap('inp-region');
-          hideLocationWrap('inp-district');
           updateLocationSteps('inp', 2);
         } else {
-          hideLocationWrap('inp-region');
-          hideLocationWrap('inp-district');
           updateLocationSteps('inp', country ? 2 : 1);
         }
         updateHiddenCityField('inp-city', country, '', '');
@@ -6068,6 +6070,8 @@ const tg = window.Telegram?.WebApp;
     function onRegionChange() {
       const country = document.getElementById('inp-country')?.value || '';
       const region  = document.getElementById('inp-region')?.value  || '';
+      // Viloyat o'zgarganda eski tanlangan tuman qiymati saqlanib qolmasligi kerak.
+      hideLocationWrap('inp-district');
       if (region) {
         const distOpts = _getDistrictOpts(country, region);
         if (distOpts.length > 0) {
@@ -6075,11 +6079,9 @@ const tg = window.Telegram?.WebApp;
           showLocationWrap('inp-district');
           updateLocationSteps('inp', 3);
         } else {
-          hideLocationWrap('inp-district');
           updateLocationSteps('inp', 2);
         }
       } else {
-        hideLocationWrap('inp-district');
         updateLocationSteps('inp', 2);
       }
       updateHiddenCityField('inp-city', country, region, '');
@@ -6096,16 +6098,21 @@ const tg = window.Telegram?.WebApp;
     // Qidiruv: Davlat o'zgartirilganda
     function onSearchCountryChange() {
       const country = document.getElementById('sf-country')?.value || '';
+      // MUHIM: Davlat o'zgarganda eski tanlangan viloyat/tuman qiymati
+      // (masalan Rossiya tanlanganda oldingi "Toshkent shahri" kabi) tozalanishi
+      // shart. Aks holda doSearch()/fetchSearchCount() filters.city sifatida
+      // shu eski (endi noto'g'ri) qiymatni yuboraveradi va country filtri
+      // umuman ishlatilmay qoladi - shuning uchun "Rossiya" bo'yicha qidirilganda
+      // hech kim topilmasdi (region qiymati Rossiyaga mos kelmagani uchun).
+      hideLocationWrap('sf-region');
+      hideLocationWrap('sf-district');
       loadRegionsData().then(() => {
         const regionOpts = _getLocOptsForCountry(country);
         if (regionOpts && regionOpts.length > 0) {
           rebuildLocOptions('sf-region', regionOpts, true);
           showLocationWrap('sf-region');
-          hideLocationWrap('sf-district');
           updateLocationSteps('sf', 2);
         } else {
-          hideLocationWrap('sf-region');
-          hideLocationWrap('sf-district');
           updateLocationSteps('sf', country ? 2 : 1);
         }
         updateHiddenCityField('sf-city', country, '', '');
@@ -6116,6 +6123,8 @@ const tg = window.Telegram?.WebApp;
     function onSearchRegionChange() {
       const country = document.getElementById('sf-country')?.value || '';
       const region  = document.getElementById('sf-region')?.value  || '';
+      // Viloyat o'zgarganda eski tanlangan tuman qiymati saqlanib qolmasligi kerak.
+      hideLocationWrap('sf-district');
       if (region) {
         const distOpts = _getDistrictOpts(country, region);
         if (distOpts.length > 0) {
@@ -6123,11 +6132,9 @@ const tg = window.Telegram?.WebApp;
           showLocationWrap('sf-district');
           updateLocationSteps('sf', 3);
         } else {
-          hideLocationWrap('sf-district');
           updateLocationSteps('sf', 2);
         }
       } else {
-        hideLocationWrap('sf-district');
         updateLocationSteps('sf', 2);
       }
       updateHiddenCityField('sf-city', country, region, '');
