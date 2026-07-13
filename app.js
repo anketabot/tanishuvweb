@@ -6990,8 +6990,12 @@ const tg = window.Telegram?.WebApp;
         });
         await loadChats();
         showToast(tr('match_super_like').replace('{sticker}', sticker));
-        const matchName = tr('chat_user_default');
-        openChatRoom(likeData.match_id, matchName, '');
+        // MUHIM: hamkorning ismi/rasmini serverdan qaytgan to_user_profile'dan
+        // olamiz - avval bu yerda bo'sh satr ('') qattiq yozilgan edi, shu sabab
+        // chat avtomatik ochilganda rasm butun (broken image) ko'rinardi.
+        const matchName = (likeData.to_user_profile?.full_name) || tr('chat_user_default');
+        const matchPhoto = (likeData.to_user_profile?.photo_base64) || (likeData.to_user_profile?.photo_file_id) || '';
+        openChatRoom(likeData.match_id, matchName, matchPhoto);
       } else {
         // Bir tomonlama — faqat toast, chat OCHILMAYDI
         showToast(tr('super_like_sent_hint').replace('{sticker}', sticker));
@@ -7164,7 +7168,16 @@ const tg = window.Telegram?.WebApp;
       if (!userId) return;
       const data = await apiPost('/api/likes/accept', { telegram_id: userId, from_user: fromUserId });
       if (data.success) {
-        showToast(tr('match_with').replace('{name}', name));
+        // MUHIM: ism/rasm uchun avval serverdan qaytgan from_user_profile'ga
+        // tayanamiz (u har doim to'g'ri, yangi va normallashtirilgan
+        // photo_base64 bilan keladi) - chaqiruvchi tomondan berilgan
+        // name/photo faqat zaxira (fallback) sifatida ishlatiladi. Shu orqali
+        // acceptLike qayerdan chaqirilishidan qat'i nazar (Chat bo'limidan
+        // yoki boshqa joydan) rasm har doim to'g'ri ko'rsatiladi.
+        const profile = data.from_user_profile || null;
+        const resolvedName = (profile?.full_name) || name;
+        const resolvedPhoto = (profile?.photo_base64) || (profile?.photo_file_id) || photo || '';
+        showToast(tr('match_with').replace('{name}', resolvedName));
         loadPendingLikesIndicator();
         await loadChats();
 
@@ -7173,7 +7186,7 @@ const tg = window.Telegram?.WebApp;
 
         // Match bo'lganda darhol chatni ochamiz
         if (data.match_id) {
-          openChatRoom(data.match_id, name, photo);
+          openChatRoom(data.match_id, resolvedName, resolvedPhoto);
         }
       } else {
         showToast(tr('error_occurred'));
